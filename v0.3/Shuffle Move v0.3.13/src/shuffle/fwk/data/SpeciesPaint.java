@@ -30,6 +30,8 @@ public class SpeciesPaint {
    private final Boolean frozen;
    private final Boolean mega;
    
+   private final String str;
+
    public SpeciesPaint(Species paint) {
       this(paint, null, null);
    }
@@ -45,6 +47,15 @@ public class SpeciesPaint {
       s = paint;
       frozen = isFrozen;
       mega = isMega;
+      StringBuilder sb = new StringBuilder();
+      if (isFrozen()) {
+         sb.append("Frozen_");
+      }
+      if (isMega()) {
+         sb.append("Mega_");
+      }
+      sb.append(s.toString());
+      str = sb.toString();
    }
    
    public Species getSpecies() {
@@ -61,15 +72,7 @@ public class SpeciesPaint {
    
    @Override
    public String toString() {
-      StringBuilder sb = new StringBuilder();
-      if (isFrozen()) {
-         sb.append("Frozen_");
-      }
-      if (isMega()) {
-         sb.append("Mega_");
-      }
-      sb.append(s.toString());
-      return sb.toString();
+      return str;
    }
    
    @Override
