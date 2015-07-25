@@ -1,3 +1,4 @@
-*.project
-*.classpath
-v0.3/Shuffle Move v0.3.12/keys/shuffleKeyStore
+/bin/
+/keys/
+/config/
+/log/
