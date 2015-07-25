@@ -2,3 +2,5 @@
 /keys/
 /config/
 /log/
+/.project
+/.classpath
