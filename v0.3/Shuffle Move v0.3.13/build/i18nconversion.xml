@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="all" name="Create Runnable Jar for Project Shuffle Move with libraries in sub-folder, and additional files included for a release.">
+	<!--ANT 1.7 is required                                        -->
+
+	<target name="all" depends="verifydir,verifycode,convert,rename,clean" />
+
+	<target name="verifydir" unless="dir">
+		<property name="dir" value="../i18n/fwk" />
+	</target>
+	
+	<target name="verifycode" unless="locale_code">
+		<property name="locale_code" value="zh" />
+	</target>
+
+	<target name="convert">
+		<native2ascii encoding="GB2312" src="${dir}" dest="${dir}" ext=".tmp" />
+	</target>
+
+	<target name="rename">
+		<move todir="${dir}" includeemptydirs="false">
+			<fileset dir="${dir}">
+				<exclude name="**/*_*.properties" />
+			</fileset>
+			<mapper type="glob" from="*.tmp" to="*_${locale_code}.properties" />
+		</move>
+	</target>
+	
+	<target name="clean">
+		<delete>
+			<fileset dir="${dir}">
+				<exclude name="**/*_*.properties" />
+			</fileset>
+		</delete>
+	</target>
+</project>

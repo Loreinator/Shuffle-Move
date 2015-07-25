@@ -1,0 +1,13 @@
+STAGE 103
+ROW_1 Pichu,Air,Pichu,Air,Pichu,Air
+FROW_1 true,false,true,false,true,false
+ROW_2 Pikachu,Air,Pikachu,Air,Pikachu,Air
+FROW_2 true,false,true,false,true,false
+ROW_3 Raichu,Air,Raichu,Air,Raichu,Air
+FROW_3 true,false,true,false,true,false
+ROW_4 Pichu,Air,Pichu,Air,Pichu,Air
+FROW_4 true,false,true,false,true,false
+ROW_5 Pikachu,Air,Pikachu,Air,Pikachu,Air
+FROW_5 true,false,true,false,true,false
+ROW_6 Raichu,Air,Raichu,Air,Raichu,Air
+FROW_6 true,false,true,false,true,false

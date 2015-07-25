@@ -1,0 +1,81 @@
+/*  ShuffleMove - A program for identifying and simulating ideal moves in the game
+ *  called Pokemon Shuffle.
+ *  
+ *  Copyright (C) 2015  Andrew Meyers
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package shuffle.fwk.gui;
+
+import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.SwingUtilities;
+
+/**
+ * @author Andrew Meyers
+ *
+ */
+public abstract class PressOrClickMouseAdapter extends MouseAdapter {
+   
+   // Static so this is maintained across all mouse adapters
+   private static boolean inside = false;
+   
+   protected abstract void onLeft(MouseEvent e);
+   
+   protected abstract void onRight(MouseEvent e);
+   
+   protected abstract void onEnter();
+   
+   @Override
+   public void mouseClicked(MouseEvent e) {
+      if (SwingUtilities.isRightMouseButton(e) | SwingUtilities.isLeftMouseButton(e) && e.isControlDown()) {
+         onRight(e);
+      } else if (SwingUtilities.isLeftMouseButton(e)) {
+         onLeft(e);
+      }
+   }
+   
+   @Override
+   public void mouseEntered(MouseEvent e) {
+      onEnter();
+      if (inside) {
+         if (b1Down(e) && e.isControlDown() || b3Down(e)) {
+            onRight(e);
+         } else if (b1Down(e)) {
+            onLeft(e);
+         }
+      }
+   }
+   
+   @Override
+   public void mouseReleased(MouseEvent e) {
+      inside = false; // This seems to be enough to stop spill over from menu clicks
+   }
+   
+   private boolean b1Down(MouseEvent e) {
+      return (e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) != 0;
+   }
+   
+   private boolean b3Down(MouseEvent e) {
+      return (e.getModifiersEx() & InputEvent.BUTTON3_DOWN_MASK) != 0;
+   }
+   
+   @Override
+   public void mousePressed(MouseEvent e) {
+      inside = true;
+      mouseEntered(e);
+   }
+}

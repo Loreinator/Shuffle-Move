@@ -1,0 +1,13 @@
+STAGE 182
+ROW_1 Duosion,Air,Duosion,Air,Air,Air
+FROW_1 true,false,true,false,false,false
+ROW_2 Air,Duosion,Air,Air,Air,Air
+FROW_2 false,true,false,false,false,false
+ROW_3 Duosion,Air,Duosion,Air,Air,Air
+FROW_3 true,false,true,false,false,false
+ROW_4 Air,Duosion,Air,Air,Air,Air
+FROW_4 false,true,false,false,false,false
+ROW_5 Duosion,Air,Duosion,Air,Air,Air
+FROW_5 true,false,true,false,false,false
+ROW_6 Air,Duosion,Air,Air,Air,Air
+FROW_6 false,true,false,false,false,false
