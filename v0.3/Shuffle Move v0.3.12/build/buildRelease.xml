@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="all" name="Create Runnable Jar for Project Shuffle Move with libraries in sub-folder, and additional files included for a release.">
+	<!--ANT 1.7 is required                                        -->
+	<property name="temp" value="../tmp" />
+	<property name="libsubdir" value="libraries" />
+	<property name="libstarget.dir" value="${temp}/${libsubdir}" />
+
+	<target name="all" depends="verify, zipreleasefailed, clean, create_run_jar, copyfiles, ziprelease, cleanuptmp" />
+
+	<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
+	        :${launch4j.dir}/lib/xstream.jar" />
+
+	<target name="verify" unless="name">
+		<echo message="Please specify a name via -Dname='Shuffle Move vM.N.X' or some such value." />
+	</target>
+
+	<target name="zipreleasefailed" unless="dest">
+		<echo message="Please define dest for this task. In eclipse this is via arguments -Ddest='PATH'" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${temp}/" />
+	</target>
+
+	<target name="create_run_jar">
+		<jar destfile="${temp}/${name}.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="shuffle.fwk.ShuffleController" />
+				<attribute name="Class-Path" value="." />
+				<attribute name="SplashScreen-Image" value="img/splash.png" />
+			</manifest>
+			<fileset dir="../bin" />
+			<fileset file="LICENSE_shuffleMove.txt" />
+			<fileset file="README_shuffleMove.txt" />
+			<zipfileset excludes="META-INF/**" src="ant-launcher.jar" />
+			<zipfileset excludes="META-INF/**" src="ant.jar" />
+			<zipfileset excludes="META-INF/**" src="commons-io-2.4.jar" />
+			<zipfileset excludes="META-INF/**" src="commons-lang3-3.4.jar" />
+			<zipfileset excludes="META-INF/**" src="junit.jar" />
+			<zipfileset excludes="META-INF/**" src="org.hamcrest.core_1.3.0.v201303031735.jar" />
+			<zipfileset includes="META-INF/*.txt **/*.MF" src="ant-launcher.jar" prefix="ant-launcher" />
+			<zipfileset includes="META-INF/*.txt **/*.MF" src="ant.jar" prefix="ant" />
+			<zipfileset includes="META-INF/*.txt **/*.MF" src="commons-io-2.4.jar" prefix="commons-io-2.4" />
+			<zipfileset includes="META-INF/*.txt **/*.MF" src="commons-lang3-3.4.jar" prefix="commons-lang3-3.4" />
+			<zipfileset includes="META-INF/*.txt **/*.MF" src="junit.jar" prefix="junit" />
+			<zipfileset includes="META-INF/*.txt **/*.MF" src="org.hamcrest.core_1.3.0.v201303031735.jar" prefix="org.hamcrest.core_1.3.0" />
+		</jar>
+		<signjar jar="${temp}/${name}.jar" alias="shufflemove" keystore="../keys/shuffleKeyStore" storepass="password" />
+		<delete file="temp_l4j.xml" />
+		<copy file="launch4jconfig.xml" tofile="temp_l4j.xml" />
+		<replaceregexp file="temp_l4j.xml" match="NAME" replace="${name}" flags="g" />
+		<launch4j configFile="temp_l4j.xml" />
+		<delete file="temp_l4j.xml" />
+	</target>
+
+	<target name="copyfiles">
+		<copy file="LICENSE_shuffleMove.txt" tofile="${temp}/LICENSE.txt" />
+		<copy file="README_shuffleMove.txt" tofile="${temp}/README.txt" />
+		<mkdir dir="${temp}/source" />
+		<mkdir dir="${temp}/source/i18n" />
+		<copy todir="${temp}/source/i18n">
+			<fileset dir="../i18n" />
+		</copy>
+		<mkdir dir="${temp}/source/i18nbase" />
+		<copy todir="${temp}/source/i18nbase">
+			<fileset dir="../i18n">
+				<exclude name="**/*_*" />
+			</fileset>
+		</copy>
+		<mkdir dir="${temp}/source/docs" />
+		<copy todir="${temp}/source/docs">
+			<fileset dir="../resources/docs" />
+		</copy>
+		<mkdir dir="${temp}/source/config" />
+		<copy todir="${temp}/source/config">
+			<fileset dir="../resources/config" />
+		</copy>
+		<mkdir dir="${temp}/source/build" />
+		<copy file="launch4j.jar" tofile="${temp}/source/build/launch4j.jar" />
+		<copy todir="${temp}/source/build">
+			<fileset dir="../build">
+				<exclude name="**/*.jar" />
+			</fileset>
+		</copy>
+		<mkdir dir="${temp}/source/src" />
+		<copy todir="${temp}/source/src">
+			<fileset dir="../src" />
+		</copy>
+	</target>
+
+	<target name="ziprelease" depends="zipreleasesucceed, zipreleasefailed" />
+
+	<target name="zipreleasesucceed" if="dest">
+		<delete file="${dest}/${name}.zip" />
+		<zip destfile="${dest}/${name}.zip" basedir="${temp}" />
+	</target>
+
+	<target name="cleanuptmp">
+		<delete dir="${temp}" />
+	</target>
+
+</project>

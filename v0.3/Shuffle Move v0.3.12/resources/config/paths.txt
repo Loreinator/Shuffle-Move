@@ -1,0 +1,17 @@
+RESOURCE PREFERENCES config/defaults/preferences.txt
+RESOURCE SPECIES config/defaults/species.txt
+RESOURCE STAGES config/defaults/stages.txt
+RESOURCE ICONS config/defaults/icons.txt
+RESOURCE HELP_FILE docs/help.html
+RESOURCE ABOUT_FILE docs/about.html
+RESOURCE BUGS_FILE docs/bugs.html
+RESOURCE UPDATE_FILE docs/update.html
+FILE PREFERENCES config/preferences.txt
+FILE SPECIES config/species.txt
+FILE STAGES config/stages.txt
+FILE ICONS config/icons.txt
+FILE TEAM config/teamsData.txt
+FILE ROSTER config/rosterData.txt
+FILE BOARD config/boards/board.txt
+STRING TYPE_PATH_FORMAT img/types/%s.png
+STRING DEFAULT_BOARD_STAGE_CONFIG config/defaults/boards/%s.txt
