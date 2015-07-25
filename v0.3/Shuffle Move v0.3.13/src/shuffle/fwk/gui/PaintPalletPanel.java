@@ -97,6 +97,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private ItemListener frozenStateListener;
    
    private List<SpeciesPaint> prevPaints = Collections.emptyList();
+   private Team prevTeam = null;
    private SpeciesPaint prevPaint = null;
    
    /**
@@ -288,13 +289,17 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private void updateIndicators() {
       List<SpeciesPaint> curPaints = getUser().getCurrentPaints();
       SpeciesPaint curPaint = getUser().getSelectedSpeciesPaint();
-      if (curPaints.equals(prevPaints)) {
+      Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());
+      if (curPaints.equals(prevPaints) && (curTeam == prevTeam || curTeam != null && curTeam.equals(prevTeam))) {
          if (!(prevPaint == curPaint || prevPaint != null && prevPaint.equals(curPaint))) {
             updateIndicatorBorders();
+            prevPaint = curPaint;
          }
          return;
       } else {
          prevPaints = curPaints;
+         prevPaint = curPaint;
+         prevTeam = curTeam;
       }
       removeAllIndicators();
       ConfigManager manager = getUser().getPreferencesManager();
