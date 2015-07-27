@@ -185,8 +185,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       
       doComboCheck();
       if (logFiner) {
-         logFinerWithId("combos checked, number of claims: "
- + prospecticeCombosSet.size());
+         logFinerWithId("combos checked, number of claims: " + prospecticeCombosSet.size());
       }
       if (move != null && move.size() >= 4) {
          ActivateComboEffect firstCombo = findBestComboFor(move.get(2), move.get(3));
@@ -994,6 +993,19 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       return s;
    }
    
+   /**
+    * Returns all matches for the given parameters, as an ordered list of row and column pairs in
+    * the grid of [1, NUM_ROWS] x [1, NUM_COLS].
+    * 
+    * @param limit
+    *           The maximum number of result coordinates
+    * @param includeActive
+    *           Should this include active tiles
+    * @param function
+    *           The check for adding a result. (row, column, species) -> boolean value, if true then
+    *           include. reject otherwise.
+    * @return
+    */
    public List<Integer> findMatches(int limit, boolean includeActive,
          TriFunction<Integer, Integer, Species, Boolean> function) {
       List<Integer> match = new ArrayList<Integer>();

@@ -1544,11 +1544,7 @@ public enum Effect {
             int row = extraBlocks.get(i * 2);
             int col = extraBlocks.get(i * 2 + 1);
             if (!task.isActive(row, col)) {
-               if (b.isFrozenAt(row, col)) {
-                  task.getState().addDisruptionCleared(1);
-               }
                b.setSpeciesAt(row, col, toReplaceWith);
-               b.setFrozenAt(row, col, false);
                Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(task.getClaimsFor(row,
                      col));
                for (ActivateComboEffect claim : claimsFor) {
@@ -1575,8 +1571,8 @@ public enum Effect {
       
    },
    /**
-    * Add one more mega slowbro above the match. This is only available for matching up on the next
-    * tick.
+    * Add one more mega heracross above the match. This is only available for matching up on the
+    * next tick.
     */
    HERACROSS {
       
@@ -1674,11 +1670,7 @@ public enum Effect {
             int row = extraBlocks.get(i * 2);
             int col = extraBlocks.get(i * 2 + 1);
             if (!task.isActive(row, col)) {
-               if (b.isFrozenAt(row, col)) {
-                  task.getState().addDisruptionCleared(1);
-               }
                b.setSpeciesAt(row, col, toReplaceWith);
-               b.setFrozenAt(row, col, false);
                Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(task.getClaimsFor(row,
                      col));
                for (ActivateComboEffect claim : claimsFor) {
@@ -1701,6 +1693,97 @@ public enum Effect {
       @Override
       public int getMegaSpeedupCap() {
          return 6;
+      }
+      
+   },
+   /**
+    * Replace 3 random fire types with Blaziken. Only one species is selected at a time.
+    */
+   BLAZIKEN {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            Board b = task.getState().getBoard();
+            Species effectSpecies = task.getEffectSpecies(effect.getCoords());
+            PkmType type = effectSpecies.getType();
+            Species selection = getRandomSpeciesOfTypeFrom(type, b, effectSpecies, task);
+            List<Integer> coords = task.findMatches(33, false, (r, c, s) -> s.equals(selection));
+            List<Integer> indexOrder = getUniqueRandoms(0, coords.size() / 2, 3);
+            // 3 random selections at most, of a single type-matched species.
+            List<Integer> plan = new ArrayList<Integer>(coords.size());
+            for (int i = 0; i < indexOrder.size(); i++) {
+               int index = indexOrder.get(i);
+               plan.add(coords.get(index * 2));
+               plan.add(coords.get(index * 2 + 1));
+            }
+            effect.addPlannedOptions(plan);
+            return effect;
+         }
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         List<Integer> toReplace = null;
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            ActivateMegaComboEffect effect = (ActivateMegaComboEffect) comboEffect;
+            List<Integer> plan = effect.getNextPlan();
+            if (plan != null) {
+               while (plan.size() >= 2 && toReplace == null) {
+                  int row = plan.remove(0);
+                  int col = plan.remove(0);
+                  if (!task.isActive(row, col)) {
+                     toReplace = Arrays.asList(row, col);
+                  }
+               }
+               if (plan.size() >= 2) {
+                  // if the plan still has stuff to use, then re-queue it.
+                  effect.addPlannedOptions(plan);
+               }
+            }
+         }
+         return toReplace;
+      }
+      
+      @Override
+      public void handleExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks) {
+         Species toReplaceWith = task.getEffectSpecies(comboEffect.getCoords());
+         Board b = task.getState().getBoard();
+         for (int i = 0; i * 2 + 1 < extraBlocks.size(); i++) {
+            int row = extraBlocks.get(i * 2);
+            int col = extraBlocks.get(i * 2 + 1);
+            if (!task.isActive(row, col)) {
+               b.setSpeciesAt(row, col, toReplaceWith);
+               Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(task.getClaimsFor(row,
+                     col));
+               for (ActivateComboEffect claim : claimsFor) {
+                  task.removeClaim(claim);
+               }
+            }
+         }
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 33;
+      }
+      
+      @Override
+      public int getMegaThreshold() {
+         return 12;
+      }
+      
+      @Override
+      public int getMegaSpeedupCap() {
+         return 3;
       }
       
    },
@@ -2547,7 +2630,7 @@ public enum Effect {
     * @param bound
     * @return
     */
-   protected static int getRandomInt(int bound) {
+   protected static final int getRandomInt(int bound) {
       r.setSeed(r.nextLong());
       return r.nextInt(bound);
    }
