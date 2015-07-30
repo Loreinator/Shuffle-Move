@@ -34,8 +34,10 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.13 - 2015-07-
-	- TBD
+v0.3.13 - 2015-07-29
+	- Blaziken's mega is now included
+	- Bug fixes
+	- Finnish translations updated
 v0.3.12 - 2015-07-23
 	- Species updated for new patch: Cresselia
 	- Including new stages: Cresselia, Blaziken, Wobbufet
