@@ -1,4 +1,4 @@
-Shuffle Move v0.3.12
+Shuffle Move v0.3.13
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -21,6 +21,7 @@ Go to https://www.reddit.com/r/ShuffleMove/wiki/plans
 
 ~~ Contact ~~
 Reddit: https://www.reddit.com/r/ShuffleMove/wiki/index
+GitHub: https://github.com/Loreinator/Shuffle-Move
 Email: all4atlantis@gmail.com
 
 ~~ License ~~
@@ -34,6 +35,10 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.13 - 2015-07-29
+	- Blaziken's mega is now included
+	- Bug fixes
+	- Finnish translations updated
 v0.3.12 - 2015-07-23
 	- Species updated for new patch: Cresselia
 	- Including new stages: Cresselia, Blaziken, Wobbufet
