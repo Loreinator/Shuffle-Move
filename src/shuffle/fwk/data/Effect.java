@@ -38,7 +38,7 @@ public enum Effect {
     * Attacks sometimes deal greater damage than usual.
     */
    HYPER_PUNCH(0.1, 0.5, 0.5) {
-   
+
    },
    /**
     * Leaves the foe Paralyzed
@@ -454,16 +454,32 @@ public enum Effect {
    
    },
    /**
-    * Attacks sometimes deal greater damage than usual.
+    * Attacks sometimes deal greater damage than usual. 1.5x modifier
     */
    HEAVY_HITTER(0.2, 0.5, 0.5) {
-   
+      
+      @Override
+      public double getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         double ret = super.getScoreMultiplier(comboEffect, task);
+         if (shouldActivate(comboEffect, task)) {
+            ret *= 1.5;
+         }
+         return ret;
+      }
    },
    /**
-    * Attacks sometimes deal greater damage than usual.
+    * Attacks sometimes deal greater damage than usual. 1.5x modifier
     */
    DRAGON_TALON(0.2, 0.5, 0.5) {
-   
+      
+      @Override
+      public double getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         double ret = super.getScoreMultiplier(comboEffect, task);
+         if (shouldActivate(comboEffect, task)) {
+            ret *= 1.5;
+         }
+         return ret;
+      }
    },
    /**
     * Attacks do more damage when things are looking desperate.
