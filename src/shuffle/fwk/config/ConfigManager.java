@@ -136,6 +136,22 @@ public class ConfigManager {
             LinkedHashMap<String, ConfigEntry> mappings = loader.getMappings(type);
             data.put(type, mappings);
          }
+         maintainVersion();
+         LinkedHashMap<String, List<String>> newData = getDataStrings();
+         changed |= !oldData.equals(newData);
+      }
+      return changed;
+   }
+   
+   protected boolean shouldUpdate() {
+      return false;
+   }
+
+   /**
+    * 
+    */
+   protected void maintainVersion() {
+      if (shouldUpdate()) {
          int curVersion = UpdateCheck.parseVersionNumber(ShuffleController.VERSION_FULL);
          int savedVersion = 0;
          try {
@@ -152,13 +168,10 @@ public class ConfigManager {
                   LinkedHashMap<String, ConfigEntry> mappings = loader.getMappings(type);
                   data.put(type, mappings);
                }
-               setEntry(EntryType.STRING, KEY_VERSION, ShuffleController.VERSION_FULL);
             }
          }
-         LinkedHashMap<String, List<String>> newData = getDataStrings();
-         changed |= !oldData.equals(newData);
       }
-      return changed;
+      setEntry(EntryType.STRING, KEY_VERSION, ShuffleController.VERSION_FULL);
    }
    
    public void saveDataToConfig() {

@@ -52,6 +52,11 @@ public class SpeciesManager extends ConfigManager {
    }
    
    @Override
+   protected boolean shouldUpdate() {
+      return true;
+   }
+
+   @Override
    public boolean loadFromConfig() {
       boolean changed = super.loadFromConfig();
       changed |= setDefaultSpecies();
