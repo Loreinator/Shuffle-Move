@@ -39,6 +39,7 @@ v0.3.14 - 2015-08-
 	- Changed working directory to user.home for all platforms
 	- Updated species and stages for the new content
 	- Now simulating Dragon Talon and Heavy Hitter appropriately
+	- Species configs will now update if they are out of date, automatically.
 v0.3.13 - 2015-07-29
 	- Blaziken's mega is now included
 	- Bug fixes
