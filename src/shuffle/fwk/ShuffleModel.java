@@ -842,6 +842,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    }
    
    public void reportBug(String message) {
+      new File("bugs").getAbsoluteFile().mkdir();
       makeBugMessageFile(message);
       copyBuildXML();
       buildBugReport();
@@ -852,14 +853,16 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       InputStream is = null;
       try {
          is = ClassLoader.getSystemResourceAsStream(BUILD_REPORT_RESOURCE);
-         Files.copy(is, Paths.get(BUILD_REPORT_FILE), StandardCopyOption.REPLACE_EXISTING);
+         String absolutePath = new File(BUILD_REPORT_FILE).getAbsolutePath();
+         Path path = Paths.get(absolutePath);
+         Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
       } catch (Exception e) {
          LOG.fine("ShuffleModel.copyBuildXML() : " + e.getLocalizedMessage());
       }
    }
    
    private void cleanupBuildXML() {
-      File f = new File(BUILD_REPORT_FILE);
+      File f = new File(BUILD_REPORT_FILE).getAbsoluteFile();
       try {
          f.delete();
       } catch (Exception e) {
@@ -873,7 +876,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private void makeBugMessageFile(String message) {
       File file = null;
       try {
-         file = (File) EntryType.FILE.parseValue(null, BUG_DETAILS_FILE);
+         file = ((File) EntryType.FILE.parseValue(null, BUG_DETAILS_FILE)).getAbsoluteFile();
       } catch (Exception e) {
          if (e != null && e instanceof IOException) {
             LOG.log(Level.WARNING, getString(KEY_BUG_FILE_IOE), e);
@@ -947,7 +950,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
          DefaultLogger logger = new DefaultLogger();
          PrintStream ps = null;
          try {
-            ps = new PrintStream("log/bugReportLog.txt");
+            ps = new PrintStream(new File("log/bugReportLog.txt").getAbsolutePath());
             ps.print("");
          } catch (FileNotFoundException e) {
             StringWriter sw = new StringWriter();

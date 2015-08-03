@@ -225,7 +225,7 @@ public enum EntryType {
       
       @Override
       public Object parseValue(String key, String value) throws Exception {
-         File f = new File(value);
+         File f = new File(value).getAbsoluteFile();
          if (!f.exists()) {
             String parentPath = f.getParent();
             if (parentPath != null) {
@@ -244,7 +244,12 @@ public enum EntryType {
       @Override
       public String getDataString(Object obj) throws Exception {
          File ret = (File) obj;
-         return ret.getPath().replaceAll("\\\\", "/");
+         String userdir = System.getProperty("user.dir").replaceAll("\\\\", "/");
+         String filePath = ret.getAbsolutePath().replaceAll("\\\\", "/");
+         if (filePath.startsWith(userdir)) {
+            filePath = filePath.substring(userdir.length() + 1);
+         }
+         return filePath;
       }
       
       @Override
