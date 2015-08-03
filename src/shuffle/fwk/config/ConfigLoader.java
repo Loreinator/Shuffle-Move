@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -152,6 +153,32 @@ public class ConfigLoader {
             addMissingTo(myMap, parse(is));
          }
          shouldReload = false;
+      }
+   }
+   
+   /**
+    * Maintains order of all keys, but overwrites all data keys with values from resources.
+    */
+   public void updateFromResource() {
+      for (String resource : resources) {
+         InputStream is = ClassLoader.getSystemResourceAsStream(resource);
+         LinkedHashMap<EntryType, LinkedHashMap<String, ConfigEntry>> parseResult = parse(is);
+         for (EntryType type : myMap.keySet()) {
+            LinkedHashMap<String, ConfigEntry> dataMappings = myMap.get(type);
+            LinkedHashMap<String, ConfigEntry> resourceMappings = parseResult.get(type);
+            LinkedHashMap<String, ConfigEntry> tempMappings = new LinkedHashMap<String, ConfigEntry>();
+            LinkedHashSet<String> keys = new LinkedHashSet<String>();
+            keys.addAll(dataMappings.keySet());
+            keys.addAll(resourceMappings.keySet());
+            for (String key : keys) {
+               if (resourceMappings.containsKey(key)) {
+                  tempMappings.put(key, resourceMappings.get(key));
+               } else {
+                  tempMappings.put(key, dataMappings.get(key));
+               }
+            }
+            myMap.put(type, tempMappings);
+         }
       }
    }
    

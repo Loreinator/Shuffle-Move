@@ -37,11 +37,13 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 
 import shuffle.fwk.EntryMode;
+import shuffle.fwk.ShuffleController;
 import shuffle.fwk.config.writer.PreferencesWriter;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
 import shuffle.fwk.data.Team;
+import shuffle.fwk.update.UpdateCheck;
 
 /**
  * @author Andrew Meyers
@@ -53,6 +55,8 @@ public class ConfigManager {
       LOG.setLevel(Level.FINE);
    }
    
+   private static final String KEY_VERSION = "VERSION";
+
    private final List<String> filePaths;
    private final ConfigLoader loader;
    private final ConfigFactory factory;
@@ -131,6 +135,25 @@ public class ConfigManager {
          for (EntryType type : EntryType.values()) {
             LinkedHashMap<String, ConfigEntry> mappings = loader.getMappings(type);
             data.put(type, mappings);
+         }
+         int curVersion = UpdateCheck.parseVersionNumber(ShuffleController.VERSION_FULL);
+         int savedVersion = 0;
+         try {
+            String fileVersion = getStringValue(KEY_VERSION);
+            savedVersion = UpdateCheck.parseVersionNumber(fileVersion);
+         } catch (Exception e) {
+            // then we assume it has no saved version.
+         } finally {
+            // if there was a saved version, we'll have it here.
+            if (savedVersion < curVersion) {
+               // we need to update from the default, overriding any out-dated keys
+               loader.updateFromResource();
+               for (EntryType type : EntryType.values()) {
+                  LinkedHashMap<String, ConfigEntry> mappings = loader.getMappings(type);
+                  data.put(type, mappings);
+               }
+               setEntry(EntryType.STRING, KEY_VERSION, ShuffleController.VERSION_FULL);
+            }
          }
          LinkedHashMap<String, List<String>> newData = getDataStrings();
          changed |= !oldData.equals(newData);
