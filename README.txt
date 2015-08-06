@@ -41,6 +41,7 @@ v0.3.14 - 2015-08-
 	- Now simulating Dragon Talon and Heavy Hitter appropriately
 	- Species configs will now update if they are out of date, automatically.
 	- Improved active mega handling for frozen tiles
+	- Improved the Migration service, it will temporarily remember where you were looking.
 v0.3.13 - 2015-07-29
 	- Blaziken's mega is now included
 	- Bug fixes

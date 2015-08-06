@@ -65,7 +65,7 @@ public class MigrateService extends BaseService<MigrateServiceUser> implements I
    private TeamManager teamData = null;
    private RosterManager rosterData = null;
    
-   private String prevPath = null;
+   private File prevLocation = null;
    
    /*
     * (non-Javadoc)
@@ -209,11 +209,14 @@ public class MigrateService extends BaseService<MigrateServiceUser> implements I
    }
    
    private File getFile(String titleKey) {
-      JFileChooser chooser = new JFileChooser(prevPath);
+      if (prevLocation == null) {
+         prevLocation = new File(System.getProperty("user.dir"));
+      }
+      JFileChooser chooser = new JFileChooser();
       chooser.setDialogTitle(getString(titleKey));
       chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
       chooser.setAcceptAllFileFilterUsed(false);
-      chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+      chooser.setCurrentDirectory(prevLocation);
       chooser.setFileFilter(new FileFilter() {
          @Override
          public String getDescription() {
@@ -231,7 +234,7 @@ public class MigrateService extends BaseService<MigrateServiceUser> implements I
       } else {
          ret = null;
       }
-      prevPath = chooser.getCurrentDirectory().getAbsolutePath();
+      prevLocation = chooser.getCurrentDirectory();
       return ret;
    }
    
