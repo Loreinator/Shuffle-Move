@@ -21,6 +21,7 @@ package shuffle.fwk.data.simulation.effects;
 import java.util.List;
 
 import shuffle.fwk.data.Board;
+import shuffle.fwk.data.Species;
 import shuffle.fwk.data.simulation.SimulationState;
 import shuffle.fwk.data.simulation.SimulationTask;
 
@@ -71,15 +72,20 @@ public class EraseComboEffect extends ComboEffect {
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
          int row = coords.get(i * 2);
          int col = coords.get(i * 2 + 1);
-         if (b.isFrozenAt(row, col)) { // unfreeze
+         boolean isFrozen = b.isFrozenAt(row, col);
+         shouldErase[getPosition(row, col)] = !isFrozen || isMegaSlot(task) && state.isMegaActive();
+         if (isFrozen) {
             b.setFrozenAt(row, col, false);
             state.addDisruptionCleared(1);
-         } else {
-            shouldErase[getPosition(row, col)] = true;
          }
       }
    }
    
+   private boolean isMegaSlot(SimulationTask task) {
+      Species s = task.getEffectSpecies(getCoords());
+      return task.getState().getCore().getMegaSlot().equals(s);
+   }
+
    /**
     * @param row
     * @param col
