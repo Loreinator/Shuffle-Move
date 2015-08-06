@@ -35,7 +35,7 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.14 - 2015-08-
+v0.3.14 - 2015-08-06
 	- Changed working directory to user.home for all platforms
 	- Updated species and stages for the new content
 	- Now simulating Dragon Talon and Heavy Hitter appropriately
