@@ -99,7 +99,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    /** The Minor version number. Each increment is a new significant overhaul. */
    public static final int VERSION_MINOR = 3;
    /** The SubMinor version number. Each increment is a minor batch of tweaks and fixes. */
-   public static final int VERSION_SUBMINOR = 15;
+   public static final int VERSION_SUBMINOR = 16;
    /** The full version String which identifies the program's actual version. */
    public static final String VERSION_FULL = String.format("v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_SUBMINOR);
    
