@@ -127,7 +127,7 @@
 	<property name="javadoc.dir" value="../javadoc" />
 
 	<target name="javadoc" description="Documentation generation">
-		<mkdir file="${javadoc.dir}" />
+		<mkdir dir="${javadoc.dir}" />
 		<javadoc access="public" destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="Shuffle Move">
 			<fileset dir="${src.dir}" defaultexcludes="yes">
 				<include name="**/*.java" />
