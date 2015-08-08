@@ -69,8 +69,11 @@
 		<signjar jar="${temp}/${name}.jar" alias="shufflemove" keystore="${keypass.dir}" storepass="password" />
 		<delete file="temp_l4j.xml" />
 		<copy file="launch4jconfig.xml" tofile="temp_l4j.xml" />
+		<echo message="l4j template is copied"/>
 		<replaceregexp file="temp_l4j.xml" match="NAME" replace="${name}" flags="g" />
+		<echo message="l4j config is prepped"/>
 		<launch4j configFile="temp_l4j.xml" />
+		<echo message="l4j complete"/>
 		<delete file="temp_l4j.xml" />
 	</target>
 
