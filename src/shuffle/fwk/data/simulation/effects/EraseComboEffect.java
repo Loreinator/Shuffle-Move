@@ -83,7 +83,7 @@ public class EraseComboEffect extends ComboEffect {
    
    private boolean isMegaSlot(SimulationTask task) {
       Species s = task.getEffectSpecies(getCoords());
-      return task.getState().getCore().getMegaSlot().equals(s);
+      return s.equals(task.getState().getCore().getMegaSlot());
    }
 
    /**
