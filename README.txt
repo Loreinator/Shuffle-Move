@@ -35,6 +35,8 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.16 - 2015-08-
+	- Updater will now tell you where the new *.zip is located.
 v0.3.15 - 2015-08-08
 	- Fixed a serious bug that was present whenever you had no mega slot selected.
 	- Improved the build task script.

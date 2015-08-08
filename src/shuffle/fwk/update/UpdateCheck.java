@@ -164,7 +164,7 @@ public class UpdateCheck implements I18nUser {
                LOG.warning(getString(KEY_GET_USEMANUAL));
             }
             if (file != null && file.exists() && !force) {
-               LOG.warning(getString(KEY_DOWNLOAD_READY));
+               LOG.warning(getString(KEY_DOWNLOAD_READY) + " " + file.getAbsolutePath());
                listener.propertyChange(new PropertyChangeEvent(this, PROPERTY_MESSAGE, "",
                      UpdateService.KEY_PLEASE_UNPACK));
                listenerHandled = true;
@@ -203,7 +203,7 @@ public class UpdateCheck implements I18nUser {
             try (InputStream stream = new URL(fileUrl).openStream()) {
                File file = getFile(getZipName(newestVersion));
                Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-               LOG.warning(getString(KEY_DOWNLOAD_READY));
+               LOG.warning(getString(KEY_DOWNLOAD_READY) + " " + file.getAbsolutePath());
                listener.propertyChange(new PropertyChangeEvent(this, PROPERTY_MESSAGE, "",
                      UpdateService.KEY_PLEASE_UNPACK));
             } catch (IOException e) {
