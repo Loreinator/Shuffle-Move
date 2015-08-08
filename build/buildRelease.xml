@@ -5,7 +5,7 @@
 	<property name="libsubdir" value="libraries" />
 	<property name="libstarget.dir" value="${temp}/${libsubdir}" />
 
-	<target name="all" depends="verify, verifykeypass, zipreleasefailed, clean, create_run_jar, copyfiles, ziprelease, cleanuptmp" />
+	<target name="all" depends="verify, verifykeypass, zipreleasefailed, clean, create_run_jar, copyfiles, ziprelease, cleanuptmp, javadoc" />
 
 	<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
 	        :${launch4j.dir}/lib/xstream.jar" />
@@ -37,10 +37,10 @@
 	<target name="clean">
 		<delete dir="${temp}/" />
 	</target>
-	
+
 	<target name="verifykeypass" unless="keypass.dir">
-		<property name="keypass.dir" value="../keys/shuffleKeyStore"/>
-		<echo message="Using keypass.dir=${keypass.dir}"/>
+		<property name="keypass.dir" value="../keys/shuffleKeyStore" />
+		<echo message="Using keypass.dir=${keypass.dir}" />
 	</target>
 
 	<target name="create_run_jar">
@@ -69,11 +69,11 @@
 		<signjar jar="${temp}/${name}.jar" alias="shufflemove" keystore="${keypass.dir}" storepass="password" />
 		<delete file="temp_l4j.xml" />
 		<copy file="launch4jconfig.xml" tofile="temp_l4j.xml" />
-		<echo message="l4j template is copied"/>
+		<echo message="l4j template is copied" />
 		<replaceregexp file="temp_l4j.xml" match="NAME" replace="${name}" flags="g" />
-		<echo message="l4j config is prepped"/>
+		<echo message="l4j config is prepped" />
 		<launch4j configFile="temp_l4j.xml" />
-		<echo message="l4j complete"/>
+		<echo message="l4j complete" />
 		<delete file="temp_l4j.xml" />
 	</target>
 
@@ -121,6 +121,19 @@
 
 	<target name="cleanuptmp">
 		<delete dir="${temp}" />
+	</target>
+
+	<property name="src.dir" value="../src" />
+	<property name="javadoc.dir" value="../javadoc" />
+
+	<target name="javadoc" description="Documentation generation">
+		<mkdir file="${javadoc.dir}" />
+		<javadoc access="public" destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="Shuffle Move">
+			<fileset dir="${src.dir}" defaultexcludes="yes">
+				<include name="**/*.java" />
+				<exclude name="test/**/*.java" />
+			</fileset>
+		</javadoc>
 	</target>
 
 </project>
