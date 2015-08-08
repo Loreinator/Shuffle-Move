@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir=".." default="build" name="Shuffle Move">
+	<property environment="env" />
+	<property name="ECLIPSE_HOME" value="../../Users/Andrew/Documents/eclipse/" />
+	<property name="junit.output.dir" value="junit" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.8" />
+	<property name="source" value="1.8" />
+	<path id="Shuffle Move.classpath">
+		<pathelement location="bin" />
+		<pathelement location="build/ant-launcher.jar" />
+		<pathelement location="build/ant.jar" />
+		<pathelement location="build/commons-io-2.4.jar" />
+		<pathelement location="build/commons-lang3-3.4.jar" />
+		<pathelement location="build/junit.jar" />
+		<pathelement location="build/org.hamcrest.core_1.3.0.v201303031735.jar" />
+	</path>
+	<target name="init">
+		<mkdir dir="bin" />
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="i18n">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="resources">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="bin" />
+	</target>
+	<target depends="clean,init,build" name="cleanAndBuild"/>
+	<target depends="init" name="build">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+			<src path="src" />
+			<src path="i18n" />
+			<src path="resources" />
+			<classpath refid="Shuffle Move.classpath" />
+		</javac>
+	</target>
+	<target name="ShuffleMove">
+		<java classname="shuffle.fwk.ShuffleController" failonerror="true" fork="yes">
+			<jvmarg line="-splash:resources/img/splash.png" />
+			<classpath refid="Shuffle Move.classpath" />
+		</java>
+	</target>
+	<target name="ShuffleTest">
+		<mkdir dir="${junit.output.dir}" />
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml" />
+			<test name="shuffle.fwk.ShuffleTest" todir="${junit.output.dir}" />
+			<classpath refid="Shuffle Move.classpath" />
+		</junit>
+	</target>
+	<target name="junitreport">
+		<junitreport todir="${junit.output.dir}">
+			<fileset dir="${junit.output.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.output.dir}" />
+		</junitreport>
+	</target>
+</project>
