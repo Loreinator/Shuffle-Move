@@ -5,7 +5,7 @@
 	<property name="libsubdir" value="libraries" />
 	<property name="libstarget.dir" value="${temp}/${libsubdir}" />
 
-	<target name="all" depends="verify, zipreleasefailed, clean, create_run_jar, copyfiles, ziprelease, cleanuptmp" />
+	<target name="all" depends="verify, verifykeypass, zipreleasefailed, clean, create_run_jar, copyfiles, ziprelease, cleanuptmp" />
 
 	<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
 	        :${launch4j.dir}/lib/xstream.jar" />
@@ -67,11 +67,11 @@
 			<zipfileset includes="META-INF/*.txt **/*.MF" src="org.hamcrest.core_1.3.0.v201303031735.jar" prefix="org.hamcrest.core_1.3.0" />
 		</jar>
 		<signjar jar="${temp}/${name}.jar" alias="shufflemove" keystore="${keypass.dir}" storepass="password" />
-		<!--<delete file="temp_l4j.xml" />
+		<delete file="temp_l4j.xml" />
 		<copy file="launch4jconfig.xml" tofile="temp_l4j.xml" />
 		<replaceregexp file="temp_l4j.xml" match="NAME" replace="${name}" flags="g" />
 		<launch4j configFile="temp_l4j.xml" />
-		<delete file="temp_l4j.xml" />-->
+		<delete file="temp_l4j.xml" />
 	</target>
 
 	<target name="copyfiles">
