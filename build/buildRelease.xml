@@ -62,11 +62,11 @@
 			<zipfileset includes="META-INF/*.txt **/*.MF" src="org.hamcrest.core_1.3.0.v201303031735.jar" prefix="org.hamcrest.core_1.3.0" />
 		</jar>
 		<signjar jar="${temp}/${name}.jar" alias="shufflemove" keystore="../keys/shuffleKeyStore" storepass="password" />
-		<delete file="temp_l4j.xml" />
+		<!--<delete file="temp_l4j.xml" />
 		<copy file="launch4jconfig.xml" tofile="temp_l4j.xml" />
 		<replaceregexp file="temp_l4j.xml" match="NAME" replace="${name}" flags="g" />
 		<launch4j configFile="temp_l4j.xml" />
-		<delete file="temp_l4j.xml" />
+		<delete file="temp_l4j.xml" />-->
 	</target>
 
 	<target name="copyfiles">
