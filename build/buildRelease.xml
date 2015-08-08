@@ -12,10 +12,26 @@
 
 	<target name="verify" unless="name">
 		<echo message="Please specify a name via -Dname='Shuffle Move vM.N.X' or some such value." />
+		<loadfile srcfile="../README.txt" property="name">
+			<filterchain>
+				<headfilter lines="1" />
+			</filterchain>
+		</loadfile>
+		<script language="javascript">
+			<![CDATA[
+	        var myproperty= project.getProperty("name");
+	        if (myproperty!= null) {
+	            project.setProperty("name", myproperty.trim())
+	        }
+	    ]]>
+		</script>
+		<echo message="Using name: '${name}'" />
 	</target>
 
 	<target name="zipreleasefailed" unless="dest">
 		<echo message="Please define dest for this task. In eclipse this is via arguments -Ddest='PATH'" />
+		<property name="dest" value=".." />
+		<echo message="Using dest: '${dest}" />
 	</target>
 
 	<target name="clean">
