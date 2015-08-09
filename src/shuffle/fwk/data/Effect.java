@@ -1863,6 +1863,65 @@ public enum Effect {
       
    },
    /**
+    * Erases diagonal Pokemon from upper left to lower right corner. Blocks 1,5,9 in the 1-9 blocks
+    * for each quadrant is the exact pattern. Same scoring as other megas that clear blocks.
+    */
+   GARCHOMP {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            // CENTER, Top Left, Bottom Right
+            effect.addPlannedOptions(Arrays.asList(1, 1));
+            effect.addPlannedOptions(Arrays.asList(2, 2, 1, 4, 4, 1));
+            effect.addPlannedOptions(Arrays.asList(3, 3, 2, 5, 5, 2));
+            effect.addPlannedOptions(Arrays.asList(4, 4, 3, 6, 6, 3));
+            effect.addPlannedOptions(Arrays.asList(5, 5));
+            effect.addPlannedOptions(Arrays.asList(6, 6));
+            return effect;
+         }
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return SABLEYE.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return SABLEYE.getEffectRepeatDelay();
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return SABLEYE.getValueLimit();
+      }
+      
+      @Override
+      public int getBonusScoreFor(double basicScore, int value, double typeModifier) {
+         return (int) (basicScore * value * 0.2 * typeModifier);
+      }
+      
+      @Override
+      public int getMegaThreshold() {
+         return 23;
+      }
+      
+      @Override
+      public int getMegaSpeedupCap() {
+         return 10;
+      }
+      
+   },
+   /**
     * Each 1 tick when this tries to begin its own clearing (its fully activated) this will erase
     * one additional mega gengar, from the top left in normal reading order. Score increases by 1/6
     * of base for each additional block.
