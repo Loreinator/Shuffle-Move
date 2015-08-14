@@ -107,7 +107,7 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
       setSelectedItem(toSelect);
    }
    
-   private String convertToBox(String s) {
+   public static String convertToBox(String s) {
       String cap = WordUtils.capitalizeFully(s);
       String temp = cap.replaceAll("_", " ");
       if (temp.endsWith(" p p")) {
@@ -119,7 +119,7 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
       }
    }
    
-   private String convertFromBox(String s) {
+   public static String convertFromBox(String s) {
       String ret = s.toUpperCase();
       String temp = ret.replaceAll(" ", "_");
       if (temp.endsWith("++")) {

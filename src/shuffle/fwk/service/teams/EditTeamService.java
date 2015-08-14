@@ -680,10 +680,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
          PkmType type = selectedSpecies.getType();
          String typeNice = WordUtils.capitalizeFully(type.toString());
          Effect effect = selectedSpecies.getEffect();
-         String effectNice = WordUtils.capitalizeFully(effect.toString(), '_').replaceAll("_", " ");
-         if (effectNice.endsWith(" P") && effectNice.length() > 2) {
-            effectNice = effectNice.substring(0, effectNice.length() - 2) + "+";
-         }
+         String effectNice = EffectChooser.convertToBox(effect.toString());
          textToUse = getString(KEY_SELECTED, name, attack, typeNice, effectNice);
       }
       selectedDisplayLabel.setText(textToUse);

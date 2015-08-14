@@ -492,15 +492,13 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       String textToUse = getString(KEY_NONE_SELECTED);
       if (selectedSpecies != null) {
          String name = selectedSpecies.getName().replaceAll("_", " ");
-         Integer thisLevel = myData.getLevelForSpecies(selectedSpecies);
+         RosterManager rosterManager = getUser().getRosterManager();
+         Integer thisLevel = rosterManager.getLevelForSpecies(selectedSpecies);
          int attack = selectedSpecies.getAttack(thisLevel);
          PkmType type = selectedSpecies.getType();
          String typeNice = WordUtils.capitalizeFully(type.toString());
          Effect effect = selectedSpecies.getEffect();
-         String effectNice = WordUtils.capitalizeFully(effect.toString(), '_').replaceAll("_", " ");
-         if (effectNice.endsWith(" P") && effectNice.length() > 2) {
-            effectNice = effectNice.substring(0, effectNice.length() - 2) + "+";
-         }
+         String effectNice = EffectChooser.convertToBox(effect.toString());
          textToUse = getString(KEY_SELECTED, name, attack, typeNice, effectNice);
       }
       selectedDisplayLabel.setText(textToUse);
