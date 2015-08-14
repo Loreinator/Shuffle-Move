@@ -68,7 +68,9 @@ public class StageManager extends ConfigManager {
          PkmType[] types = PkmType.values();
          typeStages = new ArrayList<Stage>(types.length);
          for (PkmType type : types) {
-            typeStages.add(new Stage(type));
+            if (!type.isSpecial()) {
+               typeStages.add(new Stage(type));
+            }
          }
       }
       return typeStages;
