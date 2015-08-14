@@ -58,8 +58,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private static final int SIM_TIMEOUT = 1000;
    private int simCounter = 0;
    
-   private static final double[] COMBO_MULTIPLIER = new double[] { 1.0, 1.1, 1.15, 1.2, 1.3, 1.4, 1.5, 2 };
-   private static final int[] COMBO_THRESHOLD = new int[] { 1, 2, 5, 10, 25, 50, 75, 100 };
+   private static final double[] COMBO_MULTIPLIER = new double[] { 1.0, 1.1, 1.15, 1.2, 1.3, 1.4, 1.5, 2, 2.5 };
+   private static final int[] COMBO_THRESHOLD = new int[] { 1, 2, 5, 10, 25, 50, 75, 100, 200 };
    
    private static final int COMBO_DELAY = 24;
    
@@ -873,13 +873,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    
    public Double getScoreFor(ActivateComboEffect comboEffect) {
       Species effectSpecies = getEffectSpecies(comboEffect.getCoords());
-      double comboMultiplier = 1.0;
       int combos = comboEffect.getNumCombosOnActivate();
-      for (int i = 0; i < COMBO_THRESHOLD.length && i < COMBO_MULTIPLIER.length; i++) {
-         if (COMBO_THRESHOLD[i] <= combos + 1) {
-            comboMultiplier = COMBO_MULTIPLIER[i];
-         }
-      }
+      double comboMultiplier = getComboMultiplier(combos);
       double basicScore = getBasicScoreFor(effectSpecies);
       double typeMod = getTypeModifier(effectSpecies);
       double numBlocksModifier = getNumBlocksMultiplier(comboEffect.getNumBlocks());
@@ -890,6 +885,33 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          logFinerWithId("Calculated score as %s for combo %s", finalScore, comboEffect);
       }
       return finalScore;
+   }
+   
+   /**
+    * Returns the chain multiplier, given the number of the combo for this match.<br>
+    * Chain modifiers:<br>
+    * 1: x1 <br>
+    * 2-4: x1.1<br>
+    * 5-9: x1.15<br>
+    * 10-24: x1.2<br>
+    * 25-49: x1.3<br>
+    * 50-74: x1.4<br>
+    * 75-99: x1.5<br>
+    * 100-199: x2<br>
+    * 200+: x2.5<br>
+    * 
+    * @param combos
+    *           The number of consecutive combos in a chain.
+    * @return 1 for any value of combos <= 1, otherwise see above reference.
+    */
+   public static double getComboMultiplier(int combos) {
+      double comboMultiplier = COMBO_MULTIPLIER[0];
+      int i = 0;
+      while (i + 1 < COMBO_THRESHOLD.length && COMBO_THRESHOLD[i + 1] <= combos) {
+         comboMultiplier = COMBO_MULTIPLIER[i + 1];
+         i++;
+      }
+      return comboMultiplier;
    }
    
    /**
@@ -912,18 +934,29 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       return typeMod;
    }
    
+   private static final double[] NUM_BLOCK_MULTIPLIER = new double[] { 0.3, 0.6, 1.0, 1.5, 2.0, 3.0 };
+
    /**
+    * Returns the number of blocks multiplier, given how many blocks were in the combo. 1 = 0.3, 2 =
+    * 0.6, 3 = 1.0; 4 = 1.5; 5 = 2.0; 6 = 3.0
+    * 
     * @param numBlocks
-    * @return
+    * @return A double, representing a modifier for the combo's base score
     */
    private double getNumBlocksMultiplier(int numBlocks) {
-      double result;
-      if (numBlocks == 6) {
-         result = 3.0;
-      } else {
-         result = (numBlocks - 1) / 2.0;
+      int n = numBlocks;
+      if (n < 1) {
+         if (logFiner) {
+            logFinerWithId("numBlocks was below 1", n);
+         }
+         n = 1;
+      } else if (n > 6) {
+         if (logFiner) {
+            logFinerWithId("numBlocks was above 6", n);
+         }
+         n = 6;
       }
-      return result;
+      return NUM_BLOCK_MULTIPLIER[n - 1];
    }
    
    public void addScore(int score) {

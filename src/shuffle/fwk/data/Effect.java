@@ -254,19 +254,19 @@ public enum Effect {
       }
    },
    /**
-    * Removes one non-Support Pok�mon icon without fail. that means any pokemon that you were
-    * forced to have by the stage.
+    * Removes one non-Support Pokemon icon without fail. that means any pokemon that you were forced
+    * to have by the stage.
     */
    EJECT(1, 1, 1) {
    },
    /**
-    * Removes 3 non-Support Pok�mon icon without fail. that means any pokemon that you were forced
+    * Removes 3 non-Support Pokemon icon without fail. that means any pokemon that you were forced
     * to have by the stage.
     */
    EJECT_P(0.5, 1, 1) {
    },
    /**
-    * Removes 5 non-Support Pok�mon icon without fail. that means any pokemon that you were forced
+    * Removes 5 non-Support Pokemon icon without fail. that means any pokemon that you were forced
     * to have by the stage.
     */
    EJECT_P_P(0.4, 1, 1) {
@@ -275,7 +275,14 @@ public enum Effect {
     * Damage may randomly be increased or decreased.
     */
    RISK_TAKER(0.5, 0.7, 1.0) {
-   
+      @Override
+      public double getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         double multiplier = super.getScoreMultiplier(comboEffect, task);
+         if (shouldActivate(comboEffect, task)) {
+            multiplier *= r.nextBoolean() ? 1.0 / 3.0 : 3.0;
+         }
+         return multiplier;
+      }
    },
    /**
     * Clears one unbreakable-block disruption without fail.
@@ -418,14 +425,48 @@ public enum Effect {
       }
    },
    /**
-    * Destroys one breakable-rock disruption without fail. (wood)
+    * Sometimes destroys five breakable-rock disruptions. (wood)
     */
    ROCK_BREAK_P_P(0.4, 1, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!shouldActivate(comboEffect, task)) {
+            return;
+         }
+         List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+         if (!matches.isEmpty()) {
+            List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 5);
+            List<Integer> toErase = new ArrayList<Integer>(randoms.size() * 2);
+            for (int i : randoms) {
+               toErase.add(matches.get(i * 2));
+               toErase.add(matches.get(i * 2 + 1));
+            }
+            eraseBonus(task, toErase, true);
+         }
+      }
    },
    /**
-    * Destroys one breakable-rock disruption without fail. (wood)
+    * Sometimes destroys three breakable-rock disruptions. (wood)
     */
    ROCK_BREAK_P(0.5, 1, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!shouldActivate(comboEffect, task)) {
+            return;
+         }
+         List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+         if (!matches.isEmpty()) {
+            List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 3);
+            List<Integer> toErase = new ArrayList<Integer>(randoms.size() * 2);
+            for (int i : randoms) {
+               toErase.add(matches.get(i * 2));
+               toErase.add(matches.get(i * 2 + 1));
+            }
+            eraseBonus(task, toErase, true);
+         }
+      }
    },
    /**
     * Destroys one breakable-rock disruption without fail. (wood)
@@ -643,8 +684,33 @@ public enum Effect {
       }
       
    },
+   /**
+    * Identical to Crowd Control, except this activates more often.
+    */
    CROWD_POWER(0.4, 1, 1) {
-   
+      
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public int getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
+         int ret = 0;
+         if (shouldActivate(comboEffect, task)) {
+            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            Board b = task.getState().getBoard();
+            ret = task.findMatches(
+                  36,
+                  true,
+                  (r, c, s) -> (s.equals(effectSpecies) && (!task.isActive(r, c) || b.isFrozenAt(r, c) || task
+                        .getClaimsFor(r, c).size() > 0))).size() / 2;
+         }
+         return ret;
+      }
+      
+      @Override
+      public int getBonusScoreFor(double basicScore, int value, double typeModifier) {
+         return value * 50;
+      }
    },
    /**
     * The more disruptions on the board, the greater the damage.
@@ -697,7 +763,8 @@ public enum Effect {
     * Combos do more damage if the opponent is Ghost type.
     */
    FEARLESS(0.1, 0.5, 1) {
-   // TODO no species with this effect yet.
+   // TODO Apparently, this causes attacks to be super effective. Is it actually this, or is it a
+   // flat multiplier?
    },
    /**
     * Does more damage against Flying, Bug, or Fairy types.
@@ -820,7 +887,7 @@ public enum Effect {
          if (!match.isEmpty()) {
             List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, 3);
             List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-            for (int i = 0; i < randoms.size(); i++) {
+            for (int i : randoms) {
                int row = match.get(i * 2);
                int col = match.get(i * 2 + 1);
                toClear.add(row);
@@ -834,7 +901,19 @@ public enum Effect {
     * Occasionally erases all of the foe's disruptions.
     */
    DISRUPT_BUSTER(0.02, 0.03, 0.04) {
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!shouldActivate(comboEffect, task)) {
+            return;
+         }
+         Board board = task.getState().getBoard();
+         List<Integer> match = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c)
+               || s.getEffect().isDisruption());
+         if (!match.isEmpty()) {
+            eraseBonus(task, match, false);
+         }
+      }
    },
    /**
     * Can delay your opponent's disruptions for a turn.
