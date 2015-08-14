@@ -37,6 +37,10 @@ This program is licensed under GNU General Public License Version 3. Please read
 ~~ Changelog ~~
 v0.3.16 - 2015-08-
 	- Updater will now tell you where the new *.zip is located.
+	- Simulation Accuracy improvements
+	- Effects with ++ in their name are properly displayed on the team and roster editor bottom label.
+	- Preferences default number of simulations per move is now 5 (up from 1) to better reflect randomness.
+	- None and Wood are no longer listed in the stages selector
 v0.3.15 - 2015-08-08
 	- Fixed a serious bug that was present whenever you had no mega slot selected.
 	- Improved the build task script.
