@@ -41,6 +41,7 @@ import shuffle.fwk.data.Species;
 import shuffle.fwk.data.simulation.effects.ActivateComboEffect;
 import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
 import shuffle.fwk.data.simulation.effects.ComboEffect;
+import shuffle.fwk.data.simulation.effects.DelayThawEffect;
 import shuffle.fwk.data.simulation.effects.EraseComboEffect;
 import shuffle.fwk.data.simulation.util.TriFunction;
 
@@ -62,6 +63,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private static final int[] COMBO_THRESHOLD = new int[] { 1, 2, 5, 10, 25, 50, 75, 100, 200 };
    
    private static final int COMBO_DELAY = 24;
+   private static final int THAW_DELAY = 1;
    
    private Integer lastGravityTime = null;
    private Integer nextBumpTime = 0;
@@ -697,7 +699,10 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             // interfere with other gravity effects and height measurements
             // This might not be needed, but it is good to maintain the state properly
             getState().setFallingPositionAt(row, col, 0);
-            
+         }
+         
+         if (!effect.shouldErase(row, col)) {
+            scheduleEffect(new DelayThawEffect(Arrays.asList(row, col)), THAW_DELAY);
          }
       }
    }
