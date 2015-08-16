@@ -906,4 +906,46 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    public boolean getFrozenState() {
       return getModel().arePaintsFrozen();
    }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.data.simulation.SimulationUser#getRemainingMoves()
+    */
+   @Override
+   public int getRemainingMoves() {
+      return getModel().getRemainingMoves();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.data.simulation.SimulationUser#getRemainingHealth()
+    */
+   @Override
+   public int getRemainingHealth() {
+      return getModel().getRemainingHealth();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setRemainingHealth(int)
+    */
+   @Override
+   public void setRemainingHealth(int health) {
+      if (getModel().setRemainingHealth(health)) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setRemainingMoves(int)
+    */
+   @Override
+   public void setRemainingMoves(int moves) {
+      if (getModel().setRemainingMoves(moves)) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
 }

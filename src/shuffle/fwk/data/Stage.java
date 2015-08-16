@@ -28,36 +28,41 @@ import java.util.Queue;
  */
 public class Stage {
    
+   public static final int DEFAULT_MOVES = 10;
+   public static final int DEFAULT_HEALTH = 10000;
+
    private final String stageName;
    private final String targetName;
    private final PkmType targetType;
+   private final int stageMoves;
+   private final int stageHealth;
    
+   private final String toString;
+
    public Stage(Stage stage) {
-      stageName = stage.stageName;
-      targetName = stage.targetName;
-      targetType = stage.targetType;
+      this(stage.stageName, stage.targetName, stage.targetType, stage.stageMoves, stage.stageHealth);
    }
-   
-   public Stage(String name, String target, PkmType type) {
+
+   public Stage(String name, String target, PkmType type, int moves, int health) {
       stageName = name;
       targetName = target;
       targetType = type;
-   }
-   
-   public Stage(String name, Species target, boolean isMega) {
-      stageName = name;
-      targetName = isMega && target.getMegaName() != null ? target.getMegaName() : target.getName();
-      targetType = target.getType();
-   }
-   
-   public Stage(String name, PkmType target) {
-      stageName = name;
-      targetName = target.toString(); // TODO make nice with WordUtils.capitalizeFully()
-      targetType = target;
+      stageMoves = moves;
+      stageHealth = health;
+      
+      StringBuilder sb = new StringBuilder();
+      if (targetType.toString().equals(targetName)) {
+         sb.append(targetName);
+      } else {
+         sb.append(stageName);
+         sb.append(": ");
+         sb.append(targetName);
+      }
+      toString = sb.toString();
    }
    
    public Stage(PkmType target) {
-      this(target.toString(), target);
+      this(target.toString(), target.toString(), target, DEFAULT_MOVES, DEFAULT_HEALTH);
    }
    
    // TODO implement stage-specific configuration for predictable stages.
@@ -77,17 +82,17 @@ public class Stage {
       return targetType;
    }
    
+   public int getMoves() {
+      return stageMoves;
+   }
+   
+   public int getHealth() {
+      return stageHealth;
+   }
+
    @Override
    public String toString() {
-      StringBuilder sb = new StringBuilder();
-      if (targetType.toString().equals(targetName)) {
-         sb.append(targetName);
-      } else {
-         sb.append(stageName);
-         sb.append(": ");
-         sb.append(targetName);
-      }
-      return sb.toString();
+      return toString;
    }
    
    @Override

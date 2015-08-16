@@ -36,7 +36,9 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ~~ Changelog ~~
 v0.3.17 - 2015-08-
-	- 
+	- Visual bug with paint pallet not showing the scroll bar or allowing scrolling has been fixed.
+	- Health and Moves remaining is now modeled for all main stages and select special stages. 
+	- Effects now simulated properly: Poisonous Mist, Downpour, Swarm, Steely Resolve, Vitality Drain, and Last Ditch Effort.
 v0.3.16 - 2015-08-14
 	- Updater will now tell you where the new *.zip is located.
 	- Simulation Accuracy improvements

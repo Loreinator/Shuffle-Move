@@ -18,41 +18,13 @@
 
 package shuffle.fwk.gui.user;
 
-import java.util.List;
-
-import shuffle.fwk.config.provider.PreferencesManagerProvider;
-import shuffle.fwk.data.Species;
-import shuffle.fwk.data.SpeciesPaint;
-import shuffle.fwk.data.Stage;
-import shuffle.fwk.data.Team;
-import shuffle.fwk.service.teams.EditTeamServiceUser;
-
 /**
  * @author Andrew Meyers
  *
  */
-public interface PaintsIndicatorUser extends IndicatorUser<Object>, PreferencesManagerProvider, EditTeamServiceUser,
-      StageStatsProvider {
+public interface StageStatsProvider {
    
-   SpeciesPaint getSelectedSpeciesPaint();
+   public int getRemainingHealth();
    
-   void setSelectedSpecies(Species species);
-   
-   List<SpeciesPaint> getCurrentPaints();
-   
-   void setTeamForStage(Team team, Stage stage);
-   
-   /**
-    * @param selected
-    */
-   void setPaintsFrozen(boolean selected);
-   
-   /**
-    * @return
-    */
-   boolean getFrozenState();
-   
-   void setRemainingHealth(int health);
-   
-   void setRemainingMoves(int moves);
+   public int getRemainingMoves();
 }

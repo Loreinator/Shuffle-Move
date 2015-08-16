@@ -39,4 +39,8 @@ public interface SimulationUser extends SimulationAcceptor, RosterManagerProvide
    
    public int getPreferredFeederHeight();
    
+   public int getRemainingMoves();
+   
+   public int getRemainingHealth();
+
 }

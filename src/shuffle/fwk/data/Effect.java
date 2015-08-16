@@ -38,7 +38,7 @@ public enum Effect {
     * Attacks sometimes deal greater damage than usual.
     */
    HYPER_PUNCH(0.1, 0.5, 0.5) {
-
+   
    },
    /**
     * Leaves the foe Paralyzed
@@ -56,13 +56,33 @@ public enum Effect {
     * Does mode damage when the opponent has more HP left.
     */
    POISONOUS_MIST(0.15, 0.25, 0.3) {
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!shouldActivate(comboEffect, task)) {
+            return;
+         }
+         int health = task.getState().getCore().getRemainingHealth();
+         if (health > 1) {
+            task.addScore((int) (0.1 * health));
+         }
+      }
    },
    /**
     * Does more damage when the opponent has more HP left.
     */
    DOWNPOUR(0.15, 0.25, 0.3) {
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!shouldActivate(comboEffect, task)) {
+            return;
+         }
+         int health = task.getState().getCore().getRemainingHealth();
+         if (health > 1) {
+            task.addScore((int) (0.1 * health));
+         }
+      }
    },
    /**
     * Attacks can occasionally deal greater damage than usual.
@@ -380,7 +400,15 @@ public enum Effect {
     * Increases damage done by your last three attacks in a stage by 50%.
     */
    SWARM(0.6, 1.0, 1.0) {
-   
+
+      @Override
+      public double getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         double ret = super.getScoreMultiplier(comboEffect, task);
+         if (task.getState().getCore().getRemainingMoves() <= 3 && shouldActivate(comboEffect, task)) {
+            ret *= 1.5;
+         }
+         return ret;
+      }
    },
    /**
     * Increases damage of Fairy-type moves in a Combo.
@@ -526,7 +554,15 @@ public enum Effect {
     * Attacks do more damage when things are looking desperate.
     */
    STEELY_RESOLVE(0.6, 1.0, 1.0) {
-   
+      
+      @Override
+      public double getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         double ret = super.getScoreMultiplier(comboEffect, task);
+         if (task.getState().getCore().getRemainingMoves() <= 3 && shouldActivate(comboEffect, task)) {
+            ret *= 1.5;
+         }
+         return ret;
+      }
    },
    /**
     * Removes one barrier-type disruption without fail.
@@ -603,7 +639,17 @@ public enum Effect {
     * Does more damage when the opponent has more HP left.
     */
    VITALITY_DRAIN(0.05, 0.1, 0.3) {
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!shouldActivate(comboEffect, task)) {
+            return;
+         }
+         int health = task.getState().getCore().getRemainingHealth();
+         if (health > 1) {
+            task.addScore((int) (0.1 * health));
+         }
+      }
    },
    /**
     * Increases damage done by any Dragon types in a combo.
@@ -639,7 +685,15 @@ public enum Effect {
     * Attacks do more damage when things are looking desperate.
     */
    LAST_DITCH_EFFORT(0.5, 1.0, 1.0) {
-   
+      
+      @Override
+      public double getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         double ret = super.getScoreMultiplier(comboEffect, task);
+         if (task.getState().getCore().getRemainingMoves() <= 3 && shouldActivate(comboEffect, task)) {
+            ret *= 1.5;
+         }
+         return ret;
+      }
    },
    /**
     * Sometimes increases damage and leaves opponent paralyzed.

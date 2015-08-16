@@ -71,6 +71,8 @@ public class SimulationCore extends RecursiveAction {
    private final int megaProgress;
    private final int megaThreshold;
    private final boolean megaAllowed;
+   private final int remainingHealth;
+   private final int remainingMoves;
    private final SimulationAcceptor acceptor;
    private final UUID processUUID;
    private long startTime;
@@ -90,6 +92,8 @@ public class SimulationCore extends RecursiveAction {
       RosterManager rosterManager = user.getRosterManager();
       SpeciesManager speciesManager = user.getSpeciesManager();
       megaThreshold = userTeam.getMegaThreshold(speciesManager, rosterManager);
+      remainingHealth = user.getRemainingHealth();
+      remainingMoves = user.getRemainingMoves();
       possibleBlocks = new HashSet<Species>();
       int numSpecies = userTeam.getNames().size();
       speciesMap = new HashMap<String, Species>(numSpecies);
@@ -141,6 +145,14 @@ public class SimulationCore extends RecursiveAction {
       return megaThreshold;
    }
    
+   public int getRemainingHealth() {
+      return remainingHealth;
+   }
+   
+   public int getRemainingMoves() {
+      return remainingMoves;
+   }
+
    @Override
    protected void compute() {
       startTime = System.currentTimeMillis();

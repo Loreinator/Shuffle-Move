@@ -38,12 +38,17 @@ import java.util.function.Function;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.manager.SpeciesManager;
@@ -69,6 +74,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private static final String KEY_COIN = "text.coin";
    private static final String KEY_MEGA = "text.mega";
    private static final String KEY_FROZEN = "text.frozen";
+   private static final String KEY_HEALTH = "text.health";
+   private static final String KEY_MOVES = "text.moves";
    
    // config keys
    private static final String KEY_PAINT_SELECT_COLOR = "PAINT_SELECT_COLOR";
@@ -90,11 +97,17 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private JCheckBox frozenBox;
    private JCheckBox woodBox;
    private JCheckBox metalBox;
+   private JLabel movesLabel;
+   private JComboBox<Integer> movesLeft;
+   private JLabel healthLabel;
+   private JSpinner healthLeft;
    
    private ItemListener megaActiveListener;
    private ItemListener megaProgressListener;
    private ItemListener specialSpeciesListener;
    private ItemListener frozenStateListener;
+   private ChangeListener healthListener;
+   private ItemListener movesListener;
    
    private List<SpeciesPaint> prevPaints = Collections.emptyList();
    private Team prevTeam = null;
@@ -135,6 +148,21 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       coinBox = new JCheckBox(getString(KEY_COIN));
       optionPanel.add(coinBox);
       
+      healthLabel = new JLabel(getString(KEY_HEALTH));
+      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 99999, 50);
+      healthLeft = new JSpinner(snm);
+      JPanel healthPanel = new JPanel(new BorderLayout());
+      healthPanel.add(healthLabel, BorderLayout.WEST);
+      healthPanel.add(healthLeft, BorderLayout.EAST);
+      optionPanel.add(healthPanel);
+      
+      movesLabel = new JLabel(getString(KEY_MOVES));
+      movesLeft = new JComboBox<Integer>();
+      JPanel movesPanel = new JPanel(new BorderLayout());
+      movesPanel.add(movesLabel, BorderLayout.WEST);
+      movesPanel.add(movesLeft, BorderLayout.EAST);
+      optionPanel.add(movesPanel);
+
       GridBagConstraints c = new GridBagConstraints();
       c.weightx = 0.0;
       c.weighty = 1.0;
@@ -161,9 +189,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          @Override
          public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
-            d = function.apply(d);
-            d.height -= optionPanel.getPreferredSize().height;
-            d.height -= jsp.getInsets().top + jsp.getInsets().bottom;
+            d.width = function.apply(new Dimension()).width;
             d.width -= jsp.getVerticalScrollBar().getWidth();
             d.width -= jsp.getInsets().right + jsp.getInsets().left;
             return d;
@@ -247,13 +273,30 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
             }
          };
       }
-      
+      if (healthListener == null) {
+         healthListener = new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+               getUser().setRemainingHealth((int) healthLeft.getModel().getValue());
+            }
+         };
+      }
+      if (movesListener == null) {
+         movesListener = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               getUser().setRemainingMoves(movesLeft.getItemAt(movesLeft.getSelectedIndex()));
+            }
+         };
+      }
       megaActive.addItemListener(megaActiveListener);
       megaProgress.addItemListener(megaProgressListener);
       woodBox.addItemListener(specialSpeciesListener);
       metalBox.addItemListener(specialSpeciesListener);
       coinBox.addItemListener(specialSpeciesListener);
       frozenBox.addItemListener(frozenStateListener);
+      healthLeft.addChangeListener(healthListener);
+      movesLeft.addItemListener(movesListener);
    }
    
    private char getNextBindingFor(String name, Team team) {
@@ -267,6 +310,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       metalBox.removeItemListener(specialSpeciesListener);
       coinBox.removeItemListener(specialSpeciesListener);
       frozenBox.removeItemListener(frozenStateListener);
+      healthLeft.removeChangeListener(healthListener);
+      movesLeft.removeItemListener(movesListener);
    }
    
    /**
@@ -346,6 +391,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       String woodText = getString(KEY_WOOD);
       String metalText = getString(KEY_METAL);
       String coinText = getString(KEY_COIN);
+      String healthText = getString(KEY_HEALTH);
+      String movesText = getString(KEY_MOVES);
       
       if (!megaText.equals(megaActive.getText())) {
          megaActive.setText(megaText);
@@ -361,6 +408,12 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       }
       if (!coinText.equals(coinBox.getText())) {
          coinBox.setText(coinText);
+      }
+      if (!healthText.equals(healthLabel.getText())) {
+         healthLabel.setText(healthText);
+      }
+      if (!movesText.equals(movesLabel.getText())) {
+         movesLabel.setText(movesText);
       }
       
       Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());
@@ -400,6 +453,13 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       
       frozenBox.setSelected(getUser().getFrozenState());
       
+      healthLeft.getModel().setValue(getUser().getRemainingHealth());
+      movesLeft.removeAllItems();
+      for (int i = getUser().getCurrentStage().getMoves(); i >= 1; i--) {
+         movesLeft.addItem(i);
+      }
+      movesLeft.setSelectedItem(getUser().getRemainingMoves());
+
       addOptionListeners();
    }
    
