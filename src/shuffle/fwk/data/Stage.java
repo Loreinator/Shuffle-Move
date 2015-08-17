@@ -28,7 +28,7 @@ import java.util.Queue;
  */
 public class Stage {
    
-   public static final int DEFAULT_MOVES = 10;
+   public static final int DEFAULT_MOVES = 20;
    public static final int DEFAULT_HEALTH = 10000;
 
    private final String stageName;
