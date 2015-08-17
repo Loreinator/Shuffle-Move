@@ -35,10 +35,13 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.17 - 2015-08-
+v0.3.17 - 2015-08-17
 	- Visual bug with paint pallet not showing the scroll bar or allowing scrolling has been fixed.
 	- Health and Moves remaining is now modeled for all main stages and select special stages. 
 	- Effects now simulated properly: Poisonous Mist, Downpour, Swarm, Steely Resolve, Vitality Drain, and Last Ditch Effort.
+	- Species updated for entries 2820-3030
+	- Stages added: 211-220, EX_25-EX_27, SP_303 (Darkrai)
+	- Stage updated: SP_003M (Mega Venusaur with move-based competition)
 v0.3.16 - 2015-08-14
 	- Updater will now tell you where the new *.zip is located.
 	- Simulation Accuracy improvements
