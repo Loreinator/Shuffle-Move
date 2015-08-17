@@ -57,6 +57,11 @@ public class StageManager extends ConfigManager {
       return changed;
    }
    
+   @Override
+   protected boolean shouldUpdate() {
+      return true;
+   }
+
    private void addDefaultStages() {
       for (Stage s : getDefaultStages()) {
          setEntry(EntryType.STAGE, s.getName(), s);

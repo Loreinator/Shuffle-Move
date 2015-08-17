@@ -99,7 +99,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    /** The Minor version number. Each increment is a new significant overhaul. */
    public static final int VERSION_MINOR = 3;
    /** The SubMinor version number. Each increment is a minor batch of tweaks and fixes. */
-   public static final int VERSION_SUBMINOR = 16;
+   public static final int VERSION_SUBMINOR = 17;
    /** The full version String which identifies the program's actual version. */
    public static final String VERSION_FULL = String.format("v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_SUBMINOR);
    
@@ -905,5 +905,47 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public boolean getFrozenState() {
       return getModel().arePaintsFrozen();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.data.simulation.SimulationUser#getRemainingMoves()
+    */
+   @Override
+   public int getRemainingMoves() {
+      return getModel().getRemainingMoves();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.data.simulation.SimulationUser#getRemainingHealth()
+    */
+   @Override
+   public int getRemainingHealth() {
+      return getModel().getRemainingHealth();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setRemainingHealth(int)
+    */
+   @Override
+   public void setRemainingHealth(int health) {
+      if (getModel().setRemainingHealth(health)) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setRemainingMoves(int)
+    */
+   @Override
+   public void setRemainingMoves(int moves) {
+      if (getModel().setRemainingMoves(moves)) {
+         getModel().setDataChanged();
+         repaint();
+      }
    }
 }

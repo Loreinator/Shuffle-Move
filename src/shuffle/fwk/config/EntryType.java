@@ -193,11 +193,21 @@ public enum EntryType {
          Matcher m = STAGE_PATTERN.matcher(value);
          String targetName = key;
          PkmType targetType = PkmType.getType(key);
+         int moves = Stage.DEFAULT_MOVES;
+         int health = Stage.DEFAULT_HEALTH;
          if (m.find()) {
             targetName = m.group(1);
             targetType = PkmType.getType(m.group(2));
+            if (m.group(3) != null) {
+               moves = Integer.parseInt(m.group(3));
+               if (m.group(4) != null) {
+                  health = Integer.parseInt(m.group(4));
+               }
+            }
          }
-         return new Stage(stageName, targetName, targetType);
+         System.out.printf("Recognized stage with data: %s,%s,%s,%s,%s%n", stageName, targetName,
+               targetType.toString(), Integer.toString(moves), Integer.toString(health));
+         return new Stage(stageName, targetName, targetType, moves, health);
       }
       
       @Override
@@ -207,11 +217,13 @@ public enum EntryType {
          String stageName = stage.getName();
          String targetName = stage.getTarget();
          String targetType = stage.getType().toString();
+         String stageMoves = Integer.toString(stage.getMoves());
+         String stageHealth = Integer.toString(stage.getHealth());
          if (stageName.equals(targetName) && stageName.equalsIgnoreCase(targetType)) {
             // All our data IS our key, so the data part is blank.
             return "";
          } else {
-            return String.format("%s %s", targetName, targetType);
+            return String.format("%s %s %s %s", targetName, targetType, stageMoves, stageHealth);
          }
       }
       
@@ -381,7 +393,8 @@ public enum EntryType {
    private static final Pattern SPECIES_PATTERN = Pattern
          .compile("^\\s*(-?\\d+)\\s+(\\d{1,3})\\s+(\\S+)\\s+(\\S+)(?:\\s+(\\S+)\\s+(\\S+))?\\s*$");
    // __________________numberId ______attack______type ____effect __(o) MegaName MegaEffect
-   private static final Pattern STAGE_PATTERN = Pattern.compile("^\\s*(\\S+)\\s+(\\S+)\\s*$");
+   private static final Pattern STAGE_PATTERN = Pattern
+         .compile("^\\s*(\\S+)\\s+(\\S+)(?:\\s+(\\d+))?(?:\\s+(\\d+))?\\s*$");
    private static final Pattern TEAM_PATTERN = Pattern
          .compile("^\\s*(\\S+)(?:\\s+((?:[^,\\s]?[,])*[^,\\s]?))?(?:\\s+([^\\s,]+)(?:\\s*[\\s,]\\s*([^\\s,]+))?)?\\s*$");
    // _______________ListofSpecies __________ListofKeybinds _______________MegaName _______,
