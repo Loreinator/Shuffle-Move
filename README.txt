@@ -1,4 +1,4 @@
-Shuffle Move v0.3.17
+Shuffle Move v0.3.18
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -35,6 +35,8 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.18 - 2015-08-
+	- 
 v0.3.17 - 2015-08-17
 	- Visual bug with paint pallet not showing the scroll bar or allowing scrolling has been fixed.
 	- Health and Moves remaining is now modeled for all main stages and select special stages. 
