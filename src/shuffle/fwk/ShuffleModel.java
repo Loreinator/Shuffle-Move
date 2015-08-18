@@ -814,7 +814,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       // identify the new state
       Board newBoard = selectedResult.getBoard();
       int newHealth = (int) (Math.max(prevHealth - selectedResult.getNetScore().getAverage(), 0));
-      int newMoves = Math.max(prevMoves - 1, 1);
+      int newMoves = selectedResult.getMove().isEmpty() ? prevMoves : Math.max(prevMoves - 1, 1);
       // if the state is different,
       boolean changed = getBoardManager().setBoard(newBoard) || newHealth != prevHealth || prevMoves != newMoves;
       if (changed) {
@@ -865,16 +865,16 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       int prevHealth = getRemainingHealth();
       int prevMoves = getRemainingMoves();
       // Pop the new state
-      UndoRedoItem undone = redoStack.pop();
-      Board newBoard = undone.getBoard();
-      int newHealth = undone.getHealth();
-      int newMoves = undone.getMoves();
+      UndoRedoItem redone = redoStack.pop();
+      Board newBoard = redone.getBoard();
+      int newHealth = redone.getHealth();
+      int newMoves = redone.getMoves();
       // if anything changes,
       boolean changed = getBoardManager().setBoard(newBoard) || newHealth != prevHealth || newMoves != prevMoves;
       if (changed) {
          // then continue on to update health and moves
-         setRemainingHealth(undone.getHealth());
-         setRemainingMoves(undone.getMoves());
+         setRemainingHealth(redone.getHealth());
+         setRemainingMoves(redone.getMoves());
          setDataChanged();
       }
       return changed;
