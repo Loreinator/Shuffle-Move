@@ -442,7 +442,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       ret.add(iconLabel, c);
       c.gridy += 1;
       String text = s.getName();
-      JLabel jLabel = new JLabel(text);
+      JLabel jLabel = new JLabel(text.replaceAll("_", " "));
       jLabel.setHorizontalTextPosition(SwingConstants.CENTER);
       jLabel.setHorizontalAlignment(SwingConstants.CENTER);
       jLabel.addMouseListener(ma);

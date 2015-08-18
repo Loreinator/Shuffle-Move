@@ -23,8 +23,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 
@@ -60,6 +62,33 @@ public class SpeciesManager extends ConfigManager {
    public boolean loadFromConfig() {
       boolean changed = super.loadFromConfig();
       changed |= setDefaultSpecies();
+      Map<Integer, List<Species>> dexToSpecies = new HashMap<Integer, List<Species>>();
+      for (Species s : getSpeciesValues()) {
+         if (dexToSpecies.containsKey(s.getNumber())) {
+            dexToSpecies.get(s.getNumber()).add(s);
+         } else {
+            dexToSpecies.put(s.getNumber(), new ArrayList<Species>(Arrays.asList(s)));
+         }
+      }
+      ImageManager im = getFactory().getImageManager();
+      for (Integer dex : dexToSpecies.keySet()) {
+         List<Species> list = dexToSpecies.get(dex);
+         if (list.size() > 1) {
+            Species keep = list.get(0);
+            for (int i = 1; i < list.size() && im.getImageFor(keep) == null; i++) {
+               keep = list.get(i);
+            }
+            if (im.getImageFor(keep) != null) {
+               final String keepName = keep.getName();
+               for (Species s : list) {
+                  String name = s.getName();
+                  if (!name.equals(keepName)) {
+                     removeEntry(EntryType.SPECIES, name);
+                  }
+               }
+            }
+         }
+      }
       return changed;
    };
    
