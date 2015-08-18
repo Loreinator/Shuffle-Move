@@ -205,8 +205,8 @@ public enum EntryType {
                }
             }
          }
-         System.out.printf("Recognized stage with data: %s,%s,%s,%s,%s%n", stageName, targetName,
-               targetType.toString(), Integer.toString(moves), Integer.toString(health));
+         // System.out.printf("Recognized stage with data: %s,%s,%s,%s,%s%n", stageName, targetName,
+         // targetType.toString(), Integer.toString(moves), Integer.toString(health));
          return new Stage(stageName, targetName, targetType, moves, health);
       }
       

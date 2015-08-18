@@ -82,7 +82,11 @@ public class StageManager extends ConfigManager {
    }
    
    public List<Stage> getAllStages() {
-      return Collections.unmodifiableList(getStageValues());
+      List<Stage> temp = new ArrayList<Stage>(getStageValues());
+      temp.sort((s1, s2) -> s1.compareTo(s2));
+      // Uncomment this next line and comment the two above to disable sorting
+      // List<Stage> temp = Collections.unmodifiableList(getStageValues());
+      return temp;
    }
    
    /**
