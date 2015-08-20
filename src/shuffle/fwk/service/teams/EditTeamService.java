@@ -746,7 +746,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       megaChooser.removeAllItems();
       megaChooser.addItem(getString(KEY_NONE));
       for (String name : names) {
-         Species species = speciesManager.getSpeciesValue(name);
+         Species species = speciesManager.getSpeciesByName(name);
          if (species.getMegaName() != null) {
             megaChooser.addItem(name);
          }
