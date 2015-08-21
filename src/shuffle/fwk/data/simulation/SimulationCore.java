@@ -76,6 +76,7 @@ public class SimulationCore extends RecursiveAction {
    private final SimulationAcceptor acceptor;
    private final UUID processUUID;
    private long startTime;
+   private final Collection<Effect> disabledEffects;
    
    // Gets all the data it needs from the user, as deep copies of all relevant information.
    public SimulationCore(SimulationUser user, UUID processUUID) {
@@ -106,8 +107,9 @@ public class SimulationCore extends RecursiveAction {
          }
       }
       acceptor = user;
+      disabledEffects = user.getDisabledEffects();
    }
-   
+
    public UUID getId() {
       return processUUID;
    }
@@ -151,6 +153,10 @@ public class SimulationCore extends RecursiveAction {
    
    public int getRemainingMoves() {
       return remainingMoves;
+   }
+   
+   public boolean isDisabledEffect(Effect e) {
+      return disabledEffects.contains(e);
    }
 
    @Override

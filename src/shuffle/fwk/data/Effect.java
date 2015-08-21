@@ -2873,6 +2873,7 @@ public enum Effect {
    }
    
    protected boolean shouldActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-      return comboEffect.getNumCombosOnActivate() == 0 && Math.random() <= getOdds(comboEffect.getNumBlocks());
+      return !task.getState().getCore().isDisabledEffect(this) && comboEffect.getNumCombosOnActivate() == 0
+            && Math.random() <= getOdds(comboEffect.getNumBlocks());
    }
 }

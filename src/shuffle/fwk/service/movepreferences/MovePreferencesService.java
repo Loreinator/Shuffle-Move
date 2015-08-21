@@ -22,7 +22,11 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -33,7 +37,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import shuffle.fwk.data.Effect;
+import shuffle.fwk.gui.EffectChooser;
 import shuffle.fwk.i18n.I18nUser;
 import shuffle.fwk.service.BaseService;
 import shuffle.fwk.service.DisposeAction;
@@ -46,6 +54,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    
    private static final Logger LOG = Logger.getLogger(MovePreferencesService.class.getName());
    
+
    private static final String KEY_AUTOCOMPUTE = "text.autocompute";
    private static final String KEY_NUMBER_FEEDERS = "text.numberfeeders";
    private static final String KEY_HEIGHT_FEEDERS = "text.heightfeeders";
@@ -58,6 +67,9 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private JSpinner numFeederSpinner;
    private JSpinner feederHeightSpinner;
    private JCheckBox autoComputeCheckBox;
+   private EffectChooser effectChooser;
+   private JCheckBox enableEffectBox;
+   private Collection<Effect> disabledEffects = new ArrayList<Effect>();
    
    /*
     * (non-Javadoc)
@@ -98,7 +110,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       d.add(numPanel, c);
       
       c.gridx = 1;
-      c.gridy = 2;
+      c.gridy++;
       c.gridwidth = maxWidth;
       JPanel heightPanel = new JPanel(new BorderLayout());
       heightPanel.add(new JLabel(getString(KEY_HEIGHT_FEEDERS)), BorderLayout.WEST);
@@ -106,12 +118,40 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       d.add(heightPanel, c);
       
       c.gridx = 1;
-      c.gridy = 3;
+      c.gridy++;
       c.gridwidth = maxWidth;
       d.add(autoComputeCheckBox, c);
       
       c.gridx = 1;
-      c.gridy = 4;
+      c.gridy++;
+      c.gridwidth = maxWidth;
+      JPanel effectTogglePanel = new JPanel(new BorderLayout());
+      effectChooser = new EffectChooser(false, EffectChooser.DefaultEntry.EMPTY);
+      enableEffectBox = new JCheckBox();
+      enableEffectBox.setSelected(true);
+      effectChooser.addItemListener(new ItemListener() {
+         @Override
+         public void itemStateChanged(ItemEvent e) {
+            enableEffectBox.setSelected(!disabledEffects.contains(effectChooser.getSelectedEffect()));
+         }
+      });
+      enableEffectBox.addChangeListener(new ChangeListener() {
+         @Override
+         public void stateChanged(ChangeEvent e) {
+            Effect effect = effectChooser.getSelectedEffect();
+            if (enableEffectBox.isSelected()) {
+               disabledEffects.removeIf(ef -> ef.equals(effect));
+            } else if (!effect.equals(Effect.NONE)) {
+               disabledEffects.add(effect);
+            }
+         }
+      });
+      effectTogglePanel.add(effectChooser, BorderLayout.WEST);
+      effectTogglePanel.add(enableEffectBox, BorderLayout.EAST);
+      d.add(effectTogglePanel, c);
+      
+      c.gridx = 1;
+      c.gridy++;
       c.gridwidth = 1;
       @SuppressWarnings("serial")
       JButton okButton = new JButton(new AbstractAction(getString(KEY_OK)) {
@@ -162,6 +202,8 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       boolean autoCompute = autoComputeCheckBox.isSelected();
       
       getUser().setFeederPreferences(numFeeders, feederHeight, autoCompute);
+      
+      getUser().setDisabledEffects(disabledEffects);
    }
    
    /*
@@ -173,6 +215,9 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       numFeederSpinner.setValue(user.getPreferredNumFeeders());
       feederHeightSpinner.setValue(user.getPreferredFeederHeight());
       autoComputeCheckBox.setSelected(user.isAutoCompute());
+      disabledEffects.clear();
+      disabledEffects.addAll(user.getDisabledEffects());
+      enableEffectBox.setSelected(!disabledEffects.contains(effectChooser.getSelectedEffect()));
    }
    
 }

@@ -302,7 +302,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       
       c.gridx += 1;
       c.weightx = 0.0;
-      effectFilter = new EffectChooser(false, true);
+      effectFilter = new EffectChooser(false, EffectChooser.DefaultEntry.NO_FILTER);
       ret.add(effectFilter, c);
       
       c.gridx += 1;

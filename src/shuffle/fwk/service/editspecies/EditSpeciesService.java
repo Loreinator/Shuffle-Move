@@ -306,7 +306,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       firstRow.add(effectLabel, c);
       
       c.gridx++;
-      effectChooser = new EffectChooser(false, false);
+      effectChooser = new EffectChooser(false, EffectChooser.DefaultEntry.NONE);
       firstRow.add(effectChooser, c);
       
       JPanel secondRow = new JPanel(new GridBagLayout());
@@ -371,7 +371,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       secondRow.add(megaEffectLabel, c);
       
       c.gridx++;
-      megaEffectChooser = new EffectChooser(true, false);
+      megaEffectChooser = new EffectChooser(true, EffectChooser.DefaultEntry.NONE);
       secondRow.add(megaEffectChooser, c);
       
       JPanel ret = new JPanel(new GridBagLayout());

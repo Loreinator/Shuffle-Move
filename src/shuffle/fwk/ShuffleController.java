@@ -45,6 +45,7 @@ import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.TeamManager;
+import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
@@ -948,4 +949,28 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          repaint();
       }
    }
+   
+   /*
+    * (non-Javadoc)
+    * @see
+    * shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#setDisabledEffects(java.util
+    * .Collection)
+    */
+   @Override
+   public void setDisabledEffects(Collection<Effect> disabledEffects) {
+      if (getModel().setDisabledEffects(disabledEffects)) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#getDisabledEffects()
+    */
+   @Override
+   public Collection<Effect> getDisabledEffects() {
+      return getModel().getDisabledEffects();
+   }
+
 }

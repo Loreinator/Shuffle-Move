@@ -42,16 +42,35 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
    
    private boolean shouldRebuild = false;
    private boolean megaEffects;
-   private final boolean includeNoFilter;
+   private final DefaultEntry defaultEntry;
    
+   public static enum DefaultEntry {
+      /**
+       * Indicates that the "no filter" entry should be used.
+       */
+      NO_FILTER,
+      /**
+       * Indicates that the "none" entry should be used.
+       */
+      NONE,
+      /**
+       * Indicates that NO entry should be used.
+       */
+      EMPTY;
+   };
+
+   public EffectChooser() {
+      this(false, DefaultEntry.EMPTY);
+   }
+
    public EffectChooser(boolean megas) {
-      this(megas, false);
+      this(megas, DefaultEntry.EMPTY);
    }
    
-   public EffectChooser(boolean megas, boolean includeNoFilter) {
+   public EffectChooser(boolean megas, DefaultEntry defaultEntry) {
       super();
       megaEffects = megas;
-      this.includeNoFilter = includeNoFilter;
+      this.defaultEntry = defaultEntry;
       setup();
    }
    
@@ -62,9 +81,9 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
     */
    private void setup() {
       refill();
-      if (includeNoFilter) {
+      if (defaultEntry.equals(DefaultEntry.NO_FILTER)) {
          setSelectedItem(getString(KEY_NO_FILTER));
-      } else if (getItemCount() > 0) {
+      } else if (getItemCount() > 0 && defaultEntry.equals(DefaultEntry.NONE)) {
          setSelectedItem(convertToBox(Effect.NONE.toString()));
       }
    }
@@ -74,7 +93,7 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
     */
    private void refill() {
       removeAllItems();
-      if (includeNoFilter) {
+      if (defaultEntry.equals(DefaultEntry.NO_FILTER)) {
          addItem(getString(KEY_NO_FILTER));
       }
       List<String> effects = new ArrayList<String>();

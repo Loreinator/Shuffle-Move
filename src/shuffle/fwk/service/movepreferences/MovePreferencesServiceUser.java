@@ -18,6 +18,10 @@
 
 package shuffle.fwk.service.movepreferences;
 
+import java.util.Collection;
+
+import shuffle.fwk.data.Effect;
+
 /**
  * @author Andrew Meyers
  *
@@ -32,4 +36,8 @@ public interface MovePreferencesServiceUser {
    
    void setFeederPreferences(int numFeeders, int feederHeight, boolean autoCompute);
    
+   void setDisabledEffects(Collection<Effect> disabledEffects);
+   
+   Collection<Effect> getDisabledEffects();
+
 }

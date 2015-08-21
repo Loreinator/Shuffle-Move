@@ -1194,4 +1194,40 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
          return moves;
       }
    }
+   
+   public static final String KEY_DISABLED_EFFECTS = "DISABLED_EFFECTS";
+   
+   /**
+    * @param disabledEffects
+    * @return
+    */
+   protected boolean setDisabledEffects(Collection<Effect> disabledEffects) {
+      boolean changed = false;
+      StringBuilder sb = new StringBuilder();
+      for (Effect e : disabledEffects) {
+         sb.append(" ");
+         sb.append(e.toString());
+      }
+      String saveString = sb.toString().trim();
+      ConfigManager preferencesManager = getPreferencesManager();
+      if (saveString.isEmpty()) {
+         changed |= preferencesManager.removeEntry(EntryType.STRING, KEY_DISABLED_EFFECTS);
+      } else {
+         changed |= preferencesManager.setEntry(EntryType.STRING, KEY_DISABLED_EFFECTS, saveString);
+      }
+      return changed;
+   }
+   
+   public Collection<Effect> getDisabledEffects() {
+      Collection<Effect> ret = new ArrayList<Effect>();
+      String disabledEffectsString = getPreferencesManager().getStringValue(KEY_DISABLED_EFFECTS, "").trim();
+      String[] tokens = disabledEffectsString.split("\\s");
+      for (String s : tokens) {
+         Effect e = Effect.getEffect(s);
+         if (!e.equals(Effect.NONE)) {
+            ret.add(e);
+         }
+      }
+      return ret;
+   }
 }
