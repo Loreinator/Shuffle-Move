@@ -879,7 +879,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    public Double getScoreFor(ActivateComboEffect comboEffect) {
       Species effectSpecies = getEffectSpecies(comboEffect.getCoords());
       int combos = comboEffect.getNumCombosOnActivate();
-      double comboMultiplier = getComboMultiplier(combos);
+      double comboMultiplier = getComboMultiplier(combos + 1);
       double basicScore = getBasicScoreFor(effectSpecies);
       double typeMod = getTypeModifier(effectSpecies);
       double numBlocksModifier = getNumBlocksMultiplier(comboEffect.getNumBlocks());
