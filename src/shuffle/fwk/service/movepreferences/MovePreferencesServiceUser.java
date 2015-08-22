@@ -34,10 +34,11 @@ public interface MovePreferencesServiceUser {
    
    int getPreferredFeederHeight();
    
-   void setFeederPreferences(int numFeeders, int feederHeight, boolean autoCompute);
-   
-   void setDisabledEffects(Collection<Effect> disabledEffects);
-   
    Collection<Effect> getDisabledEffects();
+
+   /**
+    * @param movePreferencesService
+    */
+   void applyMovePreferences(MovePreferencesService service);
 
 }

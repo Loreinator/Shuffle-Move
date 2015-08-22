@@ -27,6 +27,7 @@ import java.awt.event.ItemListener;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -54,7 +55,6 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    
    private static final Logger LOG = Logger.getLogger(MovePreferencesService.class.getName());
    
-
    private static final String KEY_AUTOCOMPUTE = "text.autocompute";
    private static final String KEY_NUMBER_FEEDERS = "text.numberfeeders";
    private static final String KEY_HEIGHT_FEEDERS = "text.heightfeeders";
@@ -184,26 +184,34 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       setDialog(d);
    }
    
-   private void onApply() {
+   public Collection<Effect> getDisabledEffects() {
+      return Collections.unmodifiableCollection(disabledEffects);
+   }
+   
+   public int getNumFeeders() {
       try {
          numFeederSpinner.commitEdit();
       } catch (ParseException e) {
          LOG.info(getString(KEY_BAD_NUM));
       }
-      int numFeeders = (Integer) numFeederSpinner.getValue();
-      
+      return (Integer) numFeederSpinner.getValue();
+   }
+   
+   public int getFeederHeight() {
       try {
          feederHeightSpinner.commitEdit();
       } catch (ParseException e) {
          LOG.info(getString(KEY_BAD_HEIGHT));
       }
-      int feederHeight = (Integer) feederHeightSpinner.getValue();
-      
-      boolean autoCompute = autoComputeCheckBox.isSelected();
-      
-      getUser().setFeederPreferences(numFeeders, feederHeight, autoCompute);
-      
-      getUser().setDisabledEffects(disabledEffects);
+      return (Integer) feederHeightSpinner.getValue();
+   }
+   
+   public boolean isAutoCompute() {
+      return autoComputeCheckBox.isSelected();
+   }
+
+   private void onApply() {
+      getUser().applyMovePreferences(this);
    }
    
    /*

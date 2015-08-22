@@ -77,6 +77,7 @@ public class SimulationCore extends RecursiveAction {
    private final UUID processUUID;
    private long startTime;
    private final Collection<Effect> disabledEffects;
+   private final boolean attackPowerUp;
    
    // Gets all the data it needs from the user, as deep copies of all relevant information.
    public SimulationCore(SimulationUser user, UUID processUUID) {
@@ -108,6 +109,7 @@ public class SimulationCore extends RecursiveAction {
       }
       acceptor = user;
       disabledEffects = user.getDisabledEffects();
+      attackPowerUp = user.getAttackPowerUp();
    }
 
    public UUID getId() {
@@ -391,5 +393,12 @@ public class SimulationCore extends RecursiveAction {
    
    public boolean isCurrent() {
       return acceptor.getAcceptedId().equals(processUUID);
+   }
+   
+   /**
+    * @return
+    */
+   public boolean isAttackPowerUp() {
+      return attackPowerUp;
    }
 }

@@ -113,6 +113,8 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private static final String KEY_LOCALE_STATE = "LAST_LOCALE";
    private static final String KEY_MOVES_REMAINING = "STAGE_MOVES_REMAINING";
    private static final String KEY_HEALTH_REMAINING = "STAGE_HEALTH_REMAINING";
+   private static final String KEY_DISABLED_EFFECTS = "DISABLED_EFFECTS";
+   private static final String KEY_ATTACK_POWER_UP = "ATTACK_POWER_UP_ENABLED";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -1195,8 +1197,6 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       }
    }
    
-   public static final String KEY_DISABLED_EFFECTS = "DISABLED_EFFECTS";
-   
    /**
     * @param disabledEffects
     * @return
@@ -1229,5 +1229,15 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
          }
       }
       return ret;
+   }
+   
+   protected boolean setAttackPowerUp(boolean enabled) {
+      boolean changed = enabled != getAttackPowerUp();
+      getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_ATTACK_POWER_UP, enabled);
+      return changed;
+   }
+   
+   public boolean getAttackPowerUp() {
+      return getPreferencesManager().getBooleanValue(KEY_ATTACK_POWER_UP, false);
    }
 }

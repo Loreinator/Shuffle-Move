@@ -55,4 +55,8 @@ public interface PaintsIndicatorUser extends IndicatorUser<Object>, PreferencesM
    void setRemainingHealth(int health);
    
    void setRemainingMoves(int moves);
+   
+   boolean getAttackPowerUp();
+   
+   void setAttackPowerUp(boolean enabled);
 }
