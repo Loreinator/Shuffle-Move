@@ -48,26 +48,9 @@ public class SimulationTaskTest {
    /**
     * Test method for {@link shuffle.fwk.data.simulation.SimulationTask#getComboMultiplier(int)}.
     */
-   /**
-    * Returns the chain multiplier, given the number of the combo for this match.<br>
-    * Chain modifiers:<br>
-    * 1: x1 <br>
-    * 2-4: x1.1<br>
-    * 5-9: x1.15<br>
-    * 10-24: x1.2<br>
-    * 25-49: x1.3<br>
-    * 50-74: x1.4<br>
-    * 75-99: x1.5<br>
-    * 100-199: x2<br>
-    * 200+: x2.5<br>
-    * 
-    * @param combos
-    *           The number of consecutive combos in a chain.
-    * @return 1 for any value of combos <= 1, otherwise see above reference.
-    */
    @Test
    public final void testGetComboMultiplier() {
-      assertEquals("Checking for chain of 9", 1.0, SimulationTask.getComboMultiplier(0), 0.1);
+      assertEquals("Checking for chain of 0", 1.0, SimulationTask.getComboMultiplier(0), 0.1);
       assertEquals("Checking for chain of 1", 1.0, SimulationTask.getComboMultiplier(1), 0.1);
       for (int i = 2; i <= 4; i++) {
          assertEquals(String.format("Checking for chain of %s", i), 1.1, SimulationTask.getComboMultiplier(i), 0.001);
