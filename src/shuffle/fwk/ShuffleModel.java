@@ -113,6 +113,8 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private static final String KEY_LOCALE_STATE = "LAST_LOCALE";
    private static final String KEY_MOVES_REMAINING = "STAGE_MOVES_REMAINING";
    private static final String KEY_HEALTH_REMAINING = "STAGE_HEALTH_REMAINING";
+   private static final String KEY_DISABLED_EFFECTS = "DISABLED_EFFECTS";
+   private static final String KEY_ATTACK_POWER_UP = "ATTACK_POWER_UP_ENABLED";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -814,7 +816,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       // identify the new state
       Board newBoard = selectedResult.getBoard();
       int newHealth = (int) (Math.max(prevHealth - selectedResult.getNetScore().getAverage(), 0));
-      int newMoves = Math.max(prevMoves - 1, 1);
+      int newMoves = selectedResult.getMove().isEmpty() ? prevMoves : Math.max(prevMoves - 1, 1);
       // if the state is different,
       boolean changed = getBoardManager().setBoard(newBoard) || newHealth != prevHealth || prevMoves != newMoves;
       if (changed) {
@@ -865,16 +867,16 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       int prevHealth = getRemainingHealth();
       int prevMoves = getRemainingMoves();
       // Pop the new state
-      UndoRedoItem undone = redoStack.pop();
-      Board newBoard = undone.getBoard();
-      int newHealth = undone.getHealth();
-      int newMoves = undone.getMoves();
+      UndoRedoItem redone = redoStack.pop();
+      Board newBoard = redone.getBoard();
+      int newHealth = redone.getHealth();
+      int newMoves = redone.getMoves();
       // if anything changes,
       boolean changed = getBoardManager().setBoard(newBoard) || newHealth != prevHealth || newMoves != prevMoves;
       if (changed) {
          // then continue on to update health and moves
-         setRemainingHealth(undone.getHealth());
-         setRemainingMoves(undone.getMoves());
+         setRemainingHealth(redone.getHealth());
+         setRemainingMoves(redone.getMoves());
          setDataChanged();
       }
       return changed;
@@ -1193,5 +1195,49 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       public int getMoves() {
          return moves;
       }
+   }
+   
+   /**
+    * @param disabledEffects
+    * @return
+    */
+   protected boolean setDisabledEffects(Collection<Effect> disabledEffects) {
+      boolean changed = false;
+      StringBuilder sb = new StringBuilder();
+      for (Effect e : disabledEffects) {
+         sb.append(" ");
+         sb.append(e.toString());
+      }
+      String saveString = sb.toString().trim();
+      ConfigManager preferencesManager = getPreferencesManager();
+      if (saveString.isEmpty()) {
+         changed |= preferencesManager.removeEntry(EntryType.STRING, KEY_DISABLED_EFFECTS);
+      } else {
+         changed |= preferencesManager.setEntry(EntryType.STRING, KEY_DISABLED_EFFECTS, saveString);
+      }
+      return changed;
+   }
+   
+   public Collection<Effect> getDisabledEffects() {
+      Collection<Effect> ret = new ArrayList<Effect>();
+      String disabledEffectsString = getPreferencesManager().getStringValue(KEY_DISABLED_EFFECTS, "").trim();
+      String[] tokens = disabledEffectsString.split("\\s");
+      for (String s : tokens) {
+         Effect e = Effect.getEffect(s);
+         if (!e.equals(Effect.NONE)) {
+            ret.add(e);
+         }
+      }
+      return ret;
+   }
+   
+   protected boolean setAttackPowerUp(boolean enabled) {
+      boolean changed = enabled != getAttackPowerUp();
+      getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_ATTACK_POWER_UP, enabled);
+      return changed;
+   }
+   
+   public boolean getAttackPowerUp() {
+      return getPreferencesManager().getBooleanValue(KEY_ATTACK_POWER_UP, false);
    }
 }

@@ -45,6 +45,7 @@ import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.TeamManager;
+import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
@@ -55,6 +56,7 @@ import shuffle.fwk.data.simulation.SimulationUser;
 import shuffle.fwk.gui.ShuffleFrame;
 import shuffle.fwk.gui.user.ShuffleFrameUser;
 import shuffle.fwk.i18n.I18nUser;
+import shuffle.fwk.service.movepreferences.MovePreferencesService;
 
 /**
  * @author Andrew Meyers
@@ -99,7 +101,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    /** The Minor version number. Each increment is a new significant overhaul. */
    public static final int VERSION_MINOR = 3;
    /** The SubMinor version number. Each increment is a minor batch of tweaks and fixes. */
-   public static final int VERSION_SUBMINOR = 18;
+   public static final int VERSION_SUBMINOR = 19;
    /** The full version String which identifies the program's actual version. */
    public static final String VERSION_FULL = String.format("v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_SUBMINOR);
    
@@ -603,19 +605,6 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return VERSION_FULL;
    }
    
-   /*
-    * (non-Javadoc)
-    * @see shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#setFeederPreferences(int,
-    * int)
-    */
-   @Override
-   public void setFeederPreferences(int numFeeders, int feederHeight, boolean autoCompute) {
-      if (getModel().setFeederPreferences(numFeeders, feederHeight, autoCompute)) {
-         getModel().setDataChanged();
-         repaint();
-      }
-   }
-   
    public void setMegaActive(boolean active) {
       if (getModel().setMegaActive(active)) {
          getModel().setDataChanged();
@@ -948,4 +937,58 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          repaint();
       }
    }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#getDisabledEffects()
+    */
+   @Override
+   public Collection<Effect> getDisabledEffects() {
+      return getModel().getDisabledEffects();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#getAttackPowerUp()
+    */
+   @Override
+   public boolean getAttackPowerUp() {
+      return getModel().getAttackPowerUp();
+   }
+
+   /*
+    * (non-Javadoc)
+    * @see
+    * shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#applyMovePreferences(shuffle
+    * .fwk.service.movepreferences.MovePreferencesService)
+    */
+   @Override
+   public void applyMovePreferences(MovePreferencesService service) {
+      int numFeeders = service.getNumFeeders();
+      int feederHeight = service.getFeederHeight();
+      boolean autoCompute = service.isAutoCompute();
+      Collection<Effect> disabledEffects = service.getDisabledEffects();
+      
+      boolean changed = false;
+      changed |= getModel().setFeederPreferences(numFeeders, feederHeight, autoCompute);
+      changed |= getModel().setDisabledEffects(disabledEffects);
+      
+      if (changed) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setAttackPowerUp(boolean)
+    */
+   @Override
+   public void setAttackPowerUp(boolean enabled) {
+      if (getModel().setAttackPowerUp(enabled)) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+   
 }

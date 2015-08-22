@@ -879,7 +879,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    public Double getScoreFor(ActivateComboEffect comboEffect) {
       Species effectSpecies = getEffectSpecies(comboEffect.getCoords());
       int combos = comboEffect.getNumCombosOnActivate();
-      double comboMultiplier = getComboMultiplier(combos);
+      double comboMultiplier = getComboMultiplier(combos + 1);
       double basicScore = getBasicScoreFor(effectSpecies);
       double typeMod = getTypeModifier(effectSpecies);
       double numBlocksModifier = getNumBlocksMultiplier(comboEffect.getNumBlocks());
@@ -889,7 +889,11 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       if (logFiner) {
          logFinerWithId("Calculated score as %s for combo %s", finalScore, comboEffect);
       }
-      return finalScore;
+      if (getState().getCore().isAttackPowerUp()) {
+         finalScore *= 2.0;
+      }
+      return finalScore + 0.000000001;
+      // This precision adjustment is over 1,000 times as large as it is needed for all known cases
    }
    
    /**

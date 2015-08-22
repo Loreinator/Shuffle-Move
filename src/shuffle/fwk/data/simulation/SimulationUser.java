@@ -19,28 +19,22 @@
 package shuffle.fwk.data.simulation;
 
 import shuffle.fwk.config.provider.BoardManagerProvider;
+import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
 import shuffle.fwk.config.provider.SpeciesManagerProvider;
 import shuffle.fwk.config.provider.TeamManagerProvider;
 import shuffle.fwk.data.simulation.util.SimulationAcceptor;
+import shuffle.fwk.gui.user.PaintsIndicatorUser;
+import shuffle.fwk.service.movepreferences.MovePreferencesServiceUser;
 
 /**
  * @author Andrew Meyers
  *
  */
 public interface SimulationUser extends SimulationAcceptor, RosterManagerProvider, SpeciesManagerProvider,
-      BoardManagerProvider, TeamManagerProvider {
-   
-   public int getMegaProgress();
+      BoardManagerProvider, TeamManagerProvider, PreferencesManagerProvider, MovePreferencesServiceUser,
+      PaintsIndicatorUser {
    
    public boolean isMegaAllowed();
-   
-   public int getPreferredNumFeeders();
-   
-   public int getPreferredFeederHeight();
-   
-   public int getRemainingMoves();
-   
-   public int getRemainingHealth();
 
 }

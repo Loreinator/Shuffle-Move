@@ -76,6 +76,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private static final String KEY_FROZEN = "text.frozen";
    private static final String KEY_HEALTH = "text.health";
    private static final String KEY_MOVES = "text.moves";
+   private static final String KEY_ATTACK_POWERUP = "text.attack.power.up";
    
    // config keys
    private static final String KEY_PAINT_SELECT_COLOR = "PAINT_SELECT_COLOR";
@@ -101,6 +102,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private JComboBox<Integer> movesLeft;
    private JLabel healthLabel;
    private JSpinner healthLeft;
+   private JCheckBox enableAttackPowerUpBox;
    
    private ItemListener megaActiveListener;
    private ItemListener megaProgressListener;
@@ -108,6 +110,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private ItemListener frozenStateListener;
    private ChangeListener healthListener;
    private ItemListener movesListener;
+   private ChangeListener attackPowerListener;
    
    private List<SpeciesPaint> prevPaints = Collections.emptyList();
    private Team prevTeam = null;
@@ -162,6 +165,10 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       movesPanel.add(movesLabel, BorderLayout.WEST);
       movesPanel.add(movesLeft, BorderLayout.EAST);
       optionPanel.add(movesPanel);
+      
+      enableAttackPowerUpBox = new JCheckBox(getString(KEY_ATTACK_POWERUP));
+      enableAttackPowerUpBox.setSelected(getUser().getAttackPowerUp());
+      optionPanel.add(enableAttackPowerUpBox);
 
       GridBagConstraints c = new GridBagConstraints();
       c.weightx = 0.0;
@@ -289,6 +296,14 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
             }
          };
       }
+      if (attackPowerListener == null) {
+         attackPowerListener = new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+               getUser().setAttackPowerUp(enableAttackPowerUpBox.isSelected());
+            }
+         };
+      }
       megaActive.addItemListener(megaActiveListener);
       megaProgress.addItemListener(megaProgressListener);
       woodBox.addItemListener(specialSpeciesListener);
@@ -297,6 +312,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       frozenBox.addItemListener(frozenStateListener);
       healthLeft.addChangeListener(healthListener);
       movesLeft.addItemListener(movesListener);
+      enableAttackPowerUpBox.addChangeListener(attackPowerListener);
    }
    
    private char getNextBindingFor(String name, Team team) {
@@ -312,6 +328,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       frozenBox.removeItemListener(frozenStateListener);
       healthLeft.removeChangeListener(healthListener);
       movesLeft.removeItemListener(movesListener);
+      enableAttackPowerUpBox.removeChangeListener(attackPowerListener);
    }
    
    /**
@@ -393,6 +410,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       String coinText = getString(KEY_COIN);
       String healthText = getString(KEY_HEALTH);
       String movesText = getString(KEY_MOVES);
+      String attackText = getString(KEY_ATTACK_POWERUP);
       
       if (!megaText.equals(megaActive.getText())) {
          megaActive.setText(megaText);
@@ -414,6 +432,9 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       }
       if (!movesText.equals(movesLabel.getText())) {
          movesLabel.setText(movesText);
+      }
+      if (!attackText.equals(enableAttackPowerUpBox.getText())) {
+         enableAttackPowerUpBox.setText(attackText);
       }
       
       Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());
@@ -455,10 +476,12 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       
       healthLeft.getModel().setValue(getUser().getRemainingHealth());
       movesLeft.removeAllItems();
-      for (int i = getUser().getCurrentStage().getMoves(); i >= 1; i--) {
+      for (int i = getUser().getCurrentStage().getMoves() + 5; i >= 1; i--) {
          movesLeft.addItem(i);
       }
       movesLeft.setSelectedItem(getUser().getRemainingMoves());
+      
+      enableAttackPowerUpBox.setSelected(getUser().getAttackPowerUp());
 
       addOptionListeners();
    }

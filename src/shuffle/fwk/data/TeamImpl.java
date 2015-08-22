@@ -224,6 +224,9 @@ public class TeamImpl implements Team {
       }
       Character oldKey = nameToKey.remove(s);
       keyToName.remove(oldKey);
+      if (s.equals(megaSlotName)) {
+         megaSlotName = null;
+      }
       return teamNames.remove(s);
    }
    

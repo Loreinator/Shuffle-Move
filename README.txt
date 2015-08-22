@@ -1,4 +1,4 @@
-Shuffle Move v0.3.18
+Shuffle Move v0.3.19
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -35,6 +35,16 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.19 - 2015-08-22
+	- Fix for settle taking a move away
+	- Team data checking and usage improved
+	- Finnish translations updated
+	- Effects can now be forced off via the Move Preferences window
+	- Off by one correction to combo multiplier query
+	- German translations updated
+	- Stage moves remaining can now be increased by up to 5 higher than the max for that stage
+	- Rounding error corrected for scores when using the 1.15 chain multiplier (core float adjustment)
+	- Attack Power Up can now be toggled on and off in the paint pallet. This effectively doubles the base power of all species in the simulation.
 v0.3.18 - 2015-08-17
 	- Bugfix for spellfixes not being adopted when upgrading
 	- Spellfixes for Vivillon and Terrakion

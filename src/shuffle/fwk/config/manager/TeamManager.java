@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import shuffle.fwk.config.ConfigEntry;
 import shuffle.fwk.config.ConfigFactory;
@@ -69,6 +70,29 @@ public class TeamManager extends ConfigManager {
    public TeamManager(ConfigManager manager) {
       super(manager);
    }
+   
+   @Override
+   public boolean loadFromConfig() {
+      boolean changed = super.loadFromConfig();
+      // Verify data sanity by checking every team is composed of registered species
+      SpeciesManager sm = getFactory().getSpeciesManager();
+      for (String key : getKeys(EntryType.TEAM)) {
+         Team team = getTeamValue(key);
+         if (team != null) {
+            List<String> names = team.getNames();
+            List<Species> species = team.getSpecies(sm);
+            if (names.size() != species.size()) {
+               List<String> goodNames = species.stream().map(s -> s.getName()).collect(Collectors.toList());
+               List<String> toRemove = new ArrayList<String>(names);
+               toRemove.removeAll(goodNames);
+               TeamImpl newTeam = new TeamImpl(team);
+               toRemove.stream().forEach(s -> newTeam.removeName(s));
+               setEntry(EntryType.TEAM, key, newTeam);
+            }
+         }
+      }
+      return changed;
+   };
    
    /**
     * Returns the team of species for the given stage. If there is no such team for the specified

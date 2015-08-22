@@ -254,7 +254,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       
       c.gridx += 1;
       c.weightx = 0.0;
-      effectFilter = new EffectChooser(false, true);
+      effectFilter = new EffectChooser(false, EffectChooser.DefaultEntry.NO_FILTER);
       ret.add(effectFilter, c);
       
       return ret;

@@ -302,7 +302,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       
       c.gridx += 1;
       c.weightx = 0.0;
-      effectFilter = new EffectChooser(false, true);
+      effectFilter = new EffectChooser(false, EffectChooser.DefaultEntry.NO_FILTER);
       ret.add(effectFilter, c);
       
       c.gridx += 1;
@@ -746,7 +746,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       megaChooser.removeAllItems();
       megaChooser.addItem(getString(KEY_NONE));
       for (String name : names) {
-         Species species = speciesManager.getSpeciesValue(name);
+         Species species = speciesManager.getSpeciesByName(name);
          if (species.getMegaName() != null) {
             megaChooser.addItem(name);
          }

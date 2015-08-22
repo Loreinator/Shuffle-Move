@@ -24,10 +24,11 @@ import org.junit.runners.Suite;
 import shuffle.test.fwk.data.BoardTest;
 import shuffle.test.fwk.data.PkmTypeTest;
 import shuffle.test.fwk.data.SpeciesTest;
+import shuffle.test.fwk.data.simulation.SimulationTaskTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ // Make sure this includes all test classes
-BoardTest.class, PkmTypeTest.class, SpeciesTest.class })
+BoardTest.class, PkmTypeTest.class, SpeciesTest.class, SimulationTaskTest.class })
 public class TestAll {
    
 }
