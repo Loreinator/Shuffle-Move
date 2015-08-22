@@ -455,7 +455,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       
       healthLeft.getModel().setValue(getUser().getRemainingHealth());
       movesLeft.removeAllItems();
-      for (int i = getUser().getCurrentStage().getMoves(); i >= 1; i--) {
+      for (int i = getUser().getCurrentStage().getMoves() + 5; i >= 1; i--) {
          movesLeft.addItem(i);
       }
       movesLeft.setSelectedItem(getUser().getRemainingMoves());
