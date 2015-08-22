@@ -889,7 +889,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       if (logFiner) {
          logFinerWithId("Calculated score as %s for combo %s", finalScore, comboEffect);
       }
-      return finalScore;
+      return finalScore + 0.000000001;
+      // This precision adjustment is over 1,000 times as large as it is needed for all known cases
    }
    
    /**
