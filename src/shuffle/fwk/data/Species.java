@@ -18,6 +18,9 @@
 
 package shuffle.fwk.data;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -30,10 +33,18 @@ import java.util.logging.Logger;
 public class Species implements Comparable<Species> {
    @SuppressWarnings("unused")
    private static final Logger LOG = Logger.getLogger(Species.class.getName());
+
    public static final Species AIR = new Species("Air", 0, 0, PkmType.NONE, Effect.AIR, null, Effect.NONE);
    public static final Species WOOD = new Species("Wood", 1, 0, PkmType.WOOD, Effect.WOOD, null, Effect.NONE);
    public static final Species METAL = new Species("Metal", 2, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
    public static final Species COIN = new Species("Coin", 3, 100, PkmType.NONE, Effect.COIN, null, Effect.NONE);
+   public static final Species METAL_4 = new Species("Metal_4", 4, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species METAL_3 = new Species("Metal_3", 5, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species METAL_2 = new Species("Metal_2", 6, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species METAL_1 = new Species("Metal_1", 7, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   
+   public static final List<Species> FIXED_SPECIES = Collections.unmodifiableList(Arrays.asList(AIR, WOOD, METAL, COIN,
+         METAL_4, METAL_3, METAL_2, METAL_1));
    
    private static final int[] LEVEL_BONUS = new int[] { 0, // level 0 has 0 bonus
          0, 3, 6, 8, 10, 12, 14, 16, 18, 20 };
@@ -168,5 +179,21 @@ public class Species implements Comparable<Species> {
    @Override
    public int compareTo(Species o) {
       return o == null ? 1 : Integer.compare(number, o.number);
+   }
+   
+   public static Species getNextMetal(Species cur) {
+      if (cur.equals(METAL)) {
+         return METAL_4;
+      } else if (cur.equals(METAL_4)) {
+         return METAL_3;
+      } else if (cur.equals(METAL_3)) {
+         return METAL_2;
+      } else if (cur.equals(METAL_2)) {
+         return METAL_1;
+      } else if (cur.equals(METAL_1)) {
+         return AIR;
+      } else {
+         return METAL;
+      }
    }
 }

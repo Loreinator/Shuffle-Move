@@ -192,9 +192,10 @@ public class SimulationCore extends RecursiveAction {
          return results;
       }
       long start = System.currentTimeMillis();
-      LOG.fine("Preparing moves & feeder");
+      LOG.fine("Preparing board, moves & feeder");
       // First, generate the valid moves and the feeders required.
       List<List<Integer>> validMoves = getPossibleMoves(board);
+      board.advanceMetalBlocks();
       Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(minHeight, stage, possibleBlocks,
             preferredCount);
       
