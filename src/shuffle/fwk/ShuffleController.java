@@ -992,4 +992,16 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       }
    }
    
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#fillGrid()
+    */
+   @Override
+   public void fillGrid() {
+      if (getModel().fillGrid()) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+   
 }

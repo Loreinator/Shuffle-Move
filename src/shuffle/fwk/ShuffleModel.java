@@ -1251,4 +1251,21 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    public boolean getAttackPowerUp() {
       return getPreferencesManager().getBooleanValue(KEY_ATTACK_POWER_UP, false);
    }
+   
+   /**
+    * @return
+    */
+   public boolean fillGrid() {
+      boolean changed = false;
+      SpeciesPaint paint = getCurrentSpeciesPaint();
+      Board curBoard = getBoard();
+      for (int row = 1; row <= Board.NUM_ROWS; row++) {
+         for (int col = 1; col <= Board.NUM_COLS; col++) {
+            if (curBoard.getSpeciesAt(row, col).equals(Species.AIR)) {
+               changed |= paintAt(row, col, paint);
+            }
+         }
+      }
+      return changed;
+   }
 }

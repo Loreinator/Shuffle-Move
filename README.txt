@@ -37,6 +37,8 @@ This program is licensed under GNU General Public License Version 3. Please read
 ~~ Changelog ~~
 v0.3.20 - 2015-08-
 	- Metal blocks are now fully simulated - they expire after 5 turns, and disappear after moves are chosen and before they are simulated.
+	- HP and Score visualization improvements
+	- You can now fill the board with your selected Paint by pressing Ctrl-F or clicking the item in the Board menu
 v0.3.19 - 2015-08-22
 	- Fix for settle taking a move away
 	- Team data checking and usage improved
