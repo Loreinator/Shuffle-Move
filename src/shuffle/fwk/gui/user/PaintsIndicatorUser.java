@@ -52,11 +52,12 @@ public interface PaintsIndicatorUser extends IndicatorUser<Object>, PreferencesM
     */
    boolean getFrozenState();
    
-   void setRemainingHealth(int health);
-   
    void setRemainingMoves(int moves);
+   
+   void setCurrentScore(int score);
    
    boolean getAttackPowerUp();
    
    void setAttackPowerUp(boolean enabled);
+   
 }

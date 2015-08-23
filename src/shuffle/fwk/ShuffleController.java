@@ -914,18 +914,19 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return getModel().getRemainingHealth();
    }
    
-   /*
-    * (non-Javadoc)
-    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setRemainingHealth(int)
-    */
    @Override
-   public void setRemainingHealth(int health) {
-      if (getModel().setRemainingHealth(health)) {
+   public void setCurrentScore(int score) {
+      if (getModel().setCurrentScore(score)) {
          getModel().setDataChanged();
          repaint();
       }
    }
    
+   @Override
+   public int getCurrentScore() {
+      return getModel().getCurrentScore();
+   }
+
    /*
     * (non-Javadoc)
     * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setRemainingMoves(int)

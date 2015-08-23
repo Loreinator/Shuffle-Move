@@ -112,7 +112,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private static final String KEY_LOAD_LOCALE = "LOAD_LOCALE_FROM_CONFIG";
    private static final String KEY_LOCALE_STATE = "LAST_LOCALE";
    private static final String KEY_MOVES_REMAINING = "STAGE_MOVES_REMAINING";
-   private static final String KEY_HEALTH_REMAINING = "STAGE_HEALTH_REMAINING";
+   private static final String KEY_CURRENT_SCORE = "STAGE_CURRENT_SCORE";
    private static final String KEY_DISABLED_EFFECTS = "DISABLED_EFFECTS";
    private static final String KEY_ATTACK_POWER_UP = "ATTACK_POWER_UP_ENABLED";
    // i18n keys
@@ -451,7 +451,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
          }
          setMegaProgress(newProgress);
          
-         setRemainingHealth(stage.getHealth());
+         setCurrentScore(0);
          setRemainingMoves(stage.getMoves());
          undoStack.clear();
          redoStack.clear();
@@ -815,20 +815,20 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       }
       // capture the current board, and remaining health and moves.
       Board prevBoard = getBoard();
-      int prevHealth = getRemainingHealth();
+      int prevScore = getCurrentScore();
       int prevMoves = getRemainingMoves();
       // identify the new state
       Board newBoard = selectedResult.getBoard();
-      int newHealth = (int) (Math.max(prevHealth - selectedResult.getNetScore().getAverage(), 0));
+      int newScore = (int) (Math.max(0, prevScore + selectedResult.getNetScore().getAverage()));
       int newMoves = selectedResult.getMove().isEmpty() ? prevMoves : Math.max(prevMoves - 1, 1);
       // if the state is different,
-      boolean changed = getBoardManager().setBoard(newBoard) || newHealth != prevHealth || prevMoves != newMoves;
+      boolean changed = getBoardManager().setBoard(newBoard) || newScore != prevScore || prevMoves != newMoves;
       if (changed) {
          // then push the current state to the undo stack
-         undoStack.push(new UndoRedoItem(prevBoard, prevHealth, prevMoves));
+         undoStack.push(new UndoRedoItem(prevBoard, prevScore, prevMoves));
          // clear the redo stack of any possible states
          redoStack.clear();
-         setRemainingHealth(newHealth);
+         setCurrentScore(newScore);
          setRemainingMoves(newMoves);
          setDataChanged();
       }
@@ -841,20 +841,20 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       }
       // push the current state on the redo stack
       redoStack.push(getCurrentState());
-      // capture the current moves and health remaining
-      int prevHealth = getRemainingHealth();
+      // capture the current moves and score
+      int prevScore = getCurrentScore();
       int prevMoves = getRemainingMoves();
       // Pop the new state
       UndoRedoItem undone = undoStack.pop();
       Board newBoard = undone.getBoard();
-      int newHealth = undone.getHealth();
+      int newScore = undone.getScore();
       int newMoves = undone.getMoves();
       // if anything changes,
-      boolean changed = getBoardManager().setBoard(newBoard) || newHealth != prevHealth || newMoves != prevMoves;
+      boolean changed = getBoardManager().setBoard(newBoard) || newScore != prevScore || newMoves != prevMoves;
       if (changed) {
          // then continue on to update health and moves
-         setRemainingHealth(undone.getHealth());
-         setRemainingMoves(undone.getMoves());
+         setCurrentScore(newScore);
+         setRemainingMoves(newMoves);
          setDataChanged();
       }
       return changed;
@@ -867,27 +867,27 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       // push the current state to the undo stack
       undoStack.push(getCurrentState());
       
-      // capture the current moves and health remaining
-      int prevHealth = getRemainingHealth();
+      // capture the current moves and score
+      int prevScore = getCurrentScore();
       int prevMoves = getRemainingMoves();
       // Pop the new state
       UndoRedoItem redone = redoStack.pop();
       Board newBoard = redone.getBoard();
-      int newHealth = redone.getHealth();
+      int newScore = redone.getScore();
       int newMoves = redone.getMoves();
       // if anything changes,
-      boolean changed = getBoardManager().setBoard(newBoard) || newHealth != prevHealth || newMoves != prevMoves;
+      boolean changed = getBoardManager().setBoard(newBoard) || newScore != prevScore || newMoves != prevMoves;
       if (changed) {
          // then continue on to update health and moves
-         setRemainingHealth(redone.getHealth());
-         setRemainingMoves(redone.getMoves());
+         setCurrentScore(newScore);
+         setRemainingMoves(newMoves);
          setDataChanged();
       }
       return changed;
    }
    
    private UndoRedoItem getCurrentState() {
-      return new UndoRedoItem(getBoard(), getRemainingHealth(), getRemainingMoves());
+      return new UndoRedoItem(getBoard(), getCurrentScore(), getRemainingMoves());
    }
 
    public UUID getAcceptedId() {
@@ -1156,35 +1156,42 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     * @return The amount of health remaining, as an integer.
     */
    public int getRemainingHealth() {
-      return getPreferencesManager().getIntegerValue(KEY_HEALTH_REMAINING, Stage.DEFAULT_HEALTH);
+      return Math.max(0, getCurrentStage().getHealth() - getCurrentScore());
+   }
+   
+   /**
+    * Gets the current score for the current stage.
+    * 
+    * @return The score total for the current stage.
+    */
+   public int getCurrentScore() {
+      return getPreferencesManager().getIntegerValue(KEY_CURRENT_SCORE, 0);
+   }
+   
+   /**
+    * Sets the current score, which is propagated to the remaining health.
+    *
+    */
+   protected boolean setCurrentScore(int score) {
+      return getPreferencesManager()
+            .setEntry(EntryType.INTEGER, KEY_CURRENT_SCORE, Math.min(Math.max(0, score), 99999));
    }
    
    /**
     * Sets the remaining moves for the current stage.
     */
    protected boolean setRemainingMoves(int moves) {
-      boolean changed = moves != getRemainingMoves();
-      getPreferencesManager().setEntry(EntryType.INTEGER, KEY_MOVES_REMAINING, moves);
-      return changed;
-   }
-   
-   /**
-    * Sets the remaining health for the current stage.
-    */
-   protected boolean setRemainingHealth(int health) {
-      boolean changed = health != getRemainingHealth();
-      getPreferencesManager().setEntry(EntryType.INTEGER, KEY_HEALTH_REMAINING, health);
-      return changed;
+      return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_MOVES_REMAINING, moves);
    }
    
    private class UndoRedoItem {
       private final Board board;
-      private final int health;
+      private final int score;
       private final int moves;
       
-      public UndoRedoItem(Board b, int hp, int movesLeft) {
+      public UndoRedoItem(Board b, int s, int movesLeft) {
          board = b;
-         health = hp;
+         score = s;
          moves = movesLeft;
       }
       
@@ -1192,8 +1199,8 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
          return board;
       }
       
-      public int getHealth() {
-         return health;
+      public int getScore() {
+         return score;
       }
       
       public int getMoves() {
