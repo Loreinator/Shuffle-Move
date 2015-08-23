@@ -713,6 +713,11 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return getModel().getCurrentSpeciesPaint();
    }
    
+   @Override
+   public Collection<Species> getCurrentSpecies() {
+      return getModel().getCurrentSpecies();
+   }
+
    /*
     * (non-Javadoc)
     * @see shuffle.fwk.EntryModeUser#getPreviousCursor()

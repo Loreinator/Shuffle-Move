@@ -681,9 +681,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     */
    public List<SpeciesPaint> getCurrentPaints() {
       List<SpeciesPaint> ret = new ArrayList<SpeciesPaint>();
-      SpeciesManager manager = getSpeciesManager();
-      List<Species> species = getCurrentTeam().getSpecies(manager);
-      for (Species s : species) {
+      for (Species s : getCurrentSpecies()) {
          boolean isFrozen = !s.getEffect().equals(Effect.AIR) && frozen;
          boolean isMega = isMegaActive(s.getName());
          ret.add(new SpeciesPaint(s, isFrozen, isMega));
@@ -691,6 +689,11 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       return ret;
    }
    
+   public Collection<Species> getCurrentSpecies() {
+      SpeciesManager manager = getSpeciesManager();
+      return getCurrentTeam().getSpecies(manager);
+   }
+
    public void setDataChanged() {
       recomputeResults(false);
    }

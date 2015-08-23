@@ -18,11 +18,15 @@
 
 package shuffle.fwk.service.roster;
 
+import java.util.Collection;
+import java.util.Observer;
+
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.provider.ImageManagerProvider;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
 import shuffle.fwk.config.provider.SpeciesManagerProvider;
+import shuffle.fwk.data.Species;
 
 /**
  * @author Andrew Meyers
@@ -32,4 +36,11 @@ public interface EditRosterServiceUser extends ImageManagerProvider, RosterManag
       PreferencesManagerProvider {
    
    void loadFromRosterManager(RosterManager manager);
+   
+   Collection<Species> getCurrentSpecies();
+   
+   void addObserver(Observer o);
+   
+   void deleteObserver(Observer o);
+
 }
