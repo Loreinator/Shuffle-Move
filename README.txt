@@ -35,6 +35,8 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.21 - 
+	- 
 v0.3.20 - 2015-08-23
 	- Metal blocks are now fully simulated - they expire after 5 turns, and disappear after moves are chosen and before they are simulated.
 	- HP and Score visualization improvements
