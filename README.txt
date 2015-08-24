@@ -1,4 +1,4 @@
-Shuffle Move v0.3.19
+Shuffle Move v0.3.20
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -35,6 +35,14 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.20 - 2015-08-23
+	- Metal blocks are now fully simulated - they expire after 5 turns, and disappear after moves are chosen and before they are simulated.
+	- HP and Score visualization improvements
+	- You can now fill the board with your selected Paint by pressing Ctrl-F or clicking the item in the Board menu
+	- The roster panel can now be filtered by team.
+	- Effects can now be told to only occur if they at least meet a threshold for likelihood (non-random check). 
+		- A threshold of 0 will allow all effects, and a threshold of 100 will only allow 'without fail' effects. 
+		- If the odds equal the threshold, the result is otherwise undefined.
 v0.3.19 - 2015-08-22
 	- Fix for settle taking a move away
 	- Team data checking and usage improved

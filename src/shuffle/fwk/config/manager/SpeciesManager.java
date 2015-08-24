@@ -95,13 +95,13 @@ public class SpeciesManager extends ConfigManager {
    @Override
    public boolean copyFromManager(ConfigManager manager) {
       boolean changed = super.copyFromManager(manager);
-      setDefaultSpecies();
+      changed |= setDefaultSpecies();
       return changed;
    }
    
    private boolean setDefaultSpecies() {
       boolean changed = false;
-      for (Species species : getFixedSpecies()) {
+      for (Species species : Species.FIXED_SPECIES) {
          changed |= setEntry(EntryType.SPECIES, species.getName(), species);
       }
       return changed;
@@ -114,27 +114,20 @@ public class SpeciesManager extends ConfigManager {
       }
       boolean isReserved = false;
       if (EntryType.SPECIES.equals(type)) {
-         for (Species species : getFixedSpecies()) {
-            isReserved |= species.getName().equals(key);
+         for (Species species : Species.FIXED_SPECIES) {
+            isReserved |= species.getName().equals(key) && !species.equals(entry.getValue());
          }
       }
       boolean changed = false;
       if (!isReserved) {
-         super.setEntry(type, key, entry, index);
+         changed |= super.setEntry(type, key, entry, index);
       }
       return changed;
    }
    
-   /**
-    * @return
-    */
-   public List<Species> getFixedSpecies() {
-      return Arrays.asList(Species.AIR, Species.WOOD, Species.METAL, Species.COIN);
-   }
-   
    public boolean setSpeciesByName(String name, Species s) {
       boolean changed = setEntry(EntryType.SPECIES, name, s);
-      setDefaultSpecies();
+      changed |= setDefaultSpecies();
       return changed;
    }
    

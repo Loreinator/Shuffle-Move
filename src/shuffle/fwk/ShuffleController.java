@@ -101,7 +101,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    /** The Minor version number. Each increment is a new significant overhaul. */
    public static final int VERSION_MINOR = 3;
    /** The SubMinor version number. Each increment is a minor batch of tweaks and fixes. */
-   public static final int VERSION_SUBMINOR = 19;
+   public static final int VERSION_SUBMINOR = 20;
    /** The full version String which identifies the program's actual version. */
    public static final String VERSION_FULL = String.format("v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_SUBMINOR);
    
@@ -713,6 +713,11 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return getModel().getCurrentSpeciesPaint();
    }
    
+   @Override
+   public Collection<Species> getCurrentSpecies() {
+      return getModel().getCurrentSpecies();
+   }
+
    /*
     * (non-Javadoc)
     * @see shuffle.fwk.EntryModeUser#getPreviousCursor()
@@ -914,18 +919,19 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return getModel().getRemainingHealth();
    }
    
-   /*
-    * (non-Javadoc)
-    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setRemainingHealth(int)
-    */
    @Override
-   public void setRemainingHealth(int health) {
-      if (getModel().setRemainingHealth(health)) {
+   public void setCurrentScore(int score) {
+      if (getModel().setCurrentScore(score)) {
          getModel().setDataChanged();
          repaint();
       }
    }
    
+   @Override
+   public int getCurrentScore() {
+      return getModel().getCurrentScore();
+   }
+
    /*
     * (non-Javadoc)
     * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setRemainingMoves(int)
@@ -955,6 +961,11 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    public boolean getAttackPowerUp() {
       return getModel().getAttackPowerUp();
    }
+   
+   @Override
+   public int getEffectThreshold() {
+      return getModel().getEffectThreshold();
+   }
 
    /*
     * (non-Javadoc)
@@ -968,10 +979,12 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       int feederHeight = service.getFeederHeight();
       boolean autoCompute = service.isAutoCompute();
       Collection<Effect> disabledEffects = service.getDisabledEffects();
+      int threshold = service.getThreshold();
       
       boolean changed = false;
       changed |= getModel().setFeederPreferences(numFeeders, feederHeight, autoCompute);
       changed |= getModel().setDisabledEffects(disabledEffects);
+      changed |= getModel().setEffectThreshold(threshold);
       
       if (changed) {
          getModel().setDataChanged();
@@ -986,6 +999,18 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public void setAttackPowerUp(boolean enabled) {
       if (getModel().setAttackPowerUp(enabled)) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#fillGrid()
+    */
+   @Override
+   public void fillGrid() {
+      if (getModel().fillGrid()) {
          getModel().setDataChanged();
          repaint();
       }

@@ -226,4 +226,17 @@ public class Board {
       return o instanceof Board && o != null && o.toString().equals(toString());
    }
    
+   public boolean advanceMetalBlocks() {
+      boolean changed = false;
+      for (int row = 1; row <= NUM_ROWS; row++) {
+         for (int col = 1; col <= NUM_COLS; col++) {
+            Species cur = getSpeciesAt(row, col);
+            if (cur.getEffect().equals(Effect.METAL)) {
+               changed |= setSpeciesAt(row, col, Species.getNextMetal(cur));
+            }
+         }
+      }
+      return changed;
+   }
+
 }

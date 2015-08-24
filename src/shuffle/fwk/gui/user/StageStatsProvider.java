@@ -24,7 +24,9 @@ package shuffle.fwk.gui.user;
  */
 public interface StageStatsProvider {
    
-   public int getRemainingHealth();
+   int getRemainingHealth();
    
-   public int getRemainingMoves();
+   int getRemainingMoves();
+   
+   int getCurrentScore();
 }

@@ -188,6 +188,11 @@ public class GridPanel extends JPanel {
                protected void onEnter() {
                   focusRequester.updateFocus();
                }
+               
+               @Override
+               protected boolean ignoreClick() {
+                  return true;
+               }
             });
          }
       }

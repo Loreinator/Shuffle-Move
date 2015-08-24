@@ -36,6 +36,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.function.Predicate;
 
 import javax.swing.BorderFactory;
@@ -80,7 +82,8 @@ import shuffle.fwk.service.DisposeAction;
  * @author Andrew Meyers
  *
  */
-public class EditRosterService extends BaseService<EditRosterServiceUser> implements I18nUser, MultiListenerUser {
+public class EditRosterService extends BaseService<EditRosterServiceUser> implements I18nUser, MultiListenerUser,
+      Observer {
    
    private static final String KEY_NONE_SELECTED = "text.noneselected";
    private static final String KEY_SELECTED = "text.selected";
@@ -93,6 +96,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private static final String KEY_TYPE = "text.type";
    private static final String KEY_MEGA_FILTER = "text.megafilter";
    private static final String KEY_SET_FOR_ALL = "button.setforall";
+   private static final String KEY_TEAM = "text.team";
    
    public static final String KEY_ROSTER_CELL_OUTLINE_THICK = "ROSTER_CELL_OUTLINE_THICK";
    public static final String KEY_ROSTER_CELL_BORDER_THICK = "ROSTER_CELL_BORDER_THICK";
@@ -115,11 +119,13 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private JDialog d = null;
    private JComboBox<Integer> speedups = null;
    private ItemListener speedupsListener = null;
+   private JCheckBox teamFilter = null;
    
    private RosterManager myData = null;
    
    private JPanel selectedComponent = null;
    private Species selectedSpecies = null;
+   private Collection<Species> teamSpecies = new ArrayList<Species>();
    
    /*
     * (non-Javadoc)
@@ -171,8 +177,8 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       d.setLocationRelativeTo(null);
       d.setResizable(true);
       addActionListeners();
-      
       setDialog(d);
+      getUser().addObserver(this);
    }
    
    @Override
@@ -194,6 +200,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       textField.getDocument().addDocumentListener(listener);
       levelSpinner.getModel().addChangeListener(listener);
       megaFilter.addItemListener(listener);
+      teamFilter.addItemListener(listener);
       effectFilter.addItemListener(listener);
    }
    
@@ -300,9 +307,18 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       c.gridx++;
       selectedDisplayLabel = new JLabel(getString(KEY_NONE_SELECTED));
       ret.add(selectedDisplayLabel, c);
+      c.insets = new Insets(0, 0, 0, 0);
       
       c.anchor = GridBagConstraints.LINE_END;
       c.weightx = 1.0;
+      c.gridx++;
+      teamFilter = new JCheckBox(getString(KEY_TEAM));
+      JPanel teamFilterPanel = new JPanel(new BorderLayout());
+      teamFilterPanel.add(teamFilter, BorderLayout.WEST);
+      ret.add(teamFilterPanel, c);
+      
+      c.anchor = GridBagConstraints.LINE_END;
+      c.weightx = 0.0;
       c.gridx++;
       JPanel speedupPanel = new JPanel(new BorderLayout());
       ImageIcon candyIcon = getUser().getImageManager().getImageFor(KEY_CANDY_ICON);
@@ -374,14 +390,21 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    @Override
    protected void updateGUIFrom(EditRosterServiceUser user) {
       myData = new RosterManager(user.getRosterManager());
+      updateTeamSpeciesFromUser(user);
       updateRosterEntryPanel();
    }
    
    @Override
    public void update() {
+      updateTeamSpeciesFromUser(getUser());
       updateRosterEntryPanel();
    }
    
+   private void updateTeamSpeciesFromUser(EditRosterServiceUser user) {
+      teamSpecies.clear();
+      teamSpecies.addAll(user.getCurrentSpecies());
+   }
+
    protected void updateRosterEntryPanel() {
       rosterEntryPanel.removeAll();
       
@@ -583,6 +606,10 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       return megaFilter.isSelected();
    }
    
+   private boolean getTeamFilter() {
+      return teamFilter.isSelected();
+   }
+
    private PkmType getType() {
       return typeChooser.getSelectedType();
    }
@@ -625,6 +652,9 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       if (getMegaFilter()) {
          filters.add(species -> species.getMegaName() != null && !species.getMegaName().isEmpty());
       }
+      if (getTeamFilter()) {
+         filters.add(species -> teamSpecies.contains(species));
+      }
       return filters;
    }
    
@@ -635,5 +665,14 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       List<Predicate<Species>> filters = new ArrayList<Predicate<Species>>();
       filters.add(species -> species.getEffect().canLevel());
       return filters;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+    */
+   @Override
+   public void update(Observable o, Object arg) {
+      update();
    }
 }

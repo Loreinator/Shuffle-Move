@@ -115,4 +115,9 @@ public interface ShuffleMenuUser extends EditRosterServiceUser, MovePreferencesS
     */
    void setLocaleTo(Locale loc);
    
+   /**
+    * Fills the grid with the currently selected species paint, for every empty tile.
+    */
+   void fillGrid();
+   
 }

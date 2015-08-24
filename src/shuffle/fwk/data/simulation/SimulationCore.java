@@ -78,6 +78,7 @@ public class SimulationCore extends RecursiveAction {
    private long startTime;
    private final Collection<Effect> disabledEffects;
    private final boolean attackPowerUp;
+   private final int effectThreshold;
    
    // Gets all the data it needs from the user, as deep copies of all relevant information.
    public SimulationCore(SimulationUser user, UUID processUUID) {
@@ -110,6 +111,7 @@ public class SimulationCore extends RecursiveAction {
       acceptor = user;
       disabledEffects = user.getDisabledEffects();
       attackPowerUp = user.getAttackPowerUp();
+      effectThreshold = user.getEffectThreshold();
    }
 
    public UUID getId() {
@@ -160,6 +162,10 @@ public class SimulationCore extends RecursiveAction {
    public boolean isDisabledEffect(Effect e) {
       return disabledEffects.contains(e);
    }
+   
+   public int getEffectThreshold() {
+      return effectThreshold;
+   }
 
    @Override
    protected void compute() {
@@ -192,9 +198,10 @@ public class SimulationCore extends RecursiveAction {
          return results;
       }
       long start = System.currentTimeMillis();
-      LOG.fine("Preparing moves & feeder");
+      LOG.fine("Preparing board, moves & feeder");
       // First, generate the valid moves and the feeders required.
       List<List<Integer>> validMoves = getPossibleMoves(board);
+      board.advanceMetalBlocks();
       Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(minHeight, stage, possibleBlocks,
             preferredCount);
       

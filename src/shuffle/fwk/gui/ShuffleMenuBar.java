@@ -77,6 +77,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_TOGGLE_MEGA = "menuitem.togglemega";
    private static final String KEY_GRID = "menuitem.grid";
    private static final String KEY_CLEAR = "menuitem.clear";
+   private static final String KEY_FILL = "menuitem.fill";
    private static final String KEY_LOAD_DEFAULT = "menuitem.loaddefault";
    private static final String KEY_CHANGE_MODE = "menuitem.changemode";
    private static final String KEY_MOVE = "menuitem.move";
@@ -236,6 +237,10 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       clearAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.CTRL_MASK));
       addMenuAction(menu, clearAction);
       
+      MenuAction fillAction = new MenuAction(() -> getString(KEY_FILL), e -> getUser().fillGrid());
+      fillAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+      addMenuAction(menu, fillAction);
+
       menu.addSeparator();
       
       MenuAction loadDefaultAction = new MenuAction(() -> getString(KEY_LOAD_DEFAULT), e -> getUser().loadDefaultGrid());

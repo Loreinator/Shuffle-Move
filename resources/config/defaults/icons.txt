@@ -774,5 +774,9 @@ RESOURCE Air img/icons/air.png
 RESOURCE Coin img/icons/coin.png
 RESOURCE FROZEN_MASK img/icons/frozen.png
 RESOURCE Metal img/icons/metalIc.png
+RESOURCE Metal_4 img/icons/metalIc_4.png
+RESOURCE Metal_3 img/icons/metalIc_3.png
+RESOURCE Metal_2 img/icons/metalIc_2.png
+RESOURCE Metal_1 img/icons/metalIc_1.png
 RESOURCE Wood img/icons/woodIc.png
 RESOURCE Candy img/icons/candy.png

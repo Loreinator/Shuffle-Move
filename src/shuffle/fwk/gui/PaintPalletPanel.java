@@ -75,6 +75,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private static final String KEY_MEGA = "text.mega";
    private static final String KEY_FROZEN = "text.frozen";
    private static final String KEY_HEALTH = "text.health";
+   private static final String KEY_SCORE = "text.score";
    private static final String KEY_MOVES = "text.moves";
    private static final String KEY_ATTACK_POWERUP = "text.attack.power.up";
    
@@ -100,15 +101,16 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private JCheckBox metalBox;
    private JLabel movesLabel;
    private JComboBox<Integer> movesLeft;
+   private JLabel scoreLabel;
+   private JSpinner scoreField;
    private JLabel healthLabel;
-   private JSpinner healthLeft;
    private JCheckBox enableAttackPowerUpBox;
    
    private ItemListener megaActiveListener;
    private ItemListener megaProgressListener;
    private ItemListener specialSpeciesListener;
    private ItemListener frozenStateListener;
-   private ChangeListener healthListener;
+   private ChangeListener scoreListener;
    private ItemListener movesListener;
    private ChangeListener attackPowerListener;
    
@@ -151,14 +153,17 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       coinBox = new JCheckBox(getString(KEY_COIN));
       optionPanel.add(coinBox);
       
-      healthLabel = new JLabel(getString(KEY_HEALTH));
+      scoreLabel = new JLabel(getString(KEY_SCORE));
       SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 99999, 50);
-      healthLeft = new JSpinner(snm);
-      JPanel healthPanel = new JPanel(new BorderLayout());
-      healthPanel.add(healthLabel, BorderLayout.WEST);
-      healthPanel.add(healthLeft, BorderLayout.EAST);
-      optionPanel.add(healthPanel);
+      scoreField = new JSpinner(snm);
+      JPanel scorePanel = new JPanel(new BorderLayout());
+      scorePanel.add(scoreLabel, BorderLayout.WEST);
+      scorePanel.add(scoreField, BorderLayout.EAST);
+      optionPanel.add(scorePanel);
       
+      healthLabel = new JLabel(getString(KEY_HEALTH, getUser().getRemainingHealth()));
+      optionPanel.add(healthLabel);
+
       movesLabel = new JLabel(getString(KEY_MOVES));
       movesLeft = new JComboBox<Integer>();
       JPanel movesPanel = new JPanel(new BorderLayout());
@@ -280,11 +285,11 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
             }
          };
       }
-      if (healthListener == null) {
-         healthListener = new ChangeListener() {
+      if (scoreListener == null) {
+         scoreListener = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-               getUser().setRemainingHealth((int) healthLeft.getModel().getValue());
+               getUser().setCurrentScore((int) scoreField.getModel().getValue());
             }
          };
       }
@@ -310,7 +315,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       metalBox.addItemListener(specialSpeciesListener);
       coinBox.addItemListener(specialSpeciesListener);
       frozenBox.addItemListener(frozenStateListener);
-      healthLeft.addChangeListener(healthListener);
+      scoreField.addChangeListener(scoreListener);
       movesLeft.addItemListener(movesListener);
       enableAttackPowerUpBox.addChangeListener(attackPowerListener);
    }
@@ -326,7 +331,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       metalBox.removeItemListener(specialSpeciesListener);
       coinBox.removeItemListener(specialSpeciesListener);
       frozenBox.removeItemListener(frozenStateListener);
-      healthLeft.removeChangeListener(healthListener);
+      scoreField.removeChangeListener(scoreListener);
       movesLeft.removeItemListener(movesListener);
       enableAttackPowerUpBox.removeChangeListener(attackPowerListener);
    }
@@ -408,7 +413,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       String woodText = getString(KEY_WOOD);
       String metalText = getString(KEY_METAL);
       String coinText = getString(KEY_COIN);
-      String healthText = getString(KEY_HEALTH);
+      String healthText = getString(KEY_HEALTH, getUser().getRemainingHealth());
+      String scoreText = getString(KEY_SCORE);
       String movesText = getString(KEY_MOVES);
       String attackText = getString(KEY_ATTACK_POWERUP);
       
@@ -429,6 +435,9 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       }
       if (!healthText.equals(healthLabel.getText())) {
          healthLabel.setText(healthText);
+      }
+      if (!scoreText.equals(scoreLabel.getText())) {
+         scoreLabel.setText(scoreText);
       }
       if (!movesText.equals(movesLabel.getText())) {
          movesLabel.setText(movesText);
@@ -474,7 +483,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       
       frozenBox.setSelected(getUser().getFrozenState());
       
-      healthLeft.getModel().setValue(getUser().getRemainingHealth());
+      scoreField.getModel().setValue(getUser().getCurrentScore());
       movesLeft.removeAllItems();
       for (int i = getUser().getCurrentStage().getMoves() + 5; i >= 1; i--) {
          movesLeft.addItem(i);

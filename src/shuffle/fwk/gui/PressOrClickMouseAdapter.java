@@ -39,11 +39,19 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
    
    protected abstract void onEnter();
    
+   protected boolean ignoreClick() {
+      return false;
+   }
+
    @Override
    public void mouseClicked(MouseEvent e) {
+      if (ignoreClick()) {
+         return;
+      }
       if (SwingUtilities.isRightMouseButton(e) | SwingUtilities.isLeftMouseButton(e) && e.isControlDown()) {
          onRight(e);
       } else if (SwingUtilities.isLeftMouseButton(e)) {
+         // System.out.println("Left click");
          onLeft(e);
       }
    }
@@ -55,6 +63,7 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
          if (b1Down(e) && e.isControlDown() || b3Down(e)) {
             onRight(e);
          } else if (b1Down(e)) {
+            // System.out.println("Left entered");
             onLeft(e);
          }
       }
@@ -62,6 +71,7 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
    
    @Override
    public void mouseReleased(MouseEvent e) {
+      // System.out.println("Mouse Released");
       inside = false; // This seems to be enough to stop spill over from menu clicks
    }
    
@@ -76,6 +86,7 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
    @Override
    public void mousePressed(MouseEvent e) {
       inside = true;
+      // System.out.println("Mouse Pressed");
       mouseEntered(e);
    }
 }
