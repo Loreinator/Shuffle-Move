@@ -392,7 +392,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       }
       boolean changed = false;
       Species cur = getBoardManager().getBoard().getSpeciesAt(row, col);
-      if (paint.getEffect().equals(Effect.METAL) && cur.getEffect().equals(Effect.METAL)) {
+      if (paint != null && paint.getEffect().equals(Effect.METAL) && cur.getEffect().equals(Effect.METAL)) {
          paint = Species.getNextMetal(cur);
       }
       changed |= getBoardManager().getBoard().setSpeciesAt(row, col, paint);
