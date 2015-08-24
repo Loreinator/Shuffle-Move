@@ -115,6 +115,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private static final String KEY_CURRENT_SCORE = "STAGE_CURRENT_SCORE";
    private static final String KEY_DISABLED_EFFECTS = "DISABLED_EFFECTS";
    private static final String KEY_ATTACK_POWER_UP = "ATTACK_POWER_UP_ENABLED";
+   private static final String KEY_EFFECT_THRESHOLD = "EFFECT_THRESHOLD";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -1255,6 +1256,10 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       return getPreferencesManager().getBooleanValue(KEY_ATTACK_POWER_UP, false);
    }
    
+   public int getEffectThreshold() {
+      return getPreferencesManager().getIntegerValue(KEY_EFFECT_THRESHOLD, 0);
+   }
+   
    /**
     * @return
     */
@@ -1270,5 +1275,13 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
          }
       }
       return changed;
+   }
+   
+   /**
+    * @param threshold
+    * @return
+    */
+   public boolean setEffectThreshold(int threshold) {
+      return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_EFFECT_THRESHOLD, threshold);
    }
 }

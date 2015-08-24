@@ -63,6 +63,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private static final String KEY_CANCEL = "button.cancel";
    private static final String KEY_BAD_NUM = "error.numberfeeders";
    private static final String KEY_BAD_HEIGHT = "error.heightfeeders";
+   private static final String KEY_THRESHOLD = "text.threshold";
    
    private JSpinner numFeederSpinner;
    private JSpinner feederHeightSpinner;
@@ -70,6 +71,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private EffectChooser effectChooser;
    private JCheckBox enableEffectBox;
    private Collection<Effect> disabledEffects = new ArrayList<Effect>();
+   private JSpinner thresholdSpinner;
    
    /*
     * (non-Javadoc)
@@ -90,6 +92,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       numFeederSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 5000, 1));
       feederHeightSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 36, 1));
       autoComputeCheckBox = new JCheckBox(getString(KEY_AUTOCOMPUTE));
+      thresholdSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 5));
       
       d.setLayout(new GridBagLayout());
       
@@ -152,6 +155,15 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       
       c.gridx = 1;
       c.gridy++;
+      c.gridwidth = maxWidth;
+      JPanel thresholdPanel = new JPanel(new BorderLayout());
+      thresholdPanel.add(new JLabel(getString(KEY_THRESHOLD)), BorderLayout.WEST);
+      thresholdPanel.add(thresholdSpinner, BorderLayout.CENTER);
+      thresholdPanel.add(new JLabel("%"), BorderLayout.EAST);
+      d.add(thresholdPanel, c);
+      
+      c.gridx = 1;
+      c.gridy++;
       c.gridwidth = 1;
       @SuppressWarnings("serial")
       JButton okButton = new JButton(new AbstractAction(getString(KEY_OK)) {
@@ -209,6 +221,10 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    public boolean isAutoCompute() {
       return autoComputeCheckBox.isSelected();
    }
+   
+   public int getThreshold() {
+      return Math.max(0, Math.min(100, (int) thresholdSpinner.getValue()));
+   }
 
    private void onApply() {
       getUser().applyMovePreferences(this);
@@ -226,6 +242,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       disabledEffects.clear();
       disabledEffects.addAll(user.getDisabledEffects());
       enableEffectBox.setSelected(!disabledEffects.contains(effectChooser.getSelectedEffect()));
+      thresholdSpinner.setValue(user.getEffectThreshold());
    }
    
 }

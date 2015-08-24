@@ -961,6 +961,11 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    public boolean getAttackPowerUp() {
       return getModel().getAttackPowerUp();
    }
+   
+   @Override
+   public int getEffectThreshold() {
+      return getModel().getEffectThreshold();
+   }
 
    /*
     * (non-Javadoc)
@@ -974,10 +979,12 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       int feederHeight = service.getFeederHeight();
       boolean autoCompute = service.isAutoCompute();
       Collection<Effect> disabledEffects = service.getDisabledEffects();
+      int threshold = service.getThreshold();
       
       boolean changed = false;
       changed |= getModel().setFeederPreferences(numFeeders, feederHeight, autoCompute);
       changed |= getModel().setDisabledEffects(disabledEffects);
+      changed |= getModel().setEffectThreshold(threshold);
       
       if (changed) {
          getModel().setDataChanged();

@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import shuffle.fwk.data.simulation.SimulationCore;
 import shuffle.fwk.data.simulation.SimulationTask;
 import shuffle.fwk.data.simulation.effects.ActivateComboEffect;
 import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
@@ -2873,7 +2874,11 @@ public enum Effect {
    }
    
    protected boolean shouldActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-      return !task.getState().getCore().isDisabledEffect(this) && comboEffect.getNumCombosOnActivate() == 0
+      SimulationCore core = task.getState().getCore();
+      boolean coreAllowsIt = !core.isDisabledEffect(this);
+      double adjustedThreshold = core.getEffectThreshold() / 100.0;
+      coreAllowsIt &= getOdds(comboEffect.getNumBlocks()) >= adjustedThreshold;
+      return coreAllowsIt && comboEffect.getNumCombosOnActivate() == 0
             && Math.random() <= getOdds(comboEffect.getNumBlocks());
    }
 }

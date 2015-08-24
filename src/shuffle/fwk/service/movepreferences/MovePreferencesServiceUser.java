@@ -41,4 +41,9 @@ public interface MovePreferencesServiceUser {
     */
    void applyMovePreferences(MovePreferencesService service);
 
+   /**
+    * @return
+    */
+   int getEffectThreshold();
+
 }
