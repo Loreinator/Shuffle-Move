@@ -2876,8 +2876,11 @@ public enum Effect {
    protected boolean shouldActivate(ActivateComboEffect comboEffect, SimulationTask task) {
       SimulationCore core = task.getState().getCore();
       boolean coreAllowsIt = !core.isDisabledEffect(this);
-      double adjustedThreshold = core.getEffectThreshold() / 100.0;
-      coreAllowsIt &= getOdds(comboEffect.getNumBlocks()) >= adjustedThreshold;
+      int threshold = core.getEffectThreshold();
+      if (threshold > 0) {
+         double adjustedThreshold = threshold / 100.0;
+         coreAllowsIt &= getOdds(comboEffect.getNumBlocks()) >= adjustedThreshold;
+      }
       return coreAllowsIt && comboEffect.getNumCombosOnActivate() == 0
             && Math.random() <= getOdds(comboEffect.getNumBlocks());
    }

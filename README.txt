@@ -40,6 +40,9 @@ v0.3.20 - 2015-08-
 	- HP and Score visualization improvements
 	- You can now fill the board with your selected Paint by pressing Ctrl-F or clicking the item in the Board menu
 	- The roster panel can now be filtered by team.
+	- Effects can now be told to only occur if they at least meet a threshold for likelihood (non-random check). 
+	- A threshold of 0 will allow all effects, and a threshold of 100 will only allow 'without fail' effects. 
+	- If the odds equal the threshold, the result is otherwise undefined.
 v0.3.19 - 2015-08-22
 	- Fix for settle taking a move away
 	- Team data checking and usage improved
