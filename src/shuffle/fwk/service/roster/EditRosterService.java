@@ -380,6 +380,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    
    @Override
    protected void onDispose() {
+      getUser().deleteObserver(this);
       onHide();
    }
    
