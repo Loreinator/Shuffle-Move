@@ -96,7 +96,7 @@ public class SimulationCore extends RecursiveAction {
       SpeciesManager speciesManager = user.getSpeciesManager();
       megaThreshold = userTeam.getMegaThreshold(speciesManager, rosterManager);
       remainingHealth = user.getRemainingHealth();
-      remainingMoves = user.getRemainingMoves();
+      remainingMoves = user.getRemainingMoves() - 1;
       possibleBlocks = new HashSet<Species>();
       int numSpecies = userTeam.getNames().size();
       speciesMap = new HashMap<String, Species>(numSpecies);
