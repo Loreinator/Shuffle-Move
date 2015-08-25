@@ -94,7 +94,7 @@ public class SavePromptService extends BaseService<SavePromptServiceUser> implem
       c.weightx = 1.0;
       c.gridx = 1;
       c.gridwidth = 3;
-      JLabel label = new JLabel(KEY_SAVE_MESSAGE);
+      JLabel label = new JLabel(getString(KEY_SAVE_MESSAGE));
       label.setHorizontalAlignment(JLabel.CENTER);
       d.add(label, c);
       
