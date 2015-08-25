@@ -36,7 +36,10 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ~~ Changelog ~~
 v0.3.22 - 2015-08-
-	- 
+	- Bug fixes: Focus issue, last 3 abilities proc when there is 3 turns left, not from the 3rd turn.
+	- Abilities corrected: Sky Blast, Double Normal
+	- Save prompt now included if your data changes in any way, before you close.
+	- Translations updated
 v0.3.21 - 2015-08-23
 	- Bug fixes
 v0.3.20 - 2015-08-23
