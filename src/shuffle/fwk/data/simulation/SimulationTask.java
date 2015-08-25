@@ -180,7 +180,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
       
       // Create the state
-      state = new SimulationState(simulationCore, feeder, startBoard, 1.0f, 0, 0, originality);
+      state = new SimulationState(simulationCore, feeder, startBoard, 1.0f, 0, 0, originality, 0);
       if (logFiner) {
          logFinerWithId("state made");
       }

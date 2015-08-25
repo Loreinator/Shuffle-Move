@@ -41,6 +41,8 @@ public class SimulationState {
    private int numCombos = 0;
    private int gold;
    
+   private int lastChainPause = 0;
+
    private boolean[][] falling = new boolean[Board.NUM_ROWS][Board.NUM_COLS];
    private int[][] fallPosition = new int[Board.NUM_ROWS][Board.NUM_COLS];
    private boolean[][] original = new boolean[Board.NUM_ROWS][Board.NUM_COLS];
@@ -67,13 +69,14 @@ public class SimulationState {
     *           the originality of each block (should it be included in the result board)
     */
    public SimulationState(SimulationCore simCore, SimulationFeeder feeder, Board b, float weight, int curScore,
-         int curGold, boolean[][] originality) {
+         int curGold, boolean[][] originality, int chainPause) {
       core = simCore;
       simFeeder = new SimulationFeeder(feeder);
       board = new Board(b);
       curWeight = weight;
       score = curScore;
       gold = curGold;
+      lastChainPause = chainPause;
       for (int row = 1; row <= Board.NUM_ROWS; row++) {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             original[row - 1][col - 1] = originality[row - 1][col - 1];
@@ -91,7 +94,7 @@ public class SimulationState {
     */
    public SimulationState(SimulationState other) {
       this(other.getCore(), other.getFeeder(), other.getBoard(), other.getWeight(), other.getScore(), other.getGold(),
-            other.original);
+            other.original, other.lastChainPause);
       for (int row = 0; row < Board.NUM_ROWS; row++) {
          for (int col = 0; col < Board.NUM_COLS; col++) {
             falling[row][col] = other.falling[row][col];
@@ -136,6 +139,14 @@ public class SimulationState {
       return numCombos;
    }
    
+   public int getCurrentChainCount() {
+      return numCombos - lastChainPause;
+   }
+   
+   public void setChainPause() {
+      lastChainPause = numCombos;
+   }
+
    /**
     * @return the board
     */
