@@ -108,7 +108,7 @@ public class SpeciesManager extends ConfigManager {
    }
    
    @Override
-   public boolean setEntry(EntryType type, String key, ConfigEntry entry, Integer index) {
+   public boolean setEntry(EntryType type, String key, ConfigEntry entry) {
       if (key == null || type == null) {
          return false;
       }
@@ -120,7 +120,7 @@ public class SpeciesManager extends ConfigManager {
       }
       boolean changed = false;
       if (!isReserved) {
-         changed |= super.setEntry(type, key, entry, index);
+         changed |= super.setEntry(type, key, entry);
       }
       return changed;
    }

@@ -61,6 +61,7 @@ public class ConfigManager {
    private final ConfigLoader loader;
    private final ConfigFactory factory;
    private final LinkedHashMap<EntryType, LinkedHashMap<String, ConfigEntry>> data = new LinkedHashMap<EntryType, LinkedHashMap<String, ConfigEntry>>();
+   private final Map<String, List<String>> savedDataStrings = new LinkedHashMap<String, List<String>>();
    
    public ConfigManager(List<String> resources, List<String> files, ConfigFactory factory) {
       this.factory = factory;
@@ -139,6 +140,10 @@ public class ConfigManager {
          maintainVersion();
          LinkedHashMap<String, List<String>> newData = getDataStrings();
          changed |= !oldData.equals(newData);
+         if (changed) {
+            savedDataStrings.clear();
+            savedDataStrings.putAll(newData);
+         }
       }
       return changed;
    }
@@ -179,6 +184,8 @@ public class ConfigManager {
       LinkedHashMap<String, List<String>> dataToWrite;
       synchronized (data) {
          dataToWrite = getDataStrings();
+         savedDataStrings.clear();
+         savedDataStrings.putAll(dataToWrite);
       }
       pw.writePreferences(dataToWrite);
    }
@@ -241,7 +248,7 @@ public class ConfigManager {
     * 
     * @return True if anything changed. False otherwise.
     */
-   public boolean setEntry(EntryType type, String key, ConfigEntry newValue, Integer index) {
+   public boolean setEntry(EntryType type, String key, ConfigEntry newValue) {
       if (key == null || type == null) {
          return false;
       }
@@ -265,14 +272,14 @@ public class ConfigManager {
       if (key == null || newValue == null) {
          return false;
       }
-      return setEntry(newValue.getEntryType(), key, newValue, null);
+      return setEntry(newValue.getEntryType(), key, newValue);
    }
    
    public boolean setEntry(EntryType type, String key, Object newValue) {
       boolean result = false;
       try {
          ConfigEntry entry = newValue == null ? null : new ConfigEntry(type, newValue);
-         result = setEntry(type, key, entry, null);
+         result = setEntry(type, key, entry);
       } catch (Exception e) {
          LOG.log(Level.FINE,
                String.format("Cannot parse config entry, key: %s type: %s value: %s ", key, type, newValue), e);
@@ -281,7 +288,7 @@ public class ConfigManager {
    }
    
    public boolean removeEntry(EntryType type, String key) {
-      return setEntry(type, key, null, null);
+      return setEntry(type, key, null);
    }
    
    public boolean hasKey(EntryType type, String key) {
@@ -606,6 +613,13 @@ public class ConfigManager {
          return equal;
       }
       return false;
+   }
+   
+   /**
+    * @return
+    */
+   public boolean dataChanged() {
+      return !savedDataStrings.equals(getDataStrings());
    }
    
 }

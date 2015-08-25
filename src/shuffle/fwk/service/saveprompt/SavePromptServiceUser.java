@@ -15,18 +15,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package shuffle.fwk.gui.user;
-
-import shuffle.fwk.service.roster.EditRosterServiceUser;
-import shuffle.fwk.service.saveprompt.SavePromptServiceUser;
-import shuffle.fwk.service.update.UpdateServiceUser;
+package shuffle.fwk.service.saveprompt;
 
 /**
  * @author Andrew Meyers
  *
  */
-public interface ShuffleFrameUser extends UpdateServiceUser, EditRosterServiceUser, ShuffleMenuUser, ModeIndicatorUser,
-      MoveIndicatorUser, GridPanelUser, StageIndicatorUser, PaintsIndicatorUser, GradingModeUser, SavePromptServiceUser {
+public interface SavePromptServiceUser {
    
+   boolean shouldPromptSave();
+   
+   void saveAll();
+
 }

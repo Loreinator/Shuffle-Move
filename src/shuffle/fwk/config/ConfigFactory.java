@@ -64,8 +64,6 @@ public class ConfigFactory {
    private ConfigManager pathsConfigManager;
    private final String pathConfigPath;
    
-   private boolean dataChanged = false;
-   
    public ConfigFactory() {
       this(null);
    }
@@ -78,12 +76,13 @@ public class ConfigFactory {
       }
    }
    
-   protected void notifyDataChanged() {
-      dataChanged = true;
-   }
-   
    public boolean isDataChanged() {
-      return dataChanged;
+      for (ConfigManager manager : managers.values()) {
+         if (manager.dataChanged()) {
+            return true;
+         }
+      }
+      return false;
    }
    
    /**

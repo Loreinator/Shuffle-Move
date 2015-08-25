@@ -1016,4 +1016,13 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       }
    }
    
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.service.saveprompt.SavePromptServiceUser#shouldPromptSave()
+    */
+   @Override
+   public boolean shouldPromptSave() {
+      return factory.isDataChanged();
+   }
+   
 }
