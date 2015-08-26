@@ -199,6 +199,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
                   + getEffectSpecies(firstCombo.getCoords()));
          }
          doCombo(firstCombo);
+         doGravity();
       }
    }
    
