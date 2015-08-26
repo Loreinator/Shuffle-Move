@@ -68,6 +68,8 @@ public class ConfigManager {
       loader = new ConfigLoader(resources, files);
       filePaths = files;
       loadFromConfig();
+      savedDataStrings.clear();
+      savedDataStrings.putAll(getDataStrings());
    }
    
    public ConfigManager(ConfigManager copyFrom) {
@@ -619,7 +621,8 @@ public class ConfigManager {
     * @return
     */
    public boolean dataChanged() {
-      return !savedDataStrings.equals(getDataStrings());
+      LinkedHashMap<String, List<String>> dataStrings = getDataStrings();
+      return !savedDataStrings.equals(dataStrings);
    }
    
 }
