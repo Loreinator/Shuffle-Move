@@ -45,5 +45,7 @@ public interface MovePreferencesServiceUser {
     * @return
     */
    int getEffectThreshold();
+   
+   boolean isSwapToPaint();
 
 }

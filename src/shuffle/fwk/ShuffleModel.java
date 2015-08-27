@@ -116,6 +116,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private static final String KEY_DISABLED_EFFECTS = "DISABLED_EFFECTS";
    private static final String KEY_ATTACK_POWER_UP = "ATTACK_POWER_UP_ENABLED";
    private static final String KEY_EFFECT_THRESHOLD = "EFFECT_THRESHOLD";
+   private static final String KEY_SWAP_TO_PAINT = "SWAP_TO_PAINT";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -1283,5 +1284,25 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     */
    public boolean setEffectThreshold(int threshold) {
       return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_EFFECT_THRESHOLD, threshold);
+   }
+   
+   /**
+    * Check if the Express entry mode should be swapped to the paint mode upon doing a move.
+    * 
+    * @return True if so, false if not.
+    */
+   public boolean isSwapToPaint() {
+      return getPreferencesManager().getBooleanValue(KEY_SWAP_TO_PAINT, true);
+   }
+   
+   /**
+    * Set if the Express entry mode should be swapped to the paint mode upon doing a move.
+    * 
+    * @param swapToPaint
+    *           True for doing so, false for not doing so.
+    * @return True if the status changed.
+    */
+   public boolean setSwapToPaint(boolean swapToPaint) {
+      return getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_SWAP_TO_PAINT, swapToPaint);
    }
 }

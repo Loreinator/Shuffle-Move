@@ -358,7 +358,9 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    public void doSelectedMove() {
       if (getModel().doSelectedMove()) {
          LOG.info(getString(KEY_DO_MOVE));
-         getModel().setCurrentMode(EntryMode.PAINT);
+         if (getModel().isSwapToPaint()) {
+            getModel().setCurrentMode(EntryMode.PAINT);
+         }
          getModel().setCursorTo(1, 1);
          repaint();
       }
@@ -978,10 +980,12 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       int numFeeders = service.getNumFeeders();
       int feederHeight = service.getFeederHeight();
       boolean autoCompute = service.isAutoCompute();
+      boolean swapToPaint = service.isSwapToPaint();
       Collection<Effect> disabledEffects = service.getDisabledEffects();
       int threshold = service.getThreshold();
       
       boolean changed = false;
+      // These DO affect simulation results.
       changed |= getModel().setFeederPreferences(numFeeders, feederHeight, autoCompute);
       changed |= getModel().setDisabledEffects(disabledEffects);
       changed |= getModel().setEffectThreshold(threshold);
@@ -990,6 +994,8 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          getModel().setDataChanged();
          repaint();
       }
+      // This doesn't affect simulation results.
+      getModel().setSwapToPaint(swapToPaint);
    }
    
    /*
@@ -1025,4 +1031,9 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return factory.isDataChanged();
    }
    
+   @Override
+   public boolean isSwapToPaint() {
+      return getModel().isSwapToPaint();
+   }
+
 }

@@ -64,6 +64,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private static final String KEY_BAD_NUM = "error.numberfeeders";
    private static final String KEY_BAD_HEIGHT = "error.heightfeeders";
    private static final String KEY_THRESHOLD = "text.threshold";
+   private static final String KEY_SWAPTOPAINT = "text.autoswappaint";
    
    private JSpinner numFeederSpinner;
    private JSpinner feederHeightSpinner;
@@ -72,6 +73,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private JCheckBox enableEffectBox;
    private Collection<Effect> disabledEffects = new ArrayList<Effect>();
    private JSpinner thresholdSpinner;
+   private JCheckBox autoSwapToPaint;
    
    /*
     * (non-Javadoc)
@@ -93,6 +95,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       feederHeightSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 36, 1));
       autoComputeCheckBox = new JCheckBox(getString(KEY_AUTOCOMPUTE));
       thresholdSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 5));
+      autoSwapToPaint = new JCheckBox(getString(KEY_SWAPTOPAINT));
       
       d.setLayout(new GridBagLayout());
       
@@ -124,6 +127,11 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       c.gridy++;
       c.gridwidth = maxWidth;
       d.add(autoComputeCheckBox, c);
+      
+      c.gridx = 1;
+      c.gridy++;
+      c.gridwidth = maxWidth;
+      d.add(autoSwapToPaint, c);
       
       c.gridx = 1;
       c.gridy++;
@@ -222,6 +230,10 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       return autoComputeCheckBox.isSelected();
    }
    
+   public boolean isSwapToPaint() {
+      return autoSwapToPaint.isSelected();
+   }
+
    public int getThreshold() {
       return Math.max(0, Math.min(100, (int) thresholdSpinner.getValue()));
    }
@@ -243,6 +255,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       disabledEffects.addAll(user.getDisabledEffects());
       enableEffectBox.setSelected(!disabledEffects.contains(effectChooser.getSelectedEffect()));
       thresholdSpinner.setValue(user.getEffectThreshold());
+      autoSwapToPaint.setSelected(user.isSwapToPaint());
    }
    
 }
