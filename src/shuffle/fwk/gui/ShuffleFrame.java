@@ -25,6 +25,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +41,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import shuffle.fwk.ShuffleController;
 import shuffle.fwk.config.ConfigManager;
@@ -49,6 +52,7 @@ import shuffle.fwk.log.AlertReciever;
 import shuffle.fwk.service.BaseServiceManager;
 import shuffle.fwk.service.help.HelpService;
 import shuffle.fwk.service.movechooser.MoveChooserService;
+import shuffle.fwk.service.saveprompt.SavePromptService;
 import shuffle.fwk.service.update.UpdateService;
 import shuffle.fwk.update.UpdateCheck;
 
@@ -82,13 +86,25 @@ public class ShuffleFrame extends JFrame implements I18nUser {
       setTitle(getString(KEY_TITLE, ShuffleController.VERSION_FULL));
       setUser(user);
       setResizable(true);
-      setDefaultCloseOperation(EXIT_ON_CLOSE);
       setupGUI();
       addComponentListener(new ComponentAdapter() {
          @Override
          public void componentResized(ComponentEvent e) {
             updateMinimumSize();
          }
+      });
+      setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+      addWindowListener(new WindowAdapter() {
+         
+         @Override
+         public void windowClosing(WindowEvent e) {
+            if (getUser().shouldPromptSave()) {
+               BaseServiceManager.launchServiceByClass(SavePromptService.class, getUser(), ShuffleFrame.this);
+            } else {
+               System.exit(0);
+            }
+         }
+         
       });
       updateMinimumSize();
       repaint();

@@ -18,6 +18,8 @@
 
 package shuffle.fwk.data.simulation;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -180,7 +182,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
       
       // Create the state
-      state = new SimulationState(simulationCore, feeder, startBoard, 1.0f, 0, 0, originality);
+      state = new SimulationState(simulationCore, feeder, startBoard, 1.0f, 0, 0, originality, 0);
       if (logFiner) {
          logFinerWithId("state made");
       }
@@ -199,6 +201,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
                   + getEffectSpecies(firstCombo.getCoords()));
          }
          doCombo(firstCombo);
+         doGravity();
       }
    }
    
@@ -231,16 +234,51 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             }
             doBestCombo();
             advanceTimeStamp();
+            if (onlyThawing()) {
+               getState().setChainPause();
+            }
             simCounter++; // Loop protection
          }
          return getState();
       } catch (Exception e) {
-         LOG.severe("Something happened: " + e.getMessage() + " ");
-         e.printStackTrace();
+         StringWriter sw = new StringWriter();
+         PrintWriter pw = new PrintWriter(sw);
+         e.printStackTrace(pw);
+         sw.toString();
+         LOG.severe("Something happened: " + e.getMessage() + " " + sw.toString());
          return null;
       }
    }
    
+   /**
+    * Checks if the only thing happening is a 'thawing' action. If so, then the chain count is set
+    * to 0. "only thing happening is a 'thawing' action" means: <br>
+    * <ul>
+    * <li>There is no block in free-fall.</li>
+    * <li>There are no combos waiting to activate.</li>
+    * <li>There are no in-progress combos.</li>
+    * <li>The only in-progress effect is a DelayThawEffect</li>
+    * </ul>
+    * 
+    * @return
+    */
+   private boolean onlyThawing() {
+      boolean inactive = getNextBumpTime() == null && getNextComboTime() == null;
+      boolean isThawing = false;
+      if (inactive) {
+         for (Collection<ComboEffect> collection : simulationEffects.values()) {
+            for (ComboEffect effect : collection) {
+               if (effect instanceof DelayThawEffect) {
+                  isThawing = true;
+               } else {
+                  inactive = false;
+               }
+            }
+         }
+      }
+      return inactive && isThawing;
+   }
+
    private void advanceTimeStamp() {
       Integer nextEffectTime = getNextEffectTime();
       Integer nextBumpTime = getNextBumpTime();

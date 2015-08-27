@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -173,7 +174,8 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       
       menu.addSeparator();
       
-      MenuAction exitAction = new MenuAction(() -> getString(KEY_EXIT), e -> System.exit(0));
+      MenuAction exitAction = new MenuAction(() -> getString(KEY_EXIT), e -> getOwner().dispatchEvent(
+            new WindowEvent(getOwner(), WindowEvent.WINDOW_CLOSING)));
       addMenuAction(menu, exitAction);
       
       add(menu);

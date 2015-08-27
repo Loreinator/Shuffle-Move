@@ -1,4 +1,4 @@
-Shuffle Move v0.3.21
+Shuffle Move v0.3.22
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -17,12 +17,12 @@ A program to identify and display the best next move for the game Pokemon Shuffl
 	For all other problems, see the release thread listed at https://www.reddit.com/r/ShuffleMove/wiki/versionlinks
 
 ~~ Planned Features ~~
-Go to https://www.reddit.com/r/ShuffleMove/wiki/plans
+Go to https://github.com/Loreinator/Shuffle-Move/issues
 
 ~~ Contact ~~
-Reddit: https://www.reddit.com/r/ShuffleMove/wiki/index
-GitHub: https://github.com/Loreinator/Shuffle-Move
 Email: all4atlantis@gmail.com
+GitHub: https://github.com/Loreinator/Shuffle-Move
+Reddit: https://www.reddit.com/r/ShuffleMove/wiki/index
 
 ~~ License ~~
 Copyright 2015 Andrew Meyers
@@ -35,6 +35,12 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.22 - 2015-08-26
+	- Bug fixes: Focus issue, last 3 abilities proc when there is 3 turns left, not from the 3rd turn.
+	- Abilities corrected: Sky Blast, Double Normal
+	- Save prompt now included if your data changes in any way, before you close.
+	- Translations updated
+	- Account for chain breaks due to thawing
 v0.3.21 - 2015-08-23
 	- Bug fixes
 v0.3.20 - 2015-08-23

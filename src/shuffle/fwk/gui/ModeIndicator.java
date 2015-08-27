@@ -189,11 +189,13 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
             @Override
             protected void onLeft(MouseEvent e) {
                getUser().setCurMode(mode);
+               updateFocus();
             }
             
             @Override
             protected void onRight(MouseEvent e) {
                getUser().setCurMode(mode);
+               updateFocus();
             }
             
             @Override

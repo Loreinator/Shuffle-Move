@@ -106,7 +106,7 @@ public class RosterManager extends ConfigManager {
             for (Integer value : parsedResults.get(key)) {
                if (value != null) {
                   ConfigEntry entry = new ConfigEntry(EntryType.INTEGER, value);
-                  manager.setEntry(EntryType.INTEGER, key, entry, null);
+                  manager.setEntry(EntryType.INTEGER, key, entry);
                   break;
                }
             }

@@ -40,7 +40,7 @@ public class ActivateComboEffect extends ComboEffect {
    
    protected final void setNumClearedFrom(SimulationTask task) {
       if (numClearedOnActivation == null) {
-         numClearedOnActivation = task.getState().getCombosCleared();
+         numClearedOnActivation = task.getState().getCurrentChainCount();
       }
    }
    

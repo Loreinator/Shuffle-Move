@@ -378,7 +378,7 @@ public class TeamManager extends ConfigManager {
             for (TeamImpl team : parsedResults.get(key)) {
                if (team != null) {
                   ConfigEntry entry = new ConfigEntry(EntryType.TEAM, team);
-                  manager.setEntry(EntryType.TEAM, key, entry, null);
+                  manager.setEntry(EntryType.TEAM, key, entry);
                   break;
                }
             }

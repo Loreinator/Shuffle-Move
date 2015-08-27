@@ -175,14 +175,14 @@ public enum Effect {
       }
    },
    /**
-    * Increases damage done by any Dragon types in a combo.
+    * Increases damage done by any Normal types in a combo. 2.5x multiplier
     */
    DOUBLE_NORMAL(0.2, 0.6, 0.8) {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (shouldActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.NORMAL, 1.2);
+            task.setSpecialTypeMultiplier(PkmType.NORMAL, 2.5);
          }
       }
    },
@@ -995,14 +995,14 @@ public enum Effect {
    
    },
    /**
-    * Increases damage done by any flying types in a combo.
+    * Increases damage done by any flying types in a combo. 2.0x multiplier
     */
    SKY_BLAST(0.1, 0.6, 0.9) {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (shouldActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.FLYING, 1.2);
+            task.setSpecialTypeMultiplier(PkmType.FLYING, 2.0);
          }
       }
       
