@@ -4,7 +4,7 @@
 	<property name="dest" value="${user.dir}/bugs" />
 	<property name="temp" value="${dest}/tmp" />
 	<tstamp>
-		<format property="report.time" pattern="yyyymmdd_HHmmssSSS" />
+		<format property="report.time" pattern="yyyyMMdd_HHmmss_zzz" />
 	</tstamp>
 	<property name="zipname" value="${dest}/bugReport_${report.time}.zip" />
 
