@@ -162,7 +162,12 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          }
       }
       ShuffleController ctrl = new ShuffleController();
-      ctrl.getFrame().launch();
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            ctrl.getFrame().launch();
+         }
+      });
    }
    
    /**
