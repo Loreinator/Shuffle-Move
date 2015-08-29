@@ -44,6 +44,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
 import shuffle.fwk.GradingMode;
+import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.gui.user.ShuffleMenuUser;
 import shuffle.fwk.i18n.I18nUser;
 import shuffle.fwk.service.BaseServiceManager;
@@ -95,7 +96,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_CHOOSE_MOVE = "menuitem.choosemove";
    
    // config keys
-   private static final String KEY_AVAILABLE_LOCALES = "AVAILABLE_LOCALES";
+   public static final String KEY_AVAILABLE_LOCALES = "AVAILABLE_LOCALES";
    
    private ShuffleMenuUser user;
    private JCheckBoxMenuItem autoComputeItem;
@@ -381,7 +382,8 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       JMenu menu = new JMenu(Locale.getDefault().getDisplayName());
       registerAbstractButton(menu, () -> Locale.getDefault().getDisplayName());
       
-      String available = getUser().getPreferencesManager().getStringValue(KEY_AVAILABLE_LOCALES, "en de");
+      ConfigManager preferencesManager = getUser().getPreferencesManager();
+      String available = preferencesManager.getStringValue(KEY_AVAILABLE_LOCALES, "de en fi fr it ja ko sp zh zh_HK");
       List<Locale> locales = Arrays.asList(available.split("\\s+")).stream().map(s -> Locale.forLanguageTag(s))
             .collect(Collectors.toList());
       

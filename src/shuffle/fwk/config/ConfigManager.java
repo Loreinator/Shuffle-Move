@@ -159,28 +159,30 @@ public class ConfigManager {
     */
    protected void maintainVersion() {
       if (shouldUpdate()) {
-         int curVersion = UpdateCheck.parseVersionNumber(ShuffleController.VERSION_FULL);
-         int savedVersion = 0;
-         try {
-            String fileVersion = getStringValue(KEY_VERSION);
-            savedVersion = UpdateCheck.parseVersionNumber(fileVersion);
-         } catch (Exception e) {
-            // then we assume it has no saved version.
-         } finally {
-            // if there was a saved version, we'll have it here.
-            if (savedVersion < curVersion) {
-               // we need to update from the default, overriding any out-dated keys
-               loader.updateFromResource();
-               for (EntryType type : EntryType.values()) {
-                  LinkedHashMap<String, ConfigEntry> mappings = loader.getMappings(type);
-                  data.put(type, mappings);
-               }
+         if (isOutOfDate()) {
+            // we need to update from the default, overriding any out-dated keys
+            loader.updateFromResource();
+            for (EntryType type : EntryType.values()) {
+               LinkedHashMap<String, ConfigEntry> mappings = loader.getMappings(type);
+               data.put(type, mappings);
             }
          }
       }
       setEntry(EntryType.STRING, KEY_VERSION, ShuffleController.VERSION_FULL);
    }
    
+   public final boolean isOutOfDate() {
+      int curVersion = UpdateCheck.parseVersionNumber(ShuffleController.VERSION_FULL);
+      int savedVersion = 0;
+      try {
+         String fileVersion = getStringValue(KEY_VERSION);
+         savedVersion = UpdateCheck.parseVersionNumber(fileVersion);
+      } catch (Exception e) {
+         // then we assume it has no saved version.
+      }
+      return (savedVersion < curVersion);
+   }
+
    public void saveDataToConfig() {
       PreferencesWriter pw = new PreferencesWriter(filePaths);
       LinkedHashMap<String, List<String>> dataToWrite;
