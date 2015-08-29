@@ -208,6 +208,13 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
             public void keyTyped(KeyEvent e) {
                mode.handleKeyPress(getUser(), e);
             }
+            
+            @Override
+            public void keyPressed(KeyEvent e) {
+               if (e.getKeyChar() == KeyEvent.CHAR_UNDEFINED) {
+                  mode.handleKeyPress(getUser(), e);
+               }
+            }
          });
       }
    }
