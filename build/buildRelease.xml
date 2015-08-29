@@ -4,6 +4,7 @@
 	<property name="temp" value="../tmp" />
 	<property name="libsubdir" value="libraries" />
 	<property name="libstarget.dir" value="${temp}/${libsubdir}" />
+	<property name="suffix" value="" />
 
 	<target name="all" depends="verify, verifykeypass, zipreleasefailed, clean, create_run_jar, copyfiles, ziprelease, cleanuptmp, javadoc" />
 
@@ -19,10 +20,10 @@
 		</loadfile>
 		<script language="javascript">
 			<![CDATA[
-	        var myproperty= project.getProperty("name");
-	        if (myproperty!= null) {
-	            project.setProperty("name", myproperty.trim())
-	        }
+	        var name= project.getProperty("name").trim();
+			var suffix = project.getProperty("suffix");
+			var zipname = name.concat(suffix);
+	        project.setProperty("name", zipname.trim());
 	    ]]>
 		</script>
 		<echo message="Using name: '${name}'" />
