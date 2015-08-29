@@ -99,7 +99,7 @@ public class GridPanel extends JPanel {
       for (int pos = 1; pos <= Board.NUM_CELLS; pos++) {
          Indicator<SpeciesPaint> ind = new Indicator<SpeciesPaint>(getUser());
          cellMap.put(pos, ind);
-         ind.setBorder(getBorderFor(null, null));
+         ind.setBorder(getBorderFor(null));
          ind.setVisualized(null, "" + pos);
          content.add(ind, c);
          c.gridx++;
@@ -108,7 +108,7 @@ public class GridPanel extends JPanel {
             c.gridx -= Board.NUM_COLS;
          }
       }
-      content.setBorder(getBorderFor(null, null));
+      content.setBorder(getBorderFor(null));
       
       c.fill = GridBagConstraints.NONE;
       c.gridx = 1;
@@ -126,12 +126,13 @@ public class GridPanel extends JPanel {
       return getUser().getPreferencesManager().getIntegerValue(KEY_CELL_BORDER_THICK_INNER, DEFAULT_CELL_BORDER_THICK);
    }
    
-   /**
-    * @return
-    */
-   private int getCellBorderOuterThickness() {
-      return getUser().getPreferencesManager().getIntegerValue(KEY_CELL_BORDER_THICK_OUTER, DEFAULT_CELL_BORDER_THICK);
-   }
+   // /**
+   // * @return
+   // */
+   // private int getCellBorderOuterThickness() {
+   // return getUser().getPreferencesManager().getIntegerValue(KEY_CELL_BORDER_THICK_OUTER,
+   // DEFAULT_CELL_BORDER_THICK);
+   // }
    
    /**
     * @return
@@ -144,20 +145,22 @@ public class GridPanel extends JPanel {
       return getUser().getPreferencesManager().getIntegerValue(KEY_CELL_OUTLINE_THICK, DEFAULT_CELL_OUTLINE_THICK);
    }
    
-   private Border getBorderFor(Color inner, Color outer) {
-      Border innerBorder = new EmptyBorder(getCellBorderInnerThickness(), getCellBorderInnerThickness(),
-            getCellBorderInnerThickness(), getCellBorderInnerThickness());
-      Border outerBorder = new EmptyBorder(getCellBorderOuterThickness(), getCellBorderOuterThickness(),
-            getCellBorderOuterThickness(), getCellBorderOuterThickness());
-      if (outer != null) {
-         outerBorder = new LineBorder(outer, getCellBorderOuterThickness(), true);
-      }
+   private Border getBorderFor(Color inner) {
+      Border innerBorder = new EmptyBorder(getCellBorderInnerThickness() * 2, getCellBorderInnerThickness() * 2,
+            getCellBorderInnerThickness() * 2, getCellBorderInnerThickness() * 2);
+      // Border outerBorder = new EmptyBorder(getCellBorderOuterThickness(),
+      // getCellBorderOuterThickness(),
+      // getCellBorderOuterThickness(), getCellBorderOuterThickness());
+      // if (outer != null) {
+      // outerBorder = new LineBorder(outer, getCellBorderOuterThickness(), true);
+      // }
       if (inner != null) {
-         innerBorder = new LineBorder(inner, getCellBorderInnerThickness(), true);
+         innerBorder = new LineBorder(inner, getCellBorderInnerThickness() * 2, true);
       }
-      CompoundBorder coloredBorder = BorderFactory.createCompoundBorder(outerBorder, innerBorder);
+      // CompoundBorder coloredBorder = BorderFactory.createCompoundBorder(outerBorder,
+      // innerBorder);
       Border greyOutline = new LineBorder(Color.gray, getCellOutlineThickness());
-      CompoundBorder finalBorder = BorderFactory.createCompoundBorder(greyOutline, coloredBorder);
+      CompoundBorder finalBorder = BorderFactory.createCompoundBorder(greyOutline, innerBorder);
       return finalBorder;
    }
    
@@ -258,7 +261,10 @@ public class GridPanel extends JPanel {
          } else if (coords.equals(dropat)) {
             moveColor = preferencesManager.getColorFor(KEY_DROPAT_COLOR);
          }
-         cellMap.get(pos).setBorder(getBorderFor(selectColor, moveColor));
+         cellMap.get(pos).setBorder(getBorderFor(selectColor));
+         cellMap.get(pos).setOpaque(true);
+         cellMap.get(pos).setBackground(moveColor);
+
          if (cellMap.get(pos).setVisualized(s) || borderChangedSet.contains(coords)) {
             changed = true;
          }
