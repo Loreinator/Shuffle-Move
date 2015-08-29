@@ -180,6 +180,16 @@ public class Species implements Comparable<Species>, I18nUser {
          return getString(getName());
       }
    }
+   
+   /**
+    * Equivalent to<br>
+    * {@link Species#getLocalizedName(boolean)} called as getLocalizedName(false)
+    * 
+    * @return The localized name for this species, as a String.
+    */
+   public String getLocalizedName() {
+      return getLocalizedName(false);
+   }
 
    @Override
    public boolean equals(Object o) {

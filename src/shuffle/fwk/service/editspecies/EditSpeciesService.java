@@ -541,7 +541,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       iconLabel.addMouseListener(ma);
       ret.add(iconLabel, c);
       c.gridy += 1;
-      String text = s.getName();
+      String text = s.getLocalizedName();
       JLabel jLabel = new JLabel(text);
       jLabel.setHorizontalTextPosition(SwingConstants.CENTER);
       jLabel.setHorizontalAlignment(SwingConstants.CENTER);
