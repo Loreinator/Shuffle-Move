@@ -894,7 +894,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          for (int k = 0; k * 2 + 1 < nearby.length; k++) {
             int row = coords.get(i * 2) + nearby[k * 2];
             int col = coords.get(i * 2 + 1) + nearby[k * 2 + 1];
-            if (!isClaimed(row, col)) {
+            if (!isClaimed(row, col) && !isFalling(row, col)) {
                Species neighbour = b.getSpeciesAt(row, col);
                if (neighbour.getEffect().equals(Effect.WOOD)) {
                   woodCoords.add(Arrays.asList(row, col));
