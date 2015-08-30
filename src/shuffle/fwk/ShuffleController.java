@@ -587,6 +587,15 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
             sb.append(givenMessage);
             sb.append("\r\nEND OF MESSAGE");
             sb.append("\r\n\r\n");
+            sb.append("Selected result:");
+            SimulationResult curResult = getModel().getCurrentResult();
+            if (curResult == null) {
+               sb.append(" No result selected.");
+            } else {
+               sb.append("\r\n");
+               sb.append(curResult.toString());
+            }
+            sb.append("\r\n\r\n");
             sb.append("Current results:");
             Collection<SimulationResult> results = getModel().getResults();
             if (results == null) {
