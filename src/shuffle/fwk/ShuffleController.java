@@ -69,24 +69,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       SimulationUser, I18nUser {
    /** The log properties file path */
    private static final String LOG_CONFIG_FILE = "config/logger.properties";
-   static { // Ensures that the log managers are loaded from the config file.
-      String userHome = System.getProperty("user.home") + File.separator + "Shuffle-Move";
-      try {
-         new File(userHome).getAbsoluteFile().mkdir();
-         System.setProperty("user.dir", userHome);
-         try (InputStream is = ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE)) {
-            File logDir = new File("log").getAbsoluteFile();
-            if (!logDir.exists() && !logDir.mkdirs()) {
-               throw new IOException("Cannot create log directory.");
-            }
-            LogManager.getLogManager().readConfiguration(is);
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      } catch (SecurityException e) {
-         e.printStackTrace();
-      }
-   }
+
    /** The logger for this controller. */
    private static final Logger LOG = Logger.getLogger(ShuffleController.class.getName());
    
@@ -154,9 +137,24 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
     *           unused.
     */
    public static void main(String... args) {
+      String userHomeArg = null;
+      String levelToSetArg = null;
+
       if (args != null && args.length > 0) {
+         userHomeArg = args[0];
+         if (args.length > 1) {
+            levelToSetArg = args[1];
+         }
+      }
+      
+      if (userHomeArg == null) {
+         userHomeArg = System.getProperty("user.home") + File.separator + "Shuffle-Move";
+      }
+      setUserHome(userHomeArg);
+
+      if (levelToSetArg != null) {
          try {
-            Level levelToSet = Level.parse(args[0]);
+            Level levelToSet = Level.parse(args[1]);
             Logger.getLogger(SimulationTask.class.getName()).setLevel(levelToSet);
             SimulationTask.setLogFiner(levelToSet.intValue() <= Level.FINER.intValue());
             Logger.getLogger(ShuffleModel.class.getName()).setLevel(levelToSet);
@@ -164,6 +162,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
             LOG.fine("Cannot set simulation logging to that level: " + StringUtils.join(args));
          }
       }
+
       ShuffleController ctrl = new ShuffleController();
       SwingUtilities.invokeLater(new Runnable() {
          @Override
@@ -171,6 +170,33 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
             ctrl.getFrame().launch();
          }
       });
+   }
+   
+   /**
+    * Sets the user home to the given path.
+    * 
+    * @param userHome
+    *           The absolute path to the new user home.
+    */
+   public static void setUserHome(String userHome) {
+      try {
+         File absoluteFile = new File(userHome).getCanonicalFile();
+         absoluteFile.mkdir();
+         System.setProperty("user.dir", absoluteFile.getCanonicalPath());
+         try (InputStream is = ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE)) {
+            File logDir = new File("log").getAbsoluteFile();
+            if (!logDir.exists() && !logDir.mkdirs()) {
+               throw new IOException("Cannot create log directory.");
+            }
+            LogManager.getLogManager().readConfiguration(is);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      } catch (SecurityException e) {
+         e.printStackTrace();
+      } catch (IOException e1) {
+         e1.printStackTrace();
+      }
    }
    
    /**

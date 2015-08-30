@@ -35,7 +35,8 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.23 - 2015-08-
+v0.3.23 - 2015-08-30
+	- Can now be launched portably, or with a customized save path
 	- Bug with bug report file names fixed
 	- Bug report file names improved (now includes time zone)
 	- Bug report detail improved
