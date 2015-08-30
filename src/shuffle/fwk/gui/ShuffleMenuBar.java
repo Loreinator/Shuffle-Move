@@ -91,6 +91,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_HELP = "menuitem.help";
    private static final String KEY_ABOUT = "menuitem.about";
    private static final String KEY_BUG = "menuitem.bug";
+   private static final String KEY_BUG_FORCE = "menuitem.bug.force";
    private static final String KEY_UPDATE = "menuitem.update";
    private static final String KEY_GRADING_MENU = "menuitem.grading";
    private static final String KEY_CHOOSE_MOVE = "menuitem.choosemove";
@@ -365,6 +366,11 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
             BugReportService.class, getUser(), getOwner()));
       addMenuAction(menu, reportAction);
       
+      MenuAction dumpReportAction = new MenuAction(() -> getString(KEY_BUG_FORCE), e -> getUser().reportBug(
+            "Forced by command."));
+      dumpReportAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
+      addMenuAction(menu, dumpReportAction);
+
       menu.addSeparator();
       
       MenuAction updateAction = new MenuAction(() -> getString(KEY_UPDATE),

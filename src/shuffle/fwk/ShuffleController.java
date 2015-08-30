@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -56,6 +58,7 @@ import shuffle.fwk.data.simulation.SimulationUser;
 import shuffle.fwk.gui.ShuffleFrame;
 import shuffle.fwk.gui.user.ShuffleFrameUser;
 import shuffle.fwk.i18n.I18nUser;
+import shuffle.fwk.service.BaseServiceManager;
 import shuffle.fwk.service.movepreferences.MovePreferencesService;
 
 /**
@@ -575,12 +578,41 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    }
    
    @Override
-   public void reportBug(String message) {
+   public void reportBug(final String givenMessage) {
       SwingUtilities.invokeLater(new Runnable() {
          @Override
          public void run() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("MESSAGE READS:\r\n");
+            sb.append(givenMessage);
+            sb.append("\r\nEND OF MESSAGE");
+            sb.append("\r\n\r\n");
+            sb.append("Current results:");
+            Collection<SimulationResult> results = getModel().getResults();
+            if (results == null) {
+               sb.append("No results.");
+            } else {
+               for (SimulationResult result : results) {
+                  if (result != null) {
+                     sb.append("\r\n");
+                     sb.append(result.toString());
+                  }
+               }
+            }
+            sb.append("\r\n\r\n");
+            sb.append("Current running windows:");
+            List<String> info = new ArrayList<String>();
+            info.add(getFrame().toString());
+            Collection<JDialog> serviceDialogs = BaseServiceManager.getAllDialogs();
+            for (JDialog d : serviceDialogs) {
+               info.add(d.toString());
+            }
+            for (String s : info) {
+               sb.append("\r\n\r\n");
+               sb.append(s);
+            }
             getModel().saveAllData();
-            getModel().reportBug(message);
+            getModel().reportBug(sb.toString());
          }
       });
    }
