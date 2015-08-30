@@ -20,6 +20,8 @@ package shuffle.fwk.service;
 
 import java.awt.Frame;
 
+import javax.swing.JDialog;
+
 /**
  * The Service interface. Please extend {@link BaseService} instead. to ensure proper cleanup and
  * creation.
@@ -63,4 +65,11 @@ public interface Service<Y extends Object> {
     */
    public long getId();
    
+   /**
+    * Returns the dialog for this service.
+    * 
+    * @return The JDialog for this service, or null if there is none.
+    */
+   public JDialog getDialog();
+
 }

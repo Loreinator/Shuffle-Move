@@ -635,8 +635,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       iconLabel.addMouseListener(ma);
       ret.add(iconLabel, c);
       c.gridy += 1;
-      String text = s.getName();
-      JLabel jLabel = new JLabel(text.replaceAll("_", " "));
+      JLabel jLabel = new JLabel(s.getLocalizedName());
       jLabel.setHorizontalTextPosition(SwingConstants.CENTER);
       jLabel.setHorizontalAlignment(SwingConstants.CENTER);
       jLabel.addMouseListener(ma);
@@ -673,7 +672,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
    private void rebuildSelectedLabel() {
       String textToUse = getString(KEY_NONE_SELECTED);
       if (selectedSpecies != null) {
-         String name = selectedSpecies.getName().replaceAll("_", " ");
+         String name = selectedSpecies.getLocalizedName();
          RosterManager rosterManager = getUser().getRosterManager();
          Integer thisLevel = rosterManager.getLevelForSpecies(selectedSpecies);
          int attack = selectedSpecies.getAttack(thisLevel);
@@ -748,7 +747,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       for (String name : names) {
          Species species = speciesManager.getSpeciesByName(name);
          if (species.getMegaName() != null) {
-            megaChooser.addItem(name);
+            megaChooser.addItem(species.getLocalizedName(true));
          }
       }
       String megaSlotName = curTeam.getMegaSlotName();
@@ -757,7 +756,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       if (megaSpecies == null || megaSpecies.getMegaName() == null) {
          megaChooser.setSelectedItem(getString(KEY_NONE));
       } else {
-         megaChooser.setSelectedItem(megaSlotName);
+         megaChooser.setSelectedItem(megaSpecies.getLocalizedName(true));
       }
       int newThreshold = curTeam.getMegaThreshold(speciesManager, getUser().getRosterManager());
       if (megaSpecies == null || megaSpecies.getMegaName() == null || newThreshold == Integer.MAX_VALUE) {
@@ -915,7 +914,18 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
    
    private void updateFromOptions() {
       TeamImpl curTeam = new TeamImpl(myData.getTeamForStage(getCurrentStage()));
-      curTeam.setMegaSlot(getMegaSlot());
+      String megaSlotDisplayed = getMegaSlot();
+      String megaSlot = null;
+      if (megaSlotDisplayed != null) {
+         SpeciesManager sm = getUser().getSpeciesManager();
+         for (Species s : curTeam.getSpecies(sm)) {
+            if (s.getMegaName() != null && megaSlotDisplayed.equals(s.getLocalizedName(true))) {
+               megaSlot = s.getName();
+               break;
+            }
+         }
+      }
+      curTeam.setMegaSlot(megaSlot);
       String woodName = Species.WOOD.getName();
       boolean hasWood = curTeam.getNames().contains(woodName);
       String metalName = Species.METAL.getName();

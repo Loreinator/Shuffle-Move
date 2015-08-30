@@ -138,8 +138,9 @@ public class SimulationResult {
             column2 = move.get(3);
          }
       }
-      return String.format("%s,%s -> %s,%s: %sg, %s score, %s combos, %s blocks, %s disruptions", row1, column1, row2,
-            column2, gold, score, numCombosCleared, numBlocksCleared, numDisruptionsCleared);
+      return String.format("%s,%s -> %s,%s: %sg, %s score, %s combos, %s blocks, %s disruptions, %s mega progress",
+            row1, column1, row2, column2, gold, score, numCombosCleared, numBlocksCleared, numDisruptionsCleared,
+            megaProgress);
    }
    
    /*

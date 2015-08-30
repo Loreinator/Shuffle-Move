@@ -1,4 +1,4 @@
-Shuffle Move v0.3.22
+Shuffle Move v0.3.23
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -35,6 +35,15 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.23 - 2015-08-30
+	- Can now be launched portably, or with a customized save path
+	- Bug with bug report file names fixed
+	- Bug report file names improved (now includes time zone)
+	- Bug report detail improved
+	- Species names are now localized (does not include stages)
+	- Arrows can now navigate the board in express mode
+	- Move highly is now a background, cursor is double the thickness
+	- Falling wood blocks are now immune to shatter in the simulation
 v0.3.22 - 2015-08-26
 	- Bug fixes: Focus issue, last 3 abilities proc when there is 3 turns left, not from the 3rd turn.
 	- Abilities corrected: Sky Blast, Double Normal

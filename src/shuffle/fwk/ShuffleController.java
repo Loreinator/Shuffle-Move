@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -56,6 +58,7 @@ import shuffle.fwk.data.simulation.SimulationUser;
 import shuffle.fwk.gui.ShuffleFrame;
 import shuffle.fwk.gui.user.ShuffleFrameUser;
 import shuffle.fwk.i18n.I18nUser;
+import shuffle.fwk.service.BaseServiceManager;
 import shuffle.fwk.service.movepreferences.MovePreferencesService;
 
 /**
@@ -66,24 +69,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       SimulationUser, I18nUser {
    /** The log properties file path */
    private static final String LOG_CONFIG_FILE = "config/logger.properties";
-   static { // Ensures that the log managers are loaded from the config file.
-      String userHome = System.getProperty("user.home") + File.separator + "Shuffle-Move";
-      try {
-         new File(userHome).getAbsoluteFile().mkdir();
-         System.setProperty("user.dir", userHome);
-         try (InputStream is = ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE)) {
-            File logDir = new File("log").getAbsoluteFile();
-            if (!logDir.exists() && !logDir.mkdirs()) {
-               throw new IOException("Cannot create log directory.");
-            }
-            LogManager.getLogManager().readConfiguration(is);
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      } catch (SecurityException e) {
-         e.printStackTrace();
-      }
-   }
+
    /** The logger for this controller. */
    private static final Logger LOG = Logger.getLogger(ShuffleController.class.getName());
    
@@ -101,7 +87,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    /** The Minor version number. Each increment is a new significant overhaul. */
    public static final int VERSION_MINOR = 3;
    /** The SubMinor version number. Each increment is a minor batch of tweaks and fixes. */
-   public static final int VERSION_SUBMINOR = 22;
+   public static final int VERSION_SUBMINOR = 23;
    /** The full version String which identifies the program's actual version. */
    public static final String VERSION_FULL = String.format("v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_SUBMINOR);
    
@@ -151,9 +137,24 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
     *           unused.
     */
    public static void main(String... args) {
+      String userHomeArg = null;
+      String levelToSetArg = null;
+
       if (args != null && args.length > 0) {
+         userHomeArg = args[0];
+         if (args.length > 1) {
+            levelToSetArg = args[1];
+         }
+      }
+      
+      if (userHomeArg == null) {
+         userHomeArg = System.getProperty("user.home") + File.separator + "Shuffle-Move";
+      }
+      setUserHome(userHomeArg);
+
+      if (levelToSetArg != null) {
          try {
-            Level levelToSet = Level.parse(args[0]);
+            Level levelToSet = Level.parse(args[1]);
             Logger.getLogger(SimulationTask.class.getName()).setLevel(levelToSet);
             SimulationTask.setLogFiner(levelToSet.intValue() <= Level.FINER.intValue());
             Logger.getLogger(ShuffleModel.class.getName()).setLevel(levelToSet);
@@ -161,8 +162,41 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
             LOG.fine("Cannot set simulation logging to that level: " + StringUtils.join(args));
          }
       }
+
       ShuffleController ctrl = new ShuffleController();
-      ctrl.getFrame().launch();
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            ctrl.getFrame().launch();
+         }
+      });
+   }
+   
+   /**
+    * Sets the user home to the given path.
+    * 
+    * @param userHome
+    *           The absolute path to the new user home.
+    */
+   public static void setUserHome(String userHome) {
+      try {
+         File absoluteFile = new File(userHome).getCanonicalFile();
+         absoluteFile.mkdir();
+         System.setProperty("user.dir", absoluteFile.getCanonicalPath());
+         try (InputStream is = ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE)) {
+            File logDir = new File("log").getAbsoluteFile();
+            if (!logDir.exists() && !logDir.mkdirs()) {
+               throw new IOException("Cannot create log directory.");
+            }
+            LogManager.getLogManager().readConfiguration(is);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      } catch (SecurityException e) {
+         e.printStackTrace();
+      } catch (IOException e1) {
+         e1.printStackTrace();
+      }
    }
    
    /**
@@ -358,9 +392,12 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    public void doSelectedMove() {
       if (getModel().doSelectedMove()) {
          LOG.info(getString(KEY_DO_MOVE));
-         getModel().setCurrentMode(EntryMode.PAINT);
+         if (getModel().isSwapToPaint()) {
+            getModel().setCurrentMode(EntryMode.PAINT);
+         }
          getModel().setCursorTo(1, 1);
          repaint();
+         getFrame().toFront();
       }
    }
    
@@ -568,12 +605,50 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    }
    
    @Override
-   public void reportBug(String message) {
+   public void reportBug(final String givenMessage) {
       SwingUtilities.invokeLater(new Runnable() {
          @Override
          public void run() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("MESSAGE READS:\r\n");
+            sb.append(givenMessage);
+            sb.append("\r\nEND OF MESSAGE");
+            sb.append("\r\n\r\n");
+            sb.append("Selected result:");
+            SimulationResult curResult = getModel().getCurrentResult();
+            if (curResult == null) {
+               sb.append(" No result selected.");
+            } else {
+               sb.append("\r\n");
+               sb.append(curResult.toString());
+            }
+            sb.append("\r\n\r\n");
+            sb.append("Current results:");
+            Collection<SimulationResult> results = getModel().getResults();
+            if (results == null) {
+               sb.append("No results.");
+            } else {
+               for (SimulationResult result : results) {
+                  if (result != null) {
+                     sb.append("\r\n");
+                     sb.append(result.toString());
+                  }
+               }
+            }
+            sb.append("\r\n\r\n");
+            sb.append("Current running windows:");
+            List<String> info = new ArrayList<String>();
+            info.add(getFrame().toString());
+            Collection<JDialog> serviceDialogs = BaseServiceManager.getAllDialogs();
+            for (JDialog d : serviceDialogs) {
+               info.add(d.toString());
+            }
+            for (String s : info) {
+               sb.append("\r\n\r\n");
+               sb.append(s);
+            }
             getModel().saveAllData();
-            getModel().reportBug(message);
+            getModel().reportBug(sb.toString());
          }
       });
    }
@@ -978,10 +1053,12 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       int numFeeders = service.getNumFeeders();
       int feederHeight = service.getFeederHeight();
       boolean autoCompute = service.isAutoCompute();
+      boolean swapToPaint = service.isSwapToPaint();
       Collection<Effect> disabledEffects = service.getDisabledEffects();
       int threshold = service.getThreshold();
       
       boolean changed = false;
+      // These DO affect simulation results.
       changed |= getModel().setFeederPreferences(numFeeders, feederHeight, autoCompute);
       changed |= getModel().setDisabledEffects(disabledEffects);
       changed |= getModel().setEffectThreshold(threshold);
@@ -990,6 +1067,8 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          getModel().setDataChanged();
          repaint();
       }
+      // This doesn't affect simulation results.
+      getModel().setSwapToPaint(swapToPaint);
    }
    
    /*
@@ -1025,4 +1104,9 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return factory.isDataChanged();
    }
    
+   @Override
+   public boolean isSwapToPaint() {
+      return getModel().isSwapToPaint();
+   }
+
 }

@@ -126,10 +126,7 @@ public class Indicator<Y extends Object> extends JLabel {
       if (icon == null) { // no icon, we need to get a background color
          indicatorColor = getPreferencesManager().getColorFor(value);
       }
-      boolean oldOpaque = isOpaque();
-      setOpaque(icon == null);
-      boolean changing = oldOpaque != isOpaque();
-      changing |= setIndicatorIcon(icon);
+      boolean changing = setIndicatorIcon(icon);
       changing |= setIndicatorText(textToUse);
       changing |= setIndicatorColor(indicatorColor);
       visualizedValue = value;

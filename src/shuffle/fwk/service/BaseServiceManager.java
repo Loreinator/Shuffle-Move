@@ -19,9 +19,14 @@
 package shuffle.fwk.service;
 
 import java.awt.Frame;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import javax.swing.JDialog;
 
 /**
  * This manages services and their users. All service creation and destruction should progress
@@ -135,4 +140,23 @@ public class BaseServiceManager {
       return exitStatus;
    }
    
+   /**
+    * Obtains an unmodifiable view of all dialogs for registered services.
+    * 
+    * @return An unmodifiable collection of non-null JDialogs
+    */
+   public static Collection<JDialog> getAllDialogs() {
+      ArrayList<JDialog> dialogs = new ArrayList<JDialog>(SERVICE_TO_USER_MAP.size());
+      for (Service<?> s : SERVICE_TO_USER_MAP.keySet()) {
+         if (s == null) {
+            continue;
+         }
+         JDialog d = s.getDialog();
+         if (d != null) {
+            dialogs.add(d);
+         }
+      }
+      return Collections.unmodifiableCollection(dialogs);
+   }
+
 }

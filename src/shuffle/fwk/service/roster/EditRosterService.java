@@ -465,8 +465,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       iconLabel.addMouseListener(ma);
       ret.add(iconLabel, c);
       c.gridy += 1;
-      String text = s.getName();
-      JLabel jLabel = new JLabel(text.replaceAll("_", " "));
+      JLabel jLabel = new JLabel(s.getLocalizedName());
       jLabel.setHorizontalTextPosition(SwingConstants.CENTER);
       jLabel.setHorizontalAlignment(SwingConstants.CENTER);
       jLabel.addMouseListener(ma);
@@ -515,7 +514,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private void rebuildSelectedLabel() {
       String textToUse = getString(KEY_NONE_SELECTED);
       if (selectedSpecies != null) {
-         String name = selectedSpecies.getName().replaceAll("_", " ");
+         String name = selectedSpecies.getLocalizedName();
          RosterManager rosterManager = getUser().getRosterManager();
          Integer thisLevel = rosterManager.getLevelForSpecies(selectedSpecies);
          int attack = selectedSpecies.getAttack(thisLevel);

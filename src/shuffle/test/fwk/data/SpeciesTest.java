@@ -22,9 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import shuffle.fwk.ShuffleController;
 import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.PkmType;
 import shuffle.fwk.data.Species;
@@ -215,4 +218,17 @@ public class SpeciesTest {
       }
    }
    
+   /**
+    * Test method for {@link shuffle.fwk.data.Species#getLocalizedName(boolean)}.
+    */
+   @Test
+   public final void testGetLocalizedName() {
+      Collection<Species> allSpecies = new ShuffleController().getSpeciesManager().getAllSpecies();
+      for (Species s : allSpecies) {
+         if (s.getEffect().canLevel()) {
+            System.out.println(s.getLocalizedName(false));
+         }
+      }
+   }
+
 }

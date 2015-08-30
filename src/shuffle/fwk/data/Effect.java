@@ -1694,6 +1694,9 @@ public enum Effect {
             int row = extraBlocks.get(i * 2);
             int col = extraBlocks.get(i * 2 + 1);
             if (!task.isActive(row, col)) {
+               if (b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+                  task.getState().addDisruptionCleared(1);
+               }
                b.setSpeciesAt(row, col, toReplaceWith);
                Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(task.getClaimsFor(row,
                      col));
@@ -1820,6 +1823,9 @@ public enum Effect {
             int row = extraBlocks.get(i * 2);
             int col = extraBlocks.get(i * 2 + 1);
             if (!task.isActive(row, col)) {
+               if (b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+                  task.getState().addDisruptionCleared(1);
+               }
                b.setSpeciesAt(row, col, toReplaceWith);
                Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(task.getClaimsFor(row,
                      col));

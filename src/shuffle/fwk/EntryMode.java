@@ -22,6 +22,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 import shuffle.fwk.config.manager.TeamManager;
+import shuffle.fwk.data.Board;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
@@ -87,6 +88,14 @@ public enum EntryMode {
             user.advanceCursorBy(-1);
          } else if (evt.getKeyChar() == KeyEvent.VK_DELETE) {
             paintWith(user, Species.AIR);
+         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            user.advanceCursorBy(-Board.NUM_COLS);
+         } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            user.advanceCursorBy(+Board.NUM_COLS);
+         } else if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
+            user.advanceCursorBy(-1);
+         } else if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
+            user.advanceCursorBy(+1);
          } else {
             Species species = getSpeciesFor(user, evt);
             if (!species.equals(Species.AIR)) {

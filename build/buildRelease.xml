@@ -4,6 +4,7 @@
 	<property name="temp" value="../tmp" />
 	<property name="libsubdir" value="libraries" />
 	<property name="libstarget.dir" value="${temp}/${libsubdir}" />
+	<property name="suffix" value="" />
 
 	<target name="all" depends="verify, verifykeypass, zipreleasefailed, clean, create_run_jar, copyfiles, ziprelease, cleanuptmp, javadoc" />
 
@@ -19,10 +20,10 @@
 		</loadfile>
 		<script language="javascript">
 			<![CDATA[
-	        var myproperty= project.getProperty("name");
-	        if (myproperty!= null) {
-	            project.setProperty("name", myproperty.trim())
-	        }
+	        var name= project.getProperty("name").trim();
+			var suffix = project.getProperty("suffix");
+			var zipname = name.concat(suffix);
+	        project.setProperty("name", zipname.trim());
 	    ]]>
 		</script>
 		<echo message="Using name: '${name}'" />
@@ -67,6 +68,7 @@
 			<zipfileset includes="META-INF/*.txt **/*.MF" src="org.hamcrest.core_1.3.0.v201303031735.jar" prefix="org.hamcrest.core_1.3.0" />
 		</jar>
 		<signjar jar="${temp}/${name}.jar" alias="shufflemove" keystore="${keypass.dir}" storepass="password" />
+		<!-- Create the L4j executable  -->
 		<delete file="temp_l4j.xml" />
 		<copy file="launch4jconfig.xml" tofile="temp_l4j.xml" />
 		<echo message="l4j template is copied" />
@@ -75,6 +77,21 @@
 		<launch4j configFile="temp_l4j.xml" />
 		<echo message="l4j complete" />
 		<delete file="temp_l4j.xml" />
+		<!-- Create the L4j executable  -->
+		<delete file="temp_l4j.xml" />
+		<copy file="launch4jconfig_portable.xml" tofile="temp_l4j.xml" />
+		<echo message="l4j template is copied" />
+		<replaceregexp file="temp_l4j.xml" match="JARNAME" replace="${name}" flags="g" />
+		<replaceregexp file="temp_l4j.xml" match="EXENAME" replace="${name}_portable" flags="g" />
+		<echo message="l4j config is prepped" />
+		<launch4j configFile="temp_l4j.xml" />
+		<echo message="l4j complete" />
+		<delete file="temp_l4j.xml" />
+		<!-- Create the *.sh and *.bat run scripts -->
+		<copy file="launch.sh" tofile="${temp}/launch.sh" encoding="UTF-8" />
+		<copy file="launch.bat" tofile="${temp}/launch.bat" encoding="UTF-8" />
+		<replaceregexp file="${temp}/launch.sh" match="NAME" replace="${name}" flags="g" encoding="UTF-8" />
+		<replaceregexp file="${temp}/launch.bat" match="NAME" replace="${name}" flags="g" encoding="UTF-8" />
 	</target>
 
 	<target name="copyfiles">

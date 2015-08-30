@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import shuffle.fwk.i18n.I18nUser;
+
 /**
  * This is an object which acts as the intermediary between the configuration loading modules and
  * the main program. They are created by species, and then can be used to obtain things like the
@@ -30,7 +32,7 @@ import java.util.logging.Logger;
  * 
  * @author Andrew Meyers
  */
-public class Species implements Comparable<Species> {
+public class Species implements Comparable<Species>, I18nUser {
    @SuppressWarnings("unused")
    private static final Logger LOG = Logger.getLogger(Species.class.getName());
 
@@ -163,6 +165,32 @@ public class Species implements Comparable<Species> {
       return 37 * toString().hashCode();
    }
    
+   /**
+    * Gets the localized name for this species.
+    * 
+    * @param asMega
+    *           If true, and this species has a mega name, then the mega name will be returned
+    *           instead (localized)
+    * @return The localized name for this species, as a String.
+    */
+   public String getLocalizedName(boolean asMega) {
+      if (asMega && getMegaName() != null) {
+         return getString(getMegaName());
+      } else {
+         return getString(getName());
+      }
+   }
+   
+   /**
+    * Equivalent to<br>
+    * {@link Species#getLocalizedName(boolean)} called as getLocalizedName(false)
+    * 
+    * @return The localized name for this species, as a String.
+    */
+   public String getLocalizedName() {
+      return getLocalizedName(false);
+   }
+
    @Override
    public boolean equals(Object o) {
       if (o == null || !(o instanceof Species)) {
