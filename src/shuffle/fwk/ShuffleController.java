@@ -371,6 +371,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          }
          getModel().setCursorTo(1, 1);
          repaint();
+         getFrame().toFront();
       }
    }
    
