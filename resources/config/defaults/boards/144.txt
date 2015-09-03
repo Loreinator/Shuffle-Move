@@ -1,0 +1,13 @@
+STAGE 144
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Skarmory,Air,Air
+FROW_3 false,false,false,true,false,false
+ROW_4 Air,Air,Metal,Metal,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Metal,Metal,Metal,Metal,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_6 false,false,false,false,false,false

@@ -1,0 +1,13 @@
+STAGE 155
+ROW_1 Metal,Metal,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Metal,Air,Smeargle,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Wood,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Wood,Smeargle,Smeargle,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Wood,Smeargle,Air,Air
+FROW_6 false,false,false,false,false,false

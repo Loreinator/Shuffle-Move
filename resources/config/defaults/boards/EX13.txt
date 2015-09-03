@@ -1,0 +1,13 @@
+STAGE EX13
+ROW_1 Metal,Air,Air,Air,Air,Metal
+FROW_1 true,false,false,false,false,true
+ROW_2 Metal,Air,Air,Air,Air,Metal
+FROW_2 true,false,false,false,false,true
+ROW_3 Metal,Air,Air,Air,Air,Metal
+FROW_3 true,false,false,false,false,true
+ROW_4 Metal,Air,Air,Air,Air,Metal
+FROW_4 true,false,false,false,false,true
+ROW_5 Metal,Air,Air,Air,Air,Metal
+FROW_5 true,false,false,false,false,true
+ROW_6 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_6 true,true,true,true,true,true

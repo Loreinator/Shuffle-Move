@@ -1,0 +1,13 @@
+STAGE 177
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Banette,Banette,Air,Banette,Banette,Air
+FROW_2 true,true,false,true,true,false
+ROW_3 Banette,Air,Banette,Banette,Air,Banette
+FROW_3 true,false,true,true,false,true
+ROW_4 Air,Banette,Banette,Air,Air,Banette
+FROW_4 false,true,true,false,false,true
+ROW_5 Banette,Banette,Air,Banette,Banette,Air
+FROW_5 true,true,false,true,true,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

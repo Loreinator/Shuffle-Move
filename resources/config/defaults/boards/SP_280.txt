@@ -1,0 +1,13 @@
+STAGE SP_280
+ROW_1 Metal,Air,Air,Air,Air,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Air,Air,Air,Air,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Metal,Air,Air,Air,Air,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Air,Air,Air,Air,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Air,Air,Air,Air,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Air,Air,Air,Air,Metal
+FROW_6 false,false,false,false,false,false

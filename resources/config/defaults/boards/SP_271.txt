@@ -1,0 +1,13 @@
+STAGE SP_271
+ROW_1 Seviper,Air,Seviper,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Seviper,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Seviper,Air,Seviper,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Seviper,Air,Seviper
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Air,Air,Seviper,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Seviper,Air,Seviper
+FROW_6 false,false,false,false,false,false

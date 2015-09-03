@@ -1,0 +1,13 @@
+STAGE 192
+ROW_1 Lickitung,Lickitung,Lickilicky,Lickitung,Lickilicky,Lickitung
+FROW_1 false,false,false,false,false,false
+ROW_2 Lickilicky,Lickilicky,Lickitung,Lickilicky,Lickitung,Lickilicky
+FROW_2 false,false,false,false,false,false
+ROW_3 Lickilicky,Lickitung,Lickitung,Lickilicky,Lickitung,Lickitung
+FROW_3 false,false,false,false,false,false
+ROW_4 Lickitung,Lickilicky,Lickilicky,Lickitung,Lickilicky,Lickilicky
+FROW_4 false,false,false,false,false,false
+ROW_5 Lickilicky,Lickitung,Lickilicky,Lickitung,Lickilicky,Lickitung
+FROW_5 false,false,false,false,false,false
+ROW_6 Lickitung,Lickilicky,Lickitung,Lickilicky,Lickitung,Lickilicky
+FROW_6 false,false,false,false,false,false

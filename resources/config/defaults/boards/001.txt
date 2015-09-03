@@ -1,0 +1,13 @@
+STAGE 001
+ROW_1 Happiny,Pidgey,Pichu,Happiny,Pidgey,Happiny
+FROW_1 false,false,false,false,false,false
+ROW_2 Azurill,Azurill,Pichu,Pidgey,Azurill,Pichu
+FROW_2 false,false,false,false,false,false
+ROW_3 Pidgey,Happiny,Pidgey,Pichu,Pichu,Happiny
+FROW_3 false,false,false,false,false,false
+ROW_4 Pichu,Pidgey,Azurill,Azurill,Pidgey,Azurill
+FROW_4 false,false,false,false,false,false
+ROW_5 Azurill,Azurill,Pichu,Pichu,Happiny,Azurill
+FROW_5 false,false,false,false,false,false
+ROW_6 Pidgey,Happiny,Pichu,Pidgey,Azurill,Happiny
+FROW_6 false,false,false,false,false,false

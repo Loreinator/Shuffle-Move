@@ -1,0 +1,13 @@
+STAGE 165
+ROW_1 Feebas,Feebas,Air,Air,Feebas,Feebas
+FROW_1 true,true,false,false,true,true
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Feebas,Air,Feebas,Feebas,Air,Feebas
+FROW_3 true,false,true,true,false,true
+ROW_4 Feebas,Air,Feebas,Feebas,Air,Feebas
+FROW_4 true,false,true,true,false,true
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Feebas,Feebas,Air,Air,Feebas,Feebas
+FROW_6 true,true,false,false,true,true

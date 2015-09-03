@@ -1,0 +1,13 @@
+STAGE 184
+ROW_1 Air,Air,Granbull,Granbull,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Metal,Granbull,Granbull,Metal,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Granbull,Granbull,Air,Air,Granbull,Granbull
+FROW_3 false,false,false,false,false,false
+ROW_4 Granbull,Granbull,Air,Air,Granbull,Granbull
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Metal,Granbull,Granbull,Metal,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Granbull,Granbull,Air,Air
+FROW_6 false,false,false,false,false,false

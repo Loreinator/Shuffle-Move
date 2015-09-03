@@ -1,0 +1,13 @@
+STAGE SP_244
+ROW_1 Air,Shaymin,Air,Air,Shaymin,Air
+FROW_1 false,true,false,false,true,false
+ROW_2 Shaymin,Air,Shaymin,Shaymin,Air,Shaymin
+FROW_2 false,false,true,true,false,true
+ROW_3 Air,Shaymin,Shaymin,Air,Shaymin,Air
+FROW_3 false,true,false,false,true,false
+ROW_4 Air,Shaymin,Air,Air,Shaymin,Air
+FROW_4 false,true,false,false,true,false
+ROW_5 Shaymin,Air,Shaymin,Shaymin,Air,Shaymin
+FROW_5 false,false,false,true,false,false
+ROW_6 Air,Shaymin,Shaymin,Air,Shaymin,Shaymin
+FROW_6 false,true,true,false,true,true

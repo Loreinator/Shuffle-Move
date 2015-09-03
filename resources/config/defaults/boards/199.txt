@@ -1,0 +1,13 @@
+STAGE 199
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Tangrowth,Tangrowth,Air,Air,Tangrowth,Tangrowth
+FROW_2 true,true,false,false,true,true
+ROW_3 Tangrowth,Tangrowth,Air,Air,Tangrowth,Tangrowth
+FROW_3 true,true,false,false,true,true
+ROW_4 Metal,Metal,Air,Air,Metal,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Tangrowth,Tangrowth,Air,Air,Tangrowth,Tangrowth
+FROW_5 true,true,false,false,true,true
+ROW_6 Tangrowth,Tangrowth,Air,Air,Tangrowth,Tangrowth
+FROW_6 true,true,false,false,true,true

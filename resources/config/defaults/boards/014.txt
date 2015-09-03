@@ -1,0 +1,13 @@
+STAGE 014
+ROW_1 Air,Air,Air,Torchic,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Wood,Wood,Air,Wood,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Wood,Wood,Air,Wood,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Wood,Torchic,Air,Torchic,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Wood,Wood,Torchic,Wood,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Torchic,Air,Air,Air,Torchic
+FROW_6 false,false,false,false,false,false

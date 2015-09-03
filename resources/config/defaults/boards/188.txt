@@ -1,0 +1,13 @@
+STAGE 188
+ROW_1 Shelgon,Air,Air,Air,Shelgon,Air
+FROW_1 true,false,false,false,true,false
+ROW_2 Shelgon,Shelgon,Air,Air,Shelgon,Shelgon
+FROW_2 true,true,false,false,true,true
+ROW_3 Air,Shelgon,Air,Air,Air,Shelgon
+FROW_3 false,true,false,false,false,true
+ROW_4 Shelgon,Air,Air,Air,Shelgon,Air
+FROW_4 true,false,false,false,true,false
+ROW_5 Shelgon,Shelgon,Air,Air,Shelgon,Shelgon
+FROW_5 true,true,false,false,true,true
+ROW_6 Air,Shelgon,Air,Air,Air,Shelgon
+FROW_6 false,true,false,false,false,true

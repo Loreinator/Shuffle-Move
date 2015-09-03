@@ -1,0 +1,13 @@
+STAGE 034
+ROW_1 Swablu,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Swablu,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Swablu,Metal,Swablu,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Swablu,Metal,Swablu,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Swablu,Metal,Swablu,Metal,Swablu,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Swablu,Metal,Swablu,Metal,Swablu
+FROW_6 false,false,false,false,false,false
