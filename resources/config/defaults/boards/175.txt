@@ -1,0 +1,13 @@
+STAGE 175
+ROW_1 Lickitung,Lickitung,Air,Lickitung,Air,Lickitung
+FROW_1 false,false,false,false,false,false
+ROW_2 Lickitung,Air,Air,Lickitung,Lickitung,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Lickitung,Lickitung,Air,Air,Lickitung
+FROW_3 false,false,false,false,false,false
+ROW_4 Lickitung,Air,Lickitung,Air,Lickitung,Lickitung
+FROW_4 false,false,false,false,false,false
+ROW_5 Lickitung,Lickitung,Air,Lickitung,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Lickitung,Air,Lickitung,Lickitung
+FROW_6 false,false,false,false,false,false

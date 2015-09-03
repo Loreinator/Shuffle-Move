@@ -1,0 +1,13 @@
+STAGE 167
+ROW_1 Air,Air,Air,Honedge,Air,Honedge
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Honedge,Metal,Honedge,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Metal,Honedge,Metal,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Honedge,Metal,Honedge,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Honedge,Air,Honedge,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Honedge,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

@@ -1,0 +1,13 @@
+STAGE 021
+ROW_1 Wood,Wood,Wood,Wood,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Wood,Wood,Wood,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Wood,Wood,Wood,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Wood,Wood,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Wood,Wood,Wood,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Wood,Wood,Wood,Air,Air
+FROW_6 false,false,false,false,false,false

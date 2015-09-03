@@ -1,0 +1,13 @@
+STAGE SP_241
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Metal,Air,Air,Air,Air,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Metal,Air,Air,Metal,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Relicanth,Metal,Metal,Metal,Metal,Relicanth
+FROW_5 false,false,false,false,false,false
+ROW_6 Relicanth,Relicanth,Metal,Metal,Relicanth,Relicanth
+FROW_6 false,false,false,false,false,false

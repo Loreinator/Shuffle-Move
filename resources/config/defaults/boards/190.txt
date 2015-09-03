@@ -1,0 +1,13 @@
+STAGE 190
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Onix,Metal,Onix,Metal,Onix,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Onix,Metal,Onix,Metal,Onix
+FROW_4 false,false,false,false,false,false
+ROW_5 Onix,Metal,Onix,Metal,Onix,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Onix,Metal,Onix,Metal,Onix
+FROW_6 false,false,false,false,false,false

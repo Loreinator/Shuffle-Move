@@ -1,0 +1,13 @@
+STAGE 178
+ROW_1 Air,Air,Tangela,Tangela,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Tangela,Tangela,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Tangela,Air,Air,Tangela,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Tangela,Air,Air,Tangela,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Tangela,Tangela,Air,Tangela
+FROW_5 false,false,false,false,false,false
+ROW_6 Tangela,Air,Air,Air,Tangela,Air
+FROW_6 false,false,false,false,false,false

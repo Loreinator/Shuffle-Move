@@ -1,0 +1,13 @@
+STAGE SP_039L
+ROW_1 Air,Rotom_s,Rotom_s,Air,Rotom_s,Rotom_s
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Rotom_s,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Rotom_s,Air,Rotom_s,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Rotom_s,Air,Rotom_s,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Rotom_s,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Rotom_s,Rotom_s,Air,Rotom_s,Rotom_s,Air
+FROW_6 false,false,false,false,false,false

@@ -1,0 +1,13 @@
+STAGE 072
+ROW_1 Air,Wood,Air,Wood,Air,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Treecko,Wood,Treecko,Wood,Treecko,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Treecko,Air,Treecko,Air,Treecko
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Wood,Air,Wood,Air,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Treecko,Air,Treecko,Air,Treecko,Air
+FROW_6 false,false,false,false,false,false

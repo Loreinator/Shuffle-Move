@@ -1,0 +1,13 @@
+STAGE 069
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Slowpoke,Air,Slowpoke,Slowpoke,Air,Slowpoke
+FROW_2 false,false,false,false,false,false
+ROW_3 Slowbro,Air,Slowbro,Slowbro,Air,Slowbro
+FROW_3 false,false,false,false,false,false
+ROW_4 Slowpoke,Slowbro,Slowpoke,Slowpoke,Slowbro,Slowpoke
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Slowpoke,Wood,Wood,Slowpoke,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Slowbro,Air,Air,Slowbro,Air
+FROW_6 false,false,false,false,false,false

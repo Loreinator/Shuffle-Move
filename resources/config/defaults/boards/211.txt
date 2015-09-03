@@ -1,0 +1,13 @@
+STAGE 211
+ROW_1 Air,Wood,Air,Wood,Air,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Air,Wood,Air,Wood,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Wood,Air,Wood,Air,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Air,Air,Air,Wood,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Wood,Starly,Wood,Air,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Air,Air,Air,Wood,Air
+FROW_6 false,false,false,false,false,false

@@ -1,0 +1,13 @@
+STAGE 219
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Scatterbug,Air,Scatterbug,Scatterbug,Air,Scatterbug
+FROW_2 true,false,true,true,false,true
+ROW_3 Scatterbug,Air,Scatterbug,Scatterbug,Air,Scatterbug
+FROW_3 true,false,true,true,false,true
+ROW_4 Air,Scatterbug,Air,Air,Scatterbug,Air
+FROW_4 false,true,false,false,true,false
+ROW_5 Air,Scatterbug,Air,Air,Scatterbug,Air
+FROW_5 false,true,false,false,true,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

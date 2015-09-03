@@ -1,0 +1,13 @@
+STAGE EX24
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Frogadier,Frogadier,Air,Frogadier,Air,Frogadier
+FROW_2 true,true,false,true,false,true
+ROW_3 Air,Air,Frogadier,Air,Frogadier,Air
+FROW_3 false,false,true,false,true,false
+ROW_4 Frogadier,Frogadier,Air,Frogadier,Air,Frogadier
+FROW_4 true,true,false,true,false,true
+ROW_5 Air,Frogadier,Frogadier,Air,Frogadier,Frogadier
+FROW_5 false,true,true,false,true,true
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false
