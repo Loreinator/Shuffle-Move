@@ -92,7 +92,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private PriorityQueue<Integer> simulationEffectTimes = new PriorityQueue<Integer>();
    
    private HashMap<List<Integer>, Collection<ActivateComboEffect>> effectClaims = new HashMap<List<Integer>, Collection<ActivateComboEffect>>();
-   private HashMap<List<Integer>, Collection<ComboEffect>> activeEffects = new HashMap<List<Integer>, Collection<ComboEffect>>();
+   private HashMap<Integer, Collection<ComboEffect>> activeEffects = new HashMap<Integer, Collection<ComboEffect>>();
    
    private HashMap<PkmType, Double> typeMultipliers = new HashMap<PkmType, Double>();
    /**
@@ -589,13 +589,19 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
    }
    
+   private int getActiveEffectsKey(int row, int col) {
+      return Board.NUM_COLS * row + col - 1;
+   }
+
    public boolean isActive(int row, int col) {
-      return activeEffects.containsKey(Arrays.asList(row, col));
+      return activeEffects.containsKey(getActiveEffectsKey(row, col));
+      // Arrays.asList(row, col));
    }
    
    public boolean isActiveCombo(List<Integer> coords) {
       if (coords.size() >= 2) {
-         Collection<ComboEffect> effects = activeEffects.get(Arrays.asList(coords.get(0), coords.get(1)));
+         Collection<ComboEffect> effects = activeEffects.get(getActiveEffectsKey(coords.get(0), coords.get(1)));
+         // Arrays.asList(coords.get(0), coords.get(1)));
          if (effects != null) {
             for (ComboEffect collision : effects) {
                if (collision.getCoords().equals(coords)) {
@@ -609,7 +615,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    
    public Collection<ComboEffect> getActiveEffectsFor(int row, int col) {
       Collection<ComboEffect> ret = Collections.emptyList();
-      List<Integer> key = Arrays.asList(row, col);
+      Integer key = getActiveEffectsKey(row, col);
       if (activeEffects.containsKey(key)) {
          ret = activeEffects.get(key);
       }
@@ -621,7 +627,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
          Integer row = coords.get(i * 2);
          Integer col = coords.get(i * 2 + 1);
-         List<Integer> key = Arrays.asList(row, col);
+         Integer key = getActiveEffectsKey(row, col);
          if (!activeEffects.containsKey(key)) {
             activeEffects.put(key, new HashSet<ComboEffect>());
          }
@@ -634,7 +640,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
          Integer row = coords.get(i * 2);
          Integer col = coords.get(i * 2 + 1);
-         List<Integer> key = Arrays.asList(row, col);
+         Integer key = getActiveEffectsKey(row, col);
          if (activeEffects.containsKey(key)) {
             activeEffects.get(key).remove(effect);
             if (activeEffects.get(key).isEmpty()) {

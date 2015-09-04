@@ -33,6 +33,7 @@ public class Board {
    private final Species[][] species = new Species[NUM_ROWS][NUM_COLS];
    private final boolean[][] frozen = new boolean[NUM_ROWS][NUM_COLS];
    private int megaProgress;
+   private String toString = null;
    
    public Board() {
       clear();
@@ -62,6 +63,9 @@ public class Board {
       newProgress = Math.max(0, newProgress);
       if (newProgress != megaProgress) {
          megaProgress = newProgress;
+         if (toString != null) {
+            toString = null;
+         }
          return true;
       } else {
          return false;
@@ -94,6 +98,9 @@ public class Board {
          changed |= setFrozenAt(row, column, false);
       }
       species[row - 1][column - 1] = s;
+      if (changed && toString != null) {
+         toString = null;
+      }
       return changed;
    }
    
@@ -125,6 +132,9 @@ public class Board {
       boolean toSet = s != null && s.isFreezable() && freeze;
       boolean changed = frozen[row - 1][column - 1] != freeze;
       frozen[row - 1][column - 1] = toSet;
+      if (changed && toString != null) {
+         toString = null;
+      }
       return changed;
    }
    
@@ -173,47 +183,53 @@ public class Board {
             changed |= setFrozenAt(i, j, false);
          }
       }
+      if (changed && toString != null) {
+         toString = null;
+      }
       return changed;
    }
    
    @Override
    public String toString() {
-      StringBuilder sb = new StringBuilder();
-      int maxlen = 0;
-      for (Species[] row : species) {
-         for (Species s : row) {
-            if (maxlen < s.getName().length()) {
-               maxlen = s.getName().length();
+      if (toString == null) {
+         StringBuilder sb = new StringBuilder();
+         int maxlen = 0;
+         for (Species[] row : species) {
+            for (Species s : row) {
+               if (maxlen < s.getName().length()) {
+                  maxlen = s.getName().length();
+               }
             }
          }
-      }
-      for (int i = 1; i <= NUM_ROWS; i++) {
-         for (int j = 1; j <= NUM_COLS; j++) {
-            String name = species[i - 1][j - 1].getName();
-            String bufr = new String(new char[maxlen - name.length()]).replace("\0", " ");
-            sb.append(bufr);
-            sb.append(name);
-            if (j <= NUM_COLS - 1) {
-               sb.append(",");
+         for (int i = 1; i <= NUM_ROWS; i++) {
+            for (int j = 1; j <= NUM_COLS; j++) {
+               String name = species[i - 1][j - 1].getName();
+               String bufr = new String(new char[maxlen - name.length()]).replace("\0", " ");
+               sb.append(bufr);
+               sb.append(name);
+               if (j <= NUM_COLS - 1) {
+                  sb.append(",");
+               }
+            }
+            if (i <= NUM_ROWS - 1) {
+               sb.append("\n");
             }
          }
-         if (i <= NUM_ROWS - 1) {
-            sb.append("\n");
-         }
-      }
-      sb.append("\n");
-      for (int i = 1; i <= NUM_ROWS; i++) {
-         for (int j = 1; j <= NUM_COLS; j++) {
-            sb.append(Boolean.toString(isFrozenAt(i + 1, j + 1)));
-            if (j <= NUM_COLS - 1) {
-               sb.append(",");
+         sb.append("\n");
+         for (int i = 1; i <= NUM_ROWS; i++) {
+            for (int j = 1; j <= NUM_COLS; j++) {
+               sb.append(Boolean.toString(isFrozenAt(i + 1, j + 1)));
+               if (j <= NUM_COLS - 1) {
+                  sb.append(",");
+               }
+            }
+            if (i <= NUM_ROWS - 1) {
+               sb.append("\n");
             }
          }
-         if (i <= NUM_ROWS - 1) {
-            sb.append("\n");
-         }
+         toString = sb.toString();
       }
-      return sb.toString();
+      return toString;
    }
    
    @Override
