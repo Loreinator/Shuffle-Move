@@ -20,7 +20,9 @@ package shuffle.fwk.data;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import shuffle.fwk.i18n.I18nUser;
@@ -35,6 +37,8 @@ import shuffle.fwk.i18n.I18nUser;
 public class Species implements Comparable<Species>, I18nUser {
    @SuppressWarnings("unused")
    private static final Logger LOG = Logger.getLogger(Species.class.getName());
+
+   private static final Map<String, Integer> STRING_TO_ID = new HashMap<String, Integer>();
 
    public static final Species AIR = new Species("Air", 0, 0, PkmType.NONE, Effect.AIR, null, Effect.NONE);
    public static final Species WOOD = new Species("Wood", 1, 0, PkmType.WOOD, Effect.WOOD, null, Effect.NONE);
@@ -60,8 +64,9 @@ public class Species implements Comparable<Species>, I18nUser {
    private final String megaName;
    private final Effect megaEffect;
    private final int number;
-   
    private final String toString;
+   private final Integer ID;
+   private final int hash;
    
    public Species(Species other) {
       this(other.name, other.number, other.attack, other.type, other.effect, other.megaName, other.megaEffect);
@@ -96,8 +101,19 @@ public class Species implements Comparable<Species>, I18nUser {
       this.megaEffect = megaEffect == null ? Effect.NONE : megaEffect;
       
       toString = getString();
+      ID = getId(toString);
+      hash = 37 * toString.hashCode();
    }
    
+   private static final Integer getId(String toString) {
+      Integer ret = STRING_TO_ID.get(toString);
+      if (ret == null) {
+         ret = STRING_TO_ID.size();
+         STRING_TO_ID.put(toString, ret);
+      }
+      return ret;
+   }
+
    public int getNumber() {
       return number;
    }
@@ -162,7 +178,7 @@ public class Species implements Comparable<Species>, I18nUser {
    
    @Override
    public int hashCode() {
-      return 37 * toString().hashCode();
+      return hash;
    }
    
    /**
@@ -197,7 +213,7 @@ public class Species implements Comparable<Species>, I18nUser {
          return false;
       }
       Species s = (Species) o;
-      return toString().equals(s.toString());
+      return ID.equals(s.ID);
    }
    
    /*
