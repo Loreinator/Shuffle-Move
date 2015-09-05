@@ -35,8 +35,10 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.25 - 2015-09-0
-	- 
+v0.3.25 - 2015-09-04
+	- Massive performance gains (about 80-85% reduction in simulation time)
+	- Mega Sharpedo added, and his stage
+	- All versioning is now auto generated from a single source
 v0.3.24 - 2015-09-02
 	- Finnish Translations updated
 	- New species and stages added
