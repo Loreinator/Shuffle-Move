@@ -256,6 +256,21 @@ public class UpdateCheck implements I18nUser {
       return ret;
    }
    
+   public int[] getVersionNumbers(String version) {
+      int[] ret = new int[3];
+      try {
+         Matcher m = VERSION_EXTRACT_PATTERN.matcher(version);
+         if (m.find()) {
+            for (int i = 0; i < 3; i++) {
+               ret[i] = Math.max(0, Integer.parseInt(m.group(i + 1)));
+            }
+         }
+      } catch (NumberFormatException e) {
+         LOG.log(Level.SEVERE, getString(KEY_GET_INVALID, version), e);
+      }
+      return ret;
+   }
+
    public static String getVersionString(int version) {
       String versionString;
       if (version <= 0) {

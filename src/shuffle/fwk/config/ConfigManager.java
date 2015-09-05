@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 
 import shuffle.fwk.EntryMode;
-import shuffle.fwk.ShuffleController;
+import shuffle.fwk.ShuffleVersion;
 import shuffle.fwk.config.writer.PreferencesWriter;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
@@ -56,6 +56,7 @@ public class ConfigManager {
    }
    
    private static final String KEY_VERSION = "VERSION";
+   private static final String KEY_BUILD_DATE = "BUILD_DATE";
 
    private final List<String> filePaths;
    private final ConfigLoader loader;
@@ -168,19 +169,35 @@ public class ConfigManager {
             }
          }
       }
-      setEntry(EntryType.STRING, KEY_VERSION, ShuffleController.VERSION_FULL);
+      setDateStamp();
+   }
+   
+   protected final void setDateStamp() {
+      setEntry(EntryType.STRING, KEY_VERSION, ShuffleVersion.VERSION_FULL);
+      setEntry(EntryType.LONG, KEY_BUILD_DATE, ShuffleVersion.BUILD_DATE);
    }
    
    public final boolean isOutOfDate() {
-      int curVersion = UpdateCheck.parseVersionNumber(ShuffleController.VERSION_FULL);
-      int savedVersion = 0;
       try {
-         String fileVersion = getStringValue(KEY_VERSION);
-         savedVersion = UpdateCheck.parseVersionNumber(fileVersion);
+         String fileVersionString = getStringValue(KEY_VERSION, UpdateCheck.NO_VERSION);
+         int[] fileVersionNumbers = new UpdateCheck().getVersionNumbers(fileVersionString);
+         int[] curVersionNumbers = ShuffleVersion.VERSION_ARRAY;
+         boolean uptodate = true;
+         for (int i = 0; i < 3; i++) {
+            if (fileVersionNumbers[i] > curVersionNumbers[i]) {
+               break;
+            } else if (fileVersionNumbers[i] < curVersionNumbers[i]) {
+               uptodate = false;
+               break;
+            }
+         }
+         Long fileBuildDate = getLongValue(KEY_BUILD_DATE, 0l);
+         uptodate &= fileBuildDate >= ShuffleVersion.BUILD_DATE;
+         return !uptodate;
       } catch (Exception e) {
          // then we assume it has no saved version.
+         return true;
       }
-      return (savedVersion < curVersion);
    }
 
    public void saveDataToConfig() {
@@ -384,6 +401,19 @@ public class ConfigManager {
       return getValues(EntryType.INTEGER, Integer.class);
    }
    
+   // Long
+   public Long getLongValue(String key) {
+      return getValue(EntryType.LONG, key, Long.class);
+   }
+   
+   public Long getLongValue(String key, Long def) {
+      return getValue(EntryType.LONG, key, Long.class, def);
+   }
+   
+   public List<Long> getLongValues() {
+      return getValues(EntryType.LONG, Long.class);
+   }
+
    // String
    public String getStringValue(String key) {
       return getValue(EntryType.STRING, key, String.class);

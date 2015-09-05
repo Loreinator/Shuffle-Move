@@ -82,17 +82,6 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       }
    }
    
-   /** The Major version number. 0 = unfinished, 1 = first release, etc. */
-   public static final int VERSION_MAJOR = 0;
-   /** The Minor version number. Each increment is a new significant overhaul. */
-   public static final int VERSION_MINOR = 3;
-   /** The SubMinor version number. Each increment is a minor batch of tweaks and fixes. */
-   public static final int VERSION_SUBMINOR = 25;
-   /** The full version String which identifies the program's actual version. */
-   public static final String VERSION_FULL = String.format("v%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_SUBMINOR);
-   
-   public static final String KEY_I18N_LOCATION = "i18n/";
-   
    // i18n keys
    private static final String KEY_LOAD_ALL = "log.all.load";
    private static final String KEY_SAVE_ALL = "log.all.save";
@@ -510,7 +499,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    
    @Override
    public String getTitle() {
-      return VERSION_FULL;
+      return ShuffleVersion.VERSION_FULL;
    }
    
    @Override
@@ -677,7 +666,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
     */
    @Override
    public String getCurrentVersion() {
-      return VERSION_FULL;
+      return ShuffleVersion.VERSION_FULL;
    }
    
    public void setMegaActive(boolean active) {

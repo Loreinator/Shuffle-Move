@@ -43,7 +43,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import shuffle.fwk.ShuffleController;
+import shuffle.fwk.ShuffleVersion;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.gui.user.ShuffleFrameUser;
 import shuffle.fwk.i18n.I18nUser;
@@ -83,7 +83,7 @@ public class ShuffleFrame extends JFrame implements I18nUser {
    public ShuffleFrame(ShuffleFrameUser user) {
       super();
       setIconFromResources();
-      setTitle(getString(KEY_TITLE, ShuffleController.VERSION_FULL));
+      setTitle(getString(KEY_TITLE, ShuffleVersion.VERSION_FULL));
       setUser(user);
       setResizable(true);
       setupGUI();
@@ -335,7 +335,7 @@ public class ShuffleFrame extends JFrame implements I18nUser {
       gridPanel.addActionListeners();
       modeIndicator.addActionListeners();
       paintPalletPanel.addIndicatorListeners();
-      LOG.info(getString(KEY_WELCOME, ShuffleController.VERSION_FULL));
+      LOG.info(getString(KEY_WELCOME, ShuffleVersion.VERSION_FULL));
    }
    
    @Override
