@@ -1724,6 +1724,48 @@ public enum Effect {
       
    },
    /**
+    * Add one more mega sharpedo above the match. This is only available for matching up on the next
+    * tick.
+    */
+   SHARPEDO {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return SLOWBRO.handlePlans(comboEffect, task);
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return SLOWBRO.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public void handleExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks) {
+         SLOWBRO.handleExtraBlocks(comboEffect, task, extraBlocks);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 18;
+      }
+      
+      @Override
+      public int getMegaThreshold() {
+         return 22;
+      }
+      
+      @Override
+      public int getMegaSpeedupCap() {
+         return 10;
+      }
+      
+   },
+   /**
     * Add one more mega heracross above the match. This is only available for matching up on the
     * next tick.
     */
