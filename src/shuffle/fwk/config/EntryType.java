@@ -78,6 +78,26 @@ public enum EntryType {
       }
       
    },
+   LONG {
+      
+      @Override
+      public Long parseValue(String key, String value) throws Exception {
+         return Long.parseLong(value);
+      }
+      
+      @Override
+      public Class<? extends Object> getDataClass() {
+         return Long.class;
+      }
+      
+      @Override
+      public String getDataString(Object obj) throws Exception {
+         Long value = (Long) obj;
+         String ret = Long.toString(value);
+         return ret;
+      }
+      
+   },
    STRING {
       
       @Override

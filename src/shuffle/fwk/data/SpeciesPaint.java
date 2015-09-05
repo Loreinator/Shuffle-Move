@@ -27,10 +27,11 @@ public class SpeciesPaint {
    public static final SpeciesPaint AIR = new SpeciesPaint(Species.AIR);
    
    private final Species s;
-   private final Boolean frozen;
-   private final Boolean mega;
+   private final boolean frozen;
+   private final boolean mega;
    
    private final String str;
+   private final int hash;
 
    public SpeciesPaint(Species paint) {
       this(paint, null, null);
@@ -45,8 +46,8 @@ public class SpeciesPaint {
          throw new NullPointerException("Cannot specify a null species for a paint. Air would be acceptable.");
       }
       s = paint;
-      frozen = isFrozen;
-      mega = isMega;
+      frozen = isFrozen == null ? false : isFrozen.booleanValue();
+      mega = isMega == null ? false : isMega.booleanValue();
       StringBuilder sb = new StringBuilder();
       if (isFrozen()) {
          sb.append("Frozen_");
@@ -56,18 +57,19 @@ public class SpeciesPaint {
       }
       sb.append(s.toString());
       str = sb.toString();
+      hash = 37 * str.hashCode();
    }
    
    public Species getSpecies() {
       return s;
    }
    
-   public Boolean isFrozen() {
-      return frozen == null ? false : frozen.booleanValue();
+   public boolean isFrozen() {
+      return frozen;
    }
    
-   public Boolean isMega() {
-      return mega == null ? false : mega.booleanValue();
+   public boolean isMega() {
+      return mega;
    }
    
    @Override
@@ -77,11 +79,15 @@ public class SpeciesPaint {
    
    @Override
    public int hashCode() {
-      return toString().hashCode();
+      return hash;
    }
    
    @Override
    public boolean equals(Object o) {
-      return o != null && o instanceof SpeciesPaint && o.toString().equals(toString());
+      if (o == null || !(o instanceof SpeciesPaint)) {
+         return false;
+      }
+      SpeciesPaint p = (SpeciesPaint) o;
+      return s.equals(p.s) && frozen == p.frozen && mega == p.mega;
    }
 }

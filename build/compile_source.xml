@@ -15,7 +15,32 @@
 		<pathelement location="build/junit.jar" />
 		<pathelement location="build/org.hamcrest.core_1.3.0.v201303031735.jar" />
 	</path>
-	<target name="init">
+	<target name="updateversion">
+		<loadfile srcfile="README.txt" property="version.full">
+			<filterchain>
+				<headfilter lines="1" />
+			</filterchain>
+		</loadfile>
+		<script language="javascript">
+			var re = new RegExp(/v(\d+).(\d+).(\d+)/);
+			var m = re.exec(project.getProperty("version.full"));
+		    project.setProperty("version.major", m[1]);
+		    project.setProperty("version.minor", m[2]);
+			project.setProperty("version.subminor", m[3]);
+			project.setProperty("build.date.epoch", (new Date).getTime());
+		</script>
+		<delete file="src/shuffle/fwk/ShuffleVersion.java" />
+		<copy file="build/ShuffleVersion.java_template" tofile="src/shuffle/fwk/ShuffleVersion.java" encoding="UTF-8" />
+		<replaceregexp file="src/shuffle/fwk/ShuffleVersion.java" match="BUILD_DATE_REPLACE" replace="${build.date.epoch}" flags="g" encoding="UTF-8" />
+		<replaceregexp file="src/shuffle/fwk/ShuffleVersion.java" match="VERSION_MAJOR_REPLACE" replace="${version.major}" flags="g" encoding="UTF-8" />
+		<replaceregexp file="src/shuffle/fwk/ShuffleVersion.java" match="VERSION_MINOR_REPLACE" replace="${version.minor}" flags="g" encoding="UTF-8" />
+		<replaceregexp file="src/shuffle/fwk/ShuffleVersion.java" match="VERSION_SUBMINOR_REPLACE" replace="${version.subminor}" flags="g" encoding="UTF-8" />
+		<echo message="Date was ${build.date.epoch}" />
+		<echo message="Major was ${version.major}" />
+		<echo message="Minor was ${version.minor}" />
+		<echo message="SubMinor was ${version.subminor}" />
+	</target>
+	<target depends="updateversion" name="init">
 		<mkdir dir="bin" />
 		<copy includeemptydirs="false" todir="bin">
 			<fileset dir="src">
@@ -39,7 +64,7 @@
 	<target name="clean">
 		<delete dir="bin" />
 	</target>
-	<target depends="clean,init,build" name="cleanAndBuild"/>
+	<target depends="clean,init,build" name="cleanAndBuild" />
 	<target depends="init" name="build">
 		<echo message="${ant.project.name}: ${ant.file}" />
 		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">

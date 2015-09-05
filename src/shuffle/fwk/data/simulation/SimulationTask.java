@@ -91,8 +91,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private Map<Integer, Collection<ComboEffect>> simulationEffects = new HashMap<Integer, Collection<ComboEffect>>();
    private PriorityQueue<Integer> simulationEffectTimes = new PriorityQueue<Integer>();
    
-   private HashMap<List<Integer>, Collection<ActivateComboEffect>> effectClaims = new HashMap<List<Integer>, Collection<ActivateComboEffect>>();
-   private HashMap<List<Integer>, Collection<ComboEffect>> activeEffects = new HashMap<List<Integer>, Collection<ComboEffect>>();
+   private HashMap<Integer, Collection<ActivateComboEffect>> effectClaims = new HashMap<Integer, Collection<ActivateComboEffect>>();
+   private HashMap<Integer, Collection<ComboEffect>> activeEffects = new HashMap<Integer, Collection<ComboEffect>>();
    
    private HashMap<PkmType, Double> typeMultipliers = new HashMap<PkmType, Double>();
    /**
@@ -589,13 +589,17 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
    }
    
+   private int getKeyForCoords(int row, int col) {
+      return Board.NUM_COLS * row + col - 1;
+   }
+
    public boolean isActive(int row, int col) {
-      return activeEffects.containsKey(Arrays.asList(row, col));
+      return activeEffects.containsKey(getKeyForCoords(row, col));
    }
    
    public boolean isActiveCombo(List<Integer> coords) {
       if (coords.size() >= 2) {
-         Collection<ComboEffect> effects = activeEffects.get(Arrays.asList(coords.get(0), coords.get(1)));
+         Collection<ComboEffect> effects = activeEffects.get(getKeyForCoords(coords.get(0), coords.get(1)));
          if (effects != null) {
             for (ComboEffect collision : effects) {
                if (collision.getCoords().equals(coords)) {
@@ -609,7 +613,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    
    public Collection<ComboEffect> getActiveEffectsFor(int row, int col) {
       Collection<ComboEffect> ret = Collections.emptyList();
-      List<Integer> key = Arrays.asList(row, col);
+      Integer key = getKeyForCoords(row, col);
       if (activeEffects.containsKey(key)) {
          ret = activeEffects.get(key);
       }
@@ -621,7 +625,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
          Integer row = coords.get(i * 2);
          Integer col = coords.get(i * 2 + 1);
-         List<Integer> key = Arrays.asList(row, col);
+         Integer key = getKeyForCoords(row, col);
          if (!activeEffects.containsKey(key)) {
             activeEffects.put(key, new HashSet<ComboEffect>());
          }
@@ -634,7 +638,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
          Integer row = coords.get(i * 2);
          Integer col = coords.get(i * 2 + 1);
-         List<Integer> key = Arrays.asList(row, col);
+         Integer key = getKeyForCoords(row, col);
          if (activeEffects.containsKey(key)) {
             activeEffects.get(key).remove(effect);
             if (activeEffects.get(key).isEmpty()) {
@@ -652,12 +656,12 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     * @return
     */
    public boolean isClaimed(int row, int col) {
-      return effectClaims.containsKey(Arrays.asList(row, col));
+      return effectClaims.containsKey(getKeyForCoords(row, col));
    }
    
    public Collection<ActivateComboEffect> getClaimsFor(int row, int col) {
       Collection<ActivateComboEffect> ret = Collections.emptyList();
-      List<Integer> key = Arrays.asList(row, col);
+      Integer key = getKeyForCoords(row, col);
       if (effectClaims.containsKey(key)) {
          ret = effectClaims.get(key);
       }
@@ -672,7 +676,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
          Integer row = coords.get(i * 2);
          Integer col = coords.get(i * 2 + 1);
-         List<Integer> key = Arrays.asList(row, col);
+         Integer key = getKeyForCoords(row, col);
          if (!effectClaims.containsKey(key)) {
             effectClaims.put(key, new HashSet<ActivateComboEffect>());
          }
@@ -687,7 +691,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     * @param col
     */
    public void removeClaimsFor(int row, int col) {
-      effectClaims.remove(Arrays.asList(row, col));
+      effectClaims.remove(getKeyForCoords(row, col));
    }
    
    public void removeClaim(ActivateComboEffect effect) {
@@ -695,7 +699,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
          Integer row = coords.get(i * 2);
          Integer col = coords.get(i * 2 + 1);
-         List<Integer> key = Arrays.asList(row, col);
+         Integer key = getKeyForCoords(row, col);
          if (effectClaims.containsKey(key)) {
             effectClaims.get(key).remove(effect);
             if (effectClaims.get(key).isEmpty()) {
