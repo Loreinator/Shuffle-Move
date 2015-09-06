@@ -2486,7 +2486,7 @@ public enum Effect {
       
       @Override
       public int getErasureDelay() {
-         return super.getErasureDelay() + 3;
+         return getDefaultErasureDelay() + 3;
       }
       
       @Override
@@ -2719,6 +2719,10 @@ public enum Effect {
    }
    
    public int getErasureDelay() {
+      return getDefaultErasureDelay();
+   }
+   
+   public static int getDefaultErasureDelay() {
       return 82;
    }
    

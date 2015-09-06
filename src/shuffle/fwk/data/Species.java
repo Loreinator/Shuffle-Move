@@ -225,6 +225,10 @@ public class Species implements Comparable<Species>, I18nUser {
       return o == null ? 1 : Integer.compare(number, o.number);
    }
    
+   public Species getNextMetal() {
+      return getNextMetal(this);
+   }
+   
    public static Species getNextMetal(Species cur) {
       if (cur.equals(METAL)) {
          return METAL_4;
