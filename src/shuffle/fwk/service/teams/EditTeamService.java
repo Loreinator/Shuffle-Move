@@ -1068,7 +1068,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       }
       String str = getContainsString().toUpperCase();
       if (str != null && !str.isEmpty()) {
-         filters.add(species -> species.getName().toUpperCase().contains(str));
+         filters.add(species -> species.getLocalizedName().toUpperCase().contains(str));
       }
       Effect effect = getEffect();
       if (effect != null) {
