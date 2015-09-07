@@ -91,7 +91,7 @@ import shuffle.fwk.update.UpdateCheck;
  */
 public class ShuffleModel implements BoardManagerProvider, PreferencesManagerProvider, RosterManagerProvider,
       SpeciesManagerProvider, StageManagerProvider, TeamManagerProvider, I18nUser {
-   /** The logger for this controller. */
+   /** The logger for this model. */
    private static final Logger LOG = Logger.getLogger(ShuffleModel.class.getName());
    /** The controller for this model. */
    private final ShuffleModelUser user;
