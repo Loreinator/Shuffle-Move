@@ -206,6 +206,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          getState().getBoard().advanceMetalBlocks();
          if (metalBlocks.size() > 0) {
             MakeActiveEffect metalEffect = new MakeActiveEffect(metalBlocks);
+            EraseComboEffect eraseWood = getWoodShatterEffect(metalEffect);
+            scheduleEffect(eraseWood, Effect.WOOD.getErasureDelay());
             scheduleEffect(metalEffect, Effect.getDefaultErasureDelay());
          }
          doCombo(firstCombo);
