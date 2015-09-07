@@ -238,7 +238,7 @@ public class SimulationCore extends RecursiveAction {
    /**
     * @return
     */
-   private Collection<SimulationResult> computeWithoutMove() {
+   public Collection<SimulationResult> computeWithoutMove() {
       Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(0, getStage(), possibleBlocks,
             preferredCount);
       Collection<SimulationTask> toRun = new SimulationCreationTask(this, null, feeders).invoke();
