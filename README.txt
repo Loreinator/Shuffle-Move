@@ -42,6 +42,7 @@ v0.3.26 - 2015-09-07
 	- Settle is now handled more accurately, using the number of instances you configure
 	- Move chooser is now a JTable instead of a JList, which greatly improves readability
 	- Metal blocks now shatter wood when they expire
+	- The new Move Chooser table will now retain your custom column order
 	- Translations updated
 	- Matches that cause mega evolution no longer force-clear frozen tiles
 	- Fixed a bug when filtering by name in the roster and team editors (now follows localized name)

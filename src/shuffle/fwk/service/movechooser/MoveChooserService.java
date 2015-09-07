@@ -30,12 +30,15 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -49,8 +52,11 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -72,12 +78,14 @@ import shuffle.fwk.service.DisposeAction;
  */
 public class MoveChooserService extends BaseService<MoveChooserServiceUser>implements I18nUser, Observer {
    
+   /** The logger for this service. */
+   private static final Logger LOG = Logger.getLogger(MoveChooserService.class.getName());
+   
    // i18n keys
    private static final String KEY_METRIC_LABEL = "text.metric.label";
    private static final String KEY_DO_NOW = "button.donow";
    private static final String KEY_CLOSE = "button.close";
    private static final String KEY_TITLE = "text.title";
-   // private static final String KEY_RESULT_FORMAT = "format.result"; // TODO remove
    private static final String KEY_RESULT_FORMAT_MOVE = "format.result.move";
    private static final String KEY_RESULT_FORMAT_SETTLE = "format.result.settle";
    private static final String KEY_UNDO = "menuitem.undomove";
@@ -100,6 +108,7 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
    private static final String KEY_CHOOSER_HEIGHT = "CHOOSER_HEIGHT";
    private static final String KEY_CHOOSER_RESIZE = "CHOOSER_RESIZE";
    public static final String KEY_CHOOSER_AUTOLAUNCH = "CHOOSER_AUTOLAUNCH";
+   private static final String KEY_COLUMN_ORDER = "COLUMN_ORDER";
    
    // defaults
    private static final String MOVE_FORMAT = "%d,%d -> %d,%d";
@@ -164,6 +173,7 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
          }
       };
       table = new JTable(model2);
+      loadOrderFor(table, getUser().getPreferencesManager().getStringValue(KEY_COLUMN_ORDER));
       resizeColumnWidth(table);
       table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       listener2 = new ListSelectionListener() {
@@ -225,6 +235,55 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
       d.setResizable(preferencesManager.getBooleanValue(KEY_CHOOSER_RESIZE, DEFAULT_RESIZE));
       getUser().addObserver(this);
       setDialog(d);
+   }
+   
+   /**
+    * @param table2
+    * @param stringValue
+    */
+   private void loadOrderFor(JTable table2, String stringValue) {
+      if (stringValue == null) {
+         return;
+      }
+      String[] tokens = stringValue.split(",");
+      List<Integer> toIndexes = new ArrayList<Integer>();
+      try {
+         for (String token : tokens) {
+            Integer toIndex = Integer.parseInt(token);
+            toIndexes.add(toIndex);
+         }
+         sortColumnsBy(toIndexes);
+      } catch (NumberFormatException nfe) {
+         LOG.warning("Corrupted configuration for the table load order, ignoring...");
+      }
+   }
+   
+   /**
+    * @param toIndexes
+    */
+   private void sortColumnsBy(List<Integer> toIndexes) {
+      if (toIndexes == null || toIndexes.isEmpty()) {
+         return;
+      }
+      List<TableColumn> columns = new ArrayList<TableColumn>();
+      TableColumnModel tcm = table.getColumnModel();
+      for (int index = 0; index < tcm.getColumnCount(); index++) {
+         columns.add(tcm.getColumn(index));
+      }
+      columns.sort(new Comparator<TableColumn>() {
+         @Override
+         public int compare(TableColumn o1, TableColumn o2) {
+            return Integer.compare(o1.getModelIndex(), o2.getModelIndex());
+         }
+      });
+      
+      while (tcm.getColumnCount() > 0) {
+         tcm.removeColumn(tcm.getColumn(0));
+      }
+      
+      for (Integer index : toIndexes) {
+         tcm.addColumn(columns.get(index));
+      }
    }
    
    /**
@@ -344,6 +403,37 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
             preferencesManager.setEntry(EntryType.INTEGER, KEY_CHOOSER_HEIGHT, dim.height);
          }
       });
+      table.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+         
+         @Override
+         public void columnSelectionChanged(ListSelectionEvent e) {
+         }
+         
+         @Override
+         public void columnRemoved(TableColumnModelEvent e) {
+         }
+         
+         @Override
+         public void columnMoved(TableColumnModelEvent e) {
+            if (e.getFromIndex() != e.getToIndex()) {
+               StringBuilder sb = new StringBuilder();
+               Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
+               while (columns.hasMoreElements()) {
+                  TableColumn nextElement = columns.nextElement();
+                  sb.append(String.format("%s,", nextElement.getModelIndex()));
+               }
+               getUser().getPreferencesManager().setEntry(EntryType.STRING, KEY_COLUMN_ORDER, sb.toString());
+            }
+         }
+         
+         @Override
+         public void columnMarginChanged(ChangeEvent e) {
+         }
+         
+         @Override
+         public void columnAdded(TableColumnModelEvent e) {
+         }
+      });
    }
    
    @Override
@@ -365,6 +455,7 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
          table.getSelectionModel().removeListSelectionListener(listener2);
          results.clear();
          resultsMap.clear();
+         loadOrderFor(table, user.getPreferencesManager().getStringValue(KEY_COLUMN_ORDER));
          if (model2.getRowCount() > 0) {
             for (int i = model2.getRowCount() - 1; i >= 0; i--) {
                model2.removeRow(i);
