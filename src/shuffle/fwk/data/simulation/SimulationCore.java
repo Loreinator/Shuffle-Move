@@ -42,7 +42,6 @@ import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.Stage;
 import shuffle.fwk.data.Team;
-import shuffle.fwk.data.simulation.util.NumberSpan;
 import shuffle.fwk.data.simulation.util.SimulationAcceptor;
 
 /**
@@ -245,11 +244,7 @@ public class SimulationCore extends RecursiveAction {
       ForkJoinTask<SimulationResult> assembler = new SimulationResultsAssembler(null, processUUID, toRun, startTime)
             .fork();
       SimulationResult settleResult = assembler.join();
-      NumberSpan zero = new NumberSpan(0, 0, 0f, preferredCount);
-      NumberSpan megaProg = new NumberSpan(megaProgress, megaProgress, megaProgress * 1f, preferredCount);
-      SimulationResult beforeResult = new SimulationResult(null, board, zero, zero, megaProg, processUUID, zero, zero,
-            zero, startTime);
-      if (settleResult.equals(beforeResult)) {
+      if (settleResult.getBoard().equals(board)) {
          return null;
       } else {
          return Arrays.asList(settleResult);
