@@ -201,7 +201,7 @@ public class SimulationCore extends RecursiveAction {
       LOG.fine("Preparing board, moves & feeder");
       // First, generate the valid moves and the feeders required.
       List<List<Integer>> validMoves = getPossibleMoves(board);
-      Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(minHeight, stage, possibleBlocks,
+      Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(minHeight, getStage(), possibleBlocks,
             preferredCount);
       
       Map<List<Integer>, SimulationCreationTask> moveToTaskCreatorMap = new HashMap<List<Integer>, SimulationCreationTask>();
@@ -238,7 +238,8 @@ public class SimulationCore extends RecursiveAction {
     * @return
     */
    private Collection<SimulationResult> computeWithoutMove() {
-      Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(0, getStage(), possibleBlocks, 1);
+      Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(0, getStage(), possibleBlocks,
+            preferredCount);
       Collection<SimulationTask> toRun = new SimulationCreationTask(this, null, feeders).invoke();
       ForkJoinTask<SimulationResult> assembler = new SimulationResultsAssembler(null, processUUID, toRun, startTime)
             .fork();
