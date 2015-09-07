@@ -35,8 +35,19 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.26 - 2015-09-0
-	- 
+v0.3.26 - 2015-09-07
+	- When bug reports or updates are saved, their folder will automatically open for you.
+	- Default number of feeders increased to 20
+	- Metal blocks are now properly handled when vanishing
+	- Settle is now handled more accurately, using the number of instances you configure
+	- Move chooser is now a JTable instead of a JList, which greatly improves readability
+	- Metal blocks now shatter wood when they expire
+	- Translations updated
+	- Matches that cause mega evolution no longer force-clear frozen tiles
+	- Fixed a bug when filtering by name in the roster and team editors (now follows localized name)
+	- Lugia and Carnivine order has been fixed
+	- Temporary fix for the gui loading too large
+	- Test case added to guarantee settle behavior
 v0.3.25 - 2015-09-04
 	- Massive performance gains (about 80-85% reduction in simulation time)
 	- Mega Sharpedo added, and his stage
