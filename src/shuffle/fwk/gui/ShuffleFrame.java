@@ -268,12 +268,14 @@ public class ShuffleFrame extends JFrame implements I18nUser {
       });
       mainPanel.add(paintPalletPanel, c);
       
+      final int heightForLog = new JComboBox<String>().getPreferredSize().height;
       // Set up the alerts combobox to automatically maintain itself
       alertsLog = new JComboBox<String>() {
          @Override
          public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
             d.width = mainPanel.getPreferredSize().width;
+            d.height = Math.min(heightForLog, d.height);
             return d;
          }
          
