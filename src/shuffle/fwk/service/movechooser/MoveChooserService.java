@@ -18,6 +18,7 @@
 
 package shuffle.fwk.service.movechooser;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -26,28 +27,35 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.EntryType;
@@ -60,23 +68,30 @@ import shuffle.fwk.service.DisposeAction;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
-public class MoveChooserService extends BaseService<MoveChooserServiceUser> implements I18nUser, Observer {
+public class MoveChooserService extends BaseService<MoveChooserServiceUser>implements I18nUser, Observer {
    
    // i18n keys
    private static final String KEY_METRIC_LABEL = "text.metric.label";
    private static final String KEY_DO_NOW = "button.donow";
    private static final String KEY_CLOSE = "button.close";
-   private static final String KEY_NO_MOVES = "text.nomoves";
    private static final String KEY_TITLE = "text.title";
-   private static final String KEY_RESULT_FORMAT = "format.result";
+   // private static final String KEY_RESULT_FORMAT = "format.result"; // TODO remove
    private static final String KEY_RESULT_FORMAT_MOVE = "format.result.move";
    private static final String KEY_RESULT_FORMAT_SETTLE = "format.result.settle";
    private static final String KEY_UNDO = "menuitem.undomove";
    private static final String KEY_REDO = "menuitem.redomove";
    private static final String KEY_DO = "menuitem.domove";
    private static final String KEY_MENU_MOVE = "menu.move";
+   private static final String KEY_HEADER_RANK = "column.rank";
+   private static final String KEY_HEADER_MOVE = "column.move";
+   private static final String KEY_HEADER_GOLD = "column.gold";
+   private static final String KEY_HEADER_POINTS = "column.points";
+   private static final String KEY_HEADER_COMBOS = "column.combos";
+   private static final String KEY_HEADER_BLOCKS = "column.blocks";
+   private static final String KEY_HEADER_DISRUPTIONS = "column.disruptions";
+   private static final String KEY_HEADER_MEGASTATE = "column.megastate";
    
    // config keys
    private static final String KEY_CHOOSER_X = "CHOOSER_X";
@@ -97,10 +112,11 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser> impl
    // components
    private JDialog d = null;
    private GradingModeIndicator ind = null;
-   private JList<String> list = null;
-   private DefaultListModel<String> model = null;
-   private Map<String, SimulationResult> map = null;
-   private ListSelectionListener listener = null;
+   private JTable table = null;
+   private DefaultTableModel model2 = null;
+   private ListSelectionListener listener2 = null;
+   private List<SimulationResult> results = null;
+   private Map<SimulationResult, Integer> resultsMap = null;
    
    /*
     * (non-Javadoc)
@@ -137,21 +153,36 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser> impl
       c.gridy++;
       
       c.gridx++;
-      map = new HashMap<String, SimulationResult>();
-      model = new DefaultListModel<String>();
-      list = new JList<String>(model);
-      list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      list.setLayoutOrientation(JList.VERTICAL);
-      listener = new ListSelectionListener() {
+      results = new ArrayList<SimulationResult>();
+      resultsMap = new HashMap<SimulationResult, Integer>();
+      model2 = new DefaultTableModel(getColumnNames(), 0) {
+         private static final long serialVersionUID = 5180830497930828902L;
+         
+         @Override
+         public boolean isCellEditable(int row, int col) {
+            return false;
+         }
+      };
+      table = new JTable(model2);
+      DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+      centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+      for (int i = 0; i < table.getColumnCount(); i++) {
+         TableColumn column = table.getColumnModel().getColumn(i);
+         column.setHeaderRenderer(centerRenderer);
+         column.setCellRenderer(centerRenderer);
+      }
+      resizeColumnWidth(table);
+      table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      listener2 = new ListSelectionListener() {
          
          @Override
          public void valueChanged(ListSelectionEvent e) {
-            pushSelectionToUser();
+            pushSelectionToUser2();
          }
       };
-      list.addListSelectionListener(listener);
-      JScrollPane pane = new JScrollPane(list);
-      d.add(pane, c);
+      table.getSelectionModel().addListSelectionListener(listener2);
+      JScrollPane jsp = new JScrollPane(table);
+      d.add(jsp, c);
       
       // Control row
       c.weighty = 0.0;
@@ -201,6 +232,49 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser> impl
       d.setResizable(preferencesManager.getBooleanValue(KEY_CHOOSER_RESIZE, DEFAULT_RESIZE));
       getUser().addObserver(this);
       setDialog(d);
+   }
+   
+   /**
+    * From Stackoverflow: http://stackoverflow.com/a/17627497
+    * 
+    * @param table
+    *           The table to be resized
+    */
+   public void resizeColumnWidth(JTable table) {
+      table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+      final TableColumnModel columnModel = table.getColumnModel();
+      for (int column = 0; column < table.getColumnCount(); column++) {
+         TableColumn tableColumn = columnModel.getColumn(column);
+         TableCellRenderer r = tableColumn.getHeaderRenderer();
+         if (r == null) {
+            r = table.getTableHeader().getDefaultRenderer();
+         }
+         Component component = r.getTableCellRendererComponent(table, tableColumn.getHeaderValue(), false, false, 0,
+               column);
+         int width = component.getPreferredSize().width;
+         for (int row = 0; row < table.getRowCount(); row++) {
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            Component comp = table.prepareRenderer(renderer, row, column);
+            width = Math.max(comp.getPreferredSize().width + 1, width);
+         }
+         tableColumn.setPreferredWidth(width);
+      }
+   }
+   
+   /**
+    * @return
+    */
+   private Vector<String> getColumnNames() {
+      Vector<String> ret = new Vector<String>();
+      ret.add(getString(KEY_HEADER_RANK));
+      ret.add(getString(KEY_HEADER_MOVE));
+      ret.add(getString(KEY_HEADER_GOLD));
+      ret.add(getString(KEY_HEADER_POINTS));
+      ret.add(getString(KEY_HEADER_COMBOS));
+      ret.add(getString(KEY_HEADER_BLOCKS));
+      ret.add(getString(KEY_HEADER_DISRUPTIONS));
+      ret.add(getString(KEY_HEADER_MEGASTATE));
+      return ret;
    }
    
    /**
@@ -285,34 +359,50 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser> impl
     */
    @Override
    protected void updateGUIFrom(MoveChooserServiceUser user) {
-      Collection<SimulationResult> results = user.getResults();
+      Collection<SimulationResult> userResults = user.getResults();
       SimulationResult selectResult = user.getSelectedResult();
-      if (listener != null) {
-         list.removeListSelectionListener(listener);
-         model.clear();
-         map.clear();
-         if (results != null) {
-            for (SimulationResult result : results) {
-               String item = convertResult(result);
-               map.put(item, result);
-               model.addElement(item);
+      if (listener2 != null) {
+         table.getSelectionModel().removeListSelectionListener(listener2);
+         results.clear();
+         resultsMap.clear();
+         if (model2.getRowCount() > 0) {
+            for (int i = model2.getRowCount() - 1; i >= 0; i--) {
+               model2.removeRow(i);
             }
          }
-         if (model.isEmpty()) {
-            model.addElement(getString(KEY_NO_MOVES));
+         Vector<String> columNames = getColumnNames();
+         Vector<String> curNames = new Vector<String>();
+         for (int i = 0; i < model2.getColumnCount(); i++) {
+            curNames.add(model2.getColumnName(i));
+         }
+         if (!curNames.equals(columNames)) {
+            model2.setColumnIdentifiers(columNames);
+         }
+         if (userResults != null) {
+            for (SimulationResult result : userResults) {
+               resultsMap.put(result, results.size());
+               model2.addRow(getVectorFor(result, results.size() + 1));
+               results.add(result);
+            }
          }
          if (selectResult == null) {
-            list.setSelectedIndex(0);
+            table.clearSelection();
          } else {
-            list.setSelectedValue(convertResult(selectResult), true);
+            int row = resultsMap.get(selectResult);
+            table.setRowSelectionInterval(row, row);
          }
-         list.repaint();
-         list.addListSelectionListener(listener);
+         resizeColumnWidth(table);
+         table.repaint();
+         table.getSelectionModel().addListSelectionListener(listener2);
       }
       ind.repaint();
    }
    
-   private String convertResult(SimulationResult result) {
+   /**
+    * @param result
+    * @return
+    */
+   private Vector<String> getVectorFor(SimulationResult result, int rank) {
       if (result == null) {
          return null;
       }
@@ -349,19 +439,14 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser> impl
       NumberSpan disrupts = result.getDisruptionsCleared();
       NumberSpan mega = result.getProgress();
       
-      String formatToUse = getString(KEY_RESULT_FORMAT, firstPart.toString(), gold.toString(), score.toString(),
-            combos.toString(), blocks.toString(), disrupts.toString(), mega.toString());
-      if (KEY_RESULT_FORMAT.equals(formatToUse)) {
-         return result.toString();
-      } else {
-         return formatToUse;
-      }
+      return new Vector<String>(Arrays.asList(Integer.toString(rank), firstPart.toString(), gold.toString(),
+            score.toString(), combos.toString(), blocks.toString(), disrupts.toString(), mega.toString()));
    }
    
-   private void pushSelectionToUser() {
-      String selected = list.getSelectedValue();
-      if (selected != null && !selected.isEmpty() && map.containsKey(selected)) {
-         SimulationResult result = map.get(selected);
+   private void pushSelectionToUser2() {
+      int selectedRow = table.getSelectedRow();
+      if (selectedRow >= 0 && results.size() > selectedRow) {
+         SimulationResult result = results.get(selectedRow);
          getUser().setSelectedResult(result);
       }
    }
