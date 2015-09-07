@@ -39,6 +39,13 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
       n = 0;
    }
    
+   public NumberSpan(int min, int max, double total, int n) {
+      this.min = min;
+      this.max = max;
+      this.total = total;
+      this.n = n;
+   }
+   
    @Override
    public NumberSpan clone() {
       NumberSpan ns = new NumberSpan();
@@ -160,10 +167,8 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
       boolean equal = obj != null && obj instanceof NumberSpan;
       if (equal) {
          NumberSpan other = (NumberSpan) obj;
-         equal &= max == other.max;
-         equal &= min == other.min;
+         equal &= toString().equals(other.toString());
          equal &= n == other.n;
-         equal &= total == other.total; // TODO use some other way to store total
       }
       return equal;
    }

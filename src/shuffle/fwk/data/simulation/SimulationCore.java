@@ -42,17 +42,18 @@ import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.Stage;
 import shuffle.fwk.data.Team;
-import shuffle.fwk.data.simulation.util.NumberSpanSimple;
+import shuffle.fwk.data.simulation.util.NumberSpan;
 import shuffle.fwk.data.simulation.util.SimulationAcceptor;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
 public class SimulationCore extends RecursiveAction {
    private static final long serialVersionUID = -4790004708567579267L;
    
    private static final Logger LOG = Logger.getLogger(SimulationCore.class.getName());
+   
    static {
       LOG.setLevel(Level.FINE);
    }
@@ -113,7 +114,7 @@ public class SimulationCore extends RecursiveAction {
       attackPowerUp = user.getAttackPowerUp();
       effectThreshold = user.getEffectThreshold();
    }
-
+   
    public UUID getId() {
       return processUUID;
    }
@@ -166,7 +167,7 @@ public class SimulationCore extends RecursiveAction {
    public int getEffectThreshold() {
       return effectThreshold;
    }
-
+   
    @Override
    protected void compute() {
       startTime = System.currentTimeMillis();
@@ -203,7 +204,7 @@ public class SimulationCore extends RecursiveAction {
       List<List<Integer>> validMoves = getPossibleMoves(board);
       Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(minHeight, getStage(), possibleBlocks,
             preferredCount);
-      
+            
       Map<List<Integer>, SimulationCreationTask> moveToTaskCreatorMap = new HashMap<List<Integer>, SimulationCreationTask>();
       
       long diff = System.currentTimeMillis() - start;
@@ -244,9 +245,10 @@ public class SimulationCore extends RecursiveAction {
       ForkJoinTask<SimulationResult> assembler = new SimulationResultsAssembler(null, processUUID, toRun, startTime)
             .fork();
       SimulationResult settleResult = assembler.join();
-      SimulationResult beforeResult = new SimulationResult(null, board, new NumberSpanSimple(0),
-            new NumberSpanSimple(0), new NumberSpanSimple(megaProgress), processUUID, new NumberSpanSimple(0),
-            new NumberSpanSimple(0), new NumberSpanSimple(0), startTime);
+      NumberSpan zero = new NumberSpan(0, 0, 0f, preferredCount);
+      NumberSpan megaProg = new NumberSpan(megaProgress, megaProgress, megaProgress * 1f, preferredCount);
+      SimulationResult beforeResult = new SimulationResult(null, board, zero, zero, megaProg, processUUID, zero, zero,
+            zero, startTime);
       if (settleResult.equals(beforeResult)) {
          return null;
       } else {
