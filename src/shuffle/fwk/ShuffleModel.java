@@ -79,6 +79,7 @@ import shuffle.fwk.data.Team;
 import shuffle.fwk.data.simulation.SimulationCore;
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.i18n.I18nUser;
+import shuffle.fwk.update.UpdateCheck;
 
 /**
  * The model of the program, this handles all the important data. All getters or save operations
@@ -90,7 +91,7 @@ import shuffle.fwk.i18n.I18nUser;
  */
 public class ShuffleModel implements BoardManagerProvider, PreferencesManagerProvider, RosterManagerProvider,
       SpeciesManagerProvider, StageManagerProvider, TeamManagerProvider, I18nUser {
-   /** The logger for this controller. */
+   /** The logger for this model. */
    private static final Logger LOG = Logger.getLogger(ShuffleModel.class.getName());
    /** The controller for this model. */
    private final ShuffleModelUser user;
@@ -929,6 +930,8 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    }
    
    /**
+    * Creates a temporary file containing the given message.
+    * 
     * @param message
     */
    private void makeBugMessageFile(String message) {
@@ -960,14 +963,15 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    }
    
    /**
-	 * 
-	 */
+    * Builds the bug report itself.
+    */
    private void buildBugReport() {
       try {
          Project p = getErrorProject();
          p.executeTarget(p.getDefaultTarget());
          LOG.log(Level.INFO,
                getString(KEY_BUG_FILE_SUCCESS, Paths.get(p.getProperty("zipname")).toAbsolutePath().toString()));
+         UpdateCheck.showParentDirectoryOf(new File(Paths.get(p.getProperty("zipname")).toAbsolutePath().toString()));
       } catch (Exception e) {
          LOG.info(getString(KEY_BUG_REPORT_PROBLEM, e.getMessage()));
          e.printStackTrace();
@@ -975,8 +979,11 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    }
    
    /**
-    * @return
+    * Constructs the Project and returns it.
+    * 
+    * @return The Project
     * @throws Exception
+    *            If anything goes wrong.
     */
    private Project getErrorProject() throws Exception {
       if (errorProject == null) {

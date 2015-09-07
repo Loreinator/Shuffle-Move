@@ -42,17 +42,17 @@ import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.Stage;
 import shuffle.fwk.data.Team;
-import shuffle.fwk.data.simulation.util.NumberSpanSimple;
 import shuffle.fwk.data.simulation.util.SimulationAcceptor;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
 public class SimulationCore extends RecursiveAction {
    private static final long serialVersionUID = -4790004708567579267L;
    
    private static final Logger LOG = Logger.getLogger(SimulationCore.class.getName());
+   
    static {
       LOG.setLevel(Level.FINE);
    }
@@ -113,7 +113,7 @@ public class SimulationCore extends RecursiveAction {
       attackPowerUp = user.getAttackPowerUp();
       effectThreshold = user.getEffectThreshold();
    }
-
+   
    public UUID getId() {
       return processUUID;
    }
@@ -166,7 +166,7 @@ public class SimulationCore extends RecursiveAction {
    public int getEffectThreshold() {
       return effectThreshold;
    }
-
+   
    @Override
    protected void compute() {
       startTime = System.currentTimeMillis();
@@ -201,10 +201,9 @@ public class SimulationCore extends RecursiveAction {
       LOG.fine("Preparing board, moves & feeder");
       // First, generate the valid moves and the feeders required.
       List<List<Integer>> validMoves = getPossibleMoves(board);
-      board.advanceMetalBlocks();
-      Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(minHeight, stage, possibleBlocks,
+      Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(minHeight, getStage(), possibleBlocks,
             preferredCount);
-      
+            
       Map<List<Integer>, SimulationCreationTask> moveToTaskCreatorMap = new HashMap<List<Integer>, SimulationCreationTask>();
       
       long diff = System.currentTimeMillis() - start;
@@ -238,16 +237,14 @@ public class SimulationCore extends RecursiveAction {
    /**
     * @return
     */
-   private Collection<SimulationResult> computeWithoutMove() {
-      Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(0, getStage(), possibleBlocks, 1);
+   public Collection<SimulationResult> computeWithoutMove() {
+      Collection<SimulationFeeder> feeders = SimulationFeeder.getFeedersFor(0, getStage(), possibleBlocks,
+            preferredCount);
       Collection<SimulationTask> toRun = new SimulationCreationTask(this, null, feeders).invoke();
       ForkJoinTask<SimulationResult> assembler = new SimulationResultsAssembler(null, processUUID, toRun, startTime)
             .fork();
       SimulationResult settleResult = assembler.join();
-      SimulationResult beforeResult = new SimulationResult(null, board, new NumberSpanSimple(0),
-            new NumberSpanSimple(0), new NumberSpanSimple(megaProgress), processUUID, new NumberSpanSimple(0),
-            new NumberSpanSimple(0), new NumberSpanSimple(0), startTime);
-      if (settleResult.equals(beforeResult)) {
+      if (settleResult.getBoard().equals(board)) {
          return null;
       } else {
          return Arrays.asList(settleResult);

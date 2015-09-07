@@ -18,6 +18,7 @@
 
 package shuffle.fwk.update;
 
+import java.awt.Desktop;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
@@ -66,7 +67,8 @@ public class UpdateCheck implements I18nUser {
    private static final String KEY_OUTOFDATE = "updatecheck.outofdate";
    private static final String KEY_GET_IOEXCEPTION = "updatecheck.get.ioexception";
    private static final String KEY_GET_USEMANUAL = "updatecheck.get.pleaseusemanual";
-   private static final String KEY_GET_INVALID = "updateCheck.get.versioninvalid";
+   private static final String KEY_GET_INVALID = "updatecheck.get.versioninvalid";
+   private static final String KEY_GET_IOEXCEPTION_OPEN = "updatecheck.get.ioexception.open";
    
    public static final ExecutorService EXECUTOR = new ScheduledThreadPoolExecutor(1);
    public static final String PROPERTY_DONE = "PROPERTY_DONE";
@@ -168,6 +170,7 @@ public class UpdateCheck implements I18nUser {
                listener.propertyChange(new PropertyChangeEvent(this, PROPERTY_MESSAGE, "",
                      UpdateService.KEY_PLEASE_UNPACK));
                listenerHandled = true;
+               showParentOf(file);
             } else {
                getVersion(newestVersion, target, listener);
                listenerHandled = true;
@@ -180,7 +183,25 @@ public class UpdateCheck implements I18nUser {
          listener.propertyChange(new PropertyChangeEvent(this, PROPERTY_DONE, 0, 0));
       }
    }
+
+   /**
+    * @param newestVersion
+    * @param file
+    */
+   public void showParentOf(File file) {
+      Desktop d = Desktop.getDesktop();
+      try {
+         d.open(file.getParentFile());
+      } catch (IOException e) {
+         String message = getString(KEY_GET_IOEXCEPTION_OPEN, file.getAbsolutePath());
+         LOG.log(Level.SEVERE, message, e);
+      }
+   }
    
+   public static void showParentDirectoryOf(File file) {
+      new UpdateCheck().showParentOf(file);
+   }
+
    public String versionCheck(String curVersion, Map<String, String> availableVersions) {
       String newestVersion = getNewestVersion(availableVersions);
       String target = null;
@@ -206,6 +227,7 @@ public class UpdateCheck implements I18nUser {
                LOG.warning(getString(KEY_DOWNLOAD_READY) + " " + file.getAbsolutePath());
                listener.propertyChange(new PropertyChangeEvent(this, PROPERTY_MESSAGE, "",
                      UpdateService.KEY_PLEASE_UNPACK));
+               showParentOf(file);
             } catch (IOException e) {
                String ioExceptionString = getString(KEY_GET_IOEXCEPTION, newestVersion);
                LOG.log(Level.SEVERE, ioExceptionString, e);

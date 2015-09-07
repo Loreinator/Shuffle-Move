@@ -45,11 +45,12 @@ import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
 import shuffle.fwk.data.simulation.effects.ComboEffect;
 import shuffle.fwk.data.simulation.effects.DelayThawEffect;
 import shuffle.fwk.data.simulation.effects.EraseComboEffect;
+import shuffle.fwk.data.simulation.effects.MakeActiveEffect;
 import shuffle.fwk.data.simulation.util.TriFunction;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
 public class SimulationTask extends RecursiveTask<SimulationState> {
    private static final long serialVersionUID = -7639294565196247487L;
@@ -100,7 +101,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     */
    private TreeSet<ActivateComboEffect> prospecticeCombosSet = new TreeSet<ActivateComboEffect>(
          (a, b) -> Integer.compare(a.getPriority(), b.getPriority()));
-   
+         
    private SimulationState state;
    
    public SimulationTask(SimulationCore simulationCore) {
@@ -200,6 +201,15 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             logFinerWithId("performing FIRST combo: " + StringUtils.join(firstCombo) + " with species: "
                   + getEffectSpecies(firstCombo.getCoords()));
          }
+         List<Integer> metalBlocks = findMatches(Board.NUM_CELLS, true,
+               (r, c, s) -> s.getNextMetal().getEffect().equals(Effect.AIR));
+         getState().getBoard().advanceMetalBlocks();
+         if (metalBlocks.size() > 0) {
+            MakeActiveEffect metalEffect = new MakeActiveEffect(metalBlocks);
+            EraseComboEffect eraseWood = getWoodShatterEffect(metalEffect);
+            scheduleEffect(eraseWood, Effect.WOOD.getErasureDelay());
+            scheduleEffect(metalEffect, Effect.getDefaultErasureDelay());
+         }
          doCombo(firstCombo);
          doGravity();
       }
@@ -278,7 +288,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
       return inactive && isThawing;
    }
-
+   
    private void advanceTimeStamp() {
       Integer nextEffectTime = getNextEffectTime();
       Integer nextBumpTime = getNextBumpTime();
@@ -445,8 +455,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          int belowPosition = 0;
          int belowHeight = 0;
          if (row < Board.NUM_ROWS && // this is above the bottom
-               // And this block can conduct height (is inactive air or moving)
-               (canMove(row + 1, col) || b.isAir(row + 1, col) && !isActive(row, col))) {
+         // And this block can conduct height (is inactive air or moving)
+         (canMove(row + 1, col) || b.isAir(row + 1, col) && !isActive(row, col))) {
             belowPosition = getState().getFallingPositionAt(row + 1, col);
             belowHeight = heightAt[row];
          }
@@ -592,7 +602,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private int getKeyForCoords(int row, int col) {
       return Board.NUM_COLS * row + col - 1;
    }
-
+   
    public boolean isActive(int row, int col) {
       return activeEffects.containsKey(getKeyForCoords(row, col));
    }
@@ -986,7 +996,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    }
    
    private static final double[] NUM_BLOCK_MULTIPLIER = new double[] { 0.3, 0.6, 1.0, 1.5, 2.0, 3.0 };
-
+   
    /**
     * Returns the number of blocks multiplier, given how many blocks were in the combo. 1 = 0.3, 2 =
     * 0.6, 3 = 1.0; 4 = 1.5; 5 = 2.0; 6 = 3.0
@@ -1059,8 +1069,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             }
             getState().increaseMegaProgress(megaIncrease);
             if (logFiner) {
-               logFinerWithId("Mega progress is now %s of %s", getState().getMegaProgress(), getState().getCore()
-                     .getMegaThreshold());
+               logFinerWithId("Mega progress is now %s of %s", getState().getMegaProgress(),
+                     getState().getCore().getMegaThreshold());
             }
          }
       }
@@ -1125,7 +1135,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    public void eraseBonusIn(List<Integer> toErase, int erasureDelay) {
       eraseBonusIn(toErase, erasureDelay, true);
    }
-
+   
    public void eraseBonusIn(List<Integer> toErase, int erasureDelay, boolean forceErase) {
       if (logFiner) {
          logFinerWithId("Scheduling erasure after %s frames for %s", erasureDelay,

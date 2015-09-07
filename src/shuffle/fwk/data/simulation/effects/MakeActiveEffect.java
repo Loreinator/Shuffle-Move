@@ -16,16 +16,39 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package shuffle.fwk.data.simulation.util;
+package shuffle.fwk.data.simulation.effects;
+
+import java.util.List;
+
+import shuffle.fwk.data.simulation.SimulationTask;
 
 /**
+ * A symbolic effect which maintains that things similar to a metal effect disappearing need to be
+ * considered active for a time.
+ * 
  * @author Andrew Meyers
- *
+ *         
  */
-public class NumberSpanSimple extends NumberSpan {
-   private static final long serialVersionUID = 3748462366602023250L;
+public class MakeActiveEffect extends ComboEffect {
    
-   public NumberSpanSimple(int value) {
-      super.putValue(value, 1f);
+   /**
+    * Delays the inactivity for a set of blocks.
+    * 
+    * @param combo
+    */
+   public MakeActiveEffect(List<Integer> metalBlocks) {
+      super(metalBlocks, false);
    }
+   
+   /*
+    * (non-Javadoc)
+    * @see
+    * shuffle.fwk.data.simulation.effects.SimulationEffect#doEffect(shuffle.fwk.data.simulation.
+    * SimulationTask)
+    */
+   @Override
+   public void doEffect(SimulationTask task) {
+      task.removeActive(this);
+   }
+   
 }

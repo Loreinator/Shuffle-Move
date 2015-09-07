@@ -19,28 +19,19 @@ package shuffle.fwk.data.simulation.effects;
 
 import java.util.List;
 
-import shuffle.fwk.data.simulation.SimulationTask;
-
 /**
  * @author Andrew Meyers
  *
  */
-public class DelayThawEffect extends ComboEffect {
+public class DelayThawEffect extends MakeActiveEffect {
    
    /**
+    * Delays the thawing of ice.
+    * 
     * @param combo
-    * @param isPersistentEffect
     */
    public DelayThawEffect(List<Integer> combo) {
-      super(combo, false);
-   }
-
-   /* (non-Javadoc)
-    * @see shuffle.fwk.data.simulation.effects.SimulationEffect#doEffect(shuffle.fwk.data.simulation.SimulationTask)
-    */
-   @Override
-   public void doEffect(SimulationTask task) {
-      task.removeActive(this);
+      super(combo);
    }
    
 }

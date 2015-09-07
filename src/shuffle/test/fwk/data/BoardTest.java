@@ -42,8 +42,8 @@ import shuffle.fwk.data.Species;
  *
  */
 public class BoardTest {
-   private Random rand = new Random();
-   private SpeciesManager mngr = new ConfigFactory().getSpeciesManager();
+   private static Random rand = new Random();
+   private static SpeciesManager mngr = new ConfigFactory().getSpeciesManager();
    
    /**
     * @throws java.lang.Exception
@@ -75,7 +75,7 @@ public class BoardTest {
       assertEquals(b, new Board(b));
    }
    
-   public Board getRandomBoard() {
+   public static Board getRandomBoard() {
       Board ret = new Board();
       for (int row = 1; row <= Board.NUM_ROWS; row++) {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
@@ -90,7 +90,7 @@ public class BoardTest {
       return ret;
    }
    
-   public Species getRandomSpecies() {
+   public static Species getRandomSpecies() {
       PkmType t = PkmType.values()[rand.nextInt(PkmType.values().length)];
       Predicate<Species> filter = species -> species.getType().equals(t);
       List<Species> options = new ArrayList<Species>(mngr.getSpeciesByFilters(Arrays.asList(filter)));
