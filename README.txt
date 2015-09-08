@@ -35,8 +35,10 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.27 - 2015-09-
-	-
+v0.3.27 - 2015-09-08
+	- Relicanth and Shuckle AP corrected
+	- Chinese and German Translations updated
+	- Fix for Metal_1 bug
 v0.3.26 - 2015-09-07
 	- When bug reports or updates are saved, their folder will automatically open for you.
 	- Default number of feeders increased to 20
