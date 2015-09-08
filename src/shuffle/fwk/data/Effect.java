@@ -300,7 +300,8 @@ public enum Effect {
       public double getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          double multiplier = super.getScoreMultiplier(comboEffect, task);
          if (shouldActivate(comboEffect, task)) {
-            multiplier *= r.nextBoolean() ? 1.0 / 3.0 : 3.0;
+            // The multiplier is equally distributed between ⅓ and 3
+            multiplier *= (1.0 + r.nextDouble() * 8.0) / 3.0;
          }
          return multiplier;
       }
