@@ -83,7 +83,7 @@ public class SimulationCore extends RecursiveAction {
    // Gets all the data it needs from the user, as deep copies of all relevant information.
    public SimulationCore(SimulationUser user, UUID processUUID) {
       this.processUUID = processUUID;
-      minHeight = Math.max(0, user.getPreferredFeederHeight());
+      minHeight = 0; // Math.max(0, user.getPreferredFeederHeight());
       preferredCount = Math.max(1, user.getPreferredNumFeeders());
       Board userBoard = user.getBoardManager().getBoard();
       board = new Board(userBoard);

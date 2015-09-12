@@ -121,7 +121,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       JPanel heightPanel = new JPanel(new BorderLayout());
       heightPanel.add(new JLabel(getString(KEY_HEIGHT_FEEDERS)), BorderLayout.WEST);
       heightPanel.add(feederHeightSpinner, BorderLayout.EAST);
-      d.add(heightPanel, c);
+      // d.add(heightPanel, c);
       
       c.gridx = 1;
       c.gridy++;
