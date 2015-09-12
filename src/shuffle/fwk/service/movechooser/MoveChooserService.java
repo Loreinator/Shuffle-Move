@@ -57,7 +57,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -293,13 +292,6 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
     *           The table to be resized
     */
    public void resizeColumnWidth(JTable table) {
-      // DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-      // centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-      // for (int i = 0; i < table.getColumnCount(); i++) {
-      //    TableColumn column = table.getColumnModel().getColumn(i);
-      //    column.setHeaderRenderer(centerRenderer);
-      //    column.setCellRenderer(centerRenderer);
-      // }
       table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
       final TableColumnModel columnModel = table.getColumnModel();
       for (int column = 0; column < table.getColumnCount(); column++) {
