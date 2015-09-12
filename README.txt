@@ -36,7 +36,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ~~ Changelog ~~
 v0.3.28 - 2015-09-??
-	- TBD
+	- Performance Improvements to the simulation - will no longer use more than one simulation if there is no real benefit (no complex randomness)
 v0.3.27 - 2015-09-08
 	- Relicanth and Shuckle AP corrected
 	- Chinese and German Translations updated
