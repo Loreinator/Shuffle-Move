@@ -46,6 +46,7 @@ import shuffle.fwk.data.simulation.effects.ComboEffect;
 import shuffle.fwk.data.simulation.effects.DelayThawEffect;
 import shuffle.fwk.data.simulation.effects.EraseComboEffect;
 import shuffle.fwk.data.simulation.effects.MakeActiveEffect;
+import shuffle.fwk.data.simulation.util.NumberSpan;
 import shuffle.fwk.data.simulation.util.TriFunction;
 
 /**
@@ -95,7 +96,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private HashMap<Integer, Collection<ActivateComboEffect>> effectClaims = new HashMap<Integer, Collection<ActivateComboEffect>>();
    private HashMap<Integer, Collection<ComboEffect>> activeEffects = new HashMap<Integer, Collection<ComboEffect>>();
    
-   private HashMap<PkmType, Double> typeMultipliers = new HashMap<PkmType, Double>();
+   private HashMap<PkmType, NumberSpan> typeMultipliers = new HashMap<PkmType, NumberSpan>();
    /**
     * The prospective combos that are available to activate.
     */
@@ -121,19 +122,19 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
       id = moveString + " feeder:" + feeder.getID().toString();
       for (PkmType type : PkmType.values()) {
-         typeMultipliers.put(type, 1.0);
+         typeMultipliers.put(type, new NumberSpan(1.0));
       }
       createNewStateForMove(simulationCore, move, feeder);
    }
    
-   public double getSpecialTypeMultiplier(PkmType type) {
+   public NumberSpan getSpecialTypeMultiplier(PkmType type) {
       if (type == null) {
-         return 1.0;
+         return new NumberSpan(1);
       }
-      return typeMultipliers.get(type);
+      return new NumberSpan(typeMultipliers.get(type));
    }
    
-   public void setSpecialTypeMultiplier(PkmType type, double multiplier) {
+   public void setSpecialTypeMultiplier(PkmType type, NumberSpan multiplier) {
       typeMultipliers.put(type, multiplier);
    }
    
@@ -183,7 +184,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
       
       // Create the state
-      state = new SimulationState(simulationCore, feeder, startBoard, 1.0f, 0, 0, originality, 0);
+      state = new SimulationState(simulationCore, feeder, startBoard, 1.0f, new NumberSpan(), 0, originality, 0);
       if (logFiner) {
          logFinerWithId("state made");
       }
@@ -930,23 +931,37 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       return ret;
    }
    
-   public Double getScoreFor(ActivateComboEffect comboEffect) {
+   public NumberSpan getScoreFor(ActivateComboEffect comboEffect) {
       Species effectSpecies = getEffectSpecies(comboEffect.getCoords());
       int combos = comboEffect.getNumCombosOnActivate();
       double comboMultiplier = getComboMultiplier(combos + 1);
-      double basicScore = getBasicScoreFor(effectSpecies);
+      int basicScore = getBasicScoreFor(effectSpecies);
       double typeMod = getTypeModifier(effectSpecies);
       double numBlocksModifier = getNumBlocksMultiplier(comboEffect.getNumBlocks());
       Effect effect = getEffectFor(effectSpecies);
-      double effectSpecial = effect.getScoreMultiplier(comboEffect, this);
-      double finalScore = basicScore * typeMod * comboMultiplier * numBlocksModifier * effectSpecial;
+      NumberSpan effectSpecial = effect.getScoreMultiplier(comboEffect, this);
+      // gets the score without an effect affecting it
+      double preEffectScore = basicScore * typeMod * comboMultiplier * numBlocksModifier;
+      // gets the real integer floored minimum
+      int finalMin = (int) (effectSpecial.getMinimum() * preEffectScore);
+      // gets the real integer floored maximum
+      int finalMax = (int) (effectSpecial.getMaximum() * preEffectScore);
+      // gets the effect's ratio of average to minimum, which will be preserved.
+      double ratio = effectSpecial.getAverage() / effectSpecial.getMinimum();
+      // Gets the new average by multiplying that ratio by the integer minimum
+      // This is the real average because all we wanted was the distribution
+      // but now we just want the REAL distribution of values for actual score
+      double average = finalMin * ratio;
+      // NumberSpan finalScore = effectSpecial.multiplyBy(preEffectScore);
+      NumberSpan finalScore = new NumberSpan(finalMin, finalMax, average, 1);
       if (logFiner) {
          logFinerWithId("Calculated score as %s for combo %s", finalScore, comboEffect);
       }
       if (getState().getCore().isAttackPowerUp()) {
-         finalScore *= 2.0;
+         finalScore = finalScore.multiplyBy(2.0);
       }
-      return finalScore + 0.000000001;
+      // finalScore.add(0.000000001);
+      return finalScore;
       // This precision adjustment is over 1,000 times as large as it is needed for all known cases
    }
    
@@ -981,7 +996,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     * @param effectSpecies
     * @return
     */
-   public double getBasicScoreFor(Species effectSpecies) {
+   public int getBasicScoreFor(Species effectSpecies) {
       int level = getState().getCore().getLevel(effectSpecies);
       // gets the basic block score for this species in this stage
       return effectSpecies.getAttack(level);
@@ -1022,7 +1037,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       return NUM_BLOCK_MULTIPLIER[n - 1];
    }
    
-   public void addScore(int score) {
+   public void addScore(NumberSpan score) {
       if (logFiner) {
          logFinerWithId("Adding score: %s", score);
       }
@@ -1030,7 +1045,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    }
    
    public void handleMainComboResult(ActivateComboEffect comboEffect, Effect effect) {
-      int scoreToAdd = getScoreFor(comboEffect).intValue();
+      NumberSpan scoreToAdd = getScoreFor(comboEffect);
       if (logFiner) {
          logFinerWithId("Adding main score of %s for combo %s", scoreToAdd, comboEffect);
       }
@@ -1166,6 +1181,14 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             getState().addDisruptionCleared(1);
          }
          b.setFrozenAt(row, col, false);
+         scheduleEffect(new DelayThawEffect(Arrays.asList(row, col)), Effect.getDefaultErasureDelay() + THAW_DELAY);
       }
+   }
+   
+   /**
+    * 
+    */
+   public void setIsRandom() {
+      getState().setIsRandom();
    }
 }

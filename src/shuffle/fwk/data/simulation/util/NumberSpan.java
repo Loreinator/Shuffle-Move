@@ -18,19 +18,21 @@
 
 package shuffle.fwk.data.simulation.util;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
 public class NumberSpan extends Number implements Cloneable, Comparable<NumberSpan> {
    private static final long serialVersionUID = -6911146707992934793L;
+   private static final DecimalFormat FORMAT = new DecimalFormat("##.##");
    
-   private int min;
-   private int max;
-   private double total;
-   private int n;
+   private final double min;
+   private final double max;
+   private final double total;
+   private final int n;
    
    public NumberSpan() {
       min = 0;
@@ -39,21 +41,48 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
       n = 0;
    }
    
-   public NumberSpan(int min, int max, double total, int n) {
-      this.min = min;
-      this.max = max;
-      this.total = total;
-      this.n = n;
+   public NumberSpan(Number value) {
+      if (value instanceof NumberSpan) {
+         NumberSpan other = (NumberSpan) value;
+         min = other.min;
+         max = other.max;
+         total = other.total;
+         n = other.n;
+      } else {
+         min = Math.max(0, value.doubleValue());
+         max = Math.max(0, value.doubleValue());
+         total = value.doubleValue();
+         n = value.doubleValue() <= 0 ? 0 : 1;
+      }
+   }
+   
+   public NumberSpan(Number base, Number bonus, double chance) {
+      if (chance <= 0.0) {
+         min = base.doubleValue();
+         max = min;
+         total = min;
+      } else if (chance >= 1.0) {
+         max = base.doubleValue() + bonus.doubleValue();
+         min = max;
+         total = max;
+      } else {
+         min = base.doubleValue();
+         max = base.doubleValue() + bonus.doubleValue();
+         total = base.doubleValue() + bonus.doubleValue() * chance;
+      }
+      n = 1;
+   }
+   
+   public NumberSpan(Number min, Number max, Number total, Number n) {
+      this.min = min.doubleValue();
+      this.max = max.doubleValue();
+      this.total = total.doubleValue();
+      this.n = n.intValue();
    }
    
    @Override
    public NumberSpan clone() {
-      NumberSpan ns = new NumberSpan();
-      ns.min = min;
-      ns.max = max;
-      ns.total = total;
-      ns.n = n;
-      return ns;
+      return new NumberSpan(min, max, total, n);
    }
    
    /*
@@ -100,27 +129,71 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
       return n == 0 ? 0 : total / n;
    }
    
-   public int getMinimum() {
+   public double getMinimum() {
       return min;
    }
    
-   public int getMaximum() {
+   public double getMaximum() {
       return max;
    }
    
-   protected final void putValue(int value, float likelihood) {
+   public NumberSpan add(Number num) {
+      NumberSpan ret;
+      if (num instanceof NumberSpan) {
+         NumberSpan other = (NumberSpan) num;
+         if (n == 0) {
+            ret = new NumberSpan(other.min, other.max, other.total, other.n);
+         } else if (other.n != 0) {
+            ret = new NumberSpan(other.min + min, other.max + max, other.total + total, Math.max(n, other.n));
+         } else {
+            ret = clone();
+         }
+      } else {
+         double val = num.doubleValue();
+         ret = new NumberSpan(min + val, max + val, total + val, Math.max(1, n));
+      }
+      return ret;
+   }
+   
+   /**
+    * @param effectSpecial
+    * @return
+    */
+   public NumberSpan multiplyBy(Number num) {
+      NumberSpan ret;
+      if (num instanceof NumberSpan) {
+         NumberSpan span = (NumberSpan) num;
+         ret = new NumberSpan(min * span.min, max * span.max, total * span.total, Math.max(n, span.n));
+      } else {
+         double numVal = num.doubleValue();
+         ret = new NumberSpan(min * numVal, max * numVal, total * numVal, Math.max(n, 1));
+      }
+      return ret;
+   }
+   
+   public NumberSpan put(NumberSpan other) {
+      NumberSpan ret;
+      if (n == 0) {
+         ret = new NumberSpan(other);
+      } else if (other.n != 0) {
+         ret = new NumberSpan(Math.min(min, other.min), Math.max(max, other.max), total + other.total, n + other.n);
+      } else {
+         ret = clone();
+      }
+      return ret;
+   }
+   
+   public NumberSpan put(int value, float likelihood) {
       if (likelihood < 0f) {
          throw new IllegalArgumentException("Likelihood cannot be negative.");
       }
+      NumberSpan ret;
       if (n == 0) {
-         min = value;
-         max = value;
+         ret = new NumberSpan(value, value, value * likelihood, 1);
       } else {
-         min = Math.min(min, value);
-         max = Math.max(max, value);
+         ret = new NumberSpan(Math.min(min, value), Math.max(max, value), total + value * likelihood, n + 1);
       }
-      total += value * likelihood;
-      n++;
+      return ret;
    }
    
    @Override
@@ -131,12 +204,12 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
       if (average == (long) average) {
          avgString = String.format("%d", (long) average);
       } else {
-         avgString = String.format("%s", average);
+         avgString = String.format("%s", FORMAT.format(average));
       }
       if (min == max) {
          ret = avgString;
       } else {
-         ret = String.format("[%d-%d] (%s)", getMinimum(), getMaximum(), avgString);
+         ret = String.format("[%s-%s] (%s)", FORMAT.format(getMinimum()), FORMAT.format(getMaximum()), avgString);
       }
       return ret;
    }
@@ -149,10 +222,12 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
    public int hashCode() {
       final int prime = 31;
       int result = 1;
-      result = prime * result + max;
-      result = prime * result + min;
-      result = prime * result + n;
       long temp;
+      temp = Double.doubleToLongBits(max);
+      result = prime * result + (int) (temp ^ temp >>> 32);
+      temp = Double.doubleToLongBits(min);
+      result = prime * result + (int) (temp ^ temp >>> 32);
+      result = prime * result + n;
       temp = Double.doubleToLongBits(total);
       result = prime * result + (int) (temp ^ temp >>> 32);
       return result;
@@ -181,12 +256,11 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
    public int compareTo(NumberSpan o) {
       int ret = Double.compare(total, o.total);
       if (ret == 0) {
-         ret = Integer.compare(max, o.max);
+         ret = Double.compare(max, o.max);
          if (ret == 0) {
-            ret = Integer.compare(min, o.min);
+            ret = Double.compare(min, o.min);
          }
       }
       return ret;
    }
-   
 }
