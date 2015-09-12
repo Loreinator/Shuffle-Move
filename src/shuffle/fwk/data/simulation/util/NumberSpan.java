@@ -49,26 +49,31 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
          total = other.total;
          n = other.n;
       } else {
-         min = Math.max(0, value.doubleValue());
-         max = Math.max(0, value.doubleValue());
-         total = value.doubleValue();
-         n = value.doubleValue() <= 0 ? 0 : 1;
+         double doubleValue = value.doubleValue();
+         min = Math.max(0, doubleValue);
+         max = Math.max(0, doubleValue);
+         total = doubleValue;
+         n = doubleValue <= 0 ? 0 : 1;
       }
    }
    
    public NumberSpan(Number base, Number bonus, double chance) {
+      double baseValue = base.doubleValue();
       if (chance <= 0.0) {
-         min = base.doubleValue();
+         min = baseValue;
          max = min;
          total = min;
-      } else if (chance >= 1.0) {
-         max = base.doubleValue() + bonus.doubleValue();
-         min = max;
-         total = max;
       } else {
-         min = base.doubleValue();
-         max = base.doubleValue() + bonus.doubleValue();
-         total = base.doubleValue() + bonus.doubleValue() * chance;
+         double bonusValue = bonus.doubleValue();
+         if (chance >= 1.0) {
+            max = baseValue + bonusValue;
+            min = max;
+            total = max;
+         } else {
+            min = baseValue;
+            max = baseValue + bonusValue;
+            total = baseValue + bonusValue * chance;
+         }
       }
       n = 1;
    }

@@ -197,7 +197,9 @@ public class SimulationState {
       } else {
          toAdd = add.intValue();
       }
-      score = score.add(toAdd);
+      if (toAdd.doubleValue() > 0) {
+         score = score.add(toAdd);
+      }
    }
    
    public void addGold(int add) {
