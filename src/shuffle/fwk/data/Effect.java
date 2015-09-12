@@ -208,7 +208,24 @@ public enum Effect {
     * Fills the Mega Guage of a Pokemon of the same type.
     */
    MEGA_BOOST_P_P(0.1, 0.2, 0.3) {
-   
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return MEGA_BOOST.canActivate(comboEffect, task);
+      }
+      
+      @Override
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            double odds = getOdds(comboEffect.getNumBlocks());
+            if (odds < 1.0) {
+               task.setIsRandom();
+            }
+            if (odds >= Math.random()) {
+               task.getState().increaseMegaProgress(9);
+            }
+         }
+      }
    },
    /**
     * Fills the Mega Guage of a Pokemon of the same type.
