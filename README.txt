@@ -41,6 +41,9 @@ v0.3.28 - 2015-09-13
 	- Implemented effects: Mega Boost++, Hyper Punch, Nosedive, Super Bolt
 	- Feeder 'height' disabled for now due to inconsistency with new simulation framework, will be re-implemented internally in a future version
 	- Move Chooser translations for Finnish have been updated
+	- Effect chances are no longer hard-coded
+	- Mobile effect chances can be toggled on in the move preferences window.
+	- Default number of feeders increased to 50
 v0.3.27 - 2015-09-08
 	- Relicanth and Shuckle AP corrected
 	- Chinese and German Translations updated
