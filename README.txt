@@ -35,8 +35,12 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.28 - 2015-09-??
+v0.3.28 - 2015-09-13
 	- Performance Improvements to the simulation - will no longer use more than one simulation if there is no real benefit (no complex randomness)
+	- i18n for Species have been updated/improved
+	- Implemented effects: Mega Boost++, Hyper Punch, Nosedive, Super Bolt
+	- Feeder 'height' disabled for now due to inconsistency with new simulation framework, will be re-implemented internally in a future version
+	- Move Chooser translations for Finnish have been updated
 v0.3.27 - 2015-09-08
 	- Relicanth and Shuckle AP corrected
 	- Chinese and German Translations updated
