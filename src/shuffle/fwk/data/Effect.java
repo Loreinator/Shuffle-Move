@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -37,218 +38,619 @@ import shuffle.fwk.data.simulation.util.NumberSpan;
 
 public enum Effect {
    /**
-    * Attacks sometimes deal greater damage than usual.
-    */
-   HYPER_PUNCH(0.1, 0.5, 0.5) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 2, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Leaves the foe Paralyzed
-    */
-   SHOCK_ATTACK(0.2, 0.3, 0.8) {
-   
-   },
-   /**
-    * Attacks can occasionally deal greater damage than usual.
-    */
-   NOSEDIVE(0.15, 0.4, 0.7) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 4, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Does mode damage when the opponent has more HP left.
-    */
-   POISONOUS_MIST(0.15, 0.25, 0.3) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            int health = task.getState().getCore().getRemainingHealth();
-            task.addScore(new NumberSpan(0, (int) (0.1 * health), getRate(comboEffect, task)));
-         }
-      }
-   },
-   /**
-    * Does more damage when the opponent has more HP left.
-    */
-   DOWNPOUR(0.15, 0.25, 0.3) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            int health = task.getState().getCore().getRemainingHealth();
-            task.addScore(new NumberSpan(0, (int) (0.1 * health), getRate(comboEffect, task)));
-         }
-      }
-   },
-   /**
-    * Attacks can occasionally deal greater damage than usual.
-    */
-   SUPER_BOLT(0.1, 0.2, 0.5) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 9, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurance is "Sometimes" and the
-    * number cleared is 5.
-    */
-   BLOCK_SMASH_P_P(0.4, 1, 1) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
-            if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 5 || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 5);
-                  List<Integer> toErase = new ArrayList<Integer>();
-                  for (Integer i : randoms) {
-                     int row = matches.get(i * 2);
-                     int col = matches.get(i * 2 + 1);
-                     toErase.addAll(Arrays.asList(row, col));
-                  }
-                  if (!toErase.isEmpty()) {
-                     eraseBonus(task, toErase, true);
-                  }
-               }
-            }
-         }
-      }
-   },
-   
-   /**
-    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurance is "Sometimes" and the
-    * number cleared is 3.
-    */
-   BLOCK_SMASH_P(0.5, 1, 1) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
-            if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 3 || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 3);
-                  List<Integer> toErase = new ArrayList<Integer>();
-                  for (Integer i : randoms) {
-                     int row = matches.get(i * 2);
-                     int col = matches.get(i * 2 + 1);
-                     toErase.addAll(Arrays.asList(row, col));
-                  }
-                  if (!toErase.isEmpty()) {
-                     eraseBonus(task, toErase, true);
-                  }
-               }
-            }
-         }
-      }
-   },
-   /**
-    * Same as {@link Effect#POWER_OF_4} except the modifier is 3.0 instead of 1.5
-    */
-   POWER_OF_4_P(0, 0.8, 0) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 2, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Leaves the foe paralyzed.
-    */
-   PARALYZE(0.1, 0.3, 0.8) {
-   
-   },
-   /**
     * Attacks can occasionally deal greater damage than usual.
     */
    OPPORTUNIST(0.05, 0.1, 0.1) {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.5, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
+         return getMultiplier(comboEffect, task, 0.5);
       }
    },
    /**
-    * Increases damage done by any Normal types in a combo. 2.5x multiplier
+    * Attacks sometimes deal greater damage than usual. 1.5x modifier
     */
-   DOUBLE_NORMAL(0.2, 0.6, 0.8) {
+   HEAVY_HITTER(0.2, 0.5, 0.5) {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.5);
+      }
+   },
+   /**
+    * Attacks sometimes deal greater damage than usual. 1.5x modifier
+    */
+   DRAGON_TALON(0.2, 0.5, 0.5) {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.5);
+      }
+   },
+   /**
+    * Attacks do more damage when you make a match of 4.
+    */
+   POWER_OF_4(0, 1, 0) {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.5);
+      }
+   },
+   /**
+    * Attacks do more damage when you make a match of 5.
+    */
+   POWER_OF_5(0, 0, 1, 0) {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.5);
+      }
+   },
+   /**
+    * Attacks do more damage when things are looking desperate.
+    */
+   LAST_DITCH_EFFORT(0.5, 1.0, 1.0) {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.5);
+      }
+   },
+   /**
+    * Does more damage the more times in a row it is triggered. <br>
+    * hitting/damage streak, first activation: 1.2 <br>
+    * hitting/damage streak, second activation: 1.44 (1.2^2) <br>
+    * hitting/damage streak, third activation: 1.728 (1.2^3) <br>
+    * hitting/damage streak, fourth or higher activation: 2
+    */
+   HITTING_STREAK(0.6, 1, 1) {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.2);
+      }
+   },
+   /**
+    * Does more damage the more times in a row it is triggered. <br>
+    * hitting/damage streak, first activation: 1.2 <br>
+    * hitting/damage streak, second activation: 1.44 (1.2^2) <br>
+    * hitting/damage streak, third activation: 1.728 (1.2^3) <br>
+    * hitting/damage streak, fourth or higher activation: 2
+    */
+   DAMAGE_STREAK(0.6, 1, 1) {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.2);
+      }
+   },
+   /**
+    * Damage may randomly be increased or decreased.
+    */
+   RISK_TAKER(0.5, 0.7, 1) {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            // Here we are tracking three separate things
+            // The minimum possible damage multiplier
+            double min = 1.0 / 3.0;
+            // The maximum possible damage multiplier
+            double max = 9.0 / 3.0;
+            // The average boost compared to 1.0
+            double normalAvgBoost = 2.0 / 3.0;
+            double rate = getOdds(comboEffect.getNumBlocks());
+            double avg = 1 + (normalAvgBoost * rate);
+            // Which are merged into a single multiplier here,
+            // the min is the lowest it could go, the max is the highest,
+            // the 'avg' is the net average multiplier
+            NumberSpan multiplier = new NumberSpan(min, max, avg, 1);
+            return multiplier.multiplyBy(super.getScoreMultiplier(comboEffect, task));
+         } else {
+            // If it CAN'T occur, then don't incorporate it.
+            // This is the special case of multipliers, since it can decrease as well as increase.
+            return super.getScoreMultiplier(comboEffect, task);
+         }
+      }
+   },
+   /**
+    * Increases damage done by your last three attacks in a stage by 50%.
+    */
+   SWARM(0.6, 1, 1) {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.5);
+      }
+   },
+   /**
+    * Attacks do more damage when things are looking desperate.
+    */
+   STEELY_RESOLVE(0.6, 1, 1) {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.5);
+      }
+   },
+   /**
+    * Increases damage done by any Fire types in a combo.
+    */
+   PYRE(0.5, 1, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, 0.2);
+      }
+   },
+   /**
+    * Increases damage done by any Dragon types in a combo.
+    */
+   DANCING_DRAGONS(0.2, 0.5, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.DRAGON, 0.2);
+      }
+   },
+   /**
+    * Increases damage done by any fighting types in a combo.
+    */
+   PUMMEL(0.15, 0.5, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.FIGHTING, 0.2);
+      }
+      
+   },
+   /**
+    * Increases damage of Fairy-type moves in a Combo.
+    */
+   PIXIE_POWER(0.15, 0.35, 0.6) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.FAIRY, 0.5);
+      }
+   },
+   /**
+    * Increases damage of Dark-type moves in a combo.
+    */
+   SINISTER_POWER(0.15, 0.35, 0.6) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.DARK, 0.5);
+      }
+   },
+   /**
+    * The more of this Species in the puzzle area, the more damage.
+    */
+   CROWD_CONTROL(0.2, 1, 1) {
+      
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
+         NumberSpan ret = new NumberSpan();
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            int num = task
+                  .findMatches(36, true,
+                        (r, c, s) -> (s.equals(
+                              effectSpecies)
+                        && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
+                  .size() / 2;
+            ret = new NumberSpan(0, num, getOdds(comboEffect.getNumBlocks()));
+         }
+         return ret;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(50);
+      }
+      
+   },
+   /**
+    * The more disruptions on the board, the greater the damage.
+    */
+   COUNTERATTACK(0.25, 0.5, 1) {
+      
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
+         NumberSpan ret = new NumberSpan();
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            int num = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption())
+                  .size() / 2;
+            ret = new NumberSpan(0, num, getOdds(comboEffect.getNumBlocks()));
+         }
+         return ret;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(20 * typeModifier);
+      }
+   },
+   /**
+    * Does more damage when the opponent has more HP left.
+    */
+   VITALITY_DRAIN(0.05, 0.1, 0.3) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      }
+   },
+   /**
+    * Sometimes increases damage and leaves opponent paralyzed.
+    */
+   QUAKE(0.2, 0.3, 0.5) {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.2);
+      }
+   },
+   /**
+    * Combos do more damage if the opponent is Ghost type.
+    */
+   FEARLESS(0.1, 0.5, 1) {
+      // TODO Apparently, this causes attacks to be super effective. Is it actually this, or is it a
+      // flat multiplier?
+   },
+   /**
+    * Does more damage against Flying, Bug, or Fairy types.
+    */
+   SWAT(0.2, 0.3, 0.5) {
+      
+      private final List<PkmType> targets = Collections
+            .unmodifiableList(Arrays.asList(PkmType.FLYING, PkmType.BUG, PkmType.FAIRY));
+            
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return targets.contains(task.getState().getCore().getStage().getType())
+               && super.canActivate(comboEffect, task);
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 0.2);
+      }
+   },
+   /**
+    * Increases damage for attacks that are not very effective.
+    */
+   BRUTE_FORCE(0.5, 1, 1) {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!super.canActivate(comboEffect, task)) {
+            return false;
+         }
+         Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+         PkmType effectType = effectSpecies.getType();
+         PkmType stageType = task.getState().getCore().getStage().getType();
+         return PkmType.getMultiplier(effectType, stageType) < 1.0;
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 1);
+      }
+   },
+   /**
+    * Occasionally erases one extra matching Species elsewhere.
+    */
+   QUIRKY(0.3, 0.5, 1) {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.NORMAL, new NumberSpan(1, 1.5, getRate(comboEffect, task)));
-         }
-      }
-   },
-   /**
-    * Fills the Mega Guage of a Pokemon of the same type.
-    */
-   MEGA_BOOST_P_P(0.1, 0.2, 0.3) {
-      
-      @Override
-      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return MEGA_BOOST.canActivate(comboEffect, task);
-      }
-      
-      @Override
-      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            double odds = getOdds(comboEffect.getNumBlocks());
-            if (odds < 1.0) {
-               task.setIsRandom();
-            }
-            if (odds >= Math.random()) {
-               task.getState().increaseMegaProgress(9);
+            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(comboEffect.getNumBlocks());
+               if (matches.size() / 2 > 1 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toErase = new ArrayList<Integer>(Arrays.asList(row, col));
+                  eraseBonus(task, toErase, true);
+               }
             }
          }
       }
    },
    /**
-    * Fills the Mega Guage of a Pokemon of the same type.
+    * Occasionally erases two extra matching Species elsewhere.
     */
-   MEGA_BOOST_P(0.5, 1, 1) {
+   QUIRKY_P(0.25, 0.35, 1) {
       
       @Override
-      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return MEGA_BOOST.canActivate(comboEffect, task);
-      }
-      
-      @Override
-      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            double odds = getOdds(comboEffect.getNumBlocks());
-            if (odds < 1.0) {
-               task.setIsRandom();
-            }
-            if (odds >= Math.random()) {
-               task.getState().increaseMegaProgress(6);
+            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(comboEffect.getNumBlocks());
+               if (matches.size() / 2 > 2 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 2);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  eraseBonus(task, toErase, true);
+               }
             }
          }
       }
+   },
+   /**
+    * Occasionally changes when a foe will next disrupt your play.
+    */
+   PRANK(0.2, 0.4, 1) {
+   
+   },
+   /**
+    * Occasionally erases one of the foe's disruptions on the board.
+    */
+   STABILIZE(0.3, 0.5, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            List<Integer> matches = task.findMatches(36, false,
+                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
+            if (!matches.isEmpty()) {
+               double odds = getOdds(comboEffect.getNumBlocks());
+               if (matches.size() > 2 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toErase = Arrays.asList(row, col);
+                  eraseBonus(task, toErase, false);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Occasionally erases two of the foe's disruptions on the board.
+    */
+   STABILIZE_P(0.2, 0.5, 0.8) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            List<Integer> match = task.findMatches(36, false,
+                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
+            if (!match.isEmpty()) {
+               double odds = getOdds(comboEffect.getNumBlocks());
+               if (match.size() / 2 > 2 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, 2);
+                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  for (int i : randoms) {
+                     int row = match.get(i * 2);
+                     int col = match.get(i * 2 + 1);
+                     toClear.add(row);
+                     toClear.add(col);
+                  }
+                  eraseBonus(task, toClear, false);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Occasionally erases all of the foe's disruptions.
+    */
+   DISRUPT_BUSTER(0.02, 0.03, 0.04) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            List<Integer> match = task.findMatches(36, false,
+                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
+            if (!match.isEmpty()) {
+               task.setIsRandom();
+               if (doesActivate(comboEffect, task)) {
+                  eraseBonus(task, match, false);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Destroys one breakable-rock disruption without fail. (wood)
+    */
+   ROCK_BREAK(1, 1, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            if (!matches.isEmpty()) {
+               if (matches.size() > 2) {
+                  task.setIsRandom();
+               }
+               int blockIndex = getRandomInt(matches.size() / 2);
+               int row = matches.get(blockIndex * 2);
+               int col = matches.get(blockIndex * 2 + 1);
+               List<Integer> toErase = Arrays.asList(row, col);
+               WOOD.eraseBonus(task, toErase, true);
+            }
+         }
+      }
+   },
+   /**
+    * Clears clouds within 1 space.
+    */
+   CLOUD_CLEAR(1, 1, 1) {
+   
+   },
+   /**
+    * Clears one unbreakable-block disruption without fail.
+    */
+   BLOCK_SMASH(1, 1, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         boolean canActivate = canActivate(comboEffect, task);
+         if (canActivate) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            if (matches.size() > 2) {
+               task.setIsRandom();
+            }
+            if (!matches.isEmpty() && doesActivate(comboEffect, task)) {
+               int blockIndex = getRandomInt(matches.size() / 2);
+               int row = matches.get(blockIndex * 2);
+               int col = matches.get(blockIndex * 2 + 1);
+               List<Integer> toErase = Arrays.asList(row, col);
+               eraseBonus(task, toErase, false);
+            }
+         }
+      }
+   },
+   /**
+    * Removes one non-Support Pokemon icon without fail. that means any pokemon that you were forced
+    * to have by the stage.
+    */
+   EJECT(1, 1, 1) {
+   },
+   /**
+    * Removes one barrier-type disruption without fail.
+    */
+   BARRIER_BASH(1, 1, 1) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c));
+            if (!matches.isEmpty()) {
+               if (matches.size() / 2 > 1) {
+                  task.setIsRandom();
+               }
+               int blockIndex = getRandomInt(matches.size() / 2);
+               int row = matches.get(blockIndex * 2);
+               int col = matches.get(blockIndex * 2 + 1);
+               task.unfreezeAt(Arrays.asList(row, col));
+            }
+         }
+      }
+      
+   },
+   /**
+    * Can replace a disruption with one of your Pokemon.
+    */
+   SWAP(0.3, 0.5, 1) {
+   
+   },
+   /**
+    * Can delay your opponent's disruptions for a turn.
+    */
+   CHILL(0.2, 0.3, 1) {
+   
+   },
+   /**
+    * Can delay your opponent's disruptions for a turn.
+    */
+   ASTONISH(0.2, 0.3, 1) {
+   
+   },
+   /**
+    * Occasionally disrupts a Ground-type opponent's disruptions.
+    */
+   FLAP(0.5, 1, 1) {
+   
+   },
+   /**
+    * Can delay your opponent's disruptions for a turn.
+    */
+   MIND_ZAP(0.1, 0.4, 1) {
+   
+   },
+   /**
+    * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
+    * 50%.
+    */
+   BURN(0.05, 0.3, 0.8) {
+      
+      @Override
+      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, 0.5);
+      }
+   },
+   /**
+    * Leaves the foe spooked.
+    */
+   SPOOKIFY(0.05, 0.3, 0.8) {
+      
+      @Override
+      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, 0.5);
+      }
+   },
+   /**
+    * Has a chance of freezing an opponent.
+    */
+   FREEZE(0.05, 0.25, 0.7) {
+      
+      @Override
+      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.ICE, 0.5);
+      }
+   },
+   /**
+    * Inflicts the opponent with sleep for three turns, preventing it from using its distortion.
+    */
+   SLEEP_CHARM(0.05, 0.3, 0.8) {
+   
+   },
+   /**
+    * Leaves the foe paralyzed.
+    */
+   PARALYZE(0.1, 0.3, 0.8) {
+   
    },
    /**
     * Fills the Mega Guage of a Pokemon of the same type.
@@ -285,236 +687,150 @@ public enum Effect {
       }
    },
    /**
-    * Attacks do more damage when you make a match of 4.
+    * Attacks sometimes deal greater damage than usual.
     */
-   POWER_OF_4(0, 1.0, 0) {
+   HYPER_PUNCH(0.1, 0.5, 0.5) {
+      
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.5, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
+         return getMultiplier(comboEffect, task, 2);
+      }
+   },
+   /**
+    * Same as {@link Effect#POWER_OF_4} except the modifier is 3.0 instead of 1.5
+    */
+   POWER_OF_4_P(0, 0.8, 0) {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 2);
       }
    },
    /**
     * Attacks do more damage when you make a match of 5.
     */
-   POWER_OF_5(0, 0, 1.0, 0) {
+   POWER_OF_5_P(0, 0, 0.8) {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.5, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
+         return getMultiplier(comboEffect, task, 2);
       }
    },
    /**
-    * Attacks do more damage when you make a match of 5.
+    * Identical to Crowd Control, except this activates more often.
     */
-   POWER_OF_5_P(0, 0, 0.8, 0) {
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 2, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Removes one non-Support Pokemon icon without fail. that means any pokemon that you were forced
-    * to have by the stage.
-    */
-   EJECT(1, 1, 1) {
-   },
-   /**
-    * Removes 3 non-Support Pokemon icon without fail. that means any pokemon that you were forced
-    * to have by the stage.
-    */
-   EJECT_P(0.5, 1, 1) {
-   },
-   /**
-    * Removes 5 non-Support Pokemon icon without fail. that means any pokemon that you were forced
-    * to have by the stage.
-    */
-   EJECT_P_P(0.4, 1, 1) {
-   },
-   /**
-    * Damage may randomly be increased or decreased.
-    */
-   RISK_TAKER(0.5, 0.7, 1.0) {
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            // Here we are tracking three separate things
-            // The minimum possible damage multiplier
-            double min = 1.0 / 3.0;
-            // The maximum possible damage multiplier
-            double max = 9.0 / 3.0;
-            // The average boost compared to 1.0
-            double normalAvgBoost = 2.0 / 3.0;
-            double rate = getRate(comboEffect, task);
-            double avg = 1 + (normalAvgBoost * rate);
-            // Which are merged into a single multiplier here,
-            // the min is the lowest it could go, the max is the highest,
-            // the 'avg' is the net average multiplier
-            NumberSpan multiplier = new NumberSpan(min, max, avg, 1);
-            return multiplier.multiplyBy(super.getScoreMultiplier(comboEffect, task));
-         } else {
-            // If it CAN'T occur, then don't incorporate it.
-            // This is the special case of multipliers, since it can decrease as well as increase.
-            return super.getScoreMultiplier(comboEffect, task);
-         }
-      }
-   },
-   /**
-    * Clears one unbreakable-block disruption without fail.
-    */
-   BLOCK_SMASH(1, 1, 1) {
+   CROWD_POWER(0.4, 1, 1) {
       
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         boolean canActivate = canActivate(comboEffect, task);
-         if (canActivate) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
-            if (matches.size() > 2) {
-               task.setIsRandom();
-            }
-            if (!matches.isEmpty() && doesActivate(comboEffect, task)) {
-               int blockIndex = getRandomInt(matches.size() / 2);
-               int row = matches.get(blockIndex * 2);
-               int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toErase = Arrays.asList(row, col);
-               eraseBonus(task, toErase, false);
-            }
-         }
-      }
-   },
-   /**
-    * Occasionally erases one of the foe's disruptions on the board.
-    */
-   STABILIZE(0.3, 0.5, 1) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
+         NumberSpan ret = new NumberSpan();
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
-            List<Integer> matches = task.findMatches(36, false,
-                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
-            if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
-               if (matches.size() > 2 || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  int blockIndex = getRandomInt(matches.size() / 2);
-                  int row = matches.get(blockIndex * 2);
-                  int col = matches.get(blockIndex * 2 + 1);
-                  List<Integer> toErase = Arrays.asList(row, col);
-                  eraseBonus(task, toErase, false);
-               }
-            }
+            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            int num = task
+                  .findMatches(36, true,
+                        (r, c, s) -> (s.equals(
+                              effectSpecies)
+                        && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
+                  .size() / 2;
+            ret = new NumberSpan(0, num, getOdds(comboEffect.getNumBlocks()));
          }
+         return ret;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(50);
       }
    },
    /**
-    * Can replace a disruption with one of your Pokemon.
+    * Increases damage done by any Normal types in a combo. 2.5x multiplier
     */
-   SWAP(0.3, 0.5, 1) {
-   
-   },
-   /**
-    * Can replace some disruptions with this Pokemon.
-    */
-   SWAP_P(0.25, 0.5, 1) {
-   
-   },
-   /**
-    * Can replace many disruptions with this Pokemon.
-    */
-   SWAP_P_P(0.2, 0.5, 1) {
-   
-   },
-   /**
-    * Increases damage done by any fighting types in a combo.
-    */
-   PUMMEL(0.15, 0.5, 1) {
+   DOUBLE_NORMAL(0.2, 0.6, 0.8) {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.FIGHTING, new NumberSpan(1, 0.2, getRate(comboEffect, task)));
-         }
-      }
-      
-   },
-   /**
-    * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
-    * 50%.
-    */
-   BURN(0.05, 0.3, 0.8) {
-      
-      @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.FIRE, new NumberSpan(1, 0.5, getRate(comboEffect, task)));
-         }
+         ifThenSetSpecial(comboEffect, task, PkmType.NORMAL, 1.5);
       }
    },
    /**
-    * Inflicts the opponent with sleep for three turns, preventing it from using its distortion.
+    * Fills the Mega Guage of a Pokemon of the same type.
     */
-   SLEEP_CHARM(0.05, 0.3, 0.8) {
-   
-   },
-   /**
-    * Increases damage done by your last three attacks in a stage by 50%.
-    */
-   SWARM(0.6, 1.0, 1.0) {
+   MEGA_BOOST_P(0.5, 1, 1) {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
+         return MEGA_BOOST.canActivate(comboEffect, task);
       }
       
       @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.5, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Increases damage of Fairy-type moves in a Combo.
-    */
-   PIXIE_POWER(0.15, 0.35, 0.6) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.FAIRY, new NumberSpan(1, 0.5, getRate(comboEffect, task)));
+            double odds = getOdds(comboEffect.getNumBlocks());
+            if (odds < 1.0) {
+               task.setIsRandom();
+            }
+            if (odds >= Math.random()) {
+               task.getState().increaseMegaProgress(6);
+            }
          }
       }
    },
    /**
-    * Has a chance of freezing an opponent.
+    * Fills the Mega Guage of a Pokemon of the same type.
     */
-   FREEZE(0.05, 0.25, 0.7) {
+   MEGA_BOOST_P_P(0.1, 0.2, 0.3) {
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return MEGA_BOOST.canActivate(comboEffect, task);
+      }
+      
+      @Override
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.ICE, new NumberSpan(1, 0.5, getRate(comboEffect, task)));
+            double odds = getOdds(comboEffect.getNumBlocks());
+            if (odds < 1.0) {
+               task.setIsRandom();
+            }
+            if (odds >= Math.random()) {
+               task.getState().increaseMegaProgress(9);
+            }
          }
       }
    },
    /**
-    * Occasionally changes when a foe will next disrupt your play.
+    * Occasionally erases five of the foe's disruptions on the board.
     */
-   PRANK(0.2, 0.4, 1) {
-   
+   STABILIZE_P_P(0.25, 0.5, 1) {
+      // TODO
    },
    /**
-    * Increases damage done by any Fire types in a combo.
+    * Sometimes destroys three breakable-rock disruptions. (wood)
     */
-   PYRE(0.5, 1, 1) {
+   ROCK_BREAK_P(0.5, 1, 1) {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.FIRE, new NumberSpan(1, 0.2, getRate(comboEffect, task)));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(comboEffect.getNumBlocks());
+               if (matches.size() / 2 > 3 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 3);
+                  List<Integer> toErase = new ArrayList<Integer>(randoms.size() * 2);
+                  for (int i : randoms) {
+                     toErase.add(matches.get(i * 2));
+                     toErase.add(matches.get(i * 2 + 1));
+                  }
+                  WOOD.eraseBonus(task, toErase, true);
+               }
+            }
          }
       }
    },
@@ -546,14 +862,27 @@ public enum Effect {
       }
    },
    /**
-    * Sometimes destroys three breakable-rock disruptions. (wood)
+    * Clears 4 clouds within 1 space.
     */
-   ROCK_BREAK_P(0.5, 1, 1) {
+   CLOUD_CLEAR_P(0.5, 1, 1) {
+   
+   },
+   /**
+    * Clears 5 clouds within 1 space.
+    */
+   CLOUD_CLEAR_P_P(0.4, 1, 1) {
+   
+   },
+   /**
+    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurance is "Sometimes" and the
+    * number cleared is 3.
+    */
+   BLOCK_SMASH_P(0.5, 1, 1) {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
             if (!matches.isEmpty()) {
                double odds = getOdds(comboEffect.getNumBlocks());
                if (matches.size() / 2 > 3 || odds < 1.0) {
@@ -561,105 +890,62 @@ public enum Effect {
                }
                if (odds >= Math.random()) {
                   List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 3);
-                  List<Integer> toErase = new ArrayList<Integer>(randoms.size() * 2);
-                  for (int i : randoms) {
-                     toErase.add(matches.get(i * 2));
-                     toErase.add(matches.get(i * 2 + 1));
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
                   }
-                  WOOD.eraseBonus(task, toErase, true);
+                  if (!toErase.isEmpty()) {
+                     eraseBonus(task, toErase, true);
+                  }
                }
             }
          }
       }
    },
    /**
-    * Destroys one breakable-rock disruption without fail. (wood)
+    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurance is "Sometimes" and the
+    * number cleared is 5.
     */
-   ROCK_BREAK(1, 1, 1) {
+   BLOCK_SMASH_P_P(0.4, 1, 1) {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
             if (!matches.isEmpty()) {
-               if (matches.size() > 2) {
+               double odds = getOdds(comboEffect.getNumBlocks());
+               if (matches.size() / 2 > 5 || odds < 1.0) {
                   task.setIsRandom();
                }
-               int blockIndex = getRandomInt(matches.size() / 2);
-               int row = matches.get(blockIndex * 2);
-               int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toErase = Arrays.asList(row, col);
-               WOOD.eraseBonus(task, toErase, true);
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 5);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  if (!toErase.isEmpty()) {
+                     eraseBonus(task, toErase, true);
+                  }
+               }
             }
          }
       }
    },
    /**
-    * Can delay your opponent's disruptions for a turn.
+    * Removes 3 non-Support Pokemon icon without fail. that means any pokemon that you were forced
+    * to have by the stage.
     */
-   MIND_ZAP(0.1, 0.4, 1) {
-   
+   EJECT_P(0.5, 1, 1) {
    },
    /**
-    * Attacks sometimes deal greater damage than usual. 1.5x modifier
+    * Removes 5 non-Support Pokemon icon without fail. that means any pokemon that you were forced
+    * to have by the stage.
     */
-   HEAVY_HITTER(0.2, 0.5, 0.5) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.5, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Attacks sometimes deal greater damage than usual. 1.5x modifier
-    */
-   DRAGON_TALON(0.2, 0.5, 0.5) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.5, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Attacks do more damage when things are looking desperate.
-    */
-   STEELY_RESOLVE(0.6, 1.0, 1.0) {
-      
-      @Override
-      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
-      }
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.5, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Removes one barrier-type disruption without fail.
-    */
-   BARRIER_BASH(1, 1, 1) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            Board board = task.getState().getBoard();
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c));
-            if (!matches.isEmpty()) {
-               if (matches.size() / 2 > 1) {
-                  task.setIsRandom();
-               }
-               int blockIndex = getRandomInt(matches.size() / 2);
-               int row = matches.get(blockIndex * 2);
-               int col = matches.get(blockIndex * 2 + 1);
-               task.unfreezeAt(Arrays.asList(row, col));
-            }
-         }
-      }
-      
+   EJECT_P_P(0.4, 1, 1) {
    },
    /**
     * Removes 3 barrier-type disruption without fail.
@@ -722,387 +1008,32 @@ public enum Effect {
       
    },
    /**
-    * Does more damage when the opponent has more HP left.
+    * Can replace some disruptions with this Pokemon.
     */
-   VITALITY_DRAIN(0.05, 0.1, 0.3) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            int health = task.getState().getCore().getRemainingHealth();
-            task.addScore(new NumberSpan(0, (int) (0.1 * health), getRate(comboEffect, task)));
-         }
-      }
-   },
-   /**
-    * Increases damage done by any Dragon types in a combo.
-    */
-   DANCING_DRAGONS(0.2, 0.5, 1) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.DRAGON, new NumberSpan(1, 0.2, getRate(comboEffect, task)));
-         }
-      }
-   },
-   /**
-    * Increases damage of Dark-type moves in a combo.
-    */
-   SINISTER_POWER(0.15, 0.35, 0.6) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.DARK, new NumberSpan(1, 0.5, getRate(comboEffect, task)));
-         }
-      }
-   },
-   /**
-    * Occasionally disrupts a Ground-type opponent's disruptions.
-    */
-   FLAP(0.5, 1, 1) {
+   SWAP_P(0.25, 0.5, 1) {
    
    },
    /**
-    * Attacks do more damage when things are looking desperate.
+    * Can replace many disruptions with this Pokemon.
     */
-   LAST_DITCH_EFFORT(0.5, 1.0, 1.0) {
-      
-      @Override
-      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
-      }
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.5, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Sometimes increases damage and leaves opponent paralyzed.
-    */
-   QUAKE(0.2, 0.3, 0.5) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1, 0.2, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * The more of this Species in the puzzle area, the more damage.
-    */
-   CROWD_CONTROL(0.2, 1, 1) {
-      
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
-         NumberSpan ret = new NumberSpan();
-         if (canActivate(comboEffect, task)) {
-            Board board = task.getState().getBoard();
-            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-            int num = task
-                  .findMatches(36, true,
-                        (r, c, s) -> (s.equals(
-                              effectSpecies)
-                        && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
-                  .size() / 2;
-            ret = new NumberSpan(0, num, getRate(comboEffect, task));
-         }
-         return ret;
-      }
-      
-      @Override
-      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(50);
-      }
-      
-   },
-   /**
-    * Identical to Crowd Control, except this activates more often.
-    */
-   CROWD_POWER(0.4, 1, 1) {
-      
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
-         NumberSpan ret = new NumberSpan();
-         if (canActivate(comboEffect, task)) {
-            Board board = task.getState().getBoard();
-            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-            int num = task
-                  .findMatches(36, true,
-                        (r, c, s) -> (s.equals(
-                              effectSpecies)
-                        && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
-                  .size() / 2;
-            ret = new NumberSpan(0, num, getRate(comboEffect, task));
-         }
-         return ret;
-      }
-      
-      @Override
-      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(50);
-      }
-   },
-   /**
-    * The more disruptions on the board, the greater the damage.
-    */
-   COUNTERATTACK(0.25, 0.5, 1) {
-      
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
-         NumberSpan ret = new NumberSpan();
-         if (canActivate(comboEffect, task)) {
-            Board board = task.getState().getBoard();
-            int num = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption())
-                  .size() / 2;
-            ret = new NumberSpan(0, num, getRate(comboEffect, task));
-         }
-         return ret;
-      }
-      
-      @Override
-      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(20 * typeModifier);
-      }
-   },
-   /**
-    * Does more damage the more times in a row it is triggered. <br>
-    * hitting/damage streak, first activation: 1.2 <br>
-    * hitting/damage streak, second activation: 1.44 (1.2^2) <br>
-    * hitting/damage streak, third activation: 1.728 (1.2^3) <br>
-    * hitting/damage streak, fourth or higher activation: 2
-    */
-   HITTING_STREAK(0.6, 1, 1) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1.0, 0.2, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Does more damage the more times in a row it is triggered. <br>
-    * hitting/damage streak, first activation: 1.2 <br>
-    * hitting/damage streak, second activation: 1.44 (1.2^2) <br>
-    * hitting/damage streak, third activation: 1.728 (1.2^3) <br>
-    * hitting/damage streak, fourth or higher activation: 2
-    */
-   DAMAGE_STREAK(0.6, 1, 1) {
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1.0, 0.2, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Combos do more damage if the opponent is Ghost type.
-    */
-   FEARLESS(0.1, 0.5, 1) {
-      // TODO Apparently, this causes attacks to be super effective. Is it actually this, or is it a
-      // flat multiplier?
-   },
-   /**
-    * Does more damage against Flying, Bug, or Fairy types.
-    */
-   SWAT(0.2, 0.3, 0.5) {
-      
-      private final List<PkmType> targets = Collections
-            .unmodifiableList(Arrays.asList(PkmType.FLYING, PkmType.BUG, PkmType.FAIRY));
-            
-      @Override
-      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return targets.contains(task.getState().getCore().getStage().getType())
-               && super.canActivate(comboEffect, task);
-      }
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1.0, 0.2, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Increases damage for attacks that are not very effective.
-    */
-   BRUTE_FORCE(0.5, 1, 1) {
-      
-      @Override
-      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (!super.canActivate(comboEffect, task)) {
-            return false;
-         }
-         Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-         PkmType effectType = effectSpecies.getType();
-         PkmType stageType = task.getState().getCore().getStage().getType();
-         return PkmType.getMultiplier(effectType, stageType) < 1.0;
-      }
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return new NumberSpan(1.0, 1.0, getRate(comboEffect, task))
-               .multiplyBy(super.getScoreMultiplier(comboEffect, task));
-      }
-   },
-   /**
-    * Clears clouds within 1 space.
-    */
-   CLOUD_CLEAR(1, 1, 1) {
+   SWAP_P_P(0.2, 0.5, 1) {
    
    },
    /**
-    * Clears 4 clouds within 1 space.
+    * Leaves the foe Paralyzed
     */
-   CLOUD_CLEAR_P(0.5, 1, 1) {
+   SHOCK_ATTACK(0.2, 0.3, 0.8) {
    
    },
    /**
-    * Clears 5 clouds within 1 space.
+    * Attacks can occasionally deal greater damage than usual.
     */
-   CLOUD_CLEAR_P_P(0.4, 1, 1) {
-   
-   },
-   /**
-    * Occasionally erases one extra matching Species elsewhere.
-    */
-   QUIRKY(0.3, 0.5, 1) {
+   NOSEDIVE(0.15, 0.4, 0.7) {
       
       @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
-            if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 1 || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  int blockIndex = getRandomInt(matches.size() / 2);
-                  int row = matches.get(blockIndex * 2);
-                  int col = matches.get(blockIndex * 2 + 1);
-                  List<Integer> toErase = new ArrayList<Integer>(Arrays.asList(row, col));
-                  eraseBonus(task, toErase, true);
-               }
-            }
-         }
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 4);
       }
-   },
-   /**
-    * Occasionally erases two extra matching Species elsewhere.
-    */
-   QUIRKY_P(0.25, 0.35, 1) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
-            if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 2 || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 2);
-                  List<Integer> toErase = new ArrayList<Integer>();
-                  for (Integer i : randoms) {
-                     int row = matches.get(i * 2);
-                     int col = matches.get(i * 2 + 1);
-                     toErase.addAll(Arrays.asList(row, col));
-                  }
-                  eraseBonus(task, toErase, true);
-               }
-            }
-         }
-      }
-   },
-   /**
-    * Occasionally erases two of the foe's disruptions on the board.
-    */
-   STABILIZE_P(0.2, 0.5, 0.8) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            Board board = task.getState().getBoard();
-            List<Integer> match = task.findMatches(36, false,
-                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
-            if (!match.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
-               if (match.size() / 2 > 2 || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, 2);
-                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                  for (int i : randoms) {
-                     int row = match.get(i * 2);
-                     int col = match.get(i * 2 + 1);
-                     toClear.add(row);
-                     toClear.add(col);
-                  }
-                  eraseBonus(task, toClear, false);
-               }
-            }
-         }
-      }
-   },
-   /**
-    * Occasionally erases all of the foe's disruptions.
-    */
-   DISRUPT_BUSTER(0.02, 0.03, 0.04) {
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            Board board = task.getState().getBoard();
-            List<Integer> match = task.findMatches(36, false,
-                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
-            if (!match.isEmpty()) {
-               task.setIsRandom();
-               if (doesActivate(comboEffect, task)) {
-                  eraseBonus(task, match, false);
-               }
-            }
-         }
-      }
-   },
-   /**
-    * Can delay your opponent's disruptions for a turn.
-    */
-   ASTONISH(0.2, 0.3, 1) {
-   
-   },
-   /**
-    * Leaves the foe spooked.
-    */
-   SPOOKIFY(0.05, 0.3, 0.8) {
-      
-      @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.GHOST, new NumberSpan(1.0, 0.5, getOdds(comboEffect.getNumBlocks())));
-         }
-      }
-   },
-   /**
-    * Can delay your opponent's disruptions for a turn.
-    */
-   CHILL(0.2, 0.3, 1) {
-   
    },
    /**
     * Increases damage done by any flying types in a combo. 2.0x multiplier
@@ -1111,12 +1042,39 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            task.setSpecialTypeMultiplier(PkmType.FLYING,
-                  new NumberSpan(1.0, 1.0, getOdds(comboEffect.getNumBlocks())));
-         }
+         ifThenSetSpecial(comboEffect, task, PkmType.FLYING, 1.0);
       }
       
+   },
+   /**
+    * Does mode damage when the opponent has more HP left.
+    */
+   POISONOUS_MIST(0.15, 0.25, 0.3) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      }
+   },
+   /**
+    * Does more damage when the opponent has more HP left.
+    */
+   DOWNPOUR(0.15, 0.25, 0.3) {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      }
+   },
+   /**
+    * Attacks can occasionally deal greater damage than usual.
+    */
+   SUPER_BOLT(0.1, 0.2, 0.5) {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, 9);
+      }
    },
    /**
     * Same as {@link KANGASKHAN} but the mega threshold is slightly lower.
@@ -3066,21 +3024,6 @@ public enum Effect {
    }
    
    /**
-    * Returns the rate at which this can activate right now.
-    * 
-    * @param comboEffect
-    * @param task
-    * @return
-    */
-   protected double getRate(ActivateComboEffect comboEffect, SimulationTask task) {
-      if (canActivate(comboEffect, task)) {
-         return getOdds(comboEffect.getNumBlocks());
-      } else {
-         return 0.0;
-      }
-   }
-   
-   /**
     * Returns true if the effect is allowed to possibly occur.
     */
    protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -3101,5 +3044,35 @@ public enum Effect {
    
    protected boolean canAndDoesActivate(ActivateComboEffect comboEffect, SimulationTask task) {
       return canActivate(comboEffect, task) && doesActivate(comboEffect, task);
+   }
+   
+   protected final NumberSpan getMultiplier(ActivateComboEffect comboEffect, SimulationTask task, Number bonus) {
+      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+      NumberSpan multiplier = task.getSpecialTypeMultiplier(effectSpecies.getType());
+      if (canActivate(comboEffect, task)) {
+         if (bonus.doubleValue() > 0) {
+            multiplier = new NumberSpan(1, bonus, getOdds(comboEffect.getNumBlocks())).multiplyBy(multiplier);
+         }
+      }
+      return multiplier;
+   }
+   
+   protected final void ifThenAddScore(ActivateComboEffect comboEffect, SimulationTask task,
+         Supplier<Number> supplier) {
+      if (canActivate(comboEffect, task)) {
+         Number value = supplier.get();
+         if (value.doubleValue() > 0) {
+            task.addScore(new NumberSpan(0, value, getOdds(comboEffect.getNumBlocks())));
+         }
+      }
+   }
+   
+   protected final void ifThenSetSpecial(ActivateComboEffect comboEffect, SimulationTask task, PkmType type,
+         Number bonus) {
+      if (canActivate(comboEffect, task)) {
+         if (bonus.doubleValue() > 0) {
+            task.setSpecialTypeMultiplier(type, new NumberSpan(1, bonus, getOdds(comboEffect.getNumBlocks())));
+         }
+      }
    }
 }
