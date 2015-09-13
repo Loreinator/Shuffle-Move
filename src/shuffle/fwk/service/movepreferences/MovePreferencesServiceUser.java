@@ -47,5 +47,7 @@ public interface MovePreferencesServiceUser {
    int getEffectThreshold();
    
    boolean isSwapToPaint();
+   
+   boolean isMobileMode();
 
 }

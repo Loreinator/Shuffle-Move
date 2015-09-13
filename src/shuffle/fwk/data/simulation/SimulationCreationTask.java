@@ -19,6 +19,7 @@
 package shuffle.fwk.data.simulation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
@@ -42,13 +43,19 @@ public class SimulationCreationTask extends RecursiveTask<Collection<SimulationT
    
    @Override
    protected Collection<SimulationTask> compute() {
-      Collection<SimulationTask> ret = new ArrayList<SimulationTask>(feeders.size());
-      for (SimulationFeeder feeder : feeders) {
-         SimulationTask task = new SimulationTask(simulationCore, move, feeder);
-         task.fork();
-         ret.add(task);
+      SimulationTask task2 = new SimulationTask(simulationCore, move, new SimulationFeeder());
+      SimulationState result = task2.invoke();
+      if (result.isRandom()) {
+         Collection<SimulationTask> ret = new ArrayList<SimulationTask>(feeders.size());
+         for (SimulationFeeder feeder : feeders) {
+            SimulationTask task = new SimulationTask(simulationCore, move, feeder);
+            task.fork();
+            ret.add(task);
+         }
+         return ret;
+      } else {
+         return Arrays.asList(task2);
       }
-      return ret;
    }
    
 }

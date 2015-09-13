@@ -6,6 +6,8 @@ RESOURCE HELP_FILE docs/help.html
 RESOURCE ABOUT_FILE docs/about.html
 RESOURCE BUGS_FILE docs/bugs.html
 RESOURCE UPDATE_FILE docs/update.html
+RESOURCE EFFECTS config/defaults/effects.txt
+RESOURCE EFFECTS_MOBILE config/defaults/effects_mobile.txt
 FILE PREFERENCES config/preferences.txt
 FILE SPECIES config/species.txt
 FILE STAGES config/stages.txt

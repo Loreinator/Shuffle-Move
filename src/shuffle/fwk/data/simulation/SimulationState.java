@@ -20,6 +20,7 @@ package shuffle.fwk.data.simulation;
 
 import shuffle.fwk.data.Board;
 import shuffle.fwk.data.Species;
+import shuffle.fwk.data.simulation.util.NumberSpan;
 
 /**
  * @author Andrew Meyers
@@ -35,11 +36,12 @@ public class SimulationState {
    private final SimulationFeeder simFeeder;
    private final Board board;
    private float curWeight;
-   private int score;
+   private NumberSpan score;
    private int blocksCleared = 0;
    private int disruptionsCleared = 0;
    private int numCombos = 0;
    private int gold;
+   private boolean isRandom = false;
    
    private int lastChainPause = 0;
 
@@ -68,13 +70,13 @@ public class SimulationState {
     *           The grid of booleans of [1, Board.NUM_ROWS]x[1,Board.NUM_COLS] dimensions defining
     *           the originality of each block (should it be included in the result board)
     */
-   public SimulationState(SimulationCore simCore, SimulationFeeder feeder, Board b, float weight, int curScore,
+   public SimulationState(SimulationCore simCore, SimulationFeeder feeder, Board b, float weight, NumberSpan curScore,
          int curGold, boolean[][] originality, int chainPause) {
       core = simCore;
       simFeeder = new SimulationFeeder(feeder);
       board = new Board(b);
       curWeight = weight;
-      score = curScore;
+      score = new NumberSpan(curScore);
       gold = curGold;
       lastChainPause = chainPause;
       for (int row = 1; row <= Board.NUM_ROWS; row++) {
@@ -119,7 +121,7 @@ public class SimulationState {
       curWeight = newWeight;
    }
    
-   public int getScore() {
+   public NumberSpan getScore() {
       return score;
    }
    
@@ -181,8 +183,23 @@ public class SimulationState {
       return simFeeder;
    }
    
-   public void addScore(int add) {
-      score += Math.max(0, add);
+   public void addScore(Number add) {
+      Number toAdd;
+      if (add instanceof NumberSpan) {
+         NumberSpan span = (NumberSpan) add;
+         int min = (int) span.getMinimum();
+         int max = (int) span.getMaximum();
+         double average = span.getAverage();
+         if (min == max) {
+            average = min;
+         }
+         toAdd = new NumberSpan(min, max, average, 1);
+      } else {
+         toAdd = add.intValue();
+      }
+      if (toAdd.doubleValue() > 0) {
+         score = score.add(toAdd);
+      }
    }
    
    public void addGold(int add) {
@@ -389,5 +406,16 @@ public class SimulationState {
       
       return changed;
       
+   }
+   
+   /**
+    * 
+    */
+   public void setIsRandom() {
+      isRandom = true;
+   }
+   
+   public boolean isRandom() {
+      return isRandom;
    }
 }

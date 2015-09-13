@@ -27,7 +27,7 @@ import java.util.UUID;
 import java.util.concurrent.RecursiveTask;
 
 import shuffle.fwk.data.Board;
-import shuffle.fwk.data.simulation.util.NumberSpanImpl;
+import shuffle.fwk.data.simulation.util.NumberSpan;
 
 /**
  * @author Andrew Meyers
@@ -59,12 +59,12 @@ public class SimulationResultsAssembler extends RecursiveTask<SimulationResult> 
          return null;
       }
       
-      NumberSpanImpl score = new NumberSpanImpl();
-      NumberSpanImpl gold = new NumberSpanImpl();
-      NumberSpanImpl blocks = new NumberSpanImpl();
-      NumberSpanImpl disrupts = new NumberSpanImpl();
-      NumberSpanImpl combos = new NumberSpanImpl();
-      NumberSpanImpl progress = new NumberSpanImpl();
+      NumberSpan score = new NumberSpan();
+      NumberSpan gold = new NumberSpan();
+      NumberSpan blocks = new NumberSpan();
+      NumberSpan disrupts = new NumberSpan();
+      NumberSpan combos = new NumberSpan();
+      NumberSpan progress = new NumberSpan();
       
       // keeps track of all board chances, and the best one.
       Map<Board, Float> boardChances = new HashMap<Board, Float>();
@@ -78,12 +78,12 @@ public class SimulationResultsAssembler extends RecursiveTask<SimulationResult> 
          }
          float weight = state.getWeight();
          
-         score.put(state.getScore(), weight);
-         gold.put(state.getGold(), weight);
-         blocks.put(state.getBlocksCleared(), weight);
-         disrupts.put(state.getDisruptionsCleared(), weight);
-         combos.put(state.getCombosCleared(), weight);
-         progress.put(state.getMegaProgress(), weight);
+         score = score.put(state.getScore());
+         gold = gold.put(state.getGold(), weight);
+         blocks = blocks.put(state.getBlocksCleared(), weight);
+         disrupts = disrupts.put(state.getDisruptionsCleared(), weight);
+         combos = combos.put(state.getCombosCleared(), weight);
+         progress = progress.put(state.getMegaProgress(), weight);
          
          // Process the board chances
          Board b = state.getResultBoard();

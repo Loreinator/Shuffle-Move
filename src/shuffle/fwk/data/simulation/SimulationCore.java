@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import shuffle.fwk.GradingMode;
+import shuffle.fwk.config.manager.EffectManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.data.Board;
@@ -79,11 +80,12 @@ public class SimulationCore extends RecursiveAction {
    private final Collection<Effect> disabledEffects;
    private final boolean attackPowerUp;
    private final int effectThreshold;
+   private final EffectManager effectManager;
    
    // Gets all the data it needs from the user, as deep copies of all relevant information.
    public SimulationCore(SimulationUser user, UUID processUUID) {
       this.processUUID = processUUID;
-      minHeight = Math.max(0, user.getPreferredFeederHeight());
+      minHeight = 0; // Math.max(0, user.getPreferredFeederHeight());
       preferredCount = Math.max(1, user.getPreferredNumFeeders());
       Board userBoard = user.getBoardManager().getBoard();
       board = new Board(userBoard);
@@ -112,6 +114,7 @@ public class SimulationCore extends RecursiveAction {
       disabledEffects = user.getDisabledEffects();
       attackPowerUp = user.getAttackPowerUp();
       effectThreshold = user.getEffectThreshold();
+      effectManager = new EffectManager(user.getEffectManager());
    }
    
    public UUID getId() {
@@ -165,6 +168,10 @@ public class SimulationCore extends RecursiveAction {
    
    public int getEffectThreshold() {
       return effectThreshold;
+   }
+   
+   public double getOdds(Effect effect, int num) {
+      return effectManager.getOdds(effect, num);
    }
    
    @Override

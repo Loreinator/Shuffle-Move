@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import shuffle.fwk.config.manager.EffectManager;
 import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
@@ -52,6 +53,8 @@ public class ConfigFactory {
    private static final String KEY_RESOURCE_SPECIES = "SPECIES";
    private static final String KEY_RESOURCE_STAGES = "STAGES";
    private static final String KEY_RESOURCE_ICONS = "ICONS";
+   private static final String KEY_RESOURCE_EFFECT = "EFFECTS";
+   private static final String KEY_RESOURCE_EFFECT_MOBILE = "EFFECTS_MOBILE";
    private static final String KEY_FILE_PREFERENCES = "PREFERENCES";
    private static final String KEY_FILE_SPECIES = "SPECIES";
    private static final String KEY_FILE_STAGES = "STAGES";
@@ -220,4 +223,15 @@ public class ConfigFactory {
       return getManager(null, KEY_FILE_ROSTER, RosterManager.class);
    }
    
+   public EffectManager getEffectManager() {
+      return getEffectManager(false);
+   }
+   
+   public EffectManager getEffectManager(boolean mobile) {
+      if (mobile) {
+         return getManager(KEY_RESOURCE_EFFECT_MOBILE, null, EffectManager.class);
+      } else {
+         return getManager(KEY_RESOURCE_EFFECT, null, EffectManager.class);
+      }
+   }
 }

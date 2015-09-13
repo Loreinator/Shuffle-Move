@@ -16,16 +16,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package shuffle.fwk.data.simulation.util;
+package shuffle.fwk.config.provider;
+
+import shuffle.fwk.config.manager.EffectManager;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
-public class NumberSpanImpl extends NumberSpan {
-   private static final long serialVersionUID = -429985822430128885L;
-   
-   public void put(int value, float likelihood) {
-      super.putValue(value, likelihood);
-   }
+public interface EffectManagerProvider {
+   EffectManager getEffectManager();
 }

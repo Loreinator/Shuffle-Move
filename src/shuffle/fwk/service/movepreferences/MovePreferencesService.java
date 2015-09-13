@@ -65,6 +65,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private static final String KEY_BAD_HEIGHT = "error.heightfeeders";
    private static final String KEY_THRESHOLD = "text.threshold";
    private static final String KEY_SWAPTOPAINT = "text.autoswappaint";
+   private static final String KEY_MOBILE = "text.mobilemode";
    
    private JSpinner numFeederSpinner;
    private JSpinner feederHeightSpinner;
@@ -74,6 +75,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private Collection<Effect> disabledEffects = new ArrayList<Effect>();
    private JSpinner thresholdSpinner;
    private JCheckBox autoSwapToPaint;
+   private JCheckBox mobileModeCheckBox;
    
    /*
     * (non-Javadoc)
@@ -96,6 +98,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       autoComputeCheckBox = new JCheckBox(getString(KEY_AUTOCOMPUTE));
       thresholdSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 5));
       autoSwapToPaint = new JCheckBox(getString(KEY_SWAPTOPAINT));
+      mobileModeCheckBox = new JCheckBox(getString(KEY_MOBILE));
       
       d.setLayout(new GridBagLayout());
       
@@ -121,7 +124,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       JPanel heightPanel = new JPanel(new BorderLayout());
       heightPanel.add(new JLabel(getString(KEY_HEIGHT_FEEDERS)), BorderLayout.WEST);
       heightPanel.add(feederHeightSpinner, BorderLayout.EAST);
-      d.add(heightPanel, c);
+      // d.add(heightPanel, c);
       
       c.gridx = 1;
       c.gridy++;
@@ -132,6 +135,11 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       c.gridy++;
       c.gridwidth = maxWidth;
       d.add(autoSwapToPaint, c);
+      
+      c.gridx = 1;
+      c.gridy++;
+      c.gridwidth = maxWidth;
+      d.add(mobileModeCheckBox, c);
       
       c.gridx = 1;
       c.gridy++;
@@ -233,6 +241,10 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    public boolean isSwapToPaint() {
       return autoSwapToPaint.isSelected();
    }
+   
+   public boolean isMobileMode() {
+      return mobileModeCheckBox.isSelected();
+   }
 
    public int getThreshold() {
       return Math.max(0, Math.min(100, (int) thresholdSpinner.getValue()));
@@ -256,6 +268,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       enableEffectBox.setSelected(!disabledEffects.contains(effectChooser.getSelectedEffect()));
       thresholdSpinner.setValue(user.getEffectThreshold());
       autoSwapToPaint.setSelected(user.isSwapToPaint());
+      mobileModeCheckBox.setSelected(user.isMobileMode());
    }
    
 }
