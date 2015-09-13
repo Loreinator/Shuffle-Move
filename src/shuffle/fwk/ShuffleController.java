@@ -43,6 +43,7 @@ import org.apache.commons.lang3.StringUtils;
 import shuffle.fwk.config.ConfigFactory;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.manager.BoardManager;
+import shuffle.fwk.config.manager.EffectManager;
 import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
@@ -741,6 +742,11 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return getModel().getTeamManager();
    }
    
+   @Override
+   public EffectManager getEffectManager() {
+      return getModel().getEffectManager();
+   }
+   
    /*
     * (non-Javadoc)
     * @see shuffle.fwk.config.provider.BoardManagerProvider#getBoardManager()
@@ -1045,12 +1051,14 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       boolean swapToPaint = service.isSwapToPaint();
       Collection<Effect> disabledEffects = service.getDisabledEffects();
       int threshold = service.getThreshold();
+      boolean mobileMode = service.isMobileMode();
       
       boolean changed = false;
       // These DO affect simulation results.
       changed |= getModel().setFeederPreferences(numFeeders, feederHeight, autoCompute);
       changed |= getModel().setDisabledEffects(disabledEffects);
       changed |= getModel().setEffectThreshold(threshold);
+      changed |= getModel().setMobileMode(mobileMode);
       
       if (changed) {
          getModel().setDataChanged();
@@ -1098,4 +1106,13 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return getModel().isSwapToPaint();
    }
 
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#isMobileMode()
+    */
+   @Override
+   public boolean isMobileMode() {
+      return getModel().isMobileMode();
+   }
+   
 }

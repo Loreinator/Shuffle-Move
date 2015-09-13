@@ -40,7 +40,7 @@ public enum Effect {
    /**
     * Attacks can occasionally deal greater damage than usual.
     */
-   OPPORTUNIST(0.05, 0.1, 0.1) {
+   OPPORTUNIST {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -50,7 +50,7 @@ public enum Effect {
    /**
     * Attacks sometimes deal greater damage than usual. 1.5x modifier
     */
-   HEAVY_HITTER(0.2, 0.5, 0.5) {
+   HEAVY_HITTER {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -60,7 +60,7 @@ public enum Effect {
    /**
     * Attacks sometimes deal greater damage than usual. 1.5x modifier
     */
-   DRAGON_TALON(0.2, 0.5, 0.5) {
+   DRAGON_TALON {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -70,7 +70,7 @@ public enum Effect {
    /**
     * Attacks do more damage when you make a match of 4.
     */
-   POWER_OF_4(0, 1, 0) {
+   POWER_OF_4 {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, 0.5);
@@ -79,7 +79,7 @@ public enum Effect {
    /**
     * Attacks do more damage when you make a match of 5.
     */
-   POWER_OF_5(0, 0, 1, 0) {
+   POWER_OF_5 {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, 0.5);
@@ -88,7 +88,7 @@ public enum Effect {
    /**
     * Attacks do more damage when things are looking desperate.
     */
-   LAST_DITCH_EFFORT(0.5, 1.0, 1.0) {
+   LAST_DITCH_EFFORT {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -107,7 +107,7 @@ public enum Effect {
     * hitting/damage streak, third activation: 1.728 (1.2^3) <br>
     * hitting/damage streak, fourth or higher activation: 2
     */
-   HITTING_STREAK(0.6, 1, 1) {
+   HITTING_STREAK {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -121,7 +121,7 @@ public enum Effect {
     * hitting/damage streak, third activation: 1.728 (1.2^3) <br>
     * hitting/damage streak, fourth or higher activation: 2
     */
-   DAMAGE_STREAK(0.6, 1, 1) {
+   DAMAGE_STREAK {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -131,7 +131,7 @@ public enum Effect {
    /**
     * Damage may randomly be increased or decreased.
     */
-   RISK_TAKER(0.5, 0.7, 1) {
+   RISK_TAKER {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
@@ -142,7 +142,7 @@ public enum Effect {
             double max = 9.0 / 3.0;
             // The average boost compared to 1.0
             double normalAvgBoost = 2.0 / 3.0;
-            double rate = getOdds(comboEffect.getNumBlocks());
+            double rate = getOdds(task, comboEffect.getNumBlocks());
             double avg = 1 + (normalAvgBoost * rate);
             // Which are merged into a single multiplier here,
             // the min is the lowest it could go, the max is the highest,
@@ -159,7 +159,7 @@ public enum Effect {
    /**
     * Increases damage done by your last three attacks in a stage by 50%.
     */
-   SWARM(0.6, 1, 1) {
+   SWARM {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -174,7 +174,7 @@ public enum Effect {
    /**
     * Attacks do more damage when things are looking desperate.
     */
-   STEELY_RESOLVE(0.6, 1, 1) {
+   STEELY_RESOLVE {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -189,7 +189,7 @@ public enum Effect {
    /**
     * Increases damage done by any Fire types in a combo.
     */
-   PYRE(0.5, 1, 1) {
+   PYRE {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -199,7 +199,7 @@ public enum Effect {
    /**
     * Increases damage done by any Dragon types in a combo.
     */
-   DANCING_DRAGONS(0.2, 0.5, 1) {
+   DANCING_DRAGONS {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -209,7 +209,7 @@ public enum Effect {
    /**
     * Increases damage done by any fighting types in a combo.
     */
-   PUMMEL(0.15, 0.5, 1) {
+   PUMMEL {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -220,7 +220,7 @@ public enum Effect {
    /**
     * Increases damage of Fairy-type moves in a Combo.
     */
-   PIXIE_POWER(0.15, 0.35, 0.6) {
+   PIXIE_POWER {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -230,7 +230,7 @@ public enum Effect {
    /**
     * Increases damage of Dark-type moves in a combo.
     */
-   SINISTER_POWER(0.15, 0.35, 0.6) {
+   SINISTER_POWER {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -240,7 +240,7 @@ public enum Effect {
    /**
     * The more of this Species in the puzzle area, the more damage.
     */
-   CROWD_CONTROL(0.2, 1, 1) {
+   CROWD_CONTROL {
       
       /**
        * {@inheritDoc}
@@ -257,7 +257,7 @@ public enum Effect {
                               effectSpecies)
                         && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(comboEffect.getNumBlocks()));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks()));
          }
          return ret;
       }
@@ -271,7 +271,7 @@ public enum Effect {
    /**
     * The more disruptions on the board, the greater the damage.
     */
-   COUNTERATTACK(0.25, 0.5, 1) {
+   COUNTERATTACK {
       
       /**
        * {@inheritDoc}
@@ -283,7 +283,7 @@ public enum Effect {
             Board board = task.getState().getBoard();
             int num = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption())
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(comboEffect.getNumBlocks()));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks()));
          }
          return ret;
       }
@@ -296,7 +296,7 @@ public enum Effect {
    /**
     * Does more damage when the opponent has more HP left.
     */
-   VITALITY_DRAIN(0.05, 0.1, 0.3) {
+   VITALITY_DRAIN {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -306,7 +306,7 @@ public enum Effect {
    /**
     * Sometimes increases damage and leaves opponent paralyzed.
     */
-   QUAKE(0.2, 0.3, 0.5) {
+   QUAKE {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -316,14 +316,14 @@ public enum Effect {
    /**
     * Combos do more damage if the opponent is Ghost type.
     */
-   FEARLESS(0.1, 0.5, 1) {
+   FEARLESS {
       // TODO Apparently, this causes attacks to be super effective. Is it actually this, or is it a
       // flat multiplier?
    },
    /**
     * Does more damage against Flying, Bug, or Fairy types.
     */
-   SWAT(0.2, 0.3, 0.5) {
+   SWAT {
       
       private final List<PkmType> targets = Collections
             .unmodifiableList(Arrays.asList(PkmType.FLYING, PkmType.BUG, PkmType.FAIRY));
@@ -342,7 +342,7 @@ public enum Effect {
    /**
     * Increases damage for attacks that are not very effective.
     */
-   BRUTE_FORCE(0.5, 1, 1) {
+   BRUTE_FORCE {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -363,7 +363,7 @@ public enum Effect {
    /**
     * Occasionally erases one extra matching Species elsewhere.
     */
-   QUIRKY(0.3, 0.5, 1) {
+   QUIRKY {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -371,7 +371,7 @@ public enum Effect {
             Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() / 2 > 1 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -389,7 +389,7 @@ public enum Effect {
    /**
     * Occasionally erases two extra matching Species elsewhere.
     */
-   QUIRKY_P(0.25, 0.35, 1) {
+   QUIRKY_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -397,7 +397,7 @@ public enum Effect {
             Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() / 2 > 2 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -418,13 +418,13 @@ public enum Effect {
    /**
     * Occasionally changes when a foe will next disrupt your play.
     */
-   PRANK(0.2, 0.4, 1) {
+   PRANK {
    
    },
    /**
     * Occasionally erases one of the foe's disruptions on the board.
     */
-   STABILIZE(0.3, 0.5, 1) {
+   STABILIZE {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -433,7 +433,7 @@ public enum Effect {
             List<Integer> matches = task.findMatches(36, false,
                   (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() > 2 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -451,7 +451,7 @@ public enum Effect {
    /**
     * Occasionally erases two of the foe's disruptions on the board.
     */
-   STABILIZE_P(0.2, 0.5, 0.8) {
+   STABILIZE_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -460,7 +460,7 @@ public enum Effect {
             List<Integer> match = task.findMatches(36, false,
                   (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
             if (!match.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (match.size() / 2 > 2 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -482,7 +482,7 @@ public enum Effect {
    /**
     * Occasionally erases all of the foe's disruptions.
     */
-   DISRUPT_BUSTER(0.02, 0.03, 0.04) {
+   DISRUPT_BUSTER {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -502,7 +502,7 @@ public enum Effect {
    /**
     * Destroys one breakable-rock disruption without fail. (wood)
     */
-   ROCK_BREAK(1, 1, 1) {
+   ROCK_BREAK {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -524,13 +524,13 @@ public enum Effect {
    /**
     * Clears clouds within 1 space.
     */
-   CLOUD_CLEAR(1, 1, 1) {
+   CLOUD_CLEAR {
    
    },
    /**
     * Clears one unbreakable-block disruption without fail.
     */
-   BLOCK_SMASH(1, 1, 1) {
+   BLOCK_SMASH {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -554,12 +554,12 @@ public enum Effect {
     * Removes one non-Support Pokemon icon without fail. that means any pokemon that you were forced
     * to have by the stage.
     */
-   EJECT(1, 1, 1) {
+   EJECT {
    },
    /**
     * Removes one barrier-type disruption without fail.
     */
-   BARRIER_BASH(1, 1, 1) {
+   BARRIER_BASH {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -582,38 +582,38 @@ public enum Effect {
    /**
     * Can replace a disruption with one of your Pokemon.
     */
-   SWAP(0.3, 0.5, 1) {
+   SWAP {
    
    },
    /**
     * Can delay your opponent's disruptions for a turn.
     */
-   CHILL(0.2, 0.3, 1) {
+   CHILL {
    
    },
    /**
     * Can delay your opponent's disruptions for a turn.
     */
-   ASTONISH(0.2, 0.3, 1) {
+   ASTONISH {
    
    },
    /**
     * Occasionally disrupts a Ground-type opponent's disruptions.
     */
-   FLAP(0.5, 1, 1) {
+   FLAP {
    
    },
    /**
     * Can delay your opponent's disruptions for a turn.
     */
-   MIND_ZAP(0.1, 0.4, 1) {
+   MIND_ZAP {
    
    },
    /**
     * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
     * 50%.
     */
-   BURN(0.05, 0.3, 0.8) {
+   BURN {
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -623,7 +623,7 @@ public enum Effect {
    /**
     * Leaves the foe spooked.
     */
-   SPOOKIFY(0.05, 0.3, 0.8) {
+   SPOOKIFY {
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -633,7 +633,7 @@ public enum Effect {
    /**
     * Has a chance of freezing an opponent.
     */
-   FREEZE(0.05, 0.25, 0.7) {
+   FREEZE {
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -643,19 +643,19 @@ public enum Effect {
    /**
     * Inflicts the opponent with sleep for three turns, preventing it from using its distortion.
     */
-   SLEEP_CHARM(0.05, 0.3, 0.8) {
+   SLEEP_CHARM {
    
    },
    /**
     * Leaves the foe paralyzed.
     */
-   PARALYZE(0.1, 0.3, 0.8) {
+   PARALYZE {
    
    },
    /**
     * Fills the Mega Guage of a Pokemon of the same type.
     */
-   MEGA_BOOST(0.5, 1, 1) {
+   MEGA_BOOST {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -676,7 +676,7 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            double odds = getOdds(comboEffect.getNumBlocks());
+            double odds = getOdds(task, comboEffect.getNumBlocks());
             if (odds < 1.0) {
                task.setIsRandom();
             }
@@ -689,7 +689,7 @@ public enum Effect {
    /**
     * Attacks sometimes deal greater damage than usual.
     */
-   HYPER_PUNCH(0.1, 0.5, 0.5) {
+   HYPER_PUNCH {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -699,7 +699,7 @@ public enum Effect {
    /**
     * Same as {@link Effect#POWER_OF_4} except the modifier is 3.0 instead of 1.5
     */
-   POWER_OF_4_P(0, 0.8, 0) {
+   POWER_OF_4_P {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -709,7 +709,7 @@ public enum Effect {
    /**
     * Attacks do more damage when you make a match of 5.
     */
-   POWER_OF_5_P(0, 0, 0.8) {
+   POWER_OF_5_P {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, 2);
@@ -718,7 +718,7 @@ public enum Effect {
    /**
     * Identical to Crowd Control, except this activates more often.
     */
-   CROWD_POWER(0.4, 1, 1) {
+   CROWD_POWER {
       
       /**
        * {@inheritDoc}
@@ -735,7 +735,7 @@ public enum Effect {
                               effectSpecies)
                         && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(comboEffect.getNumBlocks()));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks()));
          }
          return ret;
       }
@@ -748,7 +748,7 @@ public enum Effect {
    /**
     * Increases damage done by any Normal types in a combo. 2.5x multiplier
     */
-   DOUBLE_NORMAL(0.2, 0.6, 0.8) {
+   DOUBLE_NORMAL {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -758,7 +758,7 @@ public enum Effect {
    /**
     * Fills the Mega Guage of a Pokemon of the same type.
     */
-   MEGA_BOOST_P(0.5, 1, 1) {
+   MEGA_BOOST_P {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -768,7 +768,7 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            double odds = getOdds(comboEffect.getNumBlocks());
+            double odds = getOdds(task, comboEffect.getNumBlocks());
             if (odds < 1.0) {
                task.setIsRandom();
             }
@@ -781,7 +781,7 @@ public enum Effect {
    /**
     * Fills the Mega Guage of a Pokemon of the same type.
     */
-   MEGA_BOOST_P_P(0.1, 0.2, 0.3) {
+   MEGA_BOOST_P_P {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -791,7 +791,7 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            double odds = getOdds(comboEffect.getNumBlocks());
+            double odds = getOdds(task, comboEffect.getNumBlocks());
             if (odds < 1.0) {
                task.setIsRandom();
             }
@@ -804,20 +804,45 @@ public enum Effect {
    /**
     * Occasionally erases five of the foe's disruptions on the board.
     */
-   STABILIZE_P_P(0.25, 0.5, 1) {
-      // TODO
+   STABILIZE_P_P {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            List<Integer> match = task.findMatches(36, false,
+                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
+            if (!match.isEmpty()) {
+               double odds = getOdds(task, comboEffect.getNumBlocks());
+               if (match.size() / 2 > 5 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, 5);
+                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  for (int i : randoms) {
+                     int row = match.get(i * 2);
+                     int col = match.get(i * 2 + 1);
+                     toClear.add(row);
+                     toClear.add(col);
+                  }
+                  eraseBonus(task, toClear, false);
+               }
+            }
+         }
+      }
    },
    /**
     * Sometimes destroys three breakable-rock disruptions. (wood)
     */
-   ROCK_BREAK_P(0.5, 1, 1) {
+   ROCK_BREAK_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() / 2 > 3 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -837,14 +862,14 @@ public enum Effect {
    /**
     * Sometimes destroys five breakable-rock disruptions. (wood)
     */
-   ROCK_BREAK_P_P(0.4, 1, 1) {
+   ROCK_BREAK_P_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() / 2 > 5 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -864,27 +889,27 @@ public enum Effect {
    /**
     * Clears 4 clouds within 1 space.
     */
-   CLOUD_CLEAR_P(0.5, 1, 1) {
+   CLOUD_CLEAR_P {
    
    },
    /**
     * Clears 5 clouds within 1 space.
     */
-   CLOUD_CLEAR_P_P(0.4, 1, 1) {
+   CLOUD_CLEAR_P_P {
    
    },
    /**
     * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurance is "Sometimes" and the
     * number cleared is 3.
     */
-   BLOCK_SMASH_P(0.5, 1, 1) {
+   BLOCK_SMASH_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() / 2 > 3 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -908,14 +933,14 @@ public enum Effect {
     * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurance is "Sometimes" and the
     * number cleared is 5.
     */
-   BLOCK_SMASH_P_P(0.4, 1, 1) {
+   BLOCK_SMASH_P_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() / 2 > 5 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -939,18 +964,18 @@ public enum Effect {
     * Removes 3 non-Support Pokemon icon without fail. that means any pokemon that you were forced
     * to have by the stage.
     */
-   EJECT_P(0.5, 1, 1) {
+   EJECT_P {
    },
    /**
     * Removes 5 non-Support Pokemon icon without fail. that means any pokemon that you were forced
     * to have by the stage.
     */
-   EJECT_P_P(0.4, 1, 1) {
+   EJECT_P_P {
    },
    /**
     * Removes 3 barrier-type disruption without fail.
     */
-   BARRIER_BASH_P(0.5, 1, 1) {
+   BARRIER_BASH_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -958,7 +983,7 @@ public enum Effect {
             Board board = task.getState().getBoard();
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c));
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() / 2 > 3 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -980,7 +1005,7 @@ public enum Effect {
    /**
     * Removes 5 barrier-type disruption without fail.
     */
-   BARRIER_BASH_P_P(0.4, 1, 1) {
+   BARRIER_BASH_P_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -988,7 +1013,7 @@ public enum Effect {
             Board board = task.getState().getBoard();
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c));
             if (!matches.isEmpty()) {
-               double odds = getOdds(comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect.getNumBlocks());
                if (matches.size() / 2 > 5 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -1010,25 +1035,25 @@ public enum Effect {
    /**
     * Can replace some disruptions with this Pokemon.
     */
-   SWAP_P(0.25, 0.5, 1) {
+   SWAP_P {
    
    },
    /**
     * Can replace many disruptions with this Pokemon.
     */
-   SWAP_P_P(0.2, 0.5, 1) {
+   SWAP_P_P {
    
    },
    /**
     * Leaves the foe Paralyzed
     */
-   SHOCK_ATTACK(0.2, 0.3, 0.8) {
+   SHOCK_ATTACK {
    
    },
    /**
     * Attacks can occasionally deal greater damage than usual.
     */
-   NOSEDIVE(0.15, 0.4, 0.7) {
+   NOSEDIVE {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -1038,7 +1063,7 @@ public enum Effect {
    /**
     * Increases damage done by any flying types in a combo. 2.0x multiplier
     */
-   SKY_BLAST(0.1, 0.6, 0.9) {
+   SKY_BLAST {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -1049,7 +1074,7 @@ public enum Effect {
    /**
     * Does mode damage when the opponent has more HP left.
     */
-   POISONOUS_MIST(0.15, 0.25, 0.3) {
+   POISONOUS_MIST {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -1059,7 +1084,7 @@ public enum Effect {
    /**
     * Does more damage when the opponent has more HP left.
     */
-   DOWNPOUR(0.15, 0.25, 0.3) {
+   DOWNPOUR {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -1069,7 +1094,7 @@ public enum Effect {
    /**
     * Attacks can occasionally deal greater damage than usual.
     */
-   SUPER_BOLT(0.1, 0.2, 0.5) {
+   SUPER_BOLT {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -2629,20 +2654,6 @@ public enum Effect {
       }
    };
    
-   private final double[] odds;
-   
-   private Effect() {
-      odds = new double[] { 1.0, 1.0, 1.0, 1.0 };
-   }
-   
-   private Effect(double three, double four, double five) {
-      odds = new double[] { three, four, five, five };
-   }
-   
-   private Effect(double three, double four, double five, double six) {
-      odds = new double[] { three, four, five, six };
-   }
-   
    /**
     * Gets an effect which matches the given name. If there is none, then {@link #NONE} is returned.
     * 
@@ -3016,12 +3027,16 @@ public enum Effect {
       return 0;
    }
    
-   protected double getOdds(int numBlocks) {
-      // n is between 3 and 5, inclusive
-      int n = Math.max(3, Math.min(6, numBlocks));
-      // get the odds array index at n-3
-      return odds[n - 3];
+   protected double getOdds(SimulationTask task, int num) {
+      return task.getState().getCore().getOdds(this, num);
    }
+   
+   // protected double getOdds(int numBlocks) {
+   // // n is between 3 and 5, inclusive
+   // int n = Math.max(3, Math.min(6, numBlocks));
+   // // get the odds array index at n-3
+   // return odds[n - 3];
+   // }
    
    /**
     * Returns true if the effect is allowed to possibly occur.
@@ -3032,13 +3047,13 @@ public enum Effect {
       int threshold = core.getEffectThreshold();
       if (threshold > 0) {
          double adjustedThreshold = threshold / 100.0;
-         coreAllowsIt &= getOdds(comboEffect.getNumBlocks()) >= adjustedThreshold;
+         coreAllowsIt &= getOdds(task, comboEffect.getNumBlocks()) >= adjustedThreshold;
       }
       return coreAllowsIt && comboEffect.getNumCombosOnActivate() == 0;
    }
    
    protected boolean doesActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-      double odds = getOdds(comboEffect.getNumBlocks());
+      double odds = getOdds(task, comboEffect.getNumBlocks());
       return odds >= 1.0 || odds >= Math.random();
    }
    
@@ -3051,7 +3066,7 @@ public enum Effect {
       NumberSpan multiplier = task.getSpecialTypeMultiplier(effectSpecies.getType());
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
-            multiplier = new NumberSpan(1, bonus, getOdds(comboEffect.getNumBlocks())).multiplyBy(multiplier);
+            multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(multiplier);
          }
       }
       return multiplier;
@@ -3062,7 +3077,7 @@ public enum Effect {
       if (canActivate(comboEffect, task)) {
          Number value = supplier.get();
          if (value.doubleValue() > 0) {
-            task.addScore(new NumberSpan(0, value, getOdds(comboEffect.getNumBlocks())));
+            task.addScore(new NumberSpan(0, value, getOdds(task, comboEffect.getNumBlocks())));
          }
       }
    }
@@ -3071,7 +3086,7 @@ public enum Effect {
          Number bonus) {
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
-            task.setSpecialTypeMultiplier(type, new NumberSpan(1, bonus, getOdds(comboEffect.getNumBlocks())));
+            task.setSpecialTypeMultiplier(type, new NumberSpan(1, bonus, getOdds(task, comboEffect.getNumBlocks())));
          }
       }
    }

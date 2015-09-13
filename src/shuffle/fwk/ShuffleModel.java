@@ -60,11 +60,13 @@ import shuffle.fwk.config.ConfigFactory;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.EntryType;
 import shuffle.fwk.config.manager.BoardManager;
+import shuffle.fwk.config.manager.EffectManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.StageManager;
 import shuffle.fwk.config.manager.TeamManager;
 import shuffle.fwk.config.provider.BoardManagerProvider;
+import shuffle.fwk.config.provider.EffectManagerProvider;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
 import shuffle.fwk.config.provider.SpeciesManagerProvider;
@@ -90,7 +92,7 @@ import shuffle.fwk.update.UpdateCheck;
  *
  */
 public class ShuffleModel implements BoardManagerProvider, PreferencesManagerProvider, RosterManagerProvider,
-      SpeciesManagerProvider, StageManagerProvider, TeamManagerProvider, I18nUser {
+      SpeciesManagerProvider, StageManagerProvider, TeamManagerProvider, EffectManagerProvider, I18nUser {
    /** The logger for this model. */
    private static final Logger LOG = Logger.getLogger(ShuffleModel.class.getName());
    /** The controller for this model. */
@@ -118,6 +120,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private static final String KEY_ATTACK_POWER_UP = "ATTACK_POWER_UP_ENABLED";
    private static final String KEY_EFFECT_THRESHOLD = "EFFECT_THRESHOLD";
    private static final String KEY_SWAP_TO_PAINT = "SWAP_TO_PAINT";
+   private static final String KEY_MOBILE_MODE = "MOBILE_MODE";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -133,11 +136,6 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    
    // Managers
    private BoardManager boardManager = null;
-   private RosterManager rosterManager = null;
-   private TeamManager teamManager = null;
-   private StageManager stageManager = null;
-   private SpeciesManager speciesManager = null;
-   private ConfigManager prefManager = null;
    
    // Interface controls
    /** Current mode of entry in the interface. */
@@ -264,10 +262,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     */
    @Override
    public RosterManager getRosterManager() {
-      if (rosterManager == null) {
-         rosterManager = getConfigFactory().getRosterManager();
-      }
-      return rosterManager;
+      return getConfigFactory().getRosterManager();
    }
    
    /**
@@ -275,10 +270,15 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     */
    @Override
    public TeamManager getTeamManager() {
-      if (teamManager == null) {
-         teamManager = getConfigFactory().getTeamManager();
-      }
-      return teamManager;
+      return getConfigFactory().getTeamManager();
+   }
+   
+   /**
+    * @return
+    */
+   @Override
+   public EffectManager getEffectManager() {
+      return getConfigFactory().getEffectManager(isMobileMode());
    }
    
    /**
@@ -286,10 +286,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     */
    @Override
    public StageManager getStageManager() {
-      if (stageManager == null) {
-         stageManager = getConfigFactory().getStageManager();
-      }
-      return stageManager;
+      return getConfigFactory().getStageManager();
    }
    
    /**
@@ -297,10 +294,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     */
    @Override
    public SpeciesManager getSpeciesManager() {
-      if (speciesManager == null) {
-         speciesManager = getConfigFactory().getSpeciesManager();
-      }
-      return speciesManager;
+      return getConfigFactory().getSpeciesManager();
    }
    
    /**
@@ -308,10 +302,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     */
    @Override
    public ConfigManager getPreferencesManager() {
-      if (prefManager == null) {
-         prefManager = getConfigFactory().getPreferencesManager();
-      }
-      return prefManager;
+      return getConfigFactory().getPreferencesManager();
    }
    
    // BOARD MANAGER METHODS
@@ -1311,5 +1302,16 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     */
    public boolean setSwapToPaint(boolean swapToPaint) {
       return getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_SWAP_TO_PAINT, swapToPaint);
+   }
+   
+   /**
+    * @return
+    */
+   public boolean isMobileMode() {
+      return getPreferencesManager().getBooleanValue(KEY_MOBILE_MODE, false);
+   }
+   
+   public boolean setMobileMode(boolean mobileMode) {
+      return getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_MOBILE_MODE, mobileMode);
    }
 }

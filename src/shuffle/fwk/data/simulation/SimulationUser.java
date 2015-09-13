@@ -19,6 +19,7 @@
 package shuffle.fwk.data.simulation;
 
 import shuffle.fwk.config.provider.BoardManagerProvider;
+import shuffle.fwk.config.provider.EffectManagerProvider;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
 import shuffle.fwk.config.provider.SpeciesManagerProvider;
@@ -33,7 +34,7 @@ import shuffle.fwk.service.movepreferences.MovePreferencesServiceUser;
  */
 public interface SimulationUser extends SimulationAcceptor, RosterManagerProvider, SpeciesManagerProvider,
       BoardManagerProvider, TeamManagerProvider, PreferencesManagerProvider, MovePreferencesServiceUser,
-      PaintsIndicatorUser {
+      PaintsIndicatorUser, EffectManagerProvider {
    
    public boolean isMegaAllowed();
 

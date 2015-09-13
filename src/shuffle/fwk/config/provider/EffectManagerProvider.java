@@ -16,38 +16,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package shuffle.fwk.service.movepreferences;
+package shuffle.fwk.config.provider;
 
-import java.util.Collection;
-
-import shuffle.fwk.data.Effect;
+import shuffle.fwk.config.manager.EffectManager;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
-public interface MovePreferencesServiceUser {
-   
-   boolean isAutoCompute();
-   
-   int getPreferredNumFeeders();
-   
-   int getPreferredFeederHeight();
-   
-   Collection<Effect> getDisabledEffects();
-
-   /**
-    * @param movePreferencesService
-    */
-   void applyMovePreferences(MovePreferencesService service);
-
-   /**
-    * @return
-    */
-   int getEffectThreshold();
-   
-   boolean isSwapToPaint();
-   
-   boolean isMobileMode();
-
+public interface EffectManagerProvider {
+   EffectManager getEffectManager();
 }
