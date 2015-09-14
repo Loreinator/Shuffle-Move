@@ -180,6 +180,9 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
          setBorderFor(newSelection, true, selectThick);
          oldMode = newMode;
       }
+      if (!modeMap.get(newMode).hasFocus()) {
+         modeMap.get(newMode).requestFocusInWindow();
+      }
       return changed;
    }
    
