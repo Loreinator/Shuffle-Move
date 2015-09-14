@@ -7,7 +7,7 @@ ROW_3 Air,Metal,Regirock,Regirock,Wood,Air
 FROW_3 false,false,false,false,false,false
 ROW_4 Air,Wood,Regirock,Regirock,Metal,Air
 FROW_4 false,false,false,false,false,false
-ROW_5 Air,Regirock,Wood,Wood,Regirock,Air
+ROW_5 Air,Regirock,Metal,Metal,Regirock,Air
 FROW_5 false,false,false,false,false,false
-ROW_6 Air,Regirock,Metal,Metal,Regirock,Air
+ROW_6 Air,Wood,Regirock,Regirock,Wood,Air
 FROW_6 false,false,false,false,false,false
