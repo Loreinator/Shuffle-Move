@@ -35,8 +35,13 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.29 - 2015-09-
-	- TBD
+v0.3.29 - 2015-09-14
+	- German and Chinese translations updated
+	- Fix for mode switch bug on 'do move' when auto swap to paint is enabled
+	- Added Stage for Diancie
+	- Added Species for Diancie and Ho-oh
+	- Updated default board for Regirock
+	- Updated stage data for Regirock
 v0.3.28 - 2015-09-13
 	- Performance Improvements to the simulation - will no longer use more than one simulation if there is no real benefit (no complex randomness)
 	- i18n for Species have been updated/improved
