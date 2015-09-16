@@ -18,30 +18,28 @@
 
 package shuffle.fwk;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.function.BiFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import shuffle.fwk.data.simulation.SimulationResult;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
 public enum GradingMode {
    SCORE("grading.score") {
       @Override
       public Comparator<SimulationResult> getGradingMetric() {
-         return new Comparator<SimulationResult>() {
-            @Override
-            public int compare(SimulationResult arg0, SimulationResult arg1) {
-               return getComparrison(arg0, arg1, Arrays.asList(getGoldCompare(), getScoreCompare(), getCombosCompare(),
-                     getDisruptionsCompare(), getBlocksCompare(), getProgressCompare(), getMoveCompare()));
-            }
-         };
+         return getGradingMetric("GOLD,SCORE,COMBOS,DISRUPTIONS,BLOCKS,PROGRESS,MOVE");
       }
       
    },
@@ -51,9 +49,9 @@ public enum GradingMode {
          return new Comparator<SimulationResult>() {
             @Override
             public int compare(SimulationResult arg0, SimulationResult arg1) {
-               return getComparrison(arg0, arg1, Arrays.asList(getBlocksCompare(), getCombosCompare(),
-                     getDisruptionsCompare(), getGoldCompare(), getScoreCompare(), getProgressCompare(),
-                     getMoveCompare()));
+               return getComparrison(arg0, arg1,
+                     Arrays.asList(getBlocksCompare(), getCombosCompare(), getDisruptionsCompare(), getGoldCompare(),
+                           getScoreCompare(), getProgressCompare(), getMoveCompare()));
             }
          };
       }
@@ -77,9 +75,8 @@ public enum GradingMode {
          return new Comparator<SimulationResult>() {
             @Override
             public int compare(SimulationResult arg0, SimulationResult arg1) {
-               return getComparrison(arg0, arg1, Arrays.asList(getCombosCompare(), getBlocksCompare(),
-                     getGoldCompare(), getScoreCompare(), getDisruptionsCompare(), getProgressCompare(),
-                     getMoveCompare()));
+               return getComparrison(arg0, arg1, Arrays.asList(getCombosCompare(), getBlocksCompare(), getGoldCompare(),
+                     getScoreCompare(), getDisruptionsCompare(), getProgressCompare(), getMoveCompare()));
             }
          };
       }
@@ -92,9 +89,9 @@ public enum GradingMode {
          return new Comparator<SimulationResult>() {
             @Override
             public int compare(SimulationResult arg0, SimulationResult arg1) {
-               return getComparrison(arg0, arg1, Arrays.asList(getDisruptionsCompare().andThen(x -> -x),
-                     getBlocksCompare(), getCombosCompare(), getGoldCompare(), getScoreCompare(), getProgressCompare(),
-                     getMoveCompare()));
+               return getComparrison(arg0, arg1,
+                     Arrays.asList(getDisruptionsCompare().andThen(x -> -x), getBlocksCompare(), getCombosCompare(),
+                           getGoldCompare(), getScoreCompare(), getProgressCompare(), getMoveCompare()));
             }
          };
       }
@@ -118,9 +115,9 @@ public enum GradingMode {
          return new Comparator<SimulationResult>() {
             @Override
             public int compare(SimulationResult arg0, SimulationResult arg1) {
-               return getComparrison(arg0, arg1, Arrays.asList(getProgressCompare(), getGoldCompare(),
-                     getScoreCompare(), getCombosCompare(), getDisruptionsCompare(), getBlocksCompare(),
-                     getMoveCompare()));
+               return getComparrison(arg0, arg1,
+                     Arrays.asList(getProgressCompare(), getGoldCompare(), getScoreCompare(), getCombosCompare(),
+                           getDisruptionsCompare(), getBlocksCompare(), getMoveCompare()));
             }
          };
       }
@@ -138,7 +135,7 @@ public enum GradingMode {
       }
    };
    
-   protected int getComparrison(SimulationResult arg0, SimulationResult arg1,
+   protected static int getComparrison(SimulationResult arg0, SimulationResult arg1,
          Collection<BiFunction<SimulationResult, SimulationResult, Integer>> fn) {
       int ret = 0;
       Iterator<BiFunction<SimulationResult, SimulationResult, Integer>> itr = fn.iterator();
@@ -148,12 +145,12 @@ public enum GradingMode {
       return ret;
    }
    
-   protected BiFunction<SimulationResult, SimulationResult, Integer> getProgressCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getProgressCompare() {
       return (arg0, arg1) -> Double.compare(arg1.getProgress().getAverage(), arg0.getProgress().getAverage());
    }
-
+   
    // Sorts by coordinate
-   protected BiFunction<SimulationResult, SimulationResult, Integer> getMoveCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getMoveCompare() {
       return new BiFunction<SimulationResult, SimulationResult, Integer>() {
          @Override
          public Integer apply(SimulationResult arg0, SimulationResult arg1) {
@@ -178,7 +175,7 @@ public enum GradingMode {
    }
    
    // Special - sorts by gold priority - avoid it or have lots of it.
-   protected BiFunction<SimulationResult, SimulationResult, Integer> getNoCoinCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getNoCoinCompare() {
       return new BiFunction<SimulationResult, SimulationResult, Integer>() {
          @Override
          public Integer apply(SimulationResult arg0, SimulationResult arg1) {
@@ -196,28 +193,35 @@ public enum GradingMode {
       };
    }
    
-   protected BiFunction<SimulationResult, SimulationResult, Integer> getScoreCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getScoreCompare() {
       return (arg0, arg1) -> Double.compare(arg1.getNetScore().getAverage(), arg0.getNetScore().getAverage());
    }
    
-   protected BiFunction<SimulationResult, SimulationResult, Integer> getGoldCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getGoldCompare() {
       return (arg0, arg1) -> Double.compare(arg1.getNetGold().getAverage(), arg0.getNetGold().getAverage());
    }
    
-   protected BiFunction<SimulationResult, SimulationResult, Integer> getCombosCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getCombosCompare() {
       return (arg0, arg1) -> Double.compare(arg1.getCombosCleared().getAverage(), arg0.getCombosCleared().getAverage());
    }
    
-   protected BiFunction<SimulationResult, SimulationResult, Integer> getBlocksCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getBlocksCompare() {
       return (arg0, arg1) -> Double.compare(arg1.getBlocksCleared().getAverage(), arg0.getBlocksCleared().getAverage());
    }
    
-   protected BiFunction<SimulationResult, SimulationResult, Integer> getDisruptionsCompare() {
-      return (arg0, arg1) -> Double.compare(arg1.getDisruptionsCleared().getAverage(), arg0.getDisruptionsCleared()
-            .getAverage());
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getDisruptionsCompare() {
+      return (arg0, arg1) -> Double.compare(arg1.getDisruptionsCleared().getAverage(),
+            arg0.getDisruptionsCleared().getAverage());
    }
    
+   private static final List<String> DESC_KEYS = Arrays.asList("PROGRESS", "MOVE", "NOCOIN", "SCORE", "GOLD", "COMBOS",
+         "BLOCKS", "DISRUPTIONS");
+   private static final List<BiFunction<SimulationResult, SimulationResult, Integer>> DESC_COMP = Arrays.asList(
+         getProgressCompare(), getMoveCompare(), getNoCoinCompare(), getScoreCompare(), getGoldCompare(),
+         getCombosCompare(),
+         getBlocksCompare(), getDisruptionsCompare());
    private final String i18nKey;
+   private final Pattern DESC_KEY_PATTERN = Pattern.compile("^([+-]?)([A-Z]+)");
    
    private GradingMode(String i18nKey) {
       this.i18nKey = i18nKey;
@@ -225,6 +229,43 @@ public enum GradingMode {
    
    public String getI18nKey() {
       return i18nKey;
+   }
+   
+   public Comparator<SimulationResult> getGradingMetric(String description) {
+      if (description == null || description.isEmpty()) {
+         return SCORE.getGradingMetric();
+      }
+      System.out.printf("%s, %s%n", DESC_KEYS.size(), DESC_COMP.size());
+      String[] tokens = description.split("[,\\s]");
+      TreeSet<String> used = new TreeSet<String>();
+      List<BiFunction<SimulationResult, SimulationResult, Integer>> comparrators = new ArrayList<BiFunction<SimulationResult, SimulationResult, Integer>>();
+      for (String token : tokens) {
+         Matcher m = DESC_KEY_PATTERN.matcher(token);
+         if (m.find()) {
+            String metric = m.group(2);
+            if (DESC_KEYS.contains(metric)) {
+               int index = DESC_KEYS.indexOf(metric);
+               BiFunction<SimulationResult, SimulationResult, Integer> func = DESC_COMP.get(index);
+               if (m.group(1).equals("-")) {
+                  // Reverses the ordering
+                  func = func.andThen((value) -> value * (-1));
+               }
+               comparrators.add(func);
+            }
+         }
+      }
+      for (int i = 0; i < DESC_KEYS.size(); i++) {
+         String key = DESC_KEYS.get(i);
+         if (!used.contains(key)) {
+            comparrators.add(DESC_COMP.get(i));
+         }
+      }
+      return new Comparator<SimulationResult>() {
+         @Override
+         public int compare(SimulationResult arg0, SimulationResult arg1) {
+            return getComparrison(arg0, arg1, comparrators);
+         }
+      };
    }
    
    public abstract Comparator<SimulationResult> getGradingMetric();
