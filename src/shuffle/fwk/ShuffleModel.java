@@ -1103,7 +1103,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
          String modeName = getPreferencesManager().getStringValue(KEY_GRADING_MODE);
          if (modeName != null) {
             for (GradingMode gm : GradingMode.values()) {
-               if (gm.toString().equals(modeName)) {
+               if (gm.getI18nKey().equals(modeName)) {
                   mode = gm;
                   break;
                }
@@ -1136,10 +1136,10 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       if (mode == null) {
          return false;
       }
-      boolean changed = gradeMode != mode;
+      boolean changed = !mode.equals(gradeMode);
       if (changed) {
          gradeMode = mode;
-         getPreferencesManager().setEntry(EntryType.STRING, KEY_GRADING_MODE, mode.toString());
+         getPreferencesManager().setEntry(EntryType.STRING, KEY_GRADING_MODE, mode.getI18nKey());
       }
       return changed;
    }
