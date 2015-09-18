@@ -1,0 +1,13 @@
+STAGE 225
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Klink,Klink,Wood,Air,Air
+FROW_2 false,true,false,true,false,false
+ROW_3 Air,Klink,Wood,Klink,Air,Air
+FROW_3 false,true,true,true,false,false
+ROW_4 Air,Wood,Klink,Klink,Air,Air
+FROW_4 false,true,false,true,false,false
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false
