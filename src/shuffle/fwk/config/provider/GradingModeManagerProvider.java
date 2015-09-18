@@ -15,19 +15,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package shuffle.fwk.config.provider;
 
-package shuffle.fwk.gui.user;
-
-import shuffle.fwk.GradingMode;
-import shuffle.fwk.config.provider.GradingModeManagerProvider;
+import shuffle.fwk.config.manager.GradingModeManager;
 
 /**
  * @author Andrew Meyers
  *
  */
-public interface GradingModeUser extends GradingModeManagerProvider {
-   
-   GradingMode getCurrentGradingMode();
-   
-   void setGradingMode(GradingMode mode);
+public interface GradingModeManagerProvider {
+   GradingModeManager getGradingModeManager();
 }

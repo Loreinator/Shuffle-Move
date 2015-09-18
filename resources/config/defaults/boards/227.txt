@@ -1,0 +1,13 @@
+STAGE 227
+ROW_1 Air,Klang,Air,Air,Klang,Air
+FROW_1 false,true,false,false,true,false
+ROW_2 Air,Klang,Air,Air,Klang,Air
+FROW_2 false,false,false,false,true,false
+ROW_3 Air,Metal,Air,Air,Metal,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Metal,Air,Air,Metal,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Metal,Air,Air,Metal,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Klang,Air,Air,Klang,Air
+FROW_6 false,false,false,false,false,false

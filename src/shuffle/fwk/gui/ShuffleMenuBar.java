@@ -324,8 +324,8 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       GradingMode selectedMode = getUser().getCurrentGradingMode();
       ButtonGroup group = new ButtonGroup();
       modeMap = new HashMap<GradingMode, AbstractButton>();
-      for (GradingMode mode : GradingMode.values()) {
-         String text = getString(mode.getI18nKey());
+      for (GradingMode mode : getUser().getGradingModeManager().getGradingModeValues()) {
+         String text = mode.geti18nString();
          JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(new AbstractAction(text) {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -338,7 +338,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
          group.add(menuItem);
          menu.add(menuItem);
          modeMap.put(mode, menuItem);
-         buttonToi18nKeyMap.put(menuItem, () -> getString(mode.getI18nKey()));
+         buttonToi18nKeyMap.put(menuItem, () -> mode.geti18nString());
       }
       return menu;
    }

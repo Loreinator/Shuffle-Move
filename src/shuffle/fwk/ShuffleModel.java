@@ -61,12 +61,14 @@ import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.EntryType;
 import shuffle.fwk.config.manager.BoardManager;
 import shuffle.fwk.config.manager.EffectManager;
+import shuffle.fwk.config.manager.GradingModeManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.StageManager;
 import shuffle.fwk.config.manager.TeamManager;
 import shuffle.fwk.config.provider.BoardManagerProvider;
 import shuffle.fwk.config.provider.EffectManagerProvider;
+import shuffle.fwk.config.provider.GradingModeManagerProvider;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
 import shuffle.fwk.config.provider.SpeciesManagerProvider;
@@ -92,7 +94,8 @@ import shuffle.fwk.update.UpdateCheck;
  *
  */
 public class ShuffleModel implements BoardManagerProvider, PreferencesManagerProvider, RosterManagerProvider,
-      SpeciesManagerProvider, StageManagerProvider, TeamManagerProvider, EffectManagerProvider, I18nUser {
+ SpeciesManagerProvider,
+      StageManagerProvider, TeamManagerProvider, EffectManagerProvider, GradingModeManagerProvider, I18nUser {
    /** The logger for this model. */
    private static final Logger LOG = Logger.getLogger(ShuffleModel.class.getName());
    /** The controller for this model. */
@@ -103,7 +106,6 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private static final boolean DEFAULT_AUTO_COMPUTE = true;
    private static final int DEFAULT_FEEDER_HEIGHT = 0;
    private static final int DEFAULT_NUM_FEEDERS = 1;
-   private static final GradingMode DEFAULT_GRADING = GradingMode.SCORE;
    private static final String BUILD_REPORT_FILE = "bugs/buildReport.xml";
    private static final String BUILD_REPORT_RESOURCE = "config/buildReport.xml";
    private static final String BUG_DETAILS_FILE = "bugs/bugDetails.txt";
@@ -111,7 +113,6 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private static final String KEY_AUTO_COMPUTE = "AUTO_COMPUTE";
    private static final String KEY_NUM_FEEDERS = "NUM_FEEDERS";
    private static final String KEY_FEEDER_HEIGHT = "FEEDER_HEIGHT";
-   private static final String KEY_GRADING_MODE = "GRADING_MODE";
    private static final String KEY_LOAD_LOCALE = "LOAD_LOCALE_FROM_CONFIG";
    private static final String KEY_LOCALE_STATE = "LAST_LOCALE";
    private static final String KEY_MOVES_REMAINING = "STAGE_MOVES_REMAINING";
@@ -146,7 +147,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private boolean frozen = false;
    /** Current position of the cursor for entry. */
    private int curPos = 1;
-   private GradingMode gradeMode = null;
+   // private GradingMode gradeMode = null;
    private Locale prevLocale = null;
    
    private boolean resultsCurrent = false;
@@ -303,6 +304,14 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    @Override
    public ConfigManager getPreferencesManager() {
       return getConfigFactory().getPreferencesManager();
+   }
+   
+   /**
+    * Gets the Grading Mode Manager.
+    */
+   @Override
+   public GradingModeManager getGradingModeManager() {
+      return getConfigFactory().getGradingModeManager();
    }
    
    // BOARD MANAGER METHODS
@@ -1098,23 +1107,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    }
    
    public GradingMode getCurrentGradingMode() {
-      GradingMode mode = gradeMode;
-      if (mode == null) {
-         String modeName = getPreferencesManager().getStringValue(KEY_GRADING_MODE);
-         if (modeName != null) {
-            for (GradingMode gm : GradingMode.values()) {
-               if (gm.toString().equals(modeName)) {
-                  mode = gm;
-                  break;
-               }
-            }
-         }
-         if (mode == null) {
-            mode = DEFAULT_GRADING;
-         }
-         setGradeMode(mode);
-      }
-      return mode;
+      return getGradingModeManager().getCurrentGradingMode();
    }
    
    protected boolean setGradingMode(GradingMode mode) {
@@ -1136,12 +1129,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       if (mode == null) {
          return false;
       }
-      boolean changed = gradeMode != mode;
-      if (changed) {
-         gradeMode = mode;
-         getPreferencesManager().setEntry(EntryType.STRING, KEY_GRADING_MODE, mode.toString());
-      }
-      return changed;
+      return getGradingModeManager().setCurrentGradingMode(mode);
    }
 
    /**

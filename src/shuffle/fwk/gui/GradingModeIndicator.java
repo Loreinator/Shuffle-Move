@@ -24,8 +24,6 @@ import java.util.Locale;
 
 import javax.swing.JComboBox;
 
-import org.apache.commons.lang3.text.WordUtils;
-
 import shuffle.fwk.GradingMode;
 import shuffle.fwk.gui.user.GradingModeUser;
 import shuffle.fwk.i18n.I18nUser;
@@ -73,8 +71,8 @@ public class GradingModeIndicator extends JComboBox<String> implements I18nUser 
     */
    private void rebuildItems() {
       removeAllItems();
-      for (GradingMode mode : GradingMode.values()) {
-         addItem(toBox(mode));
+      for (GradingMode mode : getUser().getGradingModeManager().getGradingModeValues()) {
+         addItem(mode.geti18nString());
       }
    }
    
@@ -82,8 +80,8 @@ public class GradingModeIndicator extends JComboBox<String> implements I18nUser 
       String curSelection = getItemAt(getSelectedIndex());
       if (curSelection != null) {
          GradingMode toSet = null;
-         for (GradingMode mode : GradingMode.values()) {
-            if (toBox(mode).equals(curSelection)) {
+         for (GradingMode mode : getUser().getGradingModeManager().getGradingModeValues()) {
+            if (mode.geti18nString().equals(curSelection)) {
                toSet = mode;
             }
          }
@@ -107,20 +105,10 @@ public class GradingModeIndicator extends JComboBox<String> implements I18nUser 
          if (curMode == null) {
             setSelectedItem(null);
          } else {
-            setSelectedItem(toBox(curMode));
+            setSelectedItem(curMode.geti18nString());
          }
          addItemListener(listener);
       }
-   }
-   
-   private String toBox(String value) {
-      return WordUtils.capitalizeFully(value);
-   }
-   
-   private String toBox(GradingMode mode) {
-      String modeString = getString(mode.getI18nKey());
-      String forBox = toBox(modeString);
-      return forBox;
    }
    
    @Override

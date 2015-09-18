@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import shuffle.fwk.config.manager.EffectManager;
+import shuffle.fwk.config.manager.GradingModeManager;
 import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
@@ -55,12 +56,14 @@ public class ConfigFactory {
    private static final String KEY_RESOURCE_ICONS = "ICONS";
    private static final String KEY_RESOURCE_EFFECT = "EFFECTS";
    private static final String KEY_RESOURCE_EFFECT_MOBILE = "EFFECTS_MOBILE";
+   private static final String KEY_RESOURCE_GRADING_MODES = "GRADING_MODES";
    private static final String KEY_FILE_PREFERENCES = "PREFERENCES";
    private static final String KEY_FILE_SPECIES = "SPECIES";
    private static final String KEY_FILE_STAGES = "STAGES";
    private static final String KEY_FILE_ICONS = "ICONS";
    private static final String KEY_FILE_TEAMS = "TEAM";
    private static final String KEY_FILE_ROSTER = "ROSTER";
+   private static final String KEY_FILE_GRADING_MODES = "GRADING_MODES";
    
    private Map<Object, ConfigManager> managers = new HashMap<Object, ConfigManager>();
    
@@ -221,6 +224,10 @@ public class ConfigFactory {
    
    public RosterManager getRosterManager() {
       return getManager(null, KEY_FILE_ROSTER, RosterManager.class);
+   }
+   
+   public GradingModeManager getGradingModeManager() {
+      return getManager(KEY_RESOURCE_GRADING_MODES, KEY_FILE_GRADING_MODES, GradingModeManager.class);
    }
    
    public EffectManager getEffectManager() {

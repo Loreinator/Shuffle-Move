@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 
 import shuffle.fwk.EntryMode;
+import shuffle.fwk.GradingMode;
 import shuffle.fwk.ShuffleVersion;
 import shuffle.fwk.config.writer.PreferencesWriter;
 import shuffle.fwk.data.Species;
@@ -542,6 +543,19 @@ public class ConfigManager {
    
    public List<Team> getTeamValues() {
       return getValues(EntryType.TEAM, Team.class);
+   }
+   
+   // Grading Mode
+   public GradingMode getGradingModeValue(String key) {
+      return getValue(EntryType.GRADING_MODE, key, GradingMode.class);
+   }
+   
+   public GradingMode getGradingModeValue(String key, GradingMode def) {
+      return getValue(EntryType.GRADING_MODE, key, GradingMode.class, def);
+   }
+   
+   public List<GradingMode> getGradingModeValues() {
+      return getValues(EntryType.GRADING_MODE, GradingMode.class);
    }
    
    // Font

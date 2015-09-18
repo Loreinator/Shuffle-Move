@@ -1,0 +1,13 @@
+STAGE 224
+ROW_1 Starly,Wood,Staraptor,Starly,Starly,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Starly,Staravia,Wood,Staravia,Staravia,Starly
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Staravia,Starly,Staraptor,Staraptor,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Staraptor,Wood,Staravia,Starly,Starly,Staraptor
+FROW_4 false,false,false,false,false,false
+ROW_5 Staraptor,Staravia,Staraptor,Staravia,Staravia,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Staravia,Staravia,Wood,Staraptor,Staraptor,Wood
+FROW_6 false,false,false,false,false,false

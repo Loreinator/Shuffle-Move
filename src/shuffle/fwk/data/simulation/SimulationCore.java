@@ -81,6 +81,7 @@ public class SimulationCore extends RecursiveAction {
    private final boolean attackPowerUp;
    private final int effectThreshold;
    private final EffectManager effectManager;
+   private final GradingMode defaultGradingMode;
    
    // Gets all the data it needs from the user, as deep copies of all relevant information.
    public SimulationCore(SimulationUser user, UUID processUUID) {
@@ -115,6 +116,7 @@ public class SimulationCore extends RecursiveAction {
       attackPowerUp = user.getAttackPowerUp();
       effectThreshold = user.getEffectThreshold();
       effectManager = new EffectManager(user.getEffectManager());
+      defaultGradingMode = user.getGradingModeManager().getDefaultGradingMode();
    }
    
    public UUID getId() {
@@ -290,7 +292,7 @@ public class SimulationCore extends RecursiveAction {
          compiledResultsMap.put(move, assembler);
       }
       
-      TreeSet<SimulationResult> bestResultSet = new TreeSet<SimulationResult>(GradingMode.SCORE.getGradingMetric());
+      TreeSet<SimulationResult> bestResultSet = new TreeSet<SimulationResult>(defaultGradingMode.getGradingMetric());
       for (List<Integer> move : validMoves) {
          SimulationResult result = compiledResultsMap.get(move).join();
          if (result != null) {
