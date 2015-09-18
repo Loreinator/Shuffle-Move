@@ -38,10 +38,10 @@ import shuffle.fwk.i18n.I18nUser;
 public class GradingMode implements I18nUser {
    
    private static final List<String> DESC_KEYS = Arrays.asList("GOLD", "SCORE", "COMBOS", "DISRUPTIONS", "BLOCKS",
-         "PROGRESS", "MOVE");
+         "PROGRESS", "MOVE", "NOCOIN");
    private static final List<BiFunction<SimulationResult, SimulationResult, Integer>> DESC_COMP = Arrays.asList(
-         getProgressCompare(), getMoveCompare(), getNoCoinCompare(), getScoreCompare(), getGoldCompare(),
-         getCombosCompare(), getBlocksCompare(), getDisruptionsCompare());
+         getGoldCompare(), getScoreCompare(), getCombosCompare(), getDisruptionsCompare(), getBlocksCompare(),
+         getProgressCompare(), getMoveCompare(), getNoCoinCompare());
    private static final Pattern DESC_KEY_PATTERN = Pattern.compile("^([+-]?)([A-Z]+)");
    
    protected static BiFunction<SimulationResult, SimulationResult, Integer> getScoreCompare() {
