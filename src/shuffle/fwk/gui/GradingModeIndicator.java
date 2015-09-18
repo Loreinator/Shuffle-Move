@@ -71,7 +71,7 @@ public class GradingModeIndicator extends JComboBox<String> implements I18nUser 
     */
    private void rebuildItems() {
       removeAllItems();
-      for (GradingMode mode : GradingMode.values()) {
+      for (GradingMode mode : getUser().getGradingModeManager().getGradingModeValues()) {
          addItem(mode.geti18nString());
       }
    }
@@ -80,7 +80,7 @@ public class GradingModeIndicator extends JComboBox<String> implements I18nUser 
       String curSelection = getItemAt(getSelectedIndex());
       if (curSelection != null) {
          GradingMode toSet = null;
-         for (GradingMode mode : GradingMode.values()) {
+         for (GradingMode mode : getUser().getGradingModeManager().getGradingModeValues()) {
             if (mode.geti18nString().equals(curSelection)) {
                toSet = mode;
             }

@@ -20,8 +20,6 @@ package shuffle.fwk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -39,54 +37,12 @@ import shuffle.fwk.i18n.I18nUser;
  */
 public class GradingMode implements I18nUser {
    
-   private static final Collection<GradingMode> VALUES = new TreeSet<GradingMode>(new Comparator<GradingMode>() {
-      @Override
-      public int compare(GradingMode o1, GradingMode o2) {
-         if (o1 == o2) {
-            return 0;
-         } else if (o1 == null && o2 != null) {
-            return -1;
-         } else if (o2 == null && o1 != null) {
-            return 1;
-         } else {
-            int ret = o1.geti18nString().compareTo(o2.geti18nString());
-            if (ret == 0) {
-               ret = o1.getDescription().compareTo(o2.getDescription());
-            }
-            return ret;
-         }
-      }
-   });
-   
    private static final List<String> DESC_KEYS = Arrays.asList("PROGRESS", "MOVE", "NOCOIN", "SCORE", "GOLD", "COMBOS",
          "BLOCKS", "DISRUPTIONS");
    private static final List<BiFunction<SimulationResult, SimulationResult, Integer>> DESC_COMP = Arrays.asList(
          getProgressCompare(), getMoveCompare(), getNoCoinCompare(), getScoreCompare(), getGoldCompare(),
          getCombosCompare(), getBlocksCompare(), getDisruptionsCompare());
    private static final Pattern DESC_KEY_PATTERN = Pattern.compile("^([+-]?)([A-Z]+)");
-   
-   public static final GradingMode SCORE = new GradingMode("grading.score",
-         "GOLD,SCORE,COMBOS,DISRUPTIONS,BLOCKS,PROGRESS,MOVE");
-   public static final GradingMode TOTAL_BLOCKS = new GradingMode("grading.totalblocks",
-         "BLOCKS,COMBOS,DISRUPTIONS,GOLD,SCORE,PROGRESS,MOVE");
-   public static final GradingMode DISRUPTIONS = new GradingMode("grading.disruptions",
-         "DISRUPTIONS,BLOCKS,COMBOS,GOLD,SCORE,PROGRESS,MOVE");
-   public static final GradingMode COMBOS = new GradingMode("grading.combos",
-         "COMBOS,BLOCKS,GOLD,SCORE,DISRUPTIONS,PROGRESS,MOVE");
-   public static final GradingMode MIN_DISRUPTIONS = new GradingMode("grading.mindisruptions",
-         "-DISRUPTIONS,BLOCKS,COMBOS,GOLD,SCORE,PROGRESS,MOVE");
-   public static final GradingMode NONE_OR_ALL = new GradingMode("grading.noneorall",
-         "NOCOIN,BLOCKS,COMBOS,GOLD,SCORE,PROGRESS,MOVE");
-   public static final GradingMode MEGA_PROGRESS = new GradingMode("grading.megaprogress",
-         "PROGRESS,GOLD,SCORE,COMBOS,DISRUPTIONS,BLOCKS,MOVE");
-   public static final GradingMode COORDINATE = new GradingMode("grading.coordinate", "MOVE");
-   
-   public static final Collection<GradingMode> values() {
-      ArrayList<GradingMode> values = new ArrayList<GradingMode>();
-      values.addAll(VALUES);
-      // TODO add the custom entries
-      return Collections.unmodifiableCollection(values);
-   }
    
    protected static BiFunction<SimulationResult, SimulationResult, Integer> getScoreCompare() {
       return (arg0, arg1) -> Double.compare(arg1.getNetScore().getAverage(), arg0.getNetScore().getAverage());
@@ -152,8 +108,8 @@ public class GradingMode implements I18nUser {
    }
    
    public static Comparator<SimulationResult> getGradingMetric(String description) {
-      if (description == null || description.isEmpty()) {
-         return SCORE.getGradingMetric();
+      if (description == null) {
+         description = "";
       }
       String[] tokens = description.split("[,\\s]");
       TreeSet<String> used = new TreeSet<String>();
@@ -193,22 +149,35 @@ public class GradingMode implements I18nUser {
    }
    
    private final Comparator<SimulationResult> metric;
-   private final String i18nKey;
+   private final String key;
    private final String desc;
+   private final boolean custom;
    
-   private GradingMode(String key, String description) {
-      desc = description;
-      metric = getGradingMetric(desc);
-      i18nKey = key;
-      VALUES.add(this);
+   public GradingMode(String key, String description) {
+      this(key, description, false);
    }
    
-   public String getI18nKey() {
-      return i18nKey;
+   public GradingMode(String name, String description, boolean isCustom) {
+      desc = description;
+      metric = getGradingMetric(desc);
+      key = name;
+      custom = isCustom;
+   }
+   
+   public boolean isCustom() {
+      return custom;
+   }
+   
+   public String getKey() {
+      return key;
    }
    
    public String geti18nString() {
-      return getString(i18nKey);
+      if (isCustom()) {
+         return getKey();
+      } else {
+         return getString(getKey());
+      }
    }
    
    public Comparator<SimulationResult> getGradingMetric() {

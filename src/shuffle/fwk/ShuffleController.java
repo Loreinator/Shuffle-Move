@@ -44,6 +44,7 @@ import shuffle.fwk.config.ConfigFactory;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.manager.BoardManager;
 import shuffle.fwk.config.manager.EffectManager;
+import shuffle.fwk.config.manager.GradingModeManager;
 import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
@@ -745,6 +746,11 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public EffectManager getEffectManager() {
       return getModel().getEffectManager();
+   }
+   
+   @Override
+   public GradingModeManager getGradingModeManager() {
+      return getModel().getGradingModeManager();
    }
    
    /*
