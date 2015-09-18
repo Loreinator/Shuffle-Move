@@ -37,8 +37,8 @@ import shuffle.fwk.i18n.I18nUser;
  */
 public class GradingMode implements I18nUser {
    
-   private static final List<String> DESC_KEYS = Arrays.asList("PROGRESS", "MOVE", "NOCOIN", "SCORE", "GOLD", "COMBOS",
-         "BLOCKS", "DISRUPTIONS");
+   private static final List<String> DESC_KEYS = Arrays.asList("GOLD", "SCORE", "COMBOS", "DISRUPTIONS", "BLOCKS",
+         "PROGRESS", "MOVE");
    private static final List<BiFunction<SimulationResult, SimulationResult, Integer>> DESC_COMP = Arrays.asList(
          getProgressCompare(), getMoveCompare(), getNoCoinCompare(), getScoreCompare(), getGoldCompare(),
          getCombosCompare(), getBlocksCompare(), getDisruptionsCompare());
@@ -152,10 +152,6 @@ public class GradingMode implements I18nUser {
    private final String key;
    private final String desc;
    private final boolean custom;
-   
-   public GradingMode(String key, String description) {
-      this(key, description, false);
-   }
    
    public GradingMode(String name, String description, boolean isCustom) {
       desc = description;

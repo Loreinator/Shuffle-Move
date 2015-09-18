@@ -32,7 +32,7 @@ public class GradingModeManager extends ConfigManager {
    
    private static final String SCORE_KEY = "grading.score";
    private static final String CURRENT_MODE = "CURRENT_MODE";
-   private static final GradingMode DEFAULT_MODE = new GradingMode(SCORE_KEY, "");
+   private static final GradingMode DEFAULT_MODE = new GradingMode(SCORE_KEY, "", false);
    
    public GradingModeManager(List<String> loadPaths, List<String> writePaths, ConfigFactory factory) {
       super(loadPaths, writePaths, factory);
