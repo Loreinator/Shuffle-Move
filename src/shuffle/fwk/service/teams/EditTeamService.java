@@ -97,10 +97,10 @@ import shuffle.fwk.service.roster.EditRosterService;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
-public class EditTeamService extends BaseService<EditTeamServiceUser> implements StageIndicatorUser, I18nUser,
-      MultiListenerUser {
+public class EditTeamService extends BaseService<EditTeamServiceUser>
+      implements StageIndicatorUser, I18nUser, MultiListenerUser {
    private static final Logger LOG = Logger.getLogger(EditTeamService.class.getName());
    
    // Config keys
@@ -320,8 +320,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
    }
    
    /**
-	 * 
-	 */
+    * 
+    */
    protected void makeTeamDefault() {
       Stage curStage = getCurrentStage();
       Team curTeam = myData.getTeamForStage(curStage);
@@ -565,7 +565,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       myData = new TeamManager(user.getTeamManager());
       curStage = user.getCurrentStage();
       megaProgress = user.getMegaProgress();
-      megaThreshold = getCurrentTeam().getMegaThreshold(user.getSpeciesManager(), getUser().getRosterManager());
+      megaThreshold = getCurrentTeam().getMegaThreshold(user.getSpeciesManager(), user.getRosterManager(),
+            user.getEffectManager());
       updateRosterPanel();
       updateTeamPanel();
    }
@@ -758,7 +759,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
       } else {
          megaChooser.setSelectedItem(megaSpecies.getLocalizedName(true));
       }
-      int newThreshold = curTeam.getMegaThreshold(speciesManager, getUser().getRosterManager());
+      int newThreshold = curTeam.getMegaThreshold(speciesManager, getUser().getRosterManager(),
+            getUser().getEffectManager());
       if (megaSpecies == null || megaSpecies.getMegaName() == null || newThreshold == Integer.MAX_VALUE) {
          // remove their states
          megaProgressChooser.removeAllItems();
@@ -975,7 +977,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser> implements
          curTeam.setMegaSlot(species.getName());
       }
       if (curTeam.getMegaSlotName() != null) {
-         megaThreshold = curTeam.getMegaThreshold(getUser().getSpeciesManager(), getUser().getRosterManager());
+         megaThreshold = curTeam.getMegaThreshold(getUser().getSpeciesManager(), getUser().getRosterManager(),
+               getUser().getEffectManager());
          megaProgress = Math.min(megaProgress, megaThreshold);
       }
       myData.setTeamForStage(curTeam, getCurrentStage());

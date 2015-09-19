@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Observer;
 
 import shuffle.fwk.config.manager.RosterManager;
+import shuffle.fwk.config.provider.EffectManagerProvider;
 import shuffle.fwk.config.provider.ImageManagerProvider;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
@@ -33,7 +34,7 @@ import shuffle.fwk.data.Species;
  *
  */
 public interface EditRosterServiceUser extends ImageManagerProvider, RosterManagerProvider, SpeciesManagerProvider,
-      PreferencesManagerProvider {
+      PreferencesManagerProvider, EffectManagerProvider {
    
    void loadFromRosterManager(RosterManager manager);
    

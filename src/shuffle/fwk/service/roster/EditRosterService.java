@@ -530,10 +530,12 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       speedups.setEnabled(isMega);
       speedups.removeAllItems();
       if (isMega) {
-         for (int i = 0; i <= selectedSpecies.getMegaEffect().getMegaSpeedupCap(); i++) {
+         int megaSpeedupCap = getUser().getEffectManager().getMegaSpeedupCap(selectedSpecies);
+         for (int i = 0; i <= megaSpeedupCap; i++) {
             speedups.addItem(i);
          }
-         speedups.setSelectedItem(myData.getMegaSpeedupsFor(selectedSpecies));
+         int megaSpeedups = Math.min(myData.getMegaSpeedupsFor(selectedSpecies), megaSpeedupCap);
+         speedups.setSelectedItem(megaSpeedups);
       }
       addSpeedupsListener();
    }

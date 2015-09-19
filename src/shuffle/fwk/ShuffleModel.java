@@ -91,10 +91,10 @@ import shuffle.fwk.update.UpdateCheck;
  * helpers in ShuffleController).
  * 
  * @author Andrew Meyers
- *
+ *         
  */
-public class ShuffleModel implements BoardManagerProvider, PreferencesManagerProvider, RosterManagerProvider,
- SpeciesManagerProvider,
+public class ShuffleModel
+      implements BoardManagerProvider, PreferencesManagerProvider, RosterManagerProvider, SpeciesManagerProvider,
       StageManagerProvider, TeamManagerProvider, EffectManagerProvider, GradingModeManagerProvider, I18nUser {
    /** The logger for this model. */
    private static final Logger LOG = Logger.getLogger(ShuffleModel.class.getName());
@@ -444,8 +444,10 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
             getTeamManager().setTeamForStage(prevTeam, stage);
          }
          
-         int newThreshold = newTeam.getMegaThreshold(getSpeciesManager(), getUser().getRosterManager());
-         int prevThreshold = prevTeam.getMegaThreshold(getSpeciesManager(), getUser().getRosterManager());
+         int newThreshold = newTeam.getMegaThreshold(getSpeciesManager(), getUser().getRosterManager(),
+               getUser().getEffectManager());
+         int prevThreshold = prevTeam.getMegaThreshold(getSpeciesManager(), getUser().getRosterManager(),
+               getUser().getEffectManager());
          int newProgress;
          if (prevProgress == prevThreshold) {
             newProgress = newThreshold;
@@ -696,7 +698,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       SpeciesManager manager = getSpeciesManager();
       return getCurrentTeam().getSpecies(manager);
    }
-
+   
    public void setDataChanged() {
       recomputeResults(false);
    }
@@ -895,7 +897,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    private UndoRedoItem getCurrentState() {
       return new UndoRedoItem(getBoard(), getCurrentScore(), getRemainingMoves());
    }
-
+   
    public UUID getAcceptedId() {
       return processUUID;
    }
@@ -1096,7 +1098,8 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     * @return
     */
    private int getCurrentThreshold() {
-      return getCurrentTeam().getMegaThreshold(getSpeciesManager(), getUser().getRosterManager());
+      return getCurrentTeam().getMegaThreshold(getSpeciesManager(), getUser().getRosterManager(),
+            getUser().getEffectManager());
    }
    
    /**
@@ -1131,7 +1134,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
       }
       return getGradingModeManager().setCurrentGradingMode(mode);
    }
-
+   
    /**
     * Gets the number of remaining moves for the current stage.
     * 
@@ -1140,7 +1143,7 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
    public int getRemainingMoves() {
       return getPreferencesManager().getIntegerValue(KEY_MOVES_REMAINING, Stage.DEFAULT_MOVES);
    }
-
+   
    /**
     * Gets the remaining health for the current stage.
     * 
@@ -1164,8 +1167,8 @@ public class ShuffleModel implements BoardManagerProvider, PreferencesManagerPro
     *
     */
    protected boolean setCurrentScore(int score) {
-      return getPreferencesManager()
-            .setEntry(EntryType.INTEGER, KEY_CURRENT_SCORE, Math.min(Math.max(0, score), 99999));
+      return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_CURRENT_SCORE,
+            Math.min(Math.max(0, score), 99999));
    }
    
    /**

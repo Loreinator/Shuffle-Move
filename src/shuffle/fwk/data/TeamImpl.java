@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import shuffle.fwk.config.manager.EffectManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 
@@ -285,12 +286,13 @@ public class TeamImpl implements Team {
    }
    
    @Override
-   public int getMegaThreshold(SpeciesManager manager, RosterManager roster) {
-      if (manager == null || megaSlotName == null) {
+   public int getMegaThreshold(SpeciesManager speciesManager, RosterManager rosterManager,
+         EffectManager effectManager) {
+      if (speciesManager == null || megaSlotName == null) {
          return Integer.MAX_VALUE;
       } else {
-         final Species megaSpecies = manager.getSpeciesByName(megaSlotName);
-         return roster.getMegaThresholdFor(megaSpecies);
+         final Species megaSpecies = speciesManager.getSpeciesByName(megaSlotName);
+         return rosterManager.getMegaThresholdFor(megaSpecies, effectManager);
       }
    }
    

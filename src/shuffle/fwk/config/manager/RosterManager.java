@@ -54,11 +54,11 @@ public class RosterManager extends ConfigManager {
       return getIntegerValue(speciesName, 0);
    }
    
-   public Integer getMegaThresholdFor(Species species) {
+   public Integer getMegaThresholdFor(Species species, EffectManager effectManager) {
       if (species == null || species.getMegaName() == null) {
          return Integer.MAX_VALUE;
       } else {
-         return species.getMegaEffect().getMegaThreshold() - getMegaSpeedupsFor(species);
+         return effectManager.getMegaThreshold(species) - getMegaSpeedupsFor(species);
       }
    }
    
@@ -68,7 +68,7 @@ public class RosterManager extends ConfigManager {
     * @return
     */
    public int getMegaSpeedupsFor(Species species) {
-      return Math.min(getIntegerValue(getSpeedupsKey(species), 0), species.getMegaEffect().getMegaSpeedupCap());
+      return getIntegerValue(getSpeedupsKey(species), 0);
    }
    
    /**

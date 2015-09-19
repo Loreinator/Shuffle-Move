@@ -25,6 +25,7 @@ import java.util.List;
 import shuffle.fwk.config.ConfigFactory;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.data.Effect;
+import shuffle.fwk.data.Species;
 
 /**
  * @author Andrew Meyers
@@ -32,6 +33,8 @@ import shuffle.fwk.data.Effect;
  */
 public class EffectManager extends ConfigManager {
    
+   private static final String FORMAT_MEGA_SPEEDUP_CAP = "MEGA_SPEEDUPS_%s";
+   private static final String FORMAT_MEGA_THRESHOLD = "MEGA_THRESHOLD_%s";
    private static final double[] DEFAULT_ODDS = new double[] { 1.0, 1.0, 1.0, 1.0 };
    private EnumMap<Effect, double[]> oddsMap;
    
@@ -58,13 +61,8 @@ public class EffectManager extends ConfigManager {
    
    @Override
    protected <T extends ConfigManager> void onCopyFrom(T manager) {
-      if (manager instanceof EffectManager) {
-         EffectManager other = (EffectManager) manager;
-         for (Effect e : other.getOddsMap().keySet()) {
-            getOddsMap().put(e, other.getOddsMap().get(e));
-         }
-      } else {
-         reloadOddsMap();
+      synchronized (this) {
+         reloadMaps();
       }
    }
    
@@ -73,8 +71,7 @@ public class EffectManager extends ConfigManager {
       boolean changed = super.loadFromConfig();
       if (changed) {
          synchronized (this) {
-            getOddsMap().clear();
-            reloadOddsMap();
+            reloadMaps();
          }
       }
       return changed;
@@ -83,15 +80,22 @@ public class EffectManager extends ConfigManager {
    /**
     * 
     */
-   private void reloadOddsMap() {
+   private void reloadMaps() {
+      getOddsMap().clear();
       for (Effect e : Effect.values()) {
-         String oddsString = getStringValue(e.toString());
-         if (oddsString == null || oddsString.isEmpty()) {
-            getOddsMap().put(e, DEFAULT_ODDS);
-         } else {
-            double[] oddsValues = parseOdds(oddsString);
-            getOddsMap().put(e, oddsValues);
-         }
+         addOddsEntryForEffect(e);
+      }
+   }
+   /**
+    * @param e
+    */
+   public void addOddsEntryForEffect(Effect e) {
+      String oddsString = getStringValue(e.toString());
+      if (oddsString == null || oddsString.isEmpty()) {
+         getOddsMap().remove(e);
+      } else {
+         double[] oddsValues = parseOdds(oddsString);
+         getOddsMap().put(e, oddsValues);
       }
    }
    
@@ -119,6 +123,40 @@ public class EffectManager extends ConfigManager {
          return getOddsMap().get(effect)[index];
       } else {
          return DEFAULT_ODDS[index];
+      }
+   }
+   
+   public int getMegaSpeedupCap(Species species) {
+      return getIntegerValue(getMegaSpeedupKey(species), 0);
+   }
+   
+   public int getMegaThreshold(Species species) {
+      return getIntegerValue(getMegaThresholdKey(species), Integer.MAX_VALUE);
+   }
+   
+   /**
+    * @param effect
+    * @return
+    */
+   public String getMegaSpeedupKey(Species species) {
+      String megaName = species.getMegaName();
+      if (megaName == null) {
+         return null;
+      } else {
+         return String.format(FORMAT_MEGA_SPEEDUP_CAP, megaName);
+      }
+   }
+   
+   /**
+    * @param effect
+    * @return
+    */
+   public String getMegaThresholdKey(Species species) {
+      String megaName = species.getMegaName();
+      if (megaName == null) {
+         return null;
+      } else {
+         return String.format(FORMAT_MEGA_THRESHOLD, megaName);
       }
    }
 }

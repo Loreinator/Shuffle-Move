@@ -97,7 +97,8 @@ public class SimulationCore extends RecursiveAction {
       megaAllowed = user.isMegaAllowed();
       RosterManager rosterManager = user.getRosterManager();
       SpeciesManager speciesManager = user.getSpeciesManager();
-      megaThreshold = userTeam.getMegaThreshold(speciesManager, rosterManager);
+      effectManager = new EffectManager(user.getEffectManager());
+      megaThreshold = userTeam.getMegaThreshold(speciesManager, rosterManager, effectManager);
       remainingHealth = user.getRemainingHealth();
       remainingMoves = user.getRemainingMoves() - 1;
       possibleBlocks = new HashSet<Species>();
@@ -115,7 +116,6 @@ public class SimulationCore extends RecursiveAction {
       disabledEffects = user.getDisabledEffects();
       attackPowerUp = user.getAttackPowerUp();
       effectThreshold = user.getEffectThreshold();
-      effectManager = new EffectManager(user.getEffectManager());
       defaultGradingMode = user.getGradingModeManager().getDefaultGradingMode();
    }
    

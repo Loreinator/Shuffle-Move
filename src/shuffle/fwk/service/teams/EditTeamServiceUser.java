@@ -19,6 +19,7 @@
 package shuffle.fwk.service.teams;
 
 import shuffle.fwk.config.manager.TeamManager;
+import shuffle.fwk.config.provider.EffectManagerProvider;
 import shuffle.fwk.config.provider.ImageManagerProvider;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
@@ -32,7 +33,7 @@ import shuffle.fwk.gui.user.StageIndicatorUser;
  *
  */
 public interface EditTeamServiceUser extends ImageManagerProvider, RosterManagerProvider, SpeciesManagerProvider,
-      TeamManagerProvider, StageIndicatorUser, PreferencesManagerProvider, MegaProgressUser {
+      TeamManagerProvider, StageIndicatorUser, PreferencesManagerProvider, MegaProgressUser, EffectManagerProvider {
    
    void loadFromTeamManager(TeamManager manager);
 }
