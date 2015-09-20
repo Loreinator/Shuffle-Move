@@ -23,10 +23,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.sun.istack.internal.NotNull;
 
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.i18n.I18nUser;
@@ -38,39 +40,71 @@ import shuffle.fwk.i18n.I18nUser;
 public class GradingMode implements I18nUser {
    
    private static final List<String> DESC_KEYS = Arrays.asList("GOLD", "SCORE", "COMBOS", "DISRUPTIONS", "BLOCKS",
-         "PROGRESS", "MOVE", "NOCOIN");
-   private static final List<BiFunction<SimulationResult, SimulationResult, Integer>> DESC_COMP = Arrays.asList(
-         getGoldCompare(), getScoreCompare(), getCombosCompare(), getDisruptionsCompare(), getBlocksCompare(),
-         getProgressCompare(), getMoveCompare(), getNoCoinCompare());
-   private static final Pattern DESC_KEY_PATTERN = Pattern.compile("^([+-]?)([A-Z]+)");
+         "PROGRESS", "MOVE", "NOCOIN", "GOLD_THRESHOLD", "COMBOS_THRESHOLD");
+   private static final List<Function<String, BiFunction<SimulationResult, SimulationResult, Integer>>> DESC_COMP = Arrays
+         .asList((a) -> getGoldCompare(a), (a) -> getScoreCompare(a), (a) -> getCombosCompare(a),
+               (a) -> getDisruptionsCompare(a), (a) -> getBlocksCompare(a), (a) -> getProgressCompare(a),
+               (a) -> getMoveCompare(a), (a) -> getNoCoinCompare(a), (a) -> getThresholdGold(a),
+               (a) -> getThresholdCombos(a));
+   private static final String DEFAULT_DESC = "GOLD,SCORE,COMBOS,DISRUPTIONS,BLOCKS,PROGRESS,MOVE";
+   private static final Pattern DESC_KEY_PATTERN = Pattern.compile("^([+-]?)([\\d]*)([A-Z_]+)$");
    
-   protected static BiFunction<SimulationResult, SimulationResult, Integer> getScoreCompare() {
-      return (arg0, arg1) -> Double.compare(arg1.getNetScore().getAverage(), arg0.getNetScore().getAverage());
+   public static int getThreshold(String args, int def) {
+      final int threshold;
+      if (args != null && !args.isEmpty() && args.matches("^[\\d]+$")) {
+         threshold = Integer.parseInt(args);
+      } else {
+         threshold = def;
+      }
+      return threshold;
    }
    
-   protected static BiFunction<SimulationResult, SimulationResult, Integer> getGoldCompare() {
-      return (arg0, arg1) -> Double.compare(arg1.getNetGold().getAverage(), arg0.getNetGold().getAverage());
+   protected static final BiFunction<SimulationResult, SimulationResult, Integer> getConditionalCompare(
+         String thresholdArg, Function<SimulationResult, Double> mapper) {
+      final int threshold = getThreshold(thresholdArg, 0);
+      return (arg0, arg1) -> {
+         @NotNull
+         Double val0 = mapper.apply(arg0);
+         @NotNull
+         Double val1 = mapper.apply(arg1);
+         if (val0 >= threshold && val1 >= threshold) {
+            return Double.compare(val1, val0);
+         } else if (val0 >= threshold && val1 < threshold) {
+            return -1;
+         } else if (val0 < threshold && val1 >= threshold) {
+            return 1;
+         } else {
+            return 0;
+         }
+      };
    }
    
-   protected static BiFunction<SimulationResult, SimulationResult, Integer> getCombosCompare() {
-      return (arg0, arg1) -> Double.compare(arg1.getCombosCleared().getAverage(), arg0.getCombosCleared().getAverage());
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getScoreCompare(String args) {
+      return getConditionalCompare(args, (r) -> r.getNetScore().getAverage());
    }
    
-   protected static BiFunction<SimulationResult, SimulationResult, Integer> getBlocksCompare() {
-      return (arg0, arg1) -> Double.compare(arg1.getBlocksCleared().getAverage(), arg0.getBlocksCleared().getAverage());
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getGoldCompare(String args) {
+      return getConditionalCompare(args, (r) -> r.getNetGold().getAverage());
    }
    
-   protected static BiFunction<SimulationResult, SimulationResult, Integer> getDisruptionsCompare() {
-      return (arg0, arg1) -> Double.compare(arg1.getDisruptionsCleared().getAverage(),
-            arg0.getDisruptionsCleared().getAverage());
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getCombosCompare(String args) {
+      return getConditionalCompare(args, (r) -> r.getCombosCleared().getAverage());
    }
    
-   protected static BiFunction<SimulationResult, SimulationResult, Integer> getProgressCompare() {
-      return (arg0, arg1) -> Double.compare(arg1.getProgress().getAverage(), arg0.getProgress().getAverage());
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getBlocksCompare(String args) {
+      return getConditionalCompare(args, (r) -> r.getBlocksCleared().getAverage());
+   }
+   
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getDisruptionsCompare(String args) {
+      return getConditionalCompare(args, (r) -> r.getDisruptionsCleared().getAverage());
+   }
+   
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getProgressCompare(String args) {
+      return getConditionalCompare(args, (r) -> r.getProgress().getAverage());
    }
    
    // Sorts by coordinate
-   protected static BiFunction<SimulationResult, SimulationResult, Integer> getMoveCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getMoveCompare(String args) {
       return (arg0, arg1) -> {
          List<Integer> move0 = arg0.getMove();
          List<Integer> move1 = arg1.getMove();
@@ -94,7 +128,7 @@ public class GradingMode implements I18nUser {
    }
    
    // Special - sorts by gold priority - avoid it or have lots of it.
-   protected static BiFunction<SimulationResult, SimulationResult, Integer> getNoCoinCompare() {
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getNoCoinCompare(String args) {
       return (arg0, arg1) -> {
          double gold0 = arg0.getNetGold().doubleValue();
          double gold1 = arg1.getNetGold().doubleValue();
@@ -107,32 +141,58 @@ public class GradingMode implements I18nUser {
       };
    }
    
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getThresholdGold(String args) {
+      final int threshold = getThreshold(args, 0);
+      return (arg0, arg1) -> {
+         double gold0 = arg0.getNetGold().doubleValue();
+         double gold1 = arg1.getNetGold().doubleValue();
+         if (gold0 >= threshold && gold1 < threshold) {
+            return -1;
+         } else if (gold0 < threshold && gold1 >= threshold) {
+            return 1;
+         } else {
+            return 0;
+         }
+      };
+   }
+   
+   protected static BiFunction<SimulationResult, SimulationResult, Integer> getThresholdCombos(String args) {
+      final int threshold = getThreshold(args, 0);
+      return (arg0, arg1) -> {
+         int cmb0 = (int) arg0.getCombosCleared().getMinimum();
+         int cmb1 = (int) arg1.getCombosCleared().getMinimum();
+         if (cmb0 >= threshold && cmb1 < threshold) {
+            return -1;
+         } else if (cmb0 < threshold && cmb1 >= threshold) {
+            return 1;
+         } else {
+            return 0;
+         }
+      };
+   }
+   
    public static Comparator<SimulationResult> getGradingMetric(String description) {
       if (description == null) {
          description = "";
       }
+      description = description + "," + DEFAULT_DESC;
       String[] tokens = description.split("[,\\s]");
-      TreeSet<String> used = new TreeSet<String>();
       List<BiFunction<SimulationResult, SimulationResult, Integer>> comparrators = new ArrayList<BiFunction<SimulationResult, SimulationResult, Integer>>();
       for (String token : tokens) {
          Matcher m = DESC_KEY_PATTERN.matcher(token);
          if (m.find()) {
-            String metric = m.group(2);
+            String metric = m.group(3);
             if (DESC_KEYS.contains(metric)) {
                int index = DESC_KEYS.indexOf(metric);
-               BiFunction<SimulationResult, SimulationResult, Integer> func = DESC_COMP.get(index);
-               if (m.group(1).equals("-")) {
+               String comparatorArg = m.group(2);
+               BiFunction<SimulationResult, SimulationResult, Integer> func = DESC_COMP.get(index).apply(comparatorArg);
+               String argSign = m.group(1);
+               if (argSign.equals("-")) {
                   // Reverses the ordering
                   func = func.andThen((value) -> value * (-1));
                }
                comparrators.add(func);
             }
-         }
-      }
-      for (int i = 0; i < DESC_KEYS.size(); i++) {
-         String key = DESC_KEYS.get(i);
-         if (!used.contains(key)) {
-            comparrators.add(DESC_COMP.get(i));
          }
       }
       return new Comparator<SimulationResult>() {
