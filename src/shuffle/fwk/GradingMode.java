@@ -28,8 +28,6 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.istack.internal.NotNull;
-
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.i18n.I18nUser;
 
@@ -63,9 +61,7 @@ public class GradingMode implements I18nUser {
          String thresholdArg, Function<SimulationResult, Double> mapper) {
       final int threshold = getThreshold(thresholdArg, 0);
       return (arg0, arg1) -> {
-         @NotNull
          Double val0 = mapper.apply(arg0);
-         @NotNull
          Double val1 = mapper.apply(arg1);
          if (val0 >= threshold && val1 >= threshold) {
             return Double.compare(val1, val0);
