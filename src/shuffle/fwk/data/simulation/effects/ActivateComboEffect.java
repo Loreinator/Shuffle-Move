@@ -65,7 +65,12 @@ public class ActivateComboEffect extends ComboEffect {
             task.removeCollisions(getCoords());
          }
       }
-      effect.handleCombo(this, task);
+      if (isAllFrozen(task)) {
+         task.removeActive(this);
+         task.unfreezeAt(getCoords());
+      } else {
+         effect.handleCombo(this, task);
+      }
    }
    
    private boolean isClaimedIn(SimulationTask task) {

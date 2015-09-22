@@ -104,6 +104,21 @@ public abstract class ComboEffect implements SimulationEffect {
       return toCombo.size() / 2;
    }
    
+   /**
+    * Checks if the combo is entirely frozen.
+    * 
+    * @return True if so, False if not
+    */
+   public boolean isAllFrozen(SimulationTask task) {
+      boolean allFrozen = !getCoords().isEmpty();
+      for (int i = 0; i * 2 + 1 < getCoords().size(); i++) {
+         int row = getCoords().get(i * 2);
+         int col = getCoords().get(i * 2 + 1);
+         allFrozen &= task.getState().getBoard().isFrozenAt(row, col);
+      }
+      return allFrozen;
+   }
+   
    @Override
    public String toString() {
       StringBuilder sb = new StringBuilder();
