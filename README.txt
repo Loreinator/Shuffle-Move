@@ -36,7 +36,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ~~ Changelog ~~
 v0.3.31 - 2015-09-
-	- 
+	- Fixed a double-activation bug regarding fully frozen combos
 v0.3.30 - 2015-09-18
 	- Configurable Grading Modes
 	- New Stages, Species, and Default Boards added for Pokemon Shuffle's 1.2.17 update
