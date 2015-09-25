@@ -163,9 +163,11 @@ public class ImageManager extends ConfigManager implements I18nUser {
          getIconMap().remove(key);
          String resource = getResourceValue(key);
          InputStream is = getResourceInputStream(resource);
-         BufferedImage img = getBufferedImage(is, resource);
-         if (img != null) {
-            imageLoadingMap.put(key, img);
+         if (is != null) {
+            BufferedImage img = getBufferedImage(is, resource);
+            if (img != null) {
+               imageLoadingMap.put(key, img);
+            }
          }
       }
       // Checks user-defined files
