@@ -1245,7 +1245,7 @@ public enum Effect {
             ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
             int col1 = 1 + getRandomInt(6); // [1,6]
             int col2 = 1 + getRandomInt(5); // [1,5]
-            if (col2 <= col1) {
+            if (col2 >= col1) {
                col2++; // offset for map of [1,5] around the choice for col1
             }
             // First step
@@ -2366,6 +2366,89 @@ public enum Effect {
       @Override
       public int getValueLimit() {
          return SABLEYE.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
+    * A random lightning strike erases a jagged line of blocks horizontally. This line is produced
+    * by independently tracking two ignorant strikes which begin at the left column, and each tick
+    * progress right one and activate them for clearing, in sequence. The one to the right must be
+    * one of the three. They can overlap strikes. The damage bonus is 1/6th of base for each
+    * additional block (if strike only clears 11 then this is 11/6 bonus power).
+    */
+   LATIAS {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return 10;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            // No matter what, this will always be inherently random.
+            task.setIsRandom();
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            int row1 = 1 + getRandomInt(6); // [1,6]
+            int row2 = 1 + getRandomInt(5); // [1,5]
+            if (row2 >= row1) {
+               row2++; // offset for map of [1,5] around the choice for col1
+            }
+            // First step
+            effect.addPlannedOptions(Arrays.asList(row1, 1, row2, 1));
+            for (int col = 2; col <= Board.NUM_COLS; col++) {
+               row1 = getNextRow(row1);
+               row2 = getNextRow(row2);
+               effect.addPlannedOptions(Arrays.asList(row1, col, row2, col));
+            }
+            return effect;
+         }
+      }
+      
+      /**
+       * @param row
+       * @return
+       */
+      private int getNextRow(int row) {
+         int ret = row;
+         if (ret <= 1) {
+            ret += getRandomInt(3) == 0 ? 1 : 0;
+            // 2/3 chance of staying in the same row, 1/3 chance of changing
+         } else if (ret >= 6) {
+            ret -= getRandomInt(3) == 0 ? 1 : 0;
+            // same as above
+         } else {
+            ret += getRandomInt(3) - 1;
+            // 1/3 chance of moving up, staying the same, or moving down
+         }
+         return ret;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getNextPlan(comboEffect);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 12;
       }
       
       @Override
