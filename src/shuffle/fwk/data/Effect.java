@@ -1136,15 +1136,6 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 15;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 3;
-      }
    },
    /**
     * Erases out blocks within two spaces of all pokemon in the chain and uses them to make one
@@ -1180,16 +1171,6 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 19;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 4;
       }
       
    },
@@ -1234,16 +1215,6 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 12;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 3;
-      }
-      
    },
    /**
     * A random lightning strike erases a jagged line of blocks. This line is produced by
@@ -1274,7 +1245,7 @@ public enum Effect {
             ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
             int col1 = 1 + getRandomInt(6); // [1,6]
             int col2 = 1 + getRandomInt(5); // [1,5]
-            if (col2 <= col1) {
+            if (col2 >= col1) {
                col2++; // offset for map of [1,5] around the choice for col1
             }
             // First step
@@ -1326,16 +1297,6 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 24;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 7;
       }
       
    },
@@ -1394,16 +1355,6 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 22;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 6;
       }
       
    },
@@ -1469,16 +1420,6 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 16;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 8;
       }
       
    },
@@ -1560,15 +1501,6 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 16;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 8;
-      }
    },
    /**
     * Erases all Pokemon in a O-shaped pattern. There are exactly 12 blocks in this pattern. Score
@@ -1633,16 +1565,6 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 22;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 8;
-      }
-      
    },
    /**
     * Same as {@link #LOPUNNY}
@@ -1677,16 +1599,6 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 14;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 4;
       }
       
    },
@@ -1807,16 +1719,6 @@ public enum Effect {
          return 18;
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 18;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 2;
-      }
-      
    },
    /**
     * Add one more mega sharpedo above the match. This is only available for matching up on the next
@@ -1847,16 +1749,6 @@ public enum Effect {
       @Override
       public int getValueLimit() {
          return 18;
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 22;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 10;
       }
       
    },
@@ -1978,16 +1870,6 @@ public enum Effect {
          return 18;
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 21;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 6;
-      }
-      
    },
    /**
     * Replace 3 random fire types with Blaziken. Only one species is selected at a time.
@@ -2070,16 +1952,6 @@ public enum Effect {
          return 33;
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 12;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 3;
-      }
-      
    },
    /**
     * Erases diagonal Pokemon from upper right to lower left corner. Blocks 3,5,7 in the 1-9 blocks
@@ -2127,16 +1999,6 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 21;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 7;
       }
       
    },
@@ -2188,16 +2050,6 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 23;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 10;
-      }
-      
    },
    /**
     * Each 1 tick when this tries to begin its own clearing (its fully activated) this will erase
@@ -2231,16 +2083,6 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 11;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 1;
       }
       
    },
@@ -2291,16 +2133,6 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 19;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 6;
-      }
-      
    },
    /**
     * Erases rocks and blocks (max 10), increasing by 1/6 for each additional block, same chosen
@@ -2333,16 +2165,6 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(50 * typeModifier);
-      }
-      
-      @Override
-      public int getMegaThreshold() {
-         return 23;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 7;
       }
       
    },
@@ -2403,15 +2225,6 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 23;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 5;
-      }
    },
    /**
     * Same as {@link #MEWTWO}.
@@ -2448,15 +2261,6 @@ public enum Effect {
          return MEWTWO.getBonusScoreFor(basicScore, value, typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 27;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 8;
-      }
    },
    /**
     * A random lightning strike erases a jagged line of blocks. This line is produced by
@@ -2521,16 +2325,6 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
-      @Override
-      public int getMegaThreshold() {
-         return 20;
-      }
-      
-      @Override
-      public int getMegaSpeedupCap() {
-         return 7;
-      }
-      
    },
    /**
     * Charizard Y: <br>
@@ -2579,15 +2373,89 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
+   },
+   /**
+    * A random lightning strike erases a jagged line of blocks horizontally. This line is produced
+    * by independently tracking two ignorant strikes which begin at the left column, and each tick
+    * progress right one and activate them for clearing, in sequence. The one to the right must be
+    * one of the three. They can overlap strikes. The damage bonus is 1/6th of base for each
+    * additional block (if strike only clears 11 then this is 11/6 bonus power).
+    */
+   LATIAS {
+      
       @Override
-      public int getMegaThreshold() {
-         return 16;
+      public boolean isPersistent() {
+         return true;
       }
       
       @Override
-      public int getMegaSpeedupCap() {
-         return 3;
+      public int getEffectRepeatDelay() {
+         return 10;
       }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            // No matter what, this will always be inherently random.
+            task.setIsRandom();
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            int row1 = 1 + getRandomInt(6); // [1,6]
+            int row2 = 1 + getRandomInt(5); // [1,5]
+            if (row2 >= row1) {
+               row2++; // offset for map of [1,5] around the choice for col1
+            }
+            // First step
+            effect.addPlannedOptions(Arrays.asList(row1, 1, row2, 1));
+            for (int col = 2; col <= Board.NUM_COLS; col++) {
+               row1 = getNextRow(row1);
+               row2 = getNextRow(row2);
+               effect.addPlannedOptions(Arrays.asList(row1, col, row2, col));
+            }
+            return effect;
+         }
+      }
+      
+      /**
+       * @param row
+       * @return
+       */
+      private int getNextRow(int row) {
+         int ret = row;
+         if (ret <= 1) {
+            ret += getRandomInt(3) == 0 ? 1 : 0;
+            // 2/3 chance of staying in the same row, 1/3 chance of changing
+         } else if (ret >= 6) {
+            ret -= getRandomInt(3) == 0 ? 1 : 0;
+            // same as above
+         } else {
+            ret += getRandomInt(3) - 1;
+            // 1/3 chance of moving up, staying the same, or moving down
+         }
+         return ret;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getNextPlan(comboEffect);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 12;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
    },
    /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
@@ -3071,17 +2939,6 @@ public enum Effect {
    
    public boolean isDisruption() {
       return !canLevel() && !equals(AIR);
-   }
-   
-   /**
-    * @return
-    */
-   public int getMegaThreshold() {
-      return Integer.MAX_VALUE;
-   }
-   
-   public int getMegaSpeedupCap() {
-      return 0;
    }
    
    protected double getOdds(SimulationTask task, int num) {

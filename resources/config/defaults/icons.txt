@@ -747,6 +747,7 @@ RESOURCE Mega_Mawile img/icons/303-m.png
 RESOURCE Mega_Aggron img/icons/306-m.png
 RESOURCE Mega_Medicham img/icons/308-m.png
 RESOURCE Mega_Manectric img/icons/310-m.png
+RESOURCE Mega_Sharpedo img/icons/319-m.png
 RESOURCE Mega_Camerupt img/icons/323-m.png
 RESOURCE Mega_Altaria img/icons/334-m.png
 RESOURCE Mega_Banette img/icons/354-m.png

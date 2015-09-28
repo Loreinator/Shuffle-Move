@@ -1,4 +1,4 @@
-Shuffle Move v0.3.30
+Shuffle Move v0.3.31
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -35,6 +35,12 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.31 - 2015-09-28
+	- New Stage and Species added for Pokemon Shuffle's 1.2.18 update (Latias)
+	- Added the Latias Mega Effect
+	- Fixed a double-activation bug regarding fully frozen combos
+	- Changed the wiki link for the help doc included in the program to the github wiki instead
+	- Improved the help document regarding recent changes
 v0.3.30 - 2015-09-18
 	- Configurable Grading Modes
 	- New Stages, Species, and Default Boards added for Pokemon Shuffle's 1.2.17 update

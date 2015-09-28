@@ -21,6 +21,7 @@ package shuffle.fwk.data;
 import java.util.List;
 import java.util.function.Function;
 
+import shuffle.fwk.config.manager.EffectManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 
@@ -124,7 +125,8 @@ public interface Team {
     * Gets the threshold for mega evolution given a SpeciesManager to look up the mega slot's
     * species.
     */
-   public abstract int getMegaThreshold(SpeciesManager manager, RosterManager roster);
+   public abstract int getMegaThreshold(SpeciesManager speciesManager, RosterManager rosterManager,
+         EffectManager effectManager);
    
    /**
     * Gets the current Mega slot name (non-mega form name). If null then there is no species

@@ -63,7 +63,7 @@ import shuffle.fwk.i18n.I18nUser;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
 @SuppressWarnings("serial")
 public class PaintPalletPanel extends JPanel implements I18nUser {
@@ -163,7 +163,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       
       healthLabel = new JLabel(getString(KEY_HEALTH, getUser().getRemainingHealth()));
       optionPanel.add(healthLabel);
-
+      
       movesLabel = new JLabel(getString(KEY_MOVES));
       movesLeft = new JComboBox<Integer>();
       JPanel movesPanel = new JPanel(new BorderLayout());
@@ -174,7 +174,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       enableAttackPowerUpBox = new JCheckBox(getString(KEY_ATTACK_POWERUP));
       enableAttackPowerUpBox.setSelected(getUser().getAttackPowerUp());
       optionPanel.add(enableAttackPowerUpBox);
-
+      
       GridBagConstraints c = new GridBagConstraints();
       c.weightx = 0.0;
       c.weighty = 1.0;
@@ -230,8 +230,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
             @Override
             public void itemStateChanged(ItemEvent e) {
                Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());
-               int megaThreshold = curTeam
-                     .getMegaThreshold(getUser().getSpeciesManager(), getUser().getRosterManager());
+               int megaThreshold = curTeam.getMegaThreshold(getUser().getSpeciesManager(), getUser().getRosterManager(),
+                     getUser().getEffectManager());
                getUser().setMegaProgress(megaActive.isSelected() ? megaThreshold : 0);
             }
          };
@@ -450,7 +450,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       SpeciesManager speciesManager = getUser().getSpeciesManager();
       String megaSlotName = curTeam.getMegaSlotName();
       Species megaSpecies = megaSlotName == null ? null : speciesManager.getSpeciesValue(megaSlotName);
-      int megaThreshold = curTeam.getMegaThreshold(speciesManager, getUser().getRosterManager());
+      int megaThreshold = curTeam.getMegaThreshold(speciesManager, getUser().getRosterManager(),
+            getUser().getEffectManager());
       if (megaSpecies == null || megaSpecies.getMegaName() == null || megaThreshold == Integer.MAX_VALUE) {
          // remove their states
          megaProgress.removeAllItems();
@@ -491,7 +492,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       movesLeft.setSelectedItem(getUser().getRemainingMoves());
       
       enableAttackPowerUpBox.setSelected(getUser().getAttackPowerUp());
-
+      
       addOptionListeners();
    }
    
