@@ -35,7 +35,7 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.31 - 2015-09-
+v0.3.31 - 2015-09-28
 	- New Stage and Species added for Pokemon Shuffle's 1.2.18 update (Latias)
 	- Added the Latias Mega Effect
 	- Fixed a double-activation bug regarding fully frozen combos
