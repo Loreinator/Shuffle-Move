@@ -1,4 +1,4 @@
-Shuffle Move v0.3.32
+Shuffle Move v0.3.33
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -35,6 +35,8 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.33 - 2015-10-
+	- 
 v0.3.32 - 2015-09-29
 	- Unfreezing blocks no longer causes a wood shatter, unless it is a mega block
 v0.3.31 - 2015-09-28
