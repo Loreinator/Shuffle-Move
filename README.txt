@@ -35,8 +35,8 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.32 - 2015-
-	- 
+v0.3.32 - 2015-09-29
+	- Unfreezing blocks no longer causes a wood shatter, unless it is a mega block
 v0.3.31 - 2015-09-28
 	- New Stage and Species added for Pokemon Shuffle's 1.2.18 update (Latias)
 	- Added the Latias Mega Effect
