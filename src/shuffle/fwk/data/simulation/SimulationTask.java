@@ -908,13 +908,17 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       List<Integer> coords = comboEffect.getCoords();
       
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
-         for (int k = 0; k * 2 + 1 < nearby.length; k++) {
-            int row = coords.get(i * 2) + nearby[k * 2];
-            int col = coords.get(i * 2 + 1) + nearby[k * 2 + 1];
-            if (!isClaimed(row, col) && !isFalling(row, col)) {
-               Species neighbour = b.getSpeciesAt(row, col);
-               if (neighbour.getEffect().equals(Effect.WOOD)) {
-                  woodCoords.add(Arrays.asList(row, col));
+         int myrow = coords.get(i * 2);
+         int mycol = coords.get(i * 2 + 1);
+         if (comboEffect instanceof ActivateMegaComboEffect || !b.isFrozenAt(myrow, mycol)) {
+            for (int k = 0; k * 2 + 1 < nearby.length; k++) {
+               int row = myrow + nearby[k * 2];
+               int col = mycol + nearby[k * 2 + 1];
+               if (!isClaimed(row, col) && !isFalling(row, col)) {
+                  Species neighbour = b.getSpeciesAt(row, col);
+                  if (neighbour.getEffect().equals(Effect.WOOD)) {
+                     woodCoords.add(Arrays.asList(row, col));
+                  }
                }
             }
          }
@@ -1055,14 +1059,15 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       handleMegaIncreases(coords);
       addScore(scoreToAdd);
       
-      EraseComboEffect erasureEffect = new EraseComboEffect(coords);
-      erasureEffect.setForceErase(comboEffect instanceof ActivateMegaComboEffect);
-      scheduleEffect(erasureEffect, effect.getErasureDelay());
-      
       EraseComboEffect woodShatter = getWoodShatterEffect(comboEffect);
       if (woodShatter != null) {
          scheduleEffect(woodShatter, Effect.WOOD.getErasureDelay());
       }
+      
+      EraseComboEffect erasureEffect = new EraseComboEffect(coords);
+      erasureEffect.setForceErase(comboEffect instanceof ActivateMegaComboEffect);
+      scheduleEffect(erasureEffect, effect.getErasureDelay());
+      
       if (logFiner) {
          logFinerWithId("Number of total blocks cleared is now: %s", getState().getBlocksCleared());
       }

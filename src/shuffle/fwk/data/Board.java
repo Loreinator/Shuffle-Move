@@ -218,12 +218,12 @@ public class Board {
          sb.append("\n");
          for (int i = 1; i <= NUM_ROWS; i++) {
             for (int j = 1; j <= NUM_COLS; j++) {
-               sb.append(Boolean.toString(isFrozenAt(i + 1, j + 1)));
-               if (j <= NUM_COLS - 1) {
+               sb.append(Boolean.toString(isFrozenAt(i, j)));
+               if (j < NUM_COLS) {
                   sb.append(",");
                }
             }
-            if (i <= NUM_ROWS - 1) {
+            if (i < NUM_ROWS) {
                sb.append("\n");
             }
          }
