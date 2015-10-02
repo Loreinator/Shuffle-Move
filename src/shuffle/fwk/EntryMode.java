@@ -151,9 +151,10 @@ public enum EntryMode {
    /**
     * Handles the specified KeyEvent, as specified by {@link java.awt.event.KeyEvent}
     * 
-    * @param view
-    *           The ShuffleView to use.
-    * @param keyEvent
+    * @param user
+    *           The EntryModeUser to use.
+    * @param evt
+    *           The KeyEvent to handle
     * @return true if this changed anything
     */
    public abstract void handleKeyPress(EntryModeUser user, KeyEvent evt);
@@ -161,15 +162,14 @@ public enum EntryMode {
    /**
     * Handles the specified grid paint action, by row and column.
     * 
-    * @param view
-    *           The ShuffleView to use.
+    * @param user
+    *           The EntryModeUser to use.
     * @param row
     *           an int within [1, 6]
     * @param col
     *           an int within [1, 6]
     * @param isErase
     *           if true, this will try to erase the specified coordinate. Otherwise ignored.
-    * @return true if this changed anything.
     */
    public abstract void handleGridEvent(EntryModeUser user, int row, int col, boolean isErase);
    

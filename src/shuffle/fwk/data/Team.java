@@ -51,8 +51,8 @@ public interface Team {
     * 
     * @param binding
     *           The character binding
-    * @param manager
-    *           The SpeciesManager
+    * @param nameToSpecies
+    *           A function that converts between a species name to a species object
     * @return The Species, or {@link Species#AIR} if there is no such Species. Returns null if the
     *         SpeciesManager given is null.
     */
@@ -105,9 +105,9 @@ public interface Team {
     * Returns a List of all Species in this team, using the given manager for name to species
     * conversion.
     * 
-    * @param nameToSpecies
-    *           TODO
-    * 
+    * @param manager
+    *           The Species Manager
+    *           
     * @return A List of Species
     */
    public abstract List<Species> getSpecies(SpeciesManager manager);
