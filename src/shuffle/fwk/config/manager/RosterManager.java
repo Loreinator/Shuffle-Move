@@ -32,7 +32,7 @@ import shuffle.fwk.data.Species;
 
 /**
  * @author Andrew Meyers
- *
+ *         
  */
 public class RosterManager extends ConfigManager {
    
@@ -64,8 +64,7 @@ public class RosterManager extends ConfigManager {
    
    /**
     * @param species
-    * @param effect
-    * @return
+    * @return The Number of Speedups that the user has for a given species.
     */
    public int getMegaSpeedupsFor(Species species) {
       return getIntegerValue(getSpeedupsKey(species), 0);

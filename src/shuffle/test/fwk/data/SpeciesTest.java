@@ -62,7 +62,7 @@ public class SpeciesTest {
    
    /**
     * Test method for
-    * {@link shuffle.fwk.data.Species#Species(java.lang.String, int, shuffle.fwk.data.PkmType, shuffle.fwk.data.Effect, java.lang.String)}
+    * {@link shuffle.fwk.data.Species#Species(String, Integer, int, PkmType, Effect, String, Effect)}
     * .
     */
    @Test

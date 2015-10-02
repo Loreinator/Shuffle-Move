@@ -135,8 +135,9 @@ public class EffectManager extends ConfigManager {
    }
    
    /**
-    * @param effect
-    * @return
+    * @param species
+    *           The Species to obtain the mega speedups key for.
+    * @return The mega speedups key
     */
    public String getMegaSpeedupKey(Species species) {
       String megaName = species.getMegaName();
@@ -148,8 +149,9 @@ public class EffectManager extends ConfigManager {
    }
    
    /**
-    * @param effect
-    * @return
+    * @param species
+    *           The Species to obtain the mega threshold key for.
+    * @return The mega threshold key
     */
    public String getMegaThresholdKey(Species species) {
       String megaName = species.getMegaName();

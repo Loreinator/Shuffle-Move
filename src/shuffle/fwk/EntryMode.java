@@ -155,7 +155,6 @@ public enum EntryMode {
     *           The EntryModeUser to use.
     * @param evt
     *           The KeyEvent to handle
-    * @return true if this changed anything
     */
    public abstract void handleKeyPress(EntryModeUser user, KeyEvent evt);
    

@@ -185,8 +185,8 @@ public class UpdateCheck implements I18nUser {
    }
 
    /**
-    * @param newestVersion
     * @param file
+    *           The file to show the folder of.
     */
    public void showParentOf(File file) {
       Desktop d = Desktop.getDesktop();

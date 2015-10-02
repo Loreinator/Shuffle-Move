@@ -279,7 +279,8 @@ public class TeamManager extends ConfigManager {
    /**
     * Lists all bindings possible by order of occurrence, then by
     * 
-    * @param s
+    * @param name
+    *           The name of the species to check bindings for.
     * @return An ordered list without duplicates, by descending rate of occurrence.
     */
    public LinkedHashSet<Character> getAllBindingsFor(String name) {
