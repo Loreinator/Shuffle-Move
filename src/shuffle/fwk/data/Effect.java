@@ -1452,7 +1452,22 @@ public enum Effect {
       
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getNextPlan(comboEffect);
+         List<Integer> plan = getNextPlan(comboEffect);
+         List<Integer> ret = null;
+         if (plan != null) {
+            ret = new ArrayList<Integer>();
+            // Only erase inactive blocks.
+            // we will still take a turn if the plans is empty or
+            // there was no inactive block
+            for (int i = 0; i * 2 + 1 < plan.size(); i++) {
+               int row = plan.get(i * 2);
+               int col = plan.get(i * 2 + 1);
+               if (!task.getState().isFallingAt(row, col)) {
+                  ret.addAll(Arrays.asList(row, col));
+               }
+            }
+         }
+         return ret;
       }
       
       @Override
