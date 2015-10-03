@@ -541,8 +541,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    }
    
    private void onApply() {
-      getUser().loadFromTeamManager(myData);
       getUser().setCurrentStage(getCurrentStage());
+      getUser().loadFromTeamManager(myData);
       getUser().setMegaProgress(megaProgress);
    }
    
