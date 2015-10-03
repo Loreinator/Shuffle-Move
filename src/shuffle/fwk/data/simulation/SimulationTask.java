@@ -682,7 +682,9 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    }
    
    /**
-    * @param coords
+    * Registers the given effect as 'claimed', i.e. about to match but not yet activated.
+    * 
+    * @param effect
     */
    public void addClaimFor(ActivateComboEffect effect) {
       List<Integer> coords = effect.getCoords();
@@ -984,7 +986,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     * 
     * @param combos
     *           The number of consecutive combos in a chain.
-    * @return 1 for any value of combos <= 1, otherwise see above reference.
+    * @return 1 for any value of combos &lt;= 1, otherwise see above reference.
     */
    public static double getComboMultiplier(int combos) {
       double comboMultiplier = COMBO_MULTIPLIER[0];
@@ -1118,8 +1120,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     * @param includeActive
     *           Should this include active tiles
     * @param function
-    *           The check for adding a result. (row, column, species) -> boolean value, if true then
-    *           include. reject otherwise.
+    *           The check for adding a result. (row, column, species) -&gt; boolean value, if true
+    *           then include. reject otherwise.
     * @return
     */
    public List<Integer> findMatches(int limit, boolean includeActive,

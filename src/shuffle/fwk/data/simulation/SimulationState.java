@@ -62,13 +62,16 @@ public class SimulationState {
     *           The Board, a copy is used.
     * @param weight
     *           The weight of this simulation
-    * @param progress
-    *           The progress towards a Mega Evolution
     * @param curScore
     *           The score up until now
+    * @param curGold
+    *           The gold up until now
     * @param originality
     *           The grid of booleans of [1, Board.NUM_ROWS]x[1,Board.NUM_COLS] dimensions defining
     *           the originality of each block (should it be included in the result board)
+    * @param chainPause
+    *           The last cumulative combo number when the chain paused due to the only thing
+    *           happening being a thawing action
     */
    public SimulationState(SimulationCore simCore, SimulationFeeder feeder, Board b, float weight, NumberSpan curScore,
          int curGold, boolean[][] originality, int chainPause) {
@@ -88,7 +91,7 @@ public class SimulationState {
    
    /**
     * Creates a new SimulationState using the given object's values, according to
-    * {@link #SimulationState(SimulationCore, SimulationFeeder, Board, float, int, int, boolean[][])}
+    * {@link #SimulationState(SimulationCore, SimulationFeeder, Board, float, NumberSpan, int, boolean[][], int)}
     * .
     * 
     * @param other
@@ -289,13 +292,12 @@ public class SimulationState {
    }
    
    /**
-    * Sets the given coordinates to the specified state of mid falling. If the state changed then
+    * Decreases the height of the falling blocks at the given coordinates. If the state changed then
     * this will return true. This will return false otherwise.
     * 
     * @param row
     * @param column
-    * @param fall
-    * @return
+    * @return True if anything changed, false if otherwise
     */
    public boolean decreaseFallAt(int row, int column) {
       boolean changed = isMidFallAt(row, column);

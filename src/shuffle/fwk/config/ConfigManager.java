@@ -263,11 +263,13 @@ public class ConfigManager {
    /**
     * Sets the value for the given key to the given newValue.
     * 
+    * @param type
+    *           The EntryType for this value
     * @param key
+    *           The key for this value
     * @param newValue
-    * @param index
-    *           TODO
-    * 
+    *           The actual value for this value
+    *           
     * @return True if anything changed. False otherwise.
     */
    public boolean setEntry(EntryType type, String key, ConfigEntry newValue) {

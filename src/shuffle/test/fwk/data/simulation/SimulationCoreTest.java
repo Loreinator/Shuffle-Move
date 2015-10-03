@@ -45,6 +45,7 @@ public class SimulationCoreTest {
 
    /**
     * @throws java.lang.Exception
+    *            If anything goes wrong, an exception is thrown.
     */
    @BeforeClass
    public static void setUpBeforeClass() throws Exception {

@@ -161,7 +161,8 @@ public class NumberSpan extends Number implements Cloneable, Comparable<NumberSp
    }
    
    /**
-    * @param effectSpecial
+    * @param num
+    *           The Number to multiply by.
     * @return
     */
    public NumberSpan multiplyBy(Number num) {

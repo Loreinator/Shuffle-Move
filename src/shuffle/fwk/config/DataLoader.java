@@ -48,7 +48,6 @@ public class DataLoader<Y> {
     *           TODO
     * @param files
     *           TODO
-    * @param fileLocations
     */
    public DataLoader(List<String> resources, List<String> files) {
       if (resources == null) {

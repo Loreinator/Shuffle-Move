@@ -54,7 +54,10 @@ public class ConfigLoader {
     * Default constructor. Include load locations to ensure proper functionality. Otherwise, this is
     * a useless object.
     * 
-    * @param loadLocations
+    * @param resourceLocations
+    *           Where to load from inside the Jars
+    * @param fileLocations
+    *           Where to load from and save to files.
     */
    public ConfigLoader(List<String> resourceLocations, List<String> fileLocations) {
       if (resourceLocations == null) {
@@ -185,8 +188,8 @@ public class ConfigLoader {
    /**
     * Merges entries from the secondary into the primary if there is no such key in the primary.
     * 
-    * @param myMap2
-    * @param parse
+    * @param primary
+    * @param secondary
     */
    public static void addMissingTo(LinkedHashMap<EntryType, LinkedHashMap<String, ConfigEntry>> primary,
          LinkedHashMap<EntryType, LinkedHashMap<String, ConfigEntry>> secondary) {

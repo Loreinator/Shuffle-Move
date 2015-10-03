@@ -132,8 +132,12 @@ public class ConfigFactory {
     * Gets an instance of ConfigManager which will load from the specified resources and files. The
     * manager may or may not save to the given files.
     * 
-    * @param reources
-    * @param files
+    * @param resourceKey
+    *           The key for the resource paths for the new manager
+    * @param fileKey
+    *           The key for the file paths for the new manager
+    * @param c
+    *           The class of the manager to create
     * @return The ConfigManager that matches the specified paths.
     */
    public <T extends ConfigManager> T getManager(String resourceKey, String fileKey, Class<T> c) {
