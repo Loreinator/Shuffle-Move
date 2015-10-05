@@ -35,8 +35,11 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.33 - 2015-10-
-	- 
+v0.3.33 - 2015-10-05
+	- Fixed a bug with the team editor's apply not working as intended
+	- Improved simulation accuracy when a mega would de-activate a combo
+	- Added stage and deault boards for Mega Absol and Palkia
+	- Adjusted the effect and species configurations for Absol and Palkia
 v0.3.32 - 2015-09-29
 	- Unfreezing blocks no longer causes a wood shatter, unless it is a mega block
 v0.3.31 - 2015-09-28
