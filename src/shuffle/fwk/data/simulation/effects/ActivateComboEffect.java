@@ -27,6 +27,9 @@ import shuffle.fwk.data.simulation.SimulationTask;
 
 public class ActivateComboEffect extends ComboEffect {
    
+   /**
+    * The number of combos activated before this one in the current chain.
+    */
    private Integer numClearedOnActivation = null;
    
    public ActivateComboEffect(ActivateComboEffect activateComboEffect) {

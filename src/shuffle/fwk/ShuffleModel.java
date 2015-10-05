@@ -163,9 +163,10 @@ public class ShuffleModel
    private Stack<UndoRedoItem> redoStack = new Stack<UndoRedoItem>();
    
    /**
-    * Creates a Shuffle model, bound to the given ShuffleController.
+    * Creates a Shuffle model, bound to the given ShuffleModelUser.
     * 
-    * @param shuffleController
+    * @param user
+    *           The user of this Shuffle Model
     */
    public ShuffleModel(ShuffleModelUser user) {
       this.user = user;
@@ -538,7 +539,7 @@ public class ShuffleModel
     * Gets the coordinates from the given position, as a List of two Integers.
     * 
     * @param pos
-    *           The position index within [1, {@link Boad#NUM_CELLS}].
+    *           The position index within [1, {@link Board#NUM_CELLS}].
     * @return Coordinates as a list of two Integers within [1, {@link Board#NUM_COLS}]x[1,
     *         {@link Board#NUM_ROWS}]
     */
@@ -681,7 +682,7 @@ public class ShuffleModel
    /**
     * Returns the list of current species paints.
     * 
-    * @return {@link List}&lt{@link SpeciesPaint}&gt which reflects the current frozen state and
+    * @return {@link List}&lt;{@link SpeciesPaint}&gt; which reflects the current frozen state and
     *         team.
     */
    public List<SpeciesPaint> getCurrentPaints() {

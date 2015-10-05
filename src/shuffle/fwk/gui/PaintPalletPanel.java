@@ -119,8 +119,13 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private SpeciesPaint prevPaint = null;
    
    /**
-    * @param user2
+    * Creates a Paint Pallet Panel for the given user with the width as adjusted by function.
+    * 
+    * @param user
+    *           The User for this Paint Pallet
     * @param function
+    *           A function that converts a dimension to one that represents the appropriate width
+    *           for this panel
     */
    public PaintPalletPanel(ShuffleFrameUser user, Function<Dimension, Dimension> function) {
       super(new GridBagLayout());

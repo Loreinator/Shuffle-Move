@@ -34,7 +34,8 @@ public class MakeActiveEffect extends ComboEffect {
    /**
     * Delays the inactivity for a set of blocks.
     * 
-    * @param combo
+    * @param metalBlocks
+    *           The blocks to keep active
     */
    public MakeActiveEffect(List<Integer> metalBlocks) {
       super(metalBlocks, false);

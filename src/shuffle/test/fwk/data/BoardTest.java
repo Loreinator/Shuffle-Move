@@ -163,7 +163,7 @@ public class BoardTest {
    }
    
    /**
-    * Test method for {@link shuffle.fwk.data.Board#setFrozenAt(int, int, boolean)}.
+    * Test method for {@link shuffle.fwk.data.Board#setFrozenAt(int, int, Boolean)}.
     */
    @Test
    public final void testSetFrozenAt() {
@@ -182,7 +182,7 @@ public class BoardTest {
    }
    
    /**
-    * Test method for {@link shuffle.fwk.data.Board#setAllFrozen(boolean)}.
+    * Test method for {@link shuffle.fwk.data.Board#setAllFrozen(Boolean)}.
     */
    @Test
    public final void testSetAllFrozen() {

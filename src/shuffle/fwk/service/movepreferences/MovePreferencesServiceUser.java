@@ -37,7 +37,8 @@ public interface MovePreferencesServiceUser {
    Collection<Effect> getDisabledEffects();
 
    /**
-    * @param movePreferencesService
+    * @param service
+    *           The MovePreferencesService to apply settings from.
     */
    void applyMovePreferences(MovePreferencesService service);
 
