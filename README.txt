@@ -39,16 +39,16 @@ v0.3.34 - 2015-10-
 	- TBD
 v0.3.33 - 2015-10-05
 	- Fixed a bug with the team editor's apply not working as intended
-	- Improved simulation accuracy when a mega would de-activate a combo
-	- Added stage and deault boards for Mega Absol and Palkia
+	- Improved simulation accuracy when a Mega would de-activate a combo
+	- Added stage and default boards for Mega Absol and Palkia
 	- Adjusted the effect and species configurations for Absol and Palkia
 v0.3.32 - 2015-09-29
-	- Unfreezing blocks no longer causes a wood shatter, unless it is a mega block
+	- Unfreezing blocks no longer causes a wood shatter, unless it is a Mega block
 v0.3.31 - 2015-09-28
 	- New Stage and Species added for Pokemon Shuffle's 1.2.18 update (Latias)
 	- Added the Latias Mega Effect
 	- Fixed a double-activation bug regarding fully frozen combos
-	- Changed the wiki link for the help doc included in the program to the github wiki instead
+	- Changed the wiki link for the help doc included in the program to the GitHub wiki instead
 	- Improved the help document regarding recent changes
 v0.3.30 - 2015-09-18
 	- Configurable Grading Modes
@@ -84,10 +84,10 @@ v0.3.26 - 2015-09-07
 	- Metal blocks now shatter wood when they expire
 	- The new Move Chooser table will now retain your custom column order
 	- Translations updated
-	- Matches that cause mega evolution no longer force-clear frozen tiles
+	- Matches that cause Mega evolution no longer force-clear frozen tiles
 	- Fixed a bug when filtering by name in the roster and team editors (now follows localized name)
 	- Lugia and Carnivine order has been fixed
-	- Temporary fix for the gui loading too large
+	- Temporary fix for the GUI loading too large
 	- Test case added to guarantee settle behavior
 v0.3.25 - 2015-09-04
 	- Massive performance gains (about 80-85% reduction in simulation time)
@@ -152,22 +152,22 @@ v0.3.16 - 2015-08-14
 	- Freezing delay is now included in the simulation (1 additional frame before releasing a block)
 	- Mega Garchomp's Effect is included in both configuration and the simulation
 v0.3.15 - 2015-08-08
-	- Fixed a serious bug that was present whenever you had no mega slot selected.
+	- Fixed a serious bug that was present whenever you had no Mega slot selected.
 	- Improved the build task script.
 v0.3.14 - 2015-08-06
 	- Changed working directory to user.home for all platforms
 	- Updated species and stages for the new content
 	- Now simulating Dragon Talon and Heavy Hitter appropriately
 	- Species configs will now update if they are out of date, automatically.
-	- Improved active mega handling for frozen tiles
+	- Improved active Mega handling for frozen tiles
 	- Improved the Migration service, it will temporarily remember where you were looking.
 v0.3.13 - 2015-07-29
-	- Blaziken's mega is now included
+	- Blaziken's Mega is now included
 	- Bug fixes
 	- Finnish translations updated
 v0.3.12 - 2015-07-23
 	- Species updated for new patch: Cresselia
-	- Including new stages: Cresselia, Blaziken, Wobbufet
+	- Including new stages: Cresselia, Blaziken, Wobbuffet
 	- New Effect added: BARRIER_BASH_P (Barrier Bash+)
 	- Barrier bash effect corrected
 	- Fixed a bug with the freezing toggle for paints
@@ -175,7 +175,7 @@ v0.3.12 - 2015-07-23
 	- Improved the occurrence of all effects according to http://pastebin.com/5uvZBN8S
 	- Place-holders for most remaining effects added, with the odds mentioned above.
 	- Crowd Control is now much more accurately scored, thanks to the research of /u/JustAnotherRandomLad
-	- Fixed an issue where an initial mega combo sometimes allowed a normal ability to also activate
+	- Fixed an issue where an initial Mega combo sometimes allowed a normal ability to also activate
 	- Fixed the attack bonus for AP 30 species as they level
 v0.3.11 - 2015-07-14
 	- Menu i18n keys updated
@@ -185,14 +185,14 @@ v0.3.10 - 2015-07-12
 	- New Grading mode: Rank by Coordinate
 	- Updated the built-in preferences.txt to include the CELL_BORDER_THICK_OUTER key (defines the from & to border thickness).
 	- Fixed Manectric's ability thanks to /u/screw_dog
-	- Fixed Ampharos's ability thanks to /u/screw_dog
+	- Fixed Ampharos' ability thanks to /u/screw_dog
 	- Fixed a bug with prospective combo traversal - now using a TreeSet instead of a PriorityQueue
 v0.3.9 - 2015-07-09
 	- Chinese translations added
 	- Fonts for interface elements will now use the java default font, but inherit the size and style as defined in your configurations
 	- Some display bugs fixed
 	- Separated line thickness for inner and outer cell borders
-	- Fixed the fine point about mega progress versus frozen states. The mega increase will only increase for comboed unfrozen blocks now.
+	- Fixed the fine point about Mega progress versus frozen states. The Mega increase will only increase for comboed unfrozen blocks now.
 	- Updated species and stages to include the new content
 	- Mega Manectric and Mega Heracross's abilities are now included
 	- Moves can be ranked by Mega Progress
@@ -200,7 +200,7 @@ v0.3.9 - 2015-07-09
 v0.3.8 - 2015-06-22
 	- Corrected Spiritomb's attack power
 	- Including missing feature from v0.3.5 (delete in express mode)
-	- Updated species list to include new species (Manaphy, phione, etc.)
+	- Updated species list to include new species (Manaphy, Phione, etc.)
 v0.3.7 - 2015-06-15
 	- Fixed bug with Dialga's ability
 v0.3.6 - 2015-06-15
@@ -248,7 +248,7 @@ v0.3.3 - 2015-05-30
 	- Ampharos bug fix for pattern of effect
 	- Simulation bug fix for score combo multipliers
 	- Effects now include:
-		- All megas, Power of 4, Power of 5, Opportunist,
+		- All Megas, Power of 4, Power of 5, Opportunist,
 		- Block Bash, Pummel, Burn, Pixie Power, Freeze,
 		- Pyre, Rock Break, Barrier Bash, Dancing Dragons,
 		- Sinister Power, Quake, Crowd Control, Counterattack,
@@ -264,7 +264,7 @@ v0.3.2 - 2015-05-24
 	- Move chooser dialog
 	- Migration service
 	- Many interface components are customizable though configurations.
-	- Bug fixes for mega lucario, etc.
+	- Bug fixes for Mega Lucario, etc.
 	- Settle feature returns
 	- fix bug with the order of keybinds in the team editor
 	- added rock break and block bash
@@ -276,22 +276,22 @@ v0.3.0 - 2015-05-18
 	- Smoother user experience overall
 	- Update checker improvements
 	- Simulation redesign to account for 1/120ths of a second resolution
-	- All megas re-implemented to completely account for their actual effects
+	- All Megas re-implemented to completely account for their actual effects
 	- Feeders added for the simulation (randomly generates blocks to fall into the board)
-	- Multithreading support for simulation (multicore cpus will experience a performance advantge for the simulation)
+	- Multithreading support for simulation (multicore CPUs will experience a performance advantage for the simulation)
 	- Teams are stage based
 	- In-program help and about documentation
 	- etc... the list goes on
 v0.2.5 - 2015-04-20
 	- Bug fix for renaming blocks with upper case letters to "M", then to something else
 v0.2.4 - 2015-04-18
-	- now includes Mega Aerodactyl. The only unsupported mega is ampharos now.
+	- now includes Mega Aerodactyl. The only unsupported Mega is Ampharos now.
 	- auto update checking now implemented
 	- metal block hard-coded
 	- special blocks no longer appear on the block config panel
 	- air blocks do not appear in the paint pallet anymore, but are still fully functional
 v0.2.3
-	- compatability fix block rows
+	- compatibility fix block rows
 v0.2.2
 	- bug fixes for frozen handling, etc.
 	- save/load by type feature added
