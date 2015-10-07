@@ -105,6 +105,11 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private static final String KEY_LEVEL_TOOLTIP = "tooltip.level";
    private static final String KEY_SELECTED_TOOLTIP = "tooltip.selected";
    private static final String KEY_CANDY_TOOLTIP = "tooltip.candy";
+   private static final String KEY_EFFECT_FILTER_TOOLTIP = "tooltip.effectfilter";
+   private static final String KEY_POKEMON_LEVEL_TOOLTIP = "tooltip.pokemonlevel";
+   private static final String KEY_OK_TOOLTIP = "tooltip.ok";
+   private static final String KEY_APPLY_TOOLTIP = "tooltip.apply";
+   private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
    
    public static final String KEY_ROSTER_CELL_OUTLINE_THICK = "ROSTER_CELL_OUTLINE_THICK";
    public static final String KEY_ROSTER_CELL_BORDER_THICK = "ROSTER_CELL_BORDER_THICK";
@@ -230,6 +235,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       typeChooser = new TypeChooser(true);
       typePanel.add(typeChooser);
       typePanel.setToolTipText(getString(KEY_TYPE_TOOLTIP));
+      typeChooser.setToolTipText(getString(KEY_TYPE_TOOLTIP));
       ret.add(typePanel, c);
       
       c.gridx += 1;
@@ -239,7 +245,8 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 10, 1);
       levelSpinner = new JSpinner(snm);
       levelPanel.add(levelSpinner);
-      levelPanel.setToolTipText(getString(KEY_LEVEL_TOOLTIP));;
+      levelPanel.setToolTipText(getString(KEY_LEVEL_TOOLTIP));
+      levelSpinner.setToolTipText(getString(KEY_LEVEL_TOOLTIP));
       JButton applyAllButton = new JButton(getString(KEY_SET_FOR_ALL));
       applyAllButton.addActionListener(new ActionListener() {
          @Override
@@ -276,6 +283,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       c.gridx += 1;
       c.weightx = 0.0;
       effectFilter = new EffectChooser(false, EffectChooser.DefaultEntry.NO_FILTER);
+      effectFilter.setToolTipText(getString(KEY_EFFECT_FILTER_TOOLTIP));
       ret.add(effectFilter, c);
       
       return ret;
@@ -345,24 +353,28 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       speedups.addItem(0);
       speedupPanel.add(speedups, BorderLayout.WEST);
       speedupPanel.setToolTipText(getString(KEY_CANDY_TOOLTIP));
+      speedups.setToolTipText(getString(KEY_CANDY_TOOLTIP));
       ret.add(speedupPanel, c);
       
       c.anchor = GridBagConstraints.LINE_END;
       c.weightx = 0.0;
       c.gridx++;
       JButton okButton = new JButton(getString(KEY_OK));
+      okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       ret.add(okButton, c);
       
       c.anchor = GridBagConstraints.CENTER;
       c.weightx = 0.0;
       c.gridx++;
       JButton applyButton = new JButton(getString(KEY_APPLY));
+      applyButton.setToolTipText(getString(KEY_APPLY_TOOLTIP));
       ret.add(applyButton, c);
       
       c.anchor = GridBagConstraints.LINE_START;
       c.weightx = 0.0;
       c.gridx++;
       JButton cancelButton = new JButton(new DisposeAction(getString(KEY_CANCEL), this));
+      cancelButton.setToolTipText(getString(KEY_CANCEL_TOOLTIP));
       ret.add(cancelButton, c);
       
       okButton.addActionListener(new ActionListener() {
@@ -493,6 +505,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       }
       Integer thisLevel = getLevelFor(s);
       level.setSelectedItem(thisLevel);
+      level.setToolTipText(getString(KEY_POKEMON_LEVEL_TOOLTIP));
       c.gridy += 1; // put the level selector below the icon.
       ret.add(level, c);
       level.addItemListener(new ItemListener() {
