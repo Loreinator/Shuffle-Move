@@ -98,6 +98,13 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private static final String KEY_SET_FOR_ALL = "button.setforall";
    private static final String KEY_TEAM = "text.team";
    private static final String KEY_TEAM_TOOLTIP = "tooltip.team";
+   private static final String KEY_SET_FOR_ALL_TOOLTIP = "tooltip.setforall";
+   private static final String KEY_NAME_TOOLTIP = "tooltip.name";
+   private static final String KEY_MEGA_FILTER_TOOLTIP = "tooltip.megafilter";
+   private static final String KEY_TYPE_TOOLTIP = "tooltip.type";
+   private static final String KEY_LEVEL_TOOLTIP = "tooltip.level";
+   private static final String KEY_SELECTED_TOOLTIP = "tooltip.selected";
+   private static final String KEY_CANDY_TOOLTIP = "tooltip.candy";
    
    public static final String KEY_ROSTER_CELL_OUTLINE_THICK = "ROSTER_CELL_OUTLINE_THICK";
    public static final String KEY_ROSTER_CELL_BORDER_THICK = "ROSTER_CELL_BORDER_THICK";
@@ -222,6 +229,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       typePanel.add(new JLabel(getString(KEY_TYPE)));
       typeChooser = new TypeChooser(true);
       typePanel.add(typeChooser);
+      typePanel.setToolTipText(getString(KEY_TYPE_TOOLTIP));
       ret.add(typePanel, c);
       
       c.gridx += 1;
@@ -231,6 +239,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 10, 1);
       levelSpinner = new JSpinner(snm);
       levelPanel.add(levelSpinner);
+      levelPanel.setToolTipText(getString(KEY_LEVEL_TOOLTIP));;
       JButton applyAllButton = new JButton(getString(KEY_SET_FOR_ALL));
       applyAllButton.addActionListener(new ActionListener() {
          @Override
@@ -238,6 +247,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
             applyLevelToAll();
          }
       });
+      applyAllButton.setToolTipText(getString(KEY_SET_FOR_ALL_TOOLTIP));
       levelPanel.add(applyAllButton);
       ret.add(levelPanel, c);
       
@@ -253,11 +263,14 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       sc.weightx = 1.0;
       sc.insets = new Insets(0, 5, 0, 5);
       stringPanel.add(textField, sc);
+      stringPanel.setToolTipText(getString(KEY_NAME_TOOLTIP));
+      textField.setToolTipText(getString(KEY_NAME_TOOLTIP));
       ret.add(stringPanel, c);
       
       c.gridx += 1;
       c.weightx = 0.0;
       megaFilter = new JCheckBox(getString(KEY_MEGA_FILTER));
+      megaFilter.setToolTipText(getString(KEY_MEGA_FILTER_TOOLTIP));
       ret.add(megaFilter, c);
       
       c.gridx += 1;
@@ -307,6 +320,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       c.weightx = 0.0;
       c.gridx++;
       selectedDisplayLabel = new JLabel(getString(KEY_NONE_SELECTED));
+      selectedDisplayLabel.setToolTipText(getString(KEY_SELECTED_TOOLTIP));;
       ret.add(selectedDisplayLabel, c);
       c.insets = new Insets(0, 0, 0, 0);
       
@@ -330,6 +344,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       speedups.setEnabled(false);
       speedups.addItem(0);
       speedupPanel.add(speedups, BorderLayout.WEST);
+      speedupPanel.setToolTipText(getString(KEY_CANDY_TOOLTIP));
       ret.add(speedupPanel, c);
       
       c.anchor = GridBagConstraints.LINE_END;
