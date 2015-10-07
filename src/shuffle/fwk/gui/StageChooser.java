@@ -36,15 +36,19 @@ import javax.swing.text.PlainDocument;
 import shuffle.fwk.data.PkmType;
 import shuffle.fwk.data.Stage;
 import shuffle.fwk.gui.user.StageIndicatorUser;
+import shuffle.fwk.i18n.I18nUser;
 
 /**
  * @author Andrew Meyers
  *
  */
 @SuppressWarnings("serial")
-public class StageChooser extends JPanel {
+public class StageChooser extends JPanel implements I18nUser {
    
    public static final int TEXT_LIMIT = 15;
+   
+   private static final String KEY_FILTER_TOOLTIP = "tooltip.filter";
+   private static final String KEY_STAGE_LIST_TOOLTIP = "tooltip.stagelist";
    
    private JComboBox<Stage> stageComboBox;
    private Indicator<PkmType> stageTypeIndicator;
@@ -128,6 +132,8 @@ public class StageChooser extends JPanel {
          }
       });
       textField.setDocument(doc);
+      textField.setToolTipText(getString(KEY_FILTER_TOOLTIP));
+      stageComboBox.setToolTipText(getString(KEY_STAGE_LIST_TOOLTIP));
       add(stageTypeIndicator);
       add(textField);
       add(stageComboBox);
