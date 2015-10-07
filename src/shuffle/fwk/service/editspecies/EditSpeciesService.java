@@ -93,6 +93,19 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
    private static final String KEY_SET = "button.set";
    private static final String KEY_FIND_ICON_TITLE = "text.findicon.title";
    private static final String KEY_FILTER_DESCRIPTION = "text.filter.desc";
+   private static final String KEY_NAME_TOOLTIP = "tooltip.name";
+   private static final String KEY_ICON_TOOLTIP = "tooltip.icon";
+   private static final String KEY_ATTACK_TOOLTIP = "tooltip.attack";
+   private static final String KEY_TYPE_TOOLTIP = "tooltip.type";
+   private static final String KEY_EFFECT_TOOLTIP = "tooltip.effect";
+   private static final String KEY_NEW_TOOLTIP = "tooltip.new";
+   private static final String KEY_SET_TOOLTIP = "tooltip.set";
+   private static final String KEY_MEGA_NAME_TOOLTIP = "tooltip.meganame";
+   private static final String KEY_MEGA_ICON_TOOLTIP = "tooltip.megaicon";
+   private static final String KEY_MEGA_EFFECT_TOOLTIP = "tooltip.megaeffect";
+   private static final String KEY_OK_TOOLTIP = "tooltip.ok";
+   private static final String KEY_APPLY_TOOLTIP = "tooltip.apply";
+   private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
    
    // Config keys
    public static final String KEY_ROSTER_CELL_OUTLINE_THICK = "ROSTER_CELL_OUTLINE_THICK";
@@ -249,6 +262,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       c.weightx = 0.0;
       c.gridx++;
       JLabel nameLabel = new JLabel(getString(KEY_NAME));
+      nameLabel.setToolTipText(getString(KEY_NAME_TOOLTIP));
       firstRow.add(nameLabel, c);
       
       c.fill = GridBagConstraints.BOTH;
@@ -264,6 +278,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
             return d;
          }
       };
+      nameField.setToolTipText(getString(KEY_NAME_TOOLTIP));
       firstRow.add(nameField, c);
       c.weightx = 0.0;
       c.fill = GridBagConstraints.NONE;
@@ -277,10 +292,12 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
             selectMainIcon();
          }
       });
+      mainIconButton.setToolTipText(getString(KEY_ICON_TOOLTIP));
       firstRow.add(mainIconButton, c);
       
       c.gridx++;
       JLabel attackLabel = new JLabel(getString(KEY_ATTACK));
+      attackLabel.setToolTipText(getString(KEY_ATTACK_TOOLTIP));
       firstRow.add(attackLabel, c);
       
       c.gridx++;
@@ -291,22 +308,27 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       for (int i = attackStart; i <= attackEnd; i += 10) {
          attackComboBox.addItem(i);
       }
+      attackComboBox.setToolTipText(getString(KEY_ATTACK_TOOLTIP));
       firstRow.add(attackComboBox, c);
       
       c.gridx++;
       JLabel typeLabel = new JLabel(getString(KEY_TYPE));
+      typeLabel.setToolTipText(getString(KEY_TYPE_TOOLTIP));
       firstRow.add(typeLabel, c);
       
       c.gridx++;
       typeChooser = new TypeChooser(false);
+      typeChooser.setToolTipText(getString(KEY_TYPE_TOOLTIP));
       firstRow.add(typeChooser, c);
       
       c.gridx++;
       JLabel effectLabel = new JLabel(getString(KEY_EFFECT));
+      effectLabel.setToolTipText(getString(KEY_EFFECT_TOOLTIP));
       firstRow.add(effectLabel, c);
       
       c.gridx++;
       effectChooser = new EffectChooser(false, EffectChooser.DefaultEntry.NONE);
+      effectChooser.setToolTipText(getString(KEY_EFFECT_TOOLTIP));
       firstRow.add(effectChooser, c);
       
       JPanel secondRow = new JPanel(new GridBagLayout());
@@ -321,6 +343,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
             setSelected(null, null);
          }
       });
+      newSpeciesButton.setToolTipText(getString(KEY_NEW_TOOLTIP));
       secondRow.add(newSpeciesButton);
       
       c.gridx++;
@@ -332,10 +355,12 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
             applySelectedSpecies();
          }
       });
+      setSpeciesButton.setToolTipText(getString(KEY_SET_TOOLTIP));
       secondRow.add(setSpeciesButton);
       
       c.gridx++;
       JLabel megaLabel = new JLabel(getString(KEY_MEGA));
+      megaLabel.setToolTipText(getString(KEY_MEGA_NAME_TOOLTIP));
       secondRow.add(megaLabel, c);
       
       c.fill = GridBagConstraints.BOTH;
@@ -351,6 +376,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
             return d;
          }
       };
+      megaNameField.setToolTipText(getString(KEY_MEGA_NAME_TOOLTIP));
       secondRow.add(megaNameField, c);
       c.weightx = 0.0;
       c.fill = GridBagConstraints.NONE;
@@ -364,14 +390,17 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
             selectMegaIcon();
          }
       });
+      megaIconButton.setToolTipText(getString(KEY_MEGA_ICON_TOOLTIP));
       secondRow.add(megaIconButton, c);
       
       c.gridx++;
       JLabel megaEffectLabel = new JLabel(getString(KEY_EFFECT));
+      megaEffectLabel.setToolTipText(getString(KEY_MEGA_EFFECT_TOOLTIP));
       secondRow.add(megaEffectLabel, c);
       
       c.gridx++;
       megaEffectChooser = new EffectChooser(true, EffectChooser.DefaultEntry.NONE);
+      megaEffectChooser.setToolTipText(getString(KEY_MEGA_EFFECT_TOOLTIP));
       secondRow.add(megaEffectChooser, c);
       
       JPanel ret = new JPanel(new GridBagLayout());
@@ -425,18 +454,21 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       c.weightx = 1.0;
       c.gridx += 1;
       JButton okButton = new JButton(getString(KEY_OK));
+      okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       ret.add(okButton, c);
       
       c.anchor = GridBagConstraints.CENTER;
       c.weightx = 0.0;
       c.gridx += 1;
       JButton applyButton = new JButton(getString(KEY_APPLY));
+      applyButton.setToolTipText(getString(KEY_APPLY_TOOLTIP));
       ret.add(applyButton, c);
       
       c.anchor = GridBagConstraints.LINE_START;
       c.weightx = 0.0;
       c.gridx += 1;
       JButton cancelButton = new JButton(new DisposeAction(getString(KEY_CANCEL), this));
+      cancelButton.setToolTipText(getString(KEY_CANCEL_TOOLTIP));
       ret.add(cancelButton, c);
       
       okButton.addActionListener(new ActionListener() {
