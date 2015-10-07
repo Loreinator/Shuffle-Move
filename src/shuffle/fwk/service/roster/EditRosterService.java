@@ -97,6 +97,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private static final String KEY_MEGA_FILTER = "text.megafilter";
    private static final String KEY_SET_FOR_ALL = "button.setforall";
    private static final String KEY_TEAM = "text.team";
+   private static final String KEY_TEAM_TOOLTIP = "tooltip.team";
    
    public static final String KEY_ROSTER_CELL_OUTLINE_THICK = "ROSTER_CELL_OUTLINE_THICK";
    public static final String KEY_ROSTER_CELL_BORDER_THICK = "ROSTER_CELL_BORDER_THICK";
@@ -315,6 +316,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       teamFilter = new JCheckBox(getString(KEY_TEAM));
       JPanel teamFilterPanel = new JPanel(new BorderLayout());
       teamFilterPanel.add(teamFilter, BorderLayout.WEST);
+      teamFilter.setToolTipText(getString(KEY_TEAM_TOOLTIP));
       ret.add(teamFilterPanel, c);
       
       c.anchor = GridBagConstraints.LINE_END;
