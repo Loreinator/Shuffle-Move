@@ -106,7 +106,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private static final String KEY_SELECTED_TOOLTIP = "tooltip.selected";
    private static final String KEY_CANDY_TOOLTIP = "tooltip.candy";
    private static final String KEY_EFFECT_FILTER_TOOLTIP = "tooltip.effectfilter";
-   private static final String KEY_POKEMON_LEVEL_TOOLTIP = "tooltip.pokemonlevel";
+   private static final String KEY_POKEMON_LEVEL_TOOLTIP = "tooltip.specieslevel";
    private static final String KEY_OK_TOOLTIP = "tooltip.ok";
    private static final String KEY_APPLY_TOOLTIP = "tooltip.apply";
    private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
