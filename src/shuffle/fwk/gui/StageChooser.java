@@ -132,8 +132,14 @@ public class StageChooser extends JPanel implements I18nUser {
          }
       });
       textField.setDocument(doc);
-      textField.setToolTipText(getString(KEY_FILTER_TOOLTIP));
-      stageComboBox.setToolTipText(getString(KEY_STAGE_LIST_TOOLTIP));
+      String tfTT = getString(KEY_FILTER_TOOLTIP);
+      if (!tfTT.equals(textField.getToolTipText())) {
+         textField.setToolTipText(tfTT);
+      }
+      String scbTT = getString(KEY_STAGE_LIST_TOOLTIP);
+      if (!scbTT.equals(stageComboBox.getToolTipText())) {
+         stageComboBox.setToolTipText(scbTT);
+      }
       add(stageTypeIndicator);
       add(textField);
       add(stageComboBox);
@@ -160,6 +166,8 @@ public class StageChooser extends JPanel implements I18nUser {
          stageComboBox.addItemListener(il);
          stageTypeIndicator.setVisualized(stage.getType());
       }
+      textField.setToolTipText(getString(KEY_FILTER_TOOLTIP));
+      stageComboBox.setToolTipText(getString(KEY_STAGE_LIST_TOOLTIP));
       return true;
    }
    

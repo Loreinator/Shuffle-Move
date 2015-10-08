@@ -435,6 +435,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private void updateOptionsFromUser() {
       removeOptionListeners();
       
+      // Actual text
       String megaText = getString(KEY_MEGA);
       String frozenText = getString(KEY_FROZEN);
       String woodText = getString(KEY_WOOD);
@@ -471,6 +472,51 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       }
       if (!attackText.equals(enableAttackPowerUpBox.getText())) {
          enableAttackPowerUpBox.setText(attackText);
+      }
+      
+      // Tooltip text
+      String megaCheckTT = getString(KEY_MEGACHECK_TOOLTIP);
+      String megaProgressTT = getString(KEY_MEGAPROGRESS_TOOLTIP);
+      String frozenTT = getString(KEY_FROZEN_TOOLTIP);
+      String woodTT = getString(KEY_WOOD_TOOLTIP);
+      String metalTT = getString(KEY_METAL_TOOLTIP);
+      String coinTT = getString(KEY_COIN_TOOLTIP);
+      String scoreTT = getString(KEY_SCORE_TOOLTIP);
+      String hpTT = getString(KEY_HP_TOOLTIP);
+      String movesTT = getString(KEY_MOVES_TOOLTIP);
+      String atkTT = getString(KEY_ATTACK_POWERUP_TOOLTIP);
+      
+      if (!megaCheckTT.equals(megaActive.getToolTipText())) {
+         megaActive.setToolTipText(megaCheckTT);
+      }
+      if (!megaProgressTT.equals(megaProgress.getToolTipText())) {
+         megaProgress.setToolTipText(megaProgressTT);
+      }
+      if (!frozenTT.equals(frozenBox.getToolTipText())) {
+         frozenBox.setToolTipText(frozenTT);
+      }
+      if (!woodTT.equals(woodBox.getToolTipText())) {
+         woodBox.setToolTipText(woodTT);
+      }
+      if (!metalTT.equals(metalBox.getToolTipText())) {
+         metalBox.setToolTipText(metalTT);
+      }
+      if (!coinTT.equals(coinBox.getToolTipText())) {
+         coinBox.setToolTipText(coinTT);
+      }
+      if (!scoreTT.equals(scoreLabel.getToolTipText())) {
+         scoreLabel.setToolTipText(scoreTT);
+         scoreField.setToolTipText(scoreTT);
+      }
+      if (!hpTT.equals(healthLabel.getToolTipText())) {
+         healthLabel.setToolTipText(hpTT);
+      }
+      if (!movesTT.equals(movesLabel.getToolTipText())) {
+         movesLabel.setToolTipText(movesTT);
+         movesLabel.setToolTipText(movesTT);
+      }
+      if (!atkTT.equals(enableAttackPowerUpBox.getToolTipText())) {
+         enableAttackPowerUpBox.setToolTipText(atkTT);
       }
       
       Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());
