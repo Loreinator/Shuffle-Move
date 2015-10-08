@@ -36,7 +36,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ~~ Changelog ~~
 v0.3.34 - 2015-10-
-	- TBD
+	- Tooltips added, and menu improvements thanks to Kpwbo
 v0.3.33 - 2015-10-05
 	- Fixed a bug with the team editor's apply not working as intended
 	- Improved simulation accuracy when a Mega would de-activate a combo
