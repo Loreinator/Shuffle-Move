@@ -66,6 +66,16 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private static final String KEY_THRESHOLD = "text.threshold";
    private static final String KEY_SWAPTOPAINT = "text.autoswappaint";
    private static final String KEY_MOBILE = "text.mobilemode";
+   private static final String KEY_SIMULATIONS_TOOLTIP = "tooltip.simulations";
+   private static final String KEY_AUTOCOMPUTE_TOOLTIP = "tooltip.autocompute";
+   private static final String KEY_AUTOSWITCH_TOOLTIP = "tooltip.autoswitch";
+   private static final String KEY_MOBILEMODE_TOOLTIP = "tooltip.mobilemode";
+   private static final String KEY_EFFECTS_TOOLTIP = "tooltip.effects";
+   private static final String KEY_EFFECT_CHECK_TOOLTIP = "tooltip.effectcheck";
+   private static final String KEY_THRESHOLD_TOOLTIP = "tooltip.threshold";
+   private static final String KEY_OK_TOOLTIP = "tooltip.ok";
+   private static final String KEY_APPLY_TOOLTIP = "tooltip.apply";
+   private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
    
    private JSpinner numFeederSpinner;
    private JSpinner feederHeightSpinner;
@@ -116,6 +126,8 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       JPanel numPanel = new JPanel(new BorderLayout());
       numPanel.add(new JLabel(getString(KEY_NUMBER_FEEDERS)), BorderLayout.WEST);
       numPanel.add(numFeederSpinner, BorderLayout.EAST);
+      numPanel.setToolTipText(getString(KEY_SIMULATIONS_TOOLTIP));
+      numFeederSpinner.setToolTipText(getString(KEY_SIMULATIONS_TOOLTIP));
       d.add(numPanel, c);
       
       c.gridx = 1;
@@ -129,16 +141,19 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       c.gridx = 1;
       c.gridy++;
       c.gridwidth = maxWidth;
+      autoComputeCheckBox.setToolTipText(getString(KEY_AUTOCOMPUTE_TOOLTIP));
       d.add(autoComputeCheckBox, c);
       
       c.gridx = 1;
       c.gridy++;
       c.gridwidth = maxWidth;
+      autoSwapToPaint.setToolTipText(getString(KEY_AUTOSWITCH_TOOLTIP));
       d.add(autoSwapToPaint, c);
       
       c.gridx = 1;
       c.gridy++;
       c.gridwidth = maxWidth;
+      mobileModeCheckBox.setToolTipText(getString(KEY_MOBILEMODE_TOOLTIP));
       d.add(mobileModeCheckBox, c);
       
       c.gridx = 1;
@@ -146,8 +161,10 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       c.gridwidth = maxWidth;
       JPanel effectTogglePanel = new JPanel(new BorderLayout());
       effectChooser = new EffectChooser(false, EffectChooser.DefaultEntry.EMPTY);
+      effectChooser.setToolTipText(getString(KEY_EFFECTS_TOOLTIP));
       enableEffectBox = new JCheckBox();
       enableEffectBox.setSelected(true);
+      enableEffectBox.setToolTipText(getString(KEY_EFFECT_CHECK_TOOLTIP));
       effectChooser.addItemListener(new ItemListener() {
          @Override
          public void itemStateChanged(ItemEvent e) {
@@ -176,6 +193,8 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       thresholdPanel.add(new JLabel(getString(KEY_THRESHOLD)), BorderLayout.WEST);
       thresholdPanel.add(thresholdSpinner, BorderLayout.CENTER);
       thresholdPanel.add(new JLabel("%"), BorderLayout.EAST);
+      thresholdPanel.setToolTipText(getString(KEY_THRESHOLD_TOOLTIP));
+      thresholdSpinner.setToolTipText(getString(KEY_THRESHOLD_TOOLTIP));
       d.add(thresholdPanel, c);
       
       c.gridx = 1;
@@ -189,6 +208,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
             dispose();
          }
       });
+      okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       d.add(okButton, c);
       
       c.gridx += 1;
@@ -200,10 +220,12 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
             onApply();
          }
       });
+      applyButton.setToolTipText(getString(KEY_APPLY_TOOLTIP));
       d.add(applyButton, c);
       
       c.gridx += 1;
       JButton cancelButton = new JButton(new DisposeAction(getString(KEY_CANCEL), this));
+      cancelButton.setToolTipText(getString(KEY_CANCEL_TOOLTIP));
       d.add(cancelButton, c);
       d.pack();
       d.repaint();

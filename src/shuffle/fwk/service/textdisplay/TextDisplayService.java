@@ -47,6 +47,7 @@ public abstract class TextDisplayService extends BaseService<TextDisplayServiceU
    
    private static final String KEY_CLOSE_BUTTON = "button.close";
    private static final String KEY_BAD_LINK = "error.badlink";
+   private static final String KEY_CLOSE_TOOLTIP = "tooltip.close";
    
    private JEditorPane textArea = null;
    private JScrollPane jsp = null;
@@ -102,6 +103,7 @@ public abstract class TextDisplayService extends BaseService<TextDisplayServiceU
       jsp.getVerticalScrollBar().setUnitIncrement(30);
       
       JButton close = new JButton(new DisposeAction(getString(KEY_CLOSE_BUTTON), this));
+      close.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
       d.add(close, BorderLayout.SOUTH);
       d.pack();
       d.setSize(new Dimension(width, height));

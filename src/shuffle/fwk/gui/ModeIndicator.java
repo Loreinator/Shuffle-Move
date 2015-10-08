@@ -106,6 +106,11 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
          JLabel label = new JLabel(getString(mode.getI18nKey()));
          label.setFont(modeFont);
          label.setForeground(getColorFor(mode));
+         String modeTooltipKey = "tooltip." + mode.getI18nKey();
+         String modeTooltipText = getString(modeTooltipKey);
+         if (!modeTooltipKey.equals(modeTooltipText)) {
+            label.setToolTipText(modeTooltipText);
+         }
          setBorderFor(label, mode.equals(oldMode), selectThick);
          modeMap.put(mode, label);
          c.gridx++;

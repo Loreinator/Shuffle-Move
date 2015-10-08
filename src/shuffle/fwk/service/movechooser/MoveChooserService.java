@@ -99,6 +99,9 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
    private static final String KEY_HEADER_BLOCKS = "column.blocks";
    private static final String KEY_HEADER_DISRUPTIONS = "column.disruptions";
    private static final String KEY_HEADER_MEGASTATE = "column.megastate";
+   private static final String KEY_METRIC_TOOLTIP = "tooltip.metric";
+   private static final String KEY_DO_TOOLTIP = "tooltip.donow";
+   private static final String KEY_CLOSE_TOOLTIP = "tooltip.close";
    
    // config keys
    private static final String KEY_CHOOSER_X = "CHOOSER_X";
@@ -196,10 +199,12 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
       JLabel metricLabel = new JLabel(getString(KEY_METRIC_LABEL));
       metricLabel.setHorizontalAlignment(SwingConstants.CENTER);
       metricLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+      metricLabel.setToolTipText(getString(KEY_METRIC_TOOLTIP));
       d.add(metricLabel, c);
       
       c.gridx++;
       ind = new GradingModeIndicator(getUser());
+      ind.setToolTipText(getString(KEY_METRIC_TOOLTIP));
       d.add(ind, c);
       
       c.gridx++;
@@ -211,10 +216,12 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
             doMove();
          }
       });
+      doMoveButton.setToolTipText(getString(KEY_DO_TOOLTIP));
       d.add(doMoveButton, c);
       
       c.gridx++;
       JButton closeButton = new JButton(new DisposeAction(getString(KEY_CLOSE), this));
+      closeButton.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
       d.add(closeButton, c);
       d.pack();
       
