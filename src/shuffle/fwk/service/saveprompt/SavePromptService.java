@@ -41,6 +41,9 @@ public class SavePromptService extends BaseService<SavePromptServiceUser> implem
    private static final String KEY_EXIT = "button.exit";
    private static final String KEY_CANCEL = "button.cancel";
    private static final String KEY_SAVE_MESSAGE = "message.savechanges";
+   private static final String KEY_SAVE_TOOLTIP = "tooltip.saveandexit";
+   private static final String KEY_EXIT_TOOLTIP = "tooltip.exit";
+   private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
    
    /*
     * (non-Javadoc)
@@ -66,6 +69,7 @@ public class SavePromptService extends BaseService<SavePromptServiceUser> implem
             closeProgram();
          }
       });
+      saveButton.setToolTipText(getString(KEY_SAVE_TOOLTIP));
       JButton closeButton = new JButton(new AbstractAction(getString(KEY_EXIT)) {
          private static final long serialVersionUID = -128415154672789095L;
 
@@ -74,6 +78,7 @@ public class SavePromptService extends BaseService<SavePromptServiceUser> implem
             closeProgram();
          }
       });
+      closeButton.setToolTipText(getString(KEY_EXIT_TOOLTIP));
       JButton cancelButton = new JButton(new AbstractAction(getString(KEY_CANCEL)) {
          private static final long serialVersionUID = -1652264212207135433L;
 
@@ -82,6 +87,7 @@ public class SavePromptService extends BaseService<SavePromptServiceUser> implem
             SavePromptService.this.dispose();
          }
       });
+      cancelButton.setToolTipText(getString(KEY_CANCEL_TOOLTIP));
       
       JDialog d = new JDialog(getOwner(), getString(KEY_TITLE));
       d.setLayout(new GridBagLayout());
