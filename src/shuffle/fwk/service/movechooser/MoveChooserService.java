@@ -122,7 +122,10 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
    
    // components
    private JDialog d = null;
+   private JLabel metricLabel = null;
    private GradingModeIndicator ind = null;
+   private JButton doMoveButton = null;
+   private JButton closeButton = null;
    private JTable table = null;
    private DefaultTableModel model2 = null;
    private ListSelectionListener listener2 = null;
@@ -196,7 +199,7 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
       c.gridy++;
       
       c.gridx++;
-      JLabel metricLabel = new JLabel(getString(KEY_METRIC_LABEL));
+      metricLabel = new JLabel(getString(KEY_METRIC_LABEL));
       metricLabel.setHorizontalAlignment(SwingConstants.CENTER);
       metricLabel.setHorizontalTextPosition(SwingConstants.CENTER);
       metricLabel.setToolTipText(getString(KEY_METRIC_TOOLTIP));
@@ -208,7 +211,7 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
       d.add(ind, c);
       
       c.gridx++;
-      JButton doMoveButton = new JButton(new AbstractAction(getString(KEY_DO_NOW)) {
+      doMoveButton = new JButton(new AbstractAction(getString(KEY_DO_NOW)) {
          private static final long serialVersionUID = -8952138130413953491L;
          
          @Override
@@ -220,7 +223,7 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
       d.add(doMoveButton, c);
       
       c.gridx++;
-      JButton closeButton = new JButton(new DisposeAction(getString(KEY_CLOSE), this));
+      closeButton = new JButton(new DisposeAction(getString(KEY_CLOSE), this));
       closeButton.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
       d.add(closeButton, c);
       d.pack();
@@ -448,6 +451,7 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
     */
    @Override
    protected void updateGUIFrom(MoveChooserServiceUser user) {
+      updateTooltips();
       Collection<SimulationResult> userResults = user.getResults();
       SimulationResult selectResult = user.getSelectedResult();
       if (listener2 != null) {
@@ -486,6 +490,25 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
          table.getSelectionModel().addListSelectionListener(listener2);
       }
       ind.repaint();
+   }
+   
+   /**
+    * Updates the tooltip text based on the current language.
+    */
+   private void updateTooltips() {
+      String metricTT = getString(KEY_METRIC_TOOLTIP);
+      String doMoveTT = getString(KEY_DO_TOOLTIP);
+      String closeTT = getString(KEY_CLOSE_TOOLTIP);
+      if (!metricTT.equals(metricLabel.getToolTipText())) {
+         metricLabel.setToolTipText(getString(KEY_METRIC_TOOLTIP));
+         ind.setToolTipText(getString(KEY_METRIC_TOOLTIP));
+      }
+      if (!doMoveTT.equals(doMoveButton.getToolTipText())) {
+         doMoveButton.setToolTipText(getString(KEY_DO_TOOLTIP));
+      }
+      if (!closeTT.equals(closeButton.getToolTipText())) {
+         closeButton.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
+      }
    }
    
    /**
