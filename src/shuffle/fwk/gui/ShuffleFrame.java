@@ -342,6 +342,7 @@ public class ShuffleFrame extends JFrame implements I18nUser {
    
    @Override
    public void repaint() {
+      updateTitleText();
       stageChooser.updateStage();
       moveIndicator.updateMove();
       gridPanel.updateGrid();
@@ -350,6 +351,16 @@ public class ShuffleFrame extends JFrame implements I18nUser {
       shuffleMenuBar.updateAll();
       // super.pack();
       super.repaint();
+   }
+   
+   /**
+    * 
+    */
+   private void updateTitleText() {
+      String titleText = getString(KEY_TITLE, ShuffleVersion.VERSION_FULL);
+      if (!titleText.equals(getTitle())) {
+         setTitle(titleText);
+      }
    }
    
 }
