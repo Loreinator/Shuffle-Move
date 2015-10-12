@@ -35,8 +35,13 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.34 - 2015-10-
+v0.3.34 - 2015-10-12
+	- 4Combos+ grading mode added (behaves like score, but puts 4+ combos above all others)
 	- Tooltips added, and menu improvements thanks to Kpwbo
+	- Bug fixed for move chooser not updating language of title & buttons
+	- Stages, Species, and Default boards added for Pokemon Shuffle update 1.2.20
+	- Latios placeholder added to species.txt
+	- Mega Absol threshold corrected to 18 (down from 30)
 v0.3.33 - 2015-10-05
 	- Fixed a bug with the team editor's apply not working as intended
 	- Improved simulation accuracy when a Mega would de-activate a combo
