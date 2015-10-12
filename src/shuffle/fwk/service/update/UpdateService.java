@@ -68,6 +68,9 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
    private static final String KEY_CLOSE = "button.close";
    private static final String KEY_BAD_LINK = "error.badlink";
    private static final String KEY_TITLE = "text.title";
+   private static final String KEY_GETNEWEST_TOOLTIP = "tooltip.getnewest";
+   private static final String KEY_FORCE_TOOLTIP = "tooltip.force";
+   private static final String KEY_CLOSE_TOOLTIP = "tooltip.close";
    public static final String KEY_DOWNLOADING = "text.downloading";
    public static final String KEY_PLEASE_UNPACK = "text.pleaseunpack";
    public static final String KEY_UPTODATE = "text.uptodate";
@@ -89,8 +92,11 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
    @Override
    public void onSetupGUI() {
       JButton getNewestButton = new JButton(new UpdateNowAction(getString(KEY_GETNEWEST), this, false));
+      getNewestButton.setToolTipText(getString(KEY_GETNEWEST_TOOLTIP));
       JButton forceNewestButton = new JButton(new UpdateNowAction(getString(KEY_FORCE), this, true));
+      forceNewestButton.setToolTipText(getString(KEY_FORCE_TOOLTIP));
       JButton closeButton = new JButton(new DisposeAction(getString(KEY_CLOSE), this));
+      closeButton.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
       inProgressConsumers.addAll(Arrays.asList(b -> getNewestButton.setEnabled(!b),
             b -> forceNewestButton.setEnabled(!b), b -> closeButton.setEnabled(!b)));
       

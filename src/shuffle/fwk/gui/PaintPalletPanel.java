@@ -78,6 +78,16 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private static final String KEY_SCORE = "text.score";
    private static final String KEY_MOVES = "text.moves";
    private static final String KEY_ATTACK_POWERUP = "text.attack.power.up";
+   private static final String KEY_MEGACHECK_TOOLTIP = "tooltip.megacheck";
+   private static final String KEY_MEGAPROGRESS_TOOLTIP = "tooltip.megaprogress";
+   private static final String KEY_FROZEN_TOOLTIP = "tooltip.frozen";
+   private static final String KEY_WOOD_TOOLTIP = "tooltip.wood";
+   private static final String KEY_METAL_TOOLTIP = "tooltip.metal";
+   private static final String KEY_COIN_TOOLTIP = "tooltip.coin";
+   private static final String KEY_SCORE_TOOLTIP = "tooltip.score";
+   private static final String KEY_HP_TOOLTIP = "tooltip.hp";
+   private static final String KEY_MOVES_TOOLTIP = "tooltip.moves";
+   private static final String KEY_ATTACK_POWERUP_TOOLTIP = "tooltip.attack.power.up";
    
    // config keys
    private static final String KEY_PAINT_SELECT_COLOR = "PAINT_SELECT_COLOR";
@@ -143,34 +153,45 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       };
       
       megaActive = new JCheckBox(getString(KEY_MEGA));
+      megaActive.setToolTipText(getString(KEY_MEGACHECK_TOOLTIP));
       megaProgress = new JComboBox<Integer>();
+      megaProgress.setToolTipText(getString(KEY_MEGAPROGRESS_TOOLTIP));
       JPanel megaPanel = new JPanel(new BorderLayout());
       megaPanel.add(megaActive, BorderLayout.WEST);
       megaPanel.add(megaProgress, BorderLayout.EAST);
       optionPanel.add(megaPanel);
       
       frozenBox = new JCheckBox(getString(KEY_FROZEN));
+      frozenBox.setToolTipText(getString(KEY_FROZEN_TOOLTIP));
       optionPanel.add(frozenBox);
       woodBox = new JCheckBox(getString(KEY_WOOD));
+      woodBox.setToolTipText(getString(KEY_WOOD_TOOLTIP));
       optionPanel.add(woodBox);
       metalBox = new JCheckBox(getString(KEY_METAL));
+      metalBox.setToolTipText(getString(KEY_METAL_TOOLTIP));
       optionPanel.add(metalBox);
       coinBox = new JCheckBox(getString(KEY_COIN));
+      coinBox.setToolTipText(getString(KEY_COIN_TOOLTIP));
       optionPanel.add(coinBox);
       
       scoreLabel = new JLabel(getString(KEY_SCORE));
+      scoreLabel.setToolTipText(getString(KEY_SCORE_TOOLTIP));
       SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 99999, 50);
       scoreField = new JSpinner(snm);
+      scoreField.setToolTipText(getString(KEY_SCORE_TOOLTIP));
       JPanel scorePanel = new JPanel(new BorderLayout());
       scorePanel.add(scoreLabel, BorderLayout.WEST);
       scorePanel.add(scoreField, BorderLayout.EAST);
       optionPanel.add(scorePanel);
       
       healthLabel = new JLabel(getString(KEY_HEALTH, getUser().getRemainingHealth()));
+      healthLabel.setToolTipText(getString(KEY_HP_TOOLTIP));
       optionPanel.add(healthLabel);
       
       movesLabel = new JLabel(getString(KEY_MOVES));
+      movesLabel.setToolTipText(getString(KEY_MOVES_TOOLTIP));
       movesLeft = new JComboBox<Integer>();
+      movesLeft.setToolTipText(getString(KEY_MOVES_TOOLTIP));
       JPanel movesPanel = new JPanel(new BorderLayout());
       movesPanel.add(movesLabel, BorderLayout.WEST);
       movesPanel.add(movesLeft, BorderLayout.EAST);
@@ -178,6 +199,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       
       enableAttackPowerUpBox = new JCheckBox(getString(KEY_ATTACK_POWERUP));
       enableAttackPowerUpBox.setSelected(getUser().getAttackPowerUp());
+      enableAttackPowerUpBox.setToolTipText(getString(KEY_ATTACK_POWERUP_TOOLTIP));
       optionPanel.add(enableAttackPowerUpBox);
       
       GridBagConstraints c = new GridBagConstraints();
@@ -413,6 +435,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private void updateOptionsFromUser() {
       removeOptionListeners();
       
+      // Actual text
       String megaText = getString(KEY_MEGA);
       String frozenText = getString(KEY_FROZEN);
       String woodText = getString(KEY_WOOD);
@@ -449,6 +472,51 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       }
       if (!attackText.equals(enableAttackPowerUpBox.getText())) {
          enableAttackPowerUpBox.setText(attackText);
+      }
+      
+      // Tooltip text
+      String megaCheckTT = getString(KEY_MEGACHECK_TOOLTIP);
+      String megaProgressTT = getString(KEY_MEGAPROGRESS_TOOLTIP);
+      String frozenTT = getString(KEY_FROZEN_TOOLTIP);
+      String woodTT = getString(KEY_WOOD_TOOLTIP);
+      String metalTT = getString(KEY_METAL_TOOLTIP);
+      String coinTT = getString(KEY_COIN_TOOLTIP);
+      String scoreTT = getString(KEY_SCORE_TOOLTIP);
+      String hpTT = getString(KEY_HP_TOOLTIP);
+      String movesTT = getString(KEY_MOVES_TOOLTIP);
+      String atkTT = getString(KEY_ATTACK_POWERUP_TOOLTIP);
+      
+      if (!megaCheckTT.equals(megaActive.getToolTipText())) {
+         megaActive.setToolTipText(megaCheckTT);
+      }
+      if (!megaProgressTT.equals(megaProgress.getToolTipText())) {
+         megaProgress.setToolTipText(megaProgressTT);
+      }
+      if (!frozenTT.equals(frozenBox.getToolTipText())) {
+         frozenBox.setToolTipText(frozenTT);
+      }
+      if (!woodTT.equals(woodBox.getToolTipText())) {
+         woodBox.setToolTipText(woodTT);
+      }
+      if (!metalTT.equals(metalBox.getToolTipText())) {
+         metalBox.setToolTipText(metalTT);
+      }
+      if (!coinTT.equals(coinBox.getToolTipText())) {
+         coinBox.setToolTipText(coinTT);
+      }
+      if (!scoreTT.equals(scoreLabel.getToolTipText())) {
+         scoreLabel.setToolTipText(scoreTT);
+         scoreField.setToolTipText(scoreTT);
+      }
+      if (!hpTT.equals(healthLabel.getToolTipText())) {
+         healthLabel.setToolTipText(hpTT);
+      }
+      if (!movesTT.equals(movesLabel.getToolTipText())) {
+         movesLabel.setToolTipText(movesTT);
+         movesLabel.setToolTipText(movesTT);
+      }
+      if (!atkTT.equals(enableAttackPowerUpBox.getToolTipText())) {
+         enableAttackPowerUpBox.setToolTipText(atkTT);
       }
       
       Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());

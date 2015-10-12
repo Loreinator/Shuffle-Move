@@ -289,6 +289,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       
       MenuAction chooserAction = new MenuAction(() -> getString(KEY_CHOOSE_MOVE),
             e -> BaseServiceManager.launchServiceByClass(MoveChooserService.class, getUser(), getOwner()));
+      chooserAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
       addMenuAction(menu, chooserAction);
       
       MenuAction doMoveAction = new MenuAction(() -> getString(KEY_DO_MOVE), e -> getUser().doSelectedMove());

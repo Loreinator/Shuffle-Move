@@ -57,6 +57,10 @@ public class MigrateService extends BaseService<MigrateServiceUser> implements I
    private static final String KEY_IMPORT_FAIL = "text.import.fail";
    private static final String KEY_STATUS_CHOOSE = "text.status.choose";
    private static final String KEY_STATUS_DONE = "text.status.done";
+   private static final String KEY_IMPORT_TEAMS_TOOLTIP = "tooltip.import.teams";
+   private static final String KEY_IMPORT_ROSTER_TOOLTIP = "tooltip.import.roster";
+   private static final String KEY_OK_TOOLTIP = "tooltip.ok";
+   private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
    
    private JDialog d = null;
    private JLabel teamStatus = null;
@@ -122,6 +126,7 @@ public class MigrateService extends BaseService<MigrateServiceUser> implements I
             importTeams();
          }
       });
+      importTeamsButton.setToolTipText(getString(KEY_IMPORT_TEAMS_TOOLTIP));
       d.add(importTeamsButton, c);
       
       c.gridx++;
@@ -133,6 +138,7 @@ public class MigrateService extends BaseService<MigrateServiceUser> implements I
             importRoster();
          }
       });
+      importRosterButton.setToolTipText(getString(KEY_IMPORT_ROSTER_TOOLTIP));
       d.add(importRosterButton, c);
       
       // ok/cancel row
@@ -148,10 +154,12 @@ public class MigrateService extends BaseService<MigrateServiceUser> implements I
             onOk();
          }
       });
+      okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       d.add(okButton, c);
       
       c.gridx++;
       JButton cancelButton = new JButton(new DisposeAction(getString(KEY_CANCEL), this));
+      cancelButton.setToolTipText(getString(KEY_CANCEL_TOOLTIP));
       d.add(cancelButton, c);
       d.pack();
       d.repaint();

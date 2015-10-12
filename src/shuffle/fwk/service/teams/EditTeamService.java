@@ -132,6 +132,26 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private static final String KEY_LEVEL = "text.level";
    private static final String KEY_NAME = "text.name";
    private static final String KEY_TYPE = "text.type";
+   private static final String KEY_TYPE_TOOLTIP = "tooltip.type";
+   private static final String KEY_LEVEL_TOOLTIP = "tooltip.level";
+   private static final String KEY_NAME_TOOLTIP = "tooltip.name";
+   private static final String KEY_MEGA_FILTER_TOOLTIP = "tooltip.megafilter";
+   private static final String KEY_EFFECT_FILTER_TOOLTIP = "tooltip.effectfilter";
+   private static final String KEY_MAKE_DEFAULT_TOOLTIP = "tooltip.makedefault";
+   private static final String KEY_MEGA_TOOLTIP = "tooltip.mega";
+   private static final String KEY_ACTIVE_TOOLTIP = "tooltip.active";
+   private static final String KEY_MEGA_PROGRESS_TOOLTIP = "tooltip.megaprogress";
+   private static final String KEY_CLEAR_TEAM_TOOLTIP = "tooltip.clearteam";
+   private static final String KEY_WOOD_TOOLTIP = "tooltip.wood";
+   private static final String KEY_METAL_TOOLTIP = "tooltip.metal";
+   private static final String KEY_COIN_TOOLTIP = "tooltip.coin";
+   private static final String KEY_REMOVE_TOOLTIP = "tooltip.remove";
+   private static final String KEY_KEYBINDS_TOOLTIP = "tooltip.keybinds";
+   private static final String KEY_ADD_TOOLTIP = "tooltip.add";
+   private static final String KEY_SELECTED_TOOLTIP = "tooltip.selected";
+   private static final String KEY_OK_TOOLTIP = "tooltip.ok";
+   private static final String KEY_APPLY_TOOLTIP = "tooltip.apply";
+   private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
    
    // Defaults
    private static final int DEFAULT_BORDER_WIDTH = EditRosterService.DEFAULT_BORDER_WIDTH;
@@ -270,6 +290,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       typePanel.add(new JLabel(getString(KEY_TYPE)));
       typeChooser = new TypeChooser(true);
       typePanel.add(typeChooser);
+      typePanel.setToolTipText(getString(KEY_TYPE_TOOLTIP));
+      typeChooser.setToolTipText(getString(KEY_TYPE_TOOLTIP));
       ret.add(typePanel, c);
       
       c.gridx += 1;
@@ -279,6 +301,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 10, 1);
       levelSpinner = new JSpinner(snm);
       levelPanel.add(levelSpinner);
+      levelPanel.setToolTipText(getString(KEY_LEVEL_TOOLTIP));
+      levelSpinner.setToolTipText(getString(KEY_LEVEL_TOOLTIP));
       ret.add(levelPanel, c);
       
       c.gridx += 1;
@@ -293,16 +317,20 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       sc.weightx = 1.0;
       sc.insets = new Insets(0, 5, 0, 5);
       stringPanel.add(textField, sc);
+      stringPanel.setToolTipText(getString(KEY_NAME_TOOLTIP));
+      textField.setToolTipText(getString(KEY_NAME_TOOLTIP));
       ret.add(stringPanel, c);
       
       c.gridx += 1;
       c.weightx = 0.0;
       megaFilter = new JCheckBox(getString(KEY_MEGA_FILTER));
+      megaFilter.setToolTipText(getString(KEY_MEGA_FILTER_TOOLTIP));;
       ret.add(megaFilter, c);
       
       c.gridx += 1;
       c.weightx = 0.0;
       effectFilter = new EffectChooser(false, EffectChooser.DefaultEntry.NO_FILTER);
+      effectFilter.setToolTipText(getString(KEY_EFFECT_FILTER_TOOLTIP));
       ret.add(effectFilter, c);
       
       c.gridx += 1;
@@ -314,6 +342,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
             makeTeamDefault();
          }
       });
+      copyToLauncher.setToolTipText(getString(KEY_MAKE_DEFAULT_TOOLTIP));
       ret.add(copyToLauncher, c);
       
       return ret;
@@ -373,19 +402,23 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       
       rowc.gridx = 1;
       JLabel megaLabel = new JLabel(getString(KEY_MEGA_LABEL));
+      megaLabel.setToolTipText(getString(KEY_MEGA_TOOLTIP));
       secondOptionRow.add(megaLabel, rowc);
       
       rowc.gridx = 2;
       megaChooser = new JComboBox<String>();
+      megaChooser.setToolTipText(getString(KEY_MEGA_TOOLTIP));
       secondOptionRow.add(megaChooser, rowc);
       
       rowc.gridx = 3;
       JPanel progressPanel = new JPanel(new BorderLayout());
       megaActive = new JCheckBox(getString(KEY_ACTIVE));
       megaActive.setSelected(false);
+      megaActive.setToolTipText(getString(KEY_ACTIVE_TOOLTIP));
       progressPanel.add(megaActive, BorderLayout.WEST);
       megaProgressChooser = new JComboBox<Integer>();
       progressPanel.add(megaProgressChooser, BorderLayout.EAST);
+      megaProgressChooser.setToolTipText(getString(KEY_MEGA_PROGRESS_TOOLTIP));
       secondOptionRow.add(progressPanel, rowc);
       
       JPanel thirdOptionRow = new JPanel(new GridBagLayout());
@@ -398,18 +431,22 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
             clearTeam();
          }
       });
+      clearTeamButton.setToolTipText(getString(KEY_CLEAR_TEAM_TOOLTIP));
       thirdOptionRow.add(clearTeamButton, rowc);
       
       rowc.gridx = 2;
       woodCheckBox = new JCheckBox(getString(KEY_WOOD));
+      woodCheckBox.setToolTipText(getString(KEY_WOOD_TOOLTIP));
       thirdOptionRow.add(woodCheckBox, rowc);
       
       rowc.gridx = 3;
       metalCheckBox = new JCheckBox(getString(KEY_METAL));
+      metalCheckBox.setToolTipText(getString(KEY_METAL_TOOLTIP));
       thirdOptionRow.add(metalCheckBox, rowc);
       
       rowc.gridx = 4;
       coinCheckBox = new JCheckBox(getString(KEY_COIN));
+      coinCheckBox.setToolTipText(getString(KEY_COIN_TOOLTIP));
       thirdOptionRow.add(coinCheckBox, rowc);
       
       JPanel topPart = new JPanel(new GridBagLayout());
@@ -500,24 +537,28 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       c.gridx += 1;
       c.insets = new Insets(0, 10, 0, 10);
       selectedDisplayLabel = new JLabel(getString(KEY_NONE_SELECTED));
+      selectedDisplayLabel.setToolTipText(getString(KEY_SELECTED_TOOLTIP));
       ret.add(selectedDisplayLabel, c);
       
       c.anchor = GridBagConstraints.LINE_END;
       c.weightx = 1.0;
       c.gridx += 1;
       JButton okButton = new JButton(getString(KEY_OK));
+      okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       ret.add(okButton, c);
       
       c.anchor = GridBagConstraints.CENTER;
       c.weightx = 0.0;
       c.gridx += 1;
       JButton applyButton = new JButton(getString(KEY_APPLY));
+      applyButton.setToolTipText(getString(KEY_APPLY_TOOLTIP));
       ret.add(applyButton, c);
       
       c.anchor = GridBagConstraints.LINE_START;
       c.weightx = 0.0;
       c.gridx += 1;
       JButton cancelButton = new JButton(new DisposeAction(getString(KEY_CANCEL), this));
+      cancelButton.setToolTipText(getString(KEY_CANCEL_TOOLTIP));
       ret.add(cancelButton, c);
       
       okButton.addActionListener(new ActionListener() {
@@ -650,6 +691,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
             updateTeamPanel();
          }
       });
+      addToTeam.setToolTipText(getString(KEY_ADD_TOOLTIP));
       c.gridy += 1;
       ret.add(addToTeam, c);
       
@@ -813,6 +855,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       c.gridy += 1;
       c.gridwidth = 1;
       JButton removeButton = new JButton(getString(KEY_REMOVE));
+      removeButton.setToolTipText(getString(KEY_REMOVE_TOOLTIP));
       removeButton.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent arg0) {
@@ -846,6 +889,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       nameToKeybindComboboxMap.put(s.getName(), keybindsComboBox);
       nameToItemListenerMap.put(s.getName(), bindingListener);
       keybindsComboBox.addItemListener(bindingListener);
+      keybindsComboBox.setToolTipText(getString(KEY_KEYBINDS_TOOLTIP));
       ret.add(keybindsComboBox, c);
       
       ConfigManager manager = getUser().getPreferencesManager();

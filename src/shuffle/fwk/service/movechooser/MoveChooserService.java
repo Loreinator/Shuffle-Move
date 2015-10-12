@@ -26,7 +26,6 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,15 +40,11 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -67,6 +62,8 @@ import shuffle.fwk.config.EntryType;
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.data.simulation.util.NumberSpan;
 import shuffle.fwk.gui.GradingModeIndicator;
+import shuffle.fwk.gui.ShuffleMenuBar;
+import shuffle.fwk.gui.user.ShuffleMenuUser;
 import shuffle.fwk.i18n.I18nUser;
 import shuffle.fwk.service.BaseService;
 import shuffle.fwk.service.DisposeAction;
@@ -75,7 +72,7 @@ import shuffle.fwk.service.DisposeAction;
  * @author Andrew Meyers
  *         
  */
-public class MoveChooserService extends BaseService<MoveChooserServiceUser>implements I18nUser, Observer {
+public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I18nUser, Observer {
    
    /** The logger for this service. */
    private static final Logger LOG = Logger.getLogger(MoveChooserService.class.getName());
@@ -87,10 +84,6 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
    private static final String KEY_TITLE = "text.title";
    private static final String KEY_RESULT_FORMAT_MOVE = "format.result.move";
    private static final String KEY_RESULT_FORMAT_SETTLE = "format.result.settle";
-   private static final String KEY_UNDO = "menuitem.undomove";
-   private static final String KEY_REDO = "menuitem.redomove";
-   private static final String KEY_DO = "menuitem.domove";
-   private static final String KEY_MENU_MOVE = "menu.move";
    private static final String KEY_HEADER_RANK = "column.rank";
    private static final String KEY_HEADER_MOVE = "column.move";
    private static final String KEY_HEADER_GOLD = "column.gold";
@@ -99,6 +92,9 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
    private static final String KEY_HEADER_BLOCKS = "column.blocks";
    private static final String KEY_HEADER_DISRUPTIONS = "column.disruptions";
    private static final String KEY_HEADER_MEGASTATE = "column.megastate";
+   private static final String KEY_METRIC_TOOLTIP = "tooltip.metric";
+   private static final String KEY_DO_TOOLTIP = "tooltip.donow";
+   private static final String KEY_CLOSE_TOOLTIP = "tooltip.close";
    
    // config keys
    private static final String KEY_CHOOSER_X = "CHOOSER_X";
@@ -118,8 +114,12 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
    private static final Dimension MIN_SIZE = new Dimension(100, 100);
    
    // components
+   private ShuffleMenuBar shuffleMenuBar = null;
    private JDialog d = null;
+   private JLabel metricLabel = null;
    private GradingModeIndicator ind = null;
+   private JButton doMoveButton = null;
+   private JButton closeButton = null;
    private JTable table = null;
    private DefaultTableModel model2 = null;
    private ListSelectionListener listener2 = null;
@@ -131,8 +131,8 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
     * @see shuffle.fwk.service.BaseService#getUserClass()
     */
    @Override
-   protected Class<MoveChooserServiceUser> getUserClass() {
-      return MoveChooserServiceUser.class;
+   protected Class<ShuffleMenuUser> getUserClass() {
+      return ShuffleMenuUser.class;
    }
    
    /*
@@ -144,8 +144,8 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
       d = new JDialog(getOwner());
       d.setLayout(new GridBagLayout());
       d.setTitle(getString(KEY_TITLE));
-      
-      addMenu();
+      shuffleMenuBar = new ShuffleMenuBar(getUser(), getOwner());
+      d.setJMenuBar(shuffleMenuBar);
       
       GridBagConstraints c = new GridBagConstraints();
       c.fill = GridBagConstraints.BOTH;
@@ -193,17 +193,19 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
       c.gridy++;
       
       c.gridx++;
-      JLabel metricLabel = new JLabel(getString(KEY_METRIC_LABEL));
+      metricLabel = new JLabel(getString(KEY_METRIC_LABEL));
       metricLabel.setHorizontalAlignment(SwingConstants.CENTER);
       metricLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+      metricLabel.setToolTipText(getString(KEY_METRIC_TOOLTIP));
       d.add(metricLabel, c);
       
       c.gridx++;
       ind = new GradingModeIndicator(getUser());
+      ind.setToolTipText(getString(KEY_METRIC_TOOLTIP));
       d.add(ind, c);
       
       c.gridx++;
-      JButton doMoveButton = new JButton(new AbstractAction(getString(KEY_DO_NOW)) {
+      doMoveButton = new JButton(new AbstractAction(getString(KEY_DO_NOW)) {
          private static final long serialVersionUID = -8952138130413953491L;
          
          @Override
@@ -211,10 +213,12 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
             doMove();
          }
       });
+      doMoveButton.setToolTipText(getString(KEY_DO_TOOLTIP));
       d.add(doMoveButton, c);
       
       c.gridx++;
-      JButton closeButton = new JButton(new DisposeAction(getString(KEY_CLOSE), this));
+      closeButton = new JButton(new DisposeAction(getString(KEY_CLOSE), this));
+      closeButton.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
       d.add(closeButton, c);
       d.pack();
       
@@ -328,50 +332,6 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
       return ret;
    }
    
-   /**
-    * 
-    */
-   private void addMenu() {
-      AbstractAction doAction = new AbstractAction(getString(KEY_DO)) {
-         private static final long serialVersionUID = 5001922828829522595L;
-         
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            getUser().doSelectedMove();
-         }
-      };
-      doAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ActionEvent.CTRL_MASK));
-      
-      AbstractAction undoAction = new AbstractAction(getString(KEY_UNDO)) {
-         private static final long serialVersionUID = -3811519711082321686L;
-         
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            getUser().undoMove();
-         }
-      };
-      undoAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-      
-      AbstractAction redoAction = new AbstractAction(getString(KEY_REDO)) {
-         private static final long serialVersionUID = 3417068461078579687L;
-         
-         @Override
-         public void actionPerformed(ActionEvent e) {
-            getUser().redoMove();
-         }
-      };
-      redoAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
-      
-      JMenu menu = new JMenu(getString(KEY_MENU_MOVE));
-      menu.add(undoAction);
-      menu.add(redoAction);
-      menu.addSeparator();
-      menu.add(doAction);
-      JMenuBar menuBar = new JMenuBar();
-      menuBar.add(menu);
-      d.setJMenuBar(menuBar);
-   }
-   
    @Override
    protected void onLaunch() {
       ConfigManager preferencesManager = getUser().getPreferencesManager();
@@ -440,7 +400,9 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
     * @see shuffle.fwk.service.BaseService#updateGUIFrom(java.lang.Object)
     */
    @Override
-   protected void updateGUIFrom(MoveChooserServiceUser user) {
+   protected void updateGUIFrom(ShuffleMenuUser user) {
+      updateTooltips();
+      updateComponentText();
       Collection<SimulationResult> userResults = user.getResults();
       SimulationResult selectResult = user.getSelectedResult();
       if (listener2 != null) {
@@ -479,6 +441,44 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
          table.getSelectionModel().addListSelectionListener(listener2);
       }
       ind.repaint();
+   }
+   
+   /**
+    * Updates the tooltip text based on the current language.
+    */
+   private void updateTooltips() {
+      String metricTT = getString(KEY_METRIC_TOOLTIP);
+      String doMoveTT = getString(KEY_DO_TOOLTIP);
+      String closeTT = getString(KEY_CLOSE_TOOLTIP);
+      if (!metricTT.equals(metricLabel.getToolTipText())) {
+         metricLabel.setToolTipText(getString(KEY_METRIC_TOOLTIP));
+         ind.setToolTipText(getString(KEY_METRIC_TOOLTIP));
+      }
+      if (!doMoveTT.equals(doMoveButton.getToolTipText())) {
+         doMoveButton.setToolTipText(getString(KEY_DO_TOOLTIP));
+      }
+      if (!closeTT.equals(closeButton.getToolTipText())) {
+         closeButton.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
+      }
+   }
+   
+   private void updateComponentText() {
+      String metricLabelText = getString(KEY_METRIC_LABEL);
+      String doMoveText = getString(KEY_DO_NOW);
+      String closeText = getString(KEY_CLOSE);
+      String titleText = getString(KEY_TITLE);
+      if (!metricLabelText.equals(metricLabel.getText())) {
+         metricLabel.setText(metricLabelText);
+      }
+      if (!doMoveText.equals(doMoveButton.getText())) {
+         doMoveButton.setText(doMoveText);
+      }
+      if (!closeText.equals(closeButton.getText())) {
+         closeButton.setText(closeText);
+      }
+      if (!titleText.equals(d.getTitle())) {
+         d.setTitle(titleText);
+      }
    }
    
    /**
@@ -544,6 +544,7 @@ public class MoveChooserService extends BaseService<MoveChooserServiceUser>imple
     */
    @Override
    public void update(Observable arg0, Object arg1) {
+      shuffleMenuBar.updateAll();
       updateGUI();
    }
 }

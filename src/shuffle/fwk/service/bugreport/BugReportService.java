@@ -55,6 +55,9 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
    private static final String KEY_CREATE = "button.create";
    private static final String KEY_CANCEL = "button.cancel";
    private static final String KEY_BAD_LINK = "error.badlink";
+   private static final String KEY_TEXTAREA_TOOLTIP = "tooltip.textarea";
+   private static final String KEY_CREATE_TOOLTIP = "tooltip.create";
+   private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
    
    private JTextArea textArea;
    
@@ -84,6 +87,7 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
       textArea = new JTextArea();
       textArea.setLineWrap(true);
       textArea.setWrapStyleWord(true);
+      textArea.setToolTipText(getString(KEY_TEXTAREA_TOOLTIP));
       JScrollPane jsp = new JScrollPane(textArea);
       jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
       jsp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -105,6 +109,7 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
             dispose();
          }
       });
+      submitButton.setToolTipText(getString(KEY_CREATE_TOOLTIP));
       d.add(submitButton, c);
       
       c.gridx += 1;
@@ -118,6 +123,7 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
             dispose();
          }
       });
+      cancelButton.setToolTipText(getString(KEY_CANCEL_TOOLTIP));
       d.add(cancelButton, c);
       
       c.gridx += 1;
