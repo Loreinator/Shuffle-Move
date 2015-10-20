@@ -35,8 +35,10 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.35 - 2015-10-
-	- TBD
+v0.3.35 - 2015-10-20
+	- In-program Help document improved
+	- All effects, stages, species, and default boards added for Pokemon Shuffle update 1.2.21
+	- Fixed a bug where the Paint Pallet's Moves dropdown tooltip wasn't updating for language changes
 v0.3.34 - 2015-10-12
 	- 4Combos+ grading mode added (behaves like score, but puts 4+ combos above all others)
 	- Tooltips added, and menu improvements thanks to Kpwbo
