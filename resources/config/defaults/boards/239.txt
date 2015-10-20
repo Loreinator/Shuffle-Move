@@ -1,0 +1,13 @@
+STAGE 239
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Metal,Klinklang,Klang,Klinklang,Klinklang,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Metal,Klink,Klinklang,Klang,Klang,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Klang,Klinklang,Klang,Klinklang,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Klink,Klang,Metal,Klink,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_6 false,false,false,false,false,false

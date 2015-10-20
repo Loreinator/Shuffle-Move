@@ -513,7 +513,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       }
       if (!movesTT.equals(movesLabel.getToolTipText())) {
          movesLabel.setToolTipText(movesTT);
-         movesLabel.setToolTipText(movesTT);
+         movesLeft.setToolTipText(movesTT);
       }
       if (!atkTT.equals(enableAttackPowerUpBox.getToolTipText())) {
          enableAttackPowerUpBox.setToolTipText(atkTT);
