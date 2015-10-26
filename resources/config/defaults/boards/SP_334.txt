@@ -1,0 +1,13 @@
+STAGE SP_334
+ROW_1 Heatmor,Air,Air,Air,Air,Heatmor
+FROW_1 true,false,false,false,false,true
+ROW_2 Heatmor,Air,Air,Air,Air,Heatmor
+FROW_2 true,false,false,false,false,true
+ROW_3 Air,Heatmor,Air,Air,Heatmor,Air
+FROW_3 false,true,false,false,true,false
+ROW_4 Heatmor,Air,Air,Air,Air,Heatmor
+FROW_4 true,false,false,false,false,true
+ROW_5 Air,Heatmor,Air,Air,Heatmor,Air
+FROW_5 false,true,false,false,true,false
+ROW_6 Air,Heatmor,Air,Air,Heatmor,Air
+FROW_6 false,true,false,false,true,false
