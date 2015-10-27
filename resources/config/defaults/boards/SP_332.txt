@@ -1,0 +1,13 @@
+STAGE SP_332
+ROW_1 Heatmor,Air,Heatmor,Heatmor,Air,Heatmor
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Durant,Air,Durant,Durant,Air,Durant
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Heatmor,Air,Heatmor,Heatmor,Air,Heatmor
+FROW_5 false,false,false,false,false,false
+ROW_6 Heatmor,Air,Heatmor,Heatmor,Air,Heatmor
+FROW_6 false,false,false,false,false,false
