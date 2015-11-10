@@ -482,7 +482,12 @@ public class ShuffleModel
     * @return True if the board changed, False otherwise.
     */
    protected boolean loadDefaultBoard() {
-      boolean changed = getBoardManager().loadBoardForStage(getCurrentStage(), true);
+      boolean changed = false;
+      changed |= clearBoard();
+      changed |= getBoardManager().loadBoardForStage(getCurrentStage(), true);
+      changed |= setMegaProgress(0);
+      changed |= setCurrentScore(0);
+      changed |= setRemainingMoves(getCurrentStage().getMoves());
       if (changed) {
          setCursorTo(1, 1);
       }
