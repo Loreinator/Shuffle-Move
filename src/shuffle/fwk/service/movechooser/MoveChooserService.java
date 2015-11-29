@@ -79,6 +79,7 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
    
    // i18n keys
    private static final String KEY_METRIC_LABEL = "text.metric.label";
+   private static final String KEY_COMPUTE_NOW = "button.computenow";
    private static final String KEY_DO_NOW = "button.donow";
    private static final String KEY_CLOSE = "button.close";
    private static final String KEY_TITLE = "text.title";
@@ -210,7 +211,7 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
          
          @Override
          public void actionPerformed(ActionEvent arg0) {
-            doMove();
+            doMovePressed();
          }
       });
       doMoveButton.setToolTipText(getString(KEY_DO_TOOLTIP));
@@ -401,8 +402,8 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
     */
    @Override
    protected void updateGUIFrom(ShuffleMenuUser user) {
-      updateTooltips();
-      updateComponentText();
+      updateTooltips(user);
+      updateComponentText(user);
       Collection<SimulationResult> userResults = user.getResults();
       SimulationResult selectResult = user.getSelectedResult();
       if (listener2 != null) {
@@ -432,6 +433,7 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
          }
          if (selectResult == null) {
             table.clearSelection();
+            
          } else {
             int row = resultsMap.get(selectResult);
             table.setRowSelectionInterval(row, row);
@@ -446,7 +448,7 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
    /**
     * Updates the tooltip text based on the current language.
     */
-   private void updateTooltips() {
+   private void updateTooltips(ShuffleMenuUser user) {
       String metricTT = getString(KEY_METRIC_TOOLTIP);
       String doMoveTT = getString(KEY_DO_TOOLTIP);
       String closeTT = getString(KEY_CLOSE_TOOLTIP);
@@ -454,7 +456,9 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
          metricLabel.setToolTipText(getString(KEY_METRIC_TOOLTIP));
          ind.setToolTipText(getString(KEY_METRIC_TOOLTIP));
       }
-      if (!doMoveTT.equals(doMoveButton.getToolTipText())) {
+      if (user.getSelectedResult() == null) {
+         doMoveButton.setToolTipText(null);
+      } else if (!doMoveTT.equals(doMoveButton.getToolTipText())) {
          doMoveButton.setToolTipText(getString(KEY_DO_TOOLTIP));
       }
       if (!closeTT.equals(closeButton.getToolTipText())) {
@@ -462,15 +466,20 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
       }
    }
    
-   private void updateComponentText() {
+   private void updateComponentText(ShuffleMenuUser user) {
       String metricLabelText = getString(KEY_METRIC_LABEL);
       String doMoveText = getString(KEY_DO_NOW);
+      String computeNowText = getString(KEY_COMPUTE_NOW);
       String closeText = getString(KEY_CLOSE);
       String titleText = getString(KEY_TITLE);
       if (!metricLabelText.equals(metricLabel.getText())) {
          metricLabel.setText(metricLabelText);
       }
-      if (!doMoveText.equals(doMoveButton.getText())) {
+      if (user.getSelectedResult() == null) {
+         if (!computeNowText.equals(doMoveButton.getText())) {
+            doMoveButton.setText(computeNowText);
+         }
+      } else if (!doMoveText.equals(doMoveButton.getText())) {
          doMoveButton.setText(doMoveText);
       }
       if (!closeText.equals(closeButton.getText())) {
@@ -534,8 +543,12 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
       }
    }
    
-   private void doMove() {
-      getUser().doSelectedMove();
+   private void doMovePressed() {
+      if (getUser().getSelectedResult() == null) {
+         getUser().computeNow();
+      } else {
+         getUser().doSelectedMove();
+      }
    }
    
    /*

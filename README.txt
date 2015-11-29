@@ -1,4 +1,4 @@
-Shuffle Move v0.3.38
+Shuffle Move v0.3.39
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -35,6 +35,10 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.39 - 2015-11-28
+	- Updates for Pokemon Shuffle v1.2.25
+	- Move Chooser's Do Move button has become more adaptable.
+	- When filtering roster or team species by mega, all shown icons are mega evolved.
 v0.3.38 - 2015-11-16
 	- Updates for Pokemon Shuffle v1.2.24
 v0.3.37 - 2015-11-09
