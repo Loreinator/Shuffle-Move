@@ -36,6 +36,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ~~ Changelog ~~
 v0.3.39 - 2015-11-28
+	- Bug fix for the Bug report tool.
 	- Updates for Pokemon Shuffle v1.2.25
 	- Move Chooser's Do Move button has become more adaptable.
 	- When filtering roster or team species by mega, all shown icons are mega evolved.
