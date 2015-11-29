@@ -671,13 +671,13 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
             // Do nothing
          }
       };
-      
-      ImageIcon icon = getUser().getImageManager().getImageFor(s);
+      SpeciesPaint sp = new SpeciesPaint(s, false, getMegaFilter());
+      ImageIcon icon = getUser().getImageManager().getImageFor(sp);
       JLabel iconLabel = new JLabel(icon);
       iconLabel.addMouseListener(ma);
       ret.add(iconLabel, c);
       c.gridy += 1;
-      JLabel jLabel = new JLabel(s.getLocalizedName());
+      JLabel jLabel = new JLabel(s.getLocalizedName(getMegaFilter()));
       jLabel.setHorizontalTextPosition(SwingConstants.CENTER);
       jLabel.setHorizontalAlignment(SwingConstants.CENTER);
       jLabel.addMouseListener(ma);

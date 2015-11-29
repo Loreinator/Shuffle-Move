@@ -994,27 +994,25 @@ public class ShuffleModel
     *            If anything goes wrong.
     */
    private Project getErrorProject() throws Exception {
-      if (errorProject == null) {
-         Path buildFilePath = Paths.get(BUILD_REPORT_FILE);
-         LOG.finer("Build file path set to " + String.valueOf(buildFilePath));
-         Project p = new Project();
-         p.setSystemProperties();
-         p.setUserProperty("ant.file", buildFilePath.toAbsolutePath().toString());
-         LOG.finer("Project ant.file property set.");
-         p.init();
-         LOG.finer("Project.init() called.");
-         ProjectHelper helper = ProjectHelper.getProjectHelper();
-         LOG.finer("ProjectHelper created.");
-         p.addReference("ant.projectHelper", helper);
-         LOG.finer("Project ant.projectHelper reference set.");
-         p.addReference("user.dir", System.getProperty("user.dir"));
-         LOG.finer("Project user.dir reference set.");
-         helper.parse(p, buildFilePath.toAbsolutePath().toFile());
-         LOG.finer("PrjectHelper.parse() called.");
-         errorProject = p;
-         p.addBuildListener(getBuildListener());
-         LOG.finer("BuildListener added.");
-      }
+      Path buildFilePath = Paths.get(BUILD_REPORT_FILE);
+      LOG.finer("Build file path set to " + String.valueOf(buildFilePath));
+      Project p = new Project();
+      p.setSystemProperties();
+      p.setUserProperty("ant.file", buildFilePath.toAbsolutePath().toString());
+      LOG.finer("Project ant.file property set.");
+      p.init();
+      LOG.finer("Project.init() called.");
+      ProjectHelper helper = ProjectHelper.getProjectHelper();
+      LOG.finer("ProjectHelper created.");
+      p.addReference("ant.projectHelper", helper);
+      LOG.finer("Project ant.projectHelper reference set.");
+      p.addReference("user.dir", System.getProperty("user.dir"));
+      LOG.finer("Project user.dir reference set.");
+      helper.parse(p, buildFilePath.toAbsolutePath().toFile());
+      LOG.finer("PrjectHelper.parse() called.");
+      errorProject = p;
+      p.addBuildListener(getBuildListener());
+      LOG.finer("BuildListener added.");
       return errorProject;
    }
    
