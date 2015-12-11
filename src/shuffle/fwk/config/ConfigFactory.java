@@ -53,6 +53,7 @@ public class ConfigFactory {
    private static final String KEY_RESOURCE_PREFERENCES = "PREFERENCES";
    private static final String KEY_RESOURCE_SPECIES = "SPECIES";
    private static final String KEY_RESOURCE_STAGES = "STAGES";
+   private static final String KEY_RESOURCE_STAGES_MOBILE = "STAGES_MOBILE";
    private static final String KEY_RESOURCE_ICONS = "ICONS";
    private static final String KEY_RESOURCE_EFFECT = "EFFECTS";
    private static final String KEY_RESOURCE_EFFECT_MOBILE = "EFFECTS_MOBILE";
@@ -60,6 +61,7 @@ public class ConfigFactory {
    private static final String KEY_FILE_PREFERENCES = "PREFERENCES";
    private static final String KEY_FILE_SPECIES = "SPECIES";
    private static final String KEY_FILE_STAGES = "STAGES";
+   private static final String KEY_FILE_STAGES_MOBILE = "STAGES_MOBILE";
    private static final String KEY_FILE_ICONS = "ICONS";
    private static final String KEY_FILE_TEAMS = "TEAM";
    private static final String KEY_FILE_ROSTER = "ROSTER";
@@ -215,7 +217,15 @@ public class ConfigFactory {
    }
    
    public StageManager getStageManager() {
-      return getManager(KEY_RESOURCE_STAGES, KEY_FILE_STAGES, StageManager.class);
+      return getStageManager(false);
+   }
+   
+   public StageManager getStageManager(boolean mobile) {
+      if (mobile) {
+         return getManager(KEY_RESOURCE_STAGES_MOBILE, KEY_FILE_STAGES_MOBILE, StageManager.class);
+      } else {
+         return getManager(KEY_RESOURCE_STAGES, KEY_FILE_STAGES, StageManager.class);
+      }
    }
    
    public ImageManager getImageManager() {
