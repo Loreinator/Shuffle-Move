@@ -1,6 +1,7 @@
 RESOURCE PREFERENCES config/defaults/preferences.txt
 RESOURCE SPECIES config/defaults/species.txt
 RESOURCE STAGES config/defaults/stages.txt
+RESOURCE STAGES_MOBILE config/defaults/stages_mobile.txt
 RESOURCE ICONS config/defaults/icons.txt
 RESOURCE HELP_FILE docs/help.html
 RESOURCE ABOUT_FILE docs/about.html
@@ -12,6 +13,7 @@ RESOURCE GRADING_MODES config/defaults/gradingModes.txt
 FILE PREFERENCES config/preferences.txt
 FILE SPECIES config/species.txt
 FILE STAGES config/stages.txt
+FILE STAGES_MOBILE config/stages_mobile.txt
 FILE ICONS config/icons.txt
 FILE TEAM config/teamsData.txt
 FILE ROSTER config/rosterData.txt

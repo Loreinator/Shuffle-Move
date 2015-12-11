@@ -288,7 +288,7 @@ public class ShuffleModel
     */
    @Override
    public StageManager getStageManager() {
-      return getConfigFactory().getStageManager();
+      return getConfigFactory().getStageManager(isMobileMode());
    }
    
    /**
@@ -424,7 +424,7 @@ public class ShuffleModel
     * @return A Stage, the current board.
     */
    public Stage getCurrentStage() {
-      return getBoardManager().getCurrentStage();
+      return getStageManager().getStageValue(getBoardManager().getCurrentStage().getName());
    }
    
    /**
