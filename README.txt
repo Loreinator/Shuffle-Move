@@ -4,7 +4,9 @@ Shuffle Move v0.3.40
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
 
 ~~ Installation ~~
-1) Update to at least Java 8
+1) Update to at least Java 8 (Java 8u51 for best performance)
+	See here for the Java 8u51 archive:
+	http://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase8-2177648.html 
 2) Launch Shuffle Move vX.X.X.jar
 	Windows: Use Shuffle Move vX.X.X.exe
 	Other: Use Shuffle Move vX.X.X.jar or from the command line navigate to this directory and enter:
@@ -35,9 +37,11 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.40 - 2015-12-
+v0.3.40 - 2015-12-10
 	- Corrected Thundurus's type, and Mega Lucario stage # moves
-	- TBD
+	- Added Boards, Species, and Stages for updates of December 8th 2015
+	- Stage Manager is now split into stages.txt and stages_mobile.txt because some stages have more health on mobile.
+	- Weekend Meowth grading mode has been tweaked based on feedback. It is now GOLD,PROGRESS,COMBOS where it used to be COMBOS,GOLD
 v0.3.39 - 2015-11-28
 	- Bug fix for the Bug report tool.
 	- Updates for Pokemon Shuffle v1.2.25
