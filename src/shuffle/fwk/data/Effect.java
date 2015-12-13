@@ -637,7 +637,7 @@ public enum Effect {
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.ICE, 0.5);
+         ifThenSetSpecial(comboEffect, task, PkmType.ICE, 0.2);
       }
    },
    /**
