@@ -336,7 +336,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.2);
+         return getMultiplier(comboEffect, task, 1.0);
       }
    },
    /**
