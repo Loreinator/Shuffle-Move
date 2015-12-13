@@ -2132,7 +2132,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(50 * typeModifier);
+         return value.multiplyBy(100 * typeModifier);
       }
       
    },
