@@ -2229,6 +2229,64 @@ public enum Effect {
       
    },
    /**
+    * Clears Pokemon with the same type as Swampert (max 3) but NOT itself.
+    */
+   SWAMPERT {
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
+         ActivateMegaComboEffect effect;
+         Species toMatch;
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            effect = (ActivateMegaComboEffect) comboEffect;
+         } else {
+            effect = new ActivateMegaComboEffect(comboEffect);
+            toMatch = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
+            effect.setTargetSpecies(toMatch);
+         }
+         return effect;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         
+         Species toMatch;
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            toMatch = ((ActivateMegaComboEffect) comboEffect).getTargetSpecies();
+         } else {
+            Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
+            toMatch = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
+         }
+         
+         List<Integer> toErase = Collections.emptyList();
+         if (toMatch != null) {
+            toErase = task.findMatches(1, false, (r, c, s) -> s.equals(toMatch));
+         }
+         return toErase.isEmpty() ? null : toErase;
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 3;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
     * Same as {@link #MEWTWO}.
     */
    BANETTE {
