@@ -280,7 +280,7 @@ public class ShuffleModel
     */
    @Override
    public EffectManager getEffectManager() {
-      return getConfigFactory().getEffectManager(isMobileMode());
+      return getConfigFactory().getEffectManager();
    }
    
    /**
@@ -288,7 +288,7 @@ public class ShuffleModel
     */
    @Override
    public StageManager getStageManager() {
-      return getConfigFactory().getStageManager(isMobileMode());
+      return getConfigFactory().getStageManager();
    }
    
    /**
@@ -1297,13 +1297,6 @@ public class ShuffleModel
     */
    public boolean setSwapToPaint(boolean swapToPaint) {
       return getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_SWAP_TO_PAINT, swapToPaint);
-   }
-   
-   /**
-    * @return
-    */
-   public boolean isMobileMode() {
-      return getPreferencesManager().getBooleanValue(KEY_MOBILE_MODE, false);
    }
    
    public boolean setMobileMode(boolean mobileMode) {

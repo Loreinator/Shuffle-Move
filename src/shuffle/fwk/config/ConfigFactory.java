@@ -67,6 +67,8 @@ public class ConfigFactory {
    private static final String KEY_FILE_ROSTER = "ROSTER";
    private static final String KEY_FILE_GRADING_MODES = "GRADING_MODES";
    
+   private static final String KEY_MOBILE_MODE = "MOBILE_MODE";
+   
    private Map<Object, ConfigManager> managers = new HashMap<Object, ConfigManager>();
    
    private ConfigManager pathsConfigManager;
@@ -216,12 +218,12 @@ public class ConfigFactory {
       return getManager(KEY_RESOURCE_SPECIES, KEY_FILE_SPECIES, SpeciesManager.class);
    }
    
-   public StageManager getStageManager() {
-      return getStageManager(false);
+   public boolean isMobileMode() {
+      return getPreferencesManager().getBooleanValue(KEY_MOBILE_MODE, false);
    }
    
-   public StageManager getStageManager(boolean mobile) {
-      if (mobile) {
+   public StageManager getStageManager() {
+      if (isMobileMode()) {
          return getManager(KEY_RESOURCE_STAGES_MOBILE, KEY_FILE_STAGES_MOBILE, StageManager.class);
       } else {
          return getManager(KEY_RESOURCE_STAGES, KEY_FILE_STAGES, StageManager.class);
@@ -245,11 +247,7 @@ public class ConfigFactory {
    }
    
    public EffectManager getEffectManager() {
-      return getEffectManager(false);
-   }
-   
-   public EffectManager getEffectManager(boolean mobile) {
-      if (mobile) {
+      if (isMobileMode()) {
          return getManager(KEY_RESOURCE_EFFECT_MOBILE, null, EffectManager.class);
       } else {
          return getManager(KEY_RESOURCE_EFFECT, null, EffectManager.class);
