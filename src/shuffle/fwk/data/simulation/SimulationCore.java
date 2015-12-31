@@ -181,6 +181,10 @@ public class SimulationCore extends RecursiveAction {
       return effectManager.getOdds(effect, num);
    }
    
+   public double getMultiplier(Effect effect) {
+      return effectManager.getMult(effect);
+   }
+   
    @Override
    protected void compute() {
       startTime = System.currentTimeMillis();

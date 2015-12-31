@@ -1188,6 +1188,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             getState().addDisruptionCleared(1);
          }
          b.setFrozenAt(row, col, false);
+         removeClaimsFor(row, col);
          scheduleEffect(new DelayThawEffect(Arrays.asList(row, col)), Effect.getDefaultErasureDelay() + THAW_DELAY);
       }
    }

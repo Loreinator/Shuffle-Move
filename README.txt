@@ -1,4 +1,4 @@
-Shuffle Move v0.3.40
+Shuffle Move v0.3.41
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -37,6 +37,16 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.41 - 2015-12-31
+	- Misc bug fixes with abilities and framework
+	- Tweaking Weekend Meowth grading mode again.
+	- Corrected all mobile stages moves and hp values
+	- Added updates for the patches on Dec 22nd.
+	- Added i18n and icon for Keldeo_r (Keldeo's Resolute form)
+	- Fixed an issue with Barrier Bash
+	- Added "MIN" and "MAX" as grading metric modifiers
+	- Fixed an issue with the initial grading mode being the hard-coded default regardless of configuration
+	- Effect multipliers are now set by configuration for both mobile and 3ds
 v0.3.40 - 2015-12-10
 	- Corrected Thundurus's type, and Mega Lucario stage # moves
 	- Added Boards, Species, and Stages for updates of December 8th 2015

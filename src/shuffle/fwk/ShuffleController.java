@@ -1118,7 +1118,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
     */
    @Override
    public boolean isMobileMode() {
-      return getModel().isMobileMode();
+      return factory.isMobileMode();
    }
    
 }
