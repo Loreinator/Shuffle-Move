@@ -38,6 +38,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ~~ Changelog ~~
 v0.3.41 - 2015-12-31
+	- Misc bug fixes with abilities and framework
 	- Tweaking Weekend Meowth grading mode again.
 	- Corrected all mobile stages moves and hp values
 	- Added updates for the patches on Dec 22nd.
