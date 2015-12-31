@@ -40,7 +40,7 @@ public class EffectManager extends ConfigManager {
    private static final double[] DEFAULT_ODDS = new double[] { 1.0, 1.0, 1.0, 1.0 };
    private static final double DEFAULT_MULT = 1.0;
    private static final Pattern EFFECT_ODDS_MULT_PATTERN = Pattern
-         .compile("(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+([0-9]{1,13}(?:\\.[0-9]*)?)?");
+         .compile("\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)(?:\\s+([0-9]{1,13}(?:\\.[0-9]*)?))?\\s*");
    private EnumMap<Effect, double[]> oddsMap;
    private EnumMap<Effect, Double> multMap;
    
