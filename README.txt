@@ -37,7 +37,7 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.41 - 2015-12-
+v0.3.41 - 2015-12-31
 	- Tweaking Weekend Meowth grading mode again.
 	- Corrected all mobile stages moves and hp values
 	- Added updates for the patches on Dec 22nd.
@@ -45,6 +45,7 @@ v0.3.41 - 2015-12-
 	- Fixed an issue with Barrier Bash
 	- Added "MIN" and "MAX" as grading metric modifiers
 	- Fixed an issue with the initial grading mode being the hard-coded default regardless of configuration
+	- Effect multipliers are now set by configuration for both mobile and 3ds
 v0.3.40 - 2015-12-10
 	- Corrected Thundurus's type, and Mega Lucario stage # moves
 	- Added Boards, Species, and Stages for updates of December 8th 2015

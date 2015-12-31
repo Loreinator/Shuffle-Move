@@ -44,7 +44,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.5);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -54,7 +54,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.5);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -64,7 +64,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.5);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -73,7 +73,7 @@ public enum Effect {
    POWER_OF_4 {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.5);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -82,7 +82,7 @@ public enum Effect {
    POWER_OF_5 {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.5);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -97,7 +97,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.5);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -111,7 +111,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.2);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -125,7 +125,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.2);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -168,7 +168,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.5);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -183,7 +183,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.5);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -193,7 +193,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, 0.2);
+         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, getBonus(task));
       }
    },
    /**
@@ -203,7 +203,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.DRAGON, 0.2);
+         ifThenSetSpecial(comboEffect, task, PkmType.DRAGON, getBonus(task));
       }
    },
    /**
@@ -213,7 +213,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FIGHTING, 0.2);
+         ifThenSetSpecial(comboEffect, task, PkmType.FIGHTING, getBonus(task));
       }
       
    },
@@ -224,7 +224,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FAIRY, 0.5);
+         ifThenSetSpecial(comboEffect, task, PkmType.FAIRY, getBonus(task));
       }
    },
    /**
@@ -234,7 +234,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.DARK, 0.5);
+         ifThenSetSpecial(comboEffect, task, PkmType.DARK, getBonus(task));
       }
    },
    /**
@@ -257,14 +257,14 @@ public enum Effect {
                               effectSpecies)
                         && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks()));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(getMultiplier(task));
          }
          return ret;
       }
       
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(50);
+         return value;
       }
       
    },
@@ -283,14 +283,14 @@ public enum Effect {
             Board board = task.getState().getBoard();
             int num = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption())
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks()));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(getMultiplier(task));
          }
          return ret;
       }
       
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(20 * typeModifier);
+         return value.multiplyBy(typeModifier);
       }
    },
    /**
@@ -310,7 +310,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 0.2);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -336,7 +336,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 1.0);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -357,7 +357,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 1);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -617,7 +617,7 @@ public enum Effect {
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, 0.5);
+         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, getBonus(task));
       }
    },
    /**
@@ -627,7 +627,7 @@ public enum Effect {
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, 0.5);
+         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, getBonus(task));
       }
    },
    /**
@@ -637,7 +637,7 @@ public enum Effect {
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.ICE, 0.2);
+         ifThenSetSpecial(comboEffect, task, PkmType.ICE, getBonus(task));
       }
    },
    /**
@@ -693,7 +693,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 2);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -703,7 +703,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 2);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -712,7 +712,7 @@ public enum Effect {
    POWER_OF_5_P {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 2);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -735,14 +735,14 @@ public enum Effect {
                               effectSpecies)
                         && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks()));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(getMultiplier(task));
          }
          return ret;
       }
       
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(50);
+         return value;
       }
    },
    /**
@@ -752,7 +752,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.NORMAL, 1.5);
+         ifThenSetSpecial(comboEffect, task, PkmType.NORMAL, getBonus(task));
       }
    },
    /**
@@ -1057,7 +1057,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 4);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -1067,7 +1067,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FLYING, 1.0);
+         ifThenSetSpecial(comboEffect, task, PkmType.FLYING, getBonus(task));
       }
       
    },
@@ -1098,7 +1098,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, 9);
+         return getMultiplier(comboEffect, task, getBonus(task));
       }
    },
    /**
@@ -3061,8 +3061,8 @@ public enum Effect {
     */
    public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-      PkmType effectType = effectSpecies.getType();
-      return task.getSpecialTypeMultiplier(effectType);
+      NumberSpan multiplier = task.getSpecialTypeMultiplier(effectSpecies.getType());
+      return multiplier;
    }
    
    /**
@@ -3114,12 +3114,13 @@ public enum Effect {
       return task.getState().getCore().getOdds(this, num);
    }
    
-   // protected double getOdds(int numBlocks) {
-   // // n is between 3 and 5, inclusive
-   // int n = Math.max(3, Math.min(6, numBlocks));
-   // // get the odds array index at n-3
-   // return odds[n - 3];
-   // }
+   protected double getMultiplier(SimulationTask task) {
+      return task.getState().getCore().getMultiplier(this);
+   }
+   
+   protected double getBonus(SimulationTask task) {
+      return getMultiplier(task) - 1.0;
+   }
    
    /**
     * Returns true if the effect is allowed to possibly occur.
