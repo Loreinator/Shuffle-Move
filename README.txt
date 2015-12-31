@@ -44,6 +44,7 @@ v0.3.41 - 2015-12-
 	- Added i18n and icon for Keldeo_r (Keldeo's Resolute form)
 	- Fixed an issue with Barrier Bash
 	- Added "MIN" and "MAX" as grading metric modifiers
+	- Fixed an issue with the initial grading mode being the hard-coded default regardless of configuration
 v0.3.40 - 2015-12-10
 	- Corrected Thundurus's type, and Mega Lucario stage # moves
 	- Added Boards, Species, and Stages for updates of December 8th 2015

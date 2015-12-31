@@ -48,7 +48,7 @@ public class GradingModeManager extends ConfigManager {
    }
    
    public GradingMode getCurrentGradingMode() {
-      return getGradingModeValue(getStringValue(CURRENT_MODE), DEFAULT_MODE);
+      return getGradingModeValue(getStringValue(CURRENT_MODE, SCORE_KEY), DEFAULT_MODE);
    }
    
    public boolean setCurrentGradingMode(GradingMode mode) {
