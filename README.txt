@@ -38,6 +38,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ~~ Changelog ~~
 v0.3.42 - 2016-01-13
+	- Fixed a bug for stages available in one version and not the other.
 v0.3.41 - 2015-12-31
 	- Misc bug fixes with abilities and framework
 	- Tweaking Weekend Meowth grading mode again.
