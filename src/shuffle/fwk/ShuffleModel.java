@@ -424,7 +424,7 @@ public class ShuffleModel
     * @return A Stage, the current board.
     */
    public Stage getCurrentStage() {
-      return getStageManager().getStageValue(getBoardManager().getCurrentStage().getName());
+      return getStageManager().getStageValue(getBoardManager().getCurrentStage().getName(), StageManager.DEFAULT_STAGE);
    }
    
    /**
@@ -1300,6 +1300,8 @@ public class ShuffleModel
    }
    
    public boolean setMobileMode(boolean mobileMode) {
-      return getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_MOBILE_MODE, mobileMode);
+      boolean result = getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_MOBILE_MODE, mobileMode);
+      setCurrentStage(getCurrentStage());
+      return result;
    }
 }
