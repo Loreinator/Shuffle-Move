@@ -2171,6 +2171,64 @@ public enum Effect {
       
    },
    /**
+    * Clears a Pokemon with a different type from Mega Rayquaza (max 10).
+    */
+   RAYQUAZA {
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
+         ActivateMegaComboEffect effect;
+         Species toMatch;
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            effect = (ActivateMegaComboEffect) comboEffect;
+         } else {
+            effect = new ActivateMegaComboEffect(comboEffect);
+            toMatch = getRandomSpeciesOfOtherTypeFrom(dontMatch.getType(), task.getState().getBoard(), task);
+            effect.setTargetSpecies(toMatch);
+         }
+         return effect;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         
+         Species toMatch;
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            toMatch = ((ActivateMegaComboEffect) comboEffect).getTargetSpecies();
+         } else {
+            Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
+            toMatch = getRandomSpeciesOfOtherTypeFrom(dontMatch.getType(), task.getState().getBoard(), task);
+         }
+         
+         List<Integer> toErase = Collections.emptyList();
+         if (toMatch != null) {
+            toErase = task.findMatches(1, false, (r, c, s) -> s.equals(toMatch));
+         }
+         return toErase.isEmpty() ? null : toErase;
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 10;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
     * Clears a Pokemon with the same type as Mega Mewtwo Y (max 10) but NOT itself.
     */
    MEWTWO {
@@ -2776,6 +2834,48 @@ public enum Effect {
       List<Integer> allIndexes = IntStream.range(start, end).boxed().collect(Collectors.toList());
       Collections.shuffle(allIndexes, r);
       return allIndexes.subList(0, Math.max(0, Math.min(n, allIndexes.size())));
+   }
+   
+   /**
+    * @param type
+    * @param board
+    * @param dontMatch
+    * @return
+    */
+   protected Species getRandomSpeciesOfOtherTypeFrom(PkmType type, Board board, SimulationTask task) {
+      List<Species> options = getSpeciesOfOtherTypeFrom(type, board, task);
+      if (options.size() > 1) {
+         task.setIsRandom();
+      }
+      Species result = null;
+      if (!options.isEmpty()) {
+         int randomFoundSpecies = getRandomInt(options.size());
+         result = options.get(randomFoundSpecies);
+      }
+      return result;
+   }
+   
+   /**
+    * @param type
+    * @param board
+    * @param dontMatch
+    * @param task
+    * @return
+    */
+   public List<Species> getSpeciesOfOtherTypeFrom(PkmType type, Board board, SimulationTask task) {
+      List<Species> options = new ArrayList<Species>();
+      Set<Species> contained = new HashSet<Species>();
+      for (int row = 1; row <= Board.NUM_ROWS; row++) {
+         for (int col = 1; col <= Board.NUM_COLS; col++) {
+            Species cur = board.getSpeciesAt(row, col);
+            if (!contained.contains(cur) && !cur.getType().equals(type) && !task.isActive(row, col)
+                  && cur.getEffect().canLevel()) {
+               contained.add(cur);
+               options.add(cur);
+            }
+         }
+      }
+      return options;
    }
    
    /**
