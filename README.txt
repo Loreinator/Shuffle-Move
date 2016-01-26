@@ -37,7 +37,7 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.44 - 2016-01-
+v0.3.44 - 2016-01-25
 	- Implemented Mega Rayquaza's ability
 v0.3.43 - 2016-01-19
 	- Updates for Mobile v1.4.6
