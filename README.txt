@@ -37,10 +37,10 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.35 - 2016-02-07
+v0.3.45 - 2016-02-07
 	- Fixed Mega Swampert's Ability
 	- Updates for Mobile v1.5.2
-	- Updates for 3DS v1.2.31=
+	- Updates for 3DS v1.2.31
 v0.3.44 - 2016-01-25
 	- Implemented Mega Rayquaza's ability
 v0.3.43 - 2016-01-19
