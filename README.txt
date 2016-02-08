@@ -1,4 +1,4 @@
-Shuffle Move v0.3.44
+Shuffle Move v0.3.45
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -37,6 +37,10 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.35 - 2016-02-07
+	- Fixed Mega Swampert's Ability
+	- Updates for Mobile v1.5.2
+	- Updates for 3DS v1.2.31=
 v0.3.44 - 2016-01-25
 	- Implemented Mega Rayquaza's ability
 v0.3.43 - 2016-01-19
