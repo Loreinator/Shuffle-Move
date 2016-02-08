@@ -2104,6 +2104,40 @@ public enum Effect {
       
    },
    /**
+    * Erases frozen blocks (max 10), increasing by 1/6 for each additional block, same chosen order
+    * and timing as for Gengar.
+    */
+   DIANCIE {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         Board b = task.getState().getBoard();
+         List<Integer> toErase = task.findMatches(1, false, (r, c, s) -> b.isFrozenAt(r, c));
+         return toErase.isEmpty() ? null : toErase;
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 10;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(100 * typeModifier);
+      }
+      
+   },
+   /**
     * Erases blocks (max 10), increasing by 1/6 for each additional block, same chosen order and
     * timing as for Gengar.
     */
