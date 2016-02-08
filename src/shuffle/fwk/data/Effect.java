@@ -1346,6 +1346,43 @@ public enum Effect {
     * Erases 5 pokemon in the rows above and beneath the pokemon in the chain. This happens at one
     * tick per block away, progressing outwards. Clearing forces erase.
     */
+   ABOMASNOW {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return LOPUNNY.handlePlans(comboEffect, task);
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return KANGASKHAN.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return KANGASKHAN.getEffectRepeatDelay();
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return KANGASKHAN.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
+    * Erases 5 pokemon in the rows above and beneath the pokemon in the chain. This happens at one
+    * tick per block away, progressing outwards. Clearing forces erase.
+    */
    LOPUNNY {
       
       @Override
