@@ -490,6 +490,7 @@ RESOURCE Phione img/icons/489.png
 RESOURCE Manaphy img/icons/490.png
 RESOURCE Darkrai img/icons/491.png
 RESOURCE Shaymin img/icons/492.png
+RESOURCE Shaymin_s img/icons/492-s.png
 RESOURCE Arceus img/icons/493.png
 RESOURCE Victini img/icons/494.png
 RESOURCE Snivy img/icons/495.png

@@ -1346,6 +1346,43 @@ public enum Effect {
     * Erases 5 pokemon in the rows above and beneath the pokemon in the chain. This happens at one
     * tick per block away, progressing outwards. Clearing forces erase.
     */
+   ABOMASNOW {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return LOPUNNY.handlePlans(comboEffect, task);
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return KANGASKHAN.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return KANGASKHAN.getEffectRepeatDelay();
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return KANGASKHAN.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
+    * Erases 5 pokemon in the rows above and beneath the pokemon in the chain. This happens at one
+    * tick per block away, progressing outwards. Clearing forces erase.
+    */
    LOPUNNY {
       
       @Override
@@ -2104,6 +2141,40 @@ public enum Effect {
       
    },
    /**
+    * Erases frozen blocks (max 10), increasing by 1/6 for each additional block, same chosen order
+    * and timing as for Gengar.
+    */
+   DIANCIE {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         Board b = task.getState().getBoard();
+         List<Integer> toErase = task.findMatches(1, false, (r, c, s) -> b.isFrozenAt(r, c));
+         return toErase.isEmpty() ? null : toErase;
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 10;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(100 * typeModifier);
+      }
+      
+   },
+   /**
     * Erases blocks (max 10), increasing by 1/6 for each additional block, same chosen order and
     * timing as for Gengar.
     */
@@ -2287,9 +2358,10 @@ public enum Effect {
       
    },
    /**
-    * Clears Pokemon with the same type as Swampert (max 3) but NOT itself.
+    * Replaces Pokemon with the same type as Swampert (max 3) but NOT itself, with Swampert.
     */
    SWAMPERT {
+      
       @Override
       public boolean isPersistent() {
          return true;
@@ -2297,50 +2369,73 @@ public enum Effect {
       
       @Override
       protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
-         Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
-         ActivateMegaComboEffect effect;
-         Species toMatch;
          if (comboEffect instanceof ActivateMegaComboEffect) {
-            effect = (ActivateMegaComboEffect) comboEffect;
+            return comboEffect;
          } else {
-            effect = new ActivateMegaComboEffect(comboEffect);
-            toMatch = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
-            effect.setTargetSpecies(toMatch);
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            Species dontMatch = task.getEffectSpecies(effect.getCoords());
+            Species sel = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
+            List<Integer> coords = task.findMatches(33, false, (r, c, s) -> s.equals(sel));
+            if (coords.size() / 2 > 3) {
+               task.setIsRandom();
+            }
+            List<Integer> indexOrder = getUniqueRandoms(0, coords.size() / 2, 3);
+            // 3 random selections at most, of a single type-matched species.
+            List<Integer> plan = new ArrayList<Integer>(coords.size());
+            for (int i = 0; i < indexOrder.size(); i++) {
+               int index = indexOrder.get(i);
+               plan.add(coords.get(index * 2));
+               plan.add(coords.get(index * 2 + 1));
+            }
+            effect.addPlannedOptions(plan);
+            return effect;
          }
-         return effect;
       }
       
-      /**
-       * @param comboEffect
-       * @param task
-       * @return
-       */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         
-         Species toMatch;
+         List<Integer> toReplace = null;
          if (comboEffect instanceof ActivateMegaComboEffect) {
-            toMatch = ((ActivateMegaComboEffect) comboEffect).getTargetSpecies();
-         } else {
-            Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
-            toMatch = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
+            ActivateMegaComboEffect effect = (ActivateMegaComboEffect) comboEffect;
+            List<Integer> plan = effect.getNextPlan();
+            if (plan != null) {
+               while (plan.size() >= 2 && toReplace == null) {
+                  int row = plan.remove(0);
+                  int col = plan.remove(0);
+                  if (!task.isActive(row, col)) {
+                     toReplace = Arrays.asList(row, col);
+                  }
+               }
+               if (plan.size() >= 2) {
+                  // if the plan still has stuff to use, then re-queue it.
+                  effect.addPlannedOptions(plan);
+               }
+            }
          }
-         
-         List<Integer> toErase = Collections.emptyList();
-         if (toMatch != null) {
-            toErase = task.findMatches(1, false, (r, c, s) -> s.equals(toMatch));
+         return toReplace;
+      }
+      
+      @Override
+      public void handleExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks) {
+         Species toReplaceWith = task.getEffectSpecies(comboEffect.getCoords());
+         Board b = task.getState().getBoard();
+         for (int i = 0; i * 2 + 1 < extraBlocks.size(); i++) {
+            int row = extraBlocks.get(i * 2);
+            int col = extraBlocks.get(i * 2 + 1);
+            if (!task.isActive(row, col)) {
+               b.setSpeciesAt(row, col, toReplaceWith);
+               Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(
+                     task.getClaimsFor(row, col));
+               for (ActivateComboEffect claim : claimsFor) {
+                  task.removeClaim(claim);
+               }
+            }
          }
-         return toErase.isEmpty() ? null : toErase;
       }
       
       @Override
       public int getValueLimit() {
-         return 3;
-      }
-      
-      @Override
-      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+         return 33;
       }
       
    },
