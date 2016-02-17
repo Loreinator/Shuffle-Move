@@ -4,6 +4,7 @@ RESOURCE Venusaur img/icons/003.png
 RESOURCE Charmander img/icons/004.png
 RESOURCE Charmeleon img/icons/005.png
 RESOURCE Charizard img/icons/006.png
+RESOURCE Charizard_x img/icons/006.png
 RESOURCE Squirtle img/icons/007.png
 RESOURCE Wartortle img/icons/008.png
 RESOURCE Blastoise img/icons/009.png
@@ -148,6 +149,7 @@ RESOURCE Dratini img/icons/147.png
 RESOURCE Dragonair img/icons/148.png
 RESOURCE Dragonite img/icons/149.png
 RESOURCE Mewtwo img/icons/150.png
+RESOURCE Mewtwo_x img/icons/150.png
 RESOURCE Mew img/icons/151.png
 RESOURCE Chikorita img/icons/152.png
 RESOURCE Bayleef img/icons/153.png
