@@ -179,7 +179,8 @@ public enum EntryType {
          Effect effect = Effect.getEffect(m.group(4));
          String megaName = m.group(5);
          Effect megaEffect = Effect.getEffect(m.group(6));
-         Species ret = new Species(name, number, attack, type, effect, megaName, megaEffect);
+         PkmType megaType = PkmType.getType(m.group(7));
+         Species ret = new Species(name, number, attack, type, effect, megaName, megaEffect, megaType);
          return ret;
       }
       
@@ -199,8 +200,12 @@ public enum EntryType {
          
          String megaName = species.getMegaName();
          Effect megaEffect = species.getMegaEffect();
+         PkmType megaType = species.getMegaType();
          if (megaName != null) {
             ret = String.format("%s %s %s", ret, String.valueOf(megaName), String.valueOf(megaEffect));
+            if (megaType != null && !megaType.equals(type)) {
+               ret = String.format("%s %s", ret, String.valueOf(megaType));
+            }
          }
          return ret;
       }
@@ -436,8 +441,9 @@ public enum EntryType {
    
    private static final Pattern COLOR_PATTERN = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)(?:\\s+(\\d+))?\\s*$");
    private static final Pattern SPECIES_PATTERN = Pattern
-         .compile("^\\s*(-?\\d+)\\s+(\\d{1,3})\\s+(\\S+)\\s+(\\S+)(?:\\s+(\\S+)\\s+(\\S+))?\\s*$");
+         .compile("^\\s*(-?\\d+)\\s+(\\d{1,3})\\s+(\\S+)\\s+(\\S+)(?:\\s+(\\S+)\\s+(\\S+)(?:\\s+(\\S+))?)?\\s*$");
    // __________________numberId ______attack______type ____effect __(o) MegaName MegaEffect
+   // (o)MegaType
    private static final Pattern STAGE_PATTERN = Pattern
          .compile("^\\s*(\\S+)\\s+(\\S+)(?:\\s+(\\d+))?(?:\\s+(\\d+))?\\s*$");
    private static final Pattern TEAM_PATTERN = Pattern

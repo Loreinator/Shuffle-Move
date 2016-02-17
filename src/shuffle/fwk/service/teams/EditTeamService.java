@@ -719,7 +719,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
          RosterManager rosterManager = getUser().getRosterManager();
          Integer thisLevel = rosterManager.getLevelForSpecies(selectedSpecies);
          int attack = selectedSpecies.getAttack(thisLevel);
-         PkmType type = selectedSpecies.getType();
+         PkmType type = megaFilter.isSelected() ? selectedSpecies.getMegaType() : selectedSpecies.getType();
          String typeNice = WordUtils.capitalizeFully(type.toString());
          Effect effect = selectedSpecies.getEffect();
          String effectNice = EffectChooser.convertToBox(effect.toString());
@@ -1105,7 +1105,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       List<Predicate<Species>> filters = getBasicFilters();
       PkmType type = getType();
       if (type != null) {
-         filters.add(species -> species.getType().equals(type));
+         filters.add(
+species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType()).equals(type));
       }
       if (!ignoreLevel) {
          Integer curLevelFilter = getLevel();
