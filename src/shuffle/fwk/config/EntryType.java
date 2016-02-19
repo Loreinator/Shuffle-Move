@@ -221,6 +221,7 @@ public enum EntryType {
          PkmType targetType = PkmType.getType(key);
          int moves = Stage.DEFAULT_MOVES;
          int health = Stage.DEFAULT_HEALTH;
+         String escalationData = null;
          if (m.find()) {
             targetName = m.group(1);
             targetType = PkmType.getType(m.group(2));
@@ -228,12 +229,11 @@ public enum EntryType {
                moves = Integer.parseInt(m.group(3));
                if (m.group(4) != null) {
                   health = Integer.parseInt(m.group(4));
+                  escalationData = m.group(5);
                }
             }
          }
-         // System.out.printf("Recognized stage with data: %s,%s,%s,%s,%s%n", stageName, targetName,
-         // targetType.toString(), Integer.toString(moves), Integer.toString(health));
-         return new Stage(stageName, targetName, targetType, moves, health);
+         return new Stage(stageName, targetName, targetType, moves, health, escalationData);
       }
       
       @Override
@@ -245,11 +245,17 @@ public enum EntryType {
          String targetType = stage.getType().toString();
          String stageMoves = Integer.toString(stage.getMoves());
          String stageHealth = Integer.toString(stage.getHealth());
+         String escalationString = stage.getEscalationString();
+         
          if (stageName.equals(targetName) && stageName.equalsIgnoreCase(targetType)) {
             // All our data IS our key, so the data part is blank.
             return "";
          } else {
-            return String.format("%s %s %s %s", targetName, targetType, stageMoves, stageHealth);
+            String stageData = String.format("%s %s %s %s", targetName, targetType, stageMoves, stageHealth);
+            if (stage.isEscalation()) {
+               stageData = String.format("%s %s", stageData, escalationString);
+            }
+            return stageData;
          }
       }
       
@@ -445,7 +451,7 @@ public enum EntryType {
    // __________________numberId ______attack______type ____effect __(o) MegaName MegaEffect
    // (o)MegaType
    private static final Pattern STAGE_PATTERN = Pattern
-         .compile("^\\s*(\\S+)\\s+(\\S+)(?:\\s+(\\d+))?(?:\\s+(\\d+))?\\s*$");
+         .compile("^\\s*(\\S+)\\s+(\\S+)(?:\\s+(\\d+)(?:\\s+(\\d+)(?:\\s+(\\S+))?)?)?\\s*$");
    private static final Pattern TEAM_PATTERN = Pattern
          .compile("^\\s*(\\S+)(?:\\s+((?:[^,\\s]?[,])*[^,\\s]?))?(?:\\s+([^\\s,]+)(?:\\s*[\\s,]\\s*([^\\s,]+))?)?\\s*$");
    // _______________ListofSpecies __________ListofKeybinds _______________MegaName _______,

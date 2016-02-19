@@ -122,6 +122,7 @@ public class ShuffleModel
    private static final String KEY_EFFECT_THRESHOLD = "EFFECT_THRESHOLD";
    private static final String KEY_SWAP_TO_PAINT = "SWAP_TO_PAINT";
    private static final String KEY_MOBILE_MODE = "MOBILE_MODE";
+   private static final String KEY_ESCALATION_LEVEL = "ESCALATION_LEVEL";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -1154,7 +1155,29 @@ public class ShuffleModel
     * @return The amount of health remaining, as an integer.
     */
    public int getRemainingHealth() {
-      return Math.max(0, getCurrentStage().getHealth() - getCurrentScore());
+      return Math.max(0, getCurrentStage().getHealth(getEscalationLevel()) - getCurrentScore());
+   }
+   
+   /**
+    * Sets the current Escalation Level.
+    * 
+    * @param level
+    * @return True if the stage health changed.
+    */
+   public boolean setEscalationLevel(Integer level) {
+      int curStageHealth = getCurrentStage().getHealth(getEscalationLevel());
+      getPreferencesManager().setEntry(EntryType.INTEGER, KEY_ESCALATION_LEVEL, level);
+      int newStageHealth = getCurrentStage().getHealth(level);
+      return curStageHealth != newStageHealth;
+   }
+   
+   /**
+    * Gets the current Escalation Level.
+    * 
+    * @return The escalation level
+    */
+   public Integer getEscalationLevel() {
+      return getPreferencesManager().getIntegerValue(KEY_ESCALATION_LEVEL, 1);
    }
    
    /**

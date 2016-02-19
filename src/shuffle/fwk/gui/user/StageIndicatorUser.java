@@ -34,4 +34,10 @@ public interface StageIndicatorUser extends IndicatorUser<Object> {
    
    void setCurrentStage(Stage stage);
    
+   Integer getEscalationLevel();
+   
+   void setEscalationLevel(Integer level);
+   
+   boolean canLevelEscalation();
+   
 }

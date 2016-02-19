@@ -1146,4 +1146,31 @@ species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType())
       return getUser().getPreferencesManager();
    }
    
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#setEscalationLevel(java.lang.Integer)
+    */
+   @Override
+   public void setEscalationLevel(Integer level) {
+      getUser().setEscalationLevel(level);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#getEscalationLevel()
+    */
+   @Override
+   public Integer getEscalationLevel() {
+      return getUser().getEscalationLevel();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#canLevelEscalation()
+    */
+   @Override
+   public boolean canLevelEscalation() {
+      return false;
+   }
+   
 }

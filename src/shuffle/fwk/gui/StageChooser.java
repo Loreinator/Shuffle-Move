@@ -26,7 +26,11 @@ import java.util.HashSet;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
@@ -57,6 +61,7 @@ public class StageChooser extends JPanel implements I18nUser {
    private Stage curStage = null;
    private StageIndicatorUser user;
    private JTextField textField;
+   private JSpinner levelSpinner = null;
    
    private String lastFilter = "";
    
@@ -77,7 +82,8 @@ public class StageChooser extends JPanel implements I18nUser {
       for (Stage stage : curStages) {
          stageComboBox.addItem(stage);
       }
-      stageComboBox.setSelectedItem(getUser().getCurrentStage().getName());
+      Stage currentStage = getUser().getCurrentStage();
+      stageComboBox.setSelectedItem(currentStage.getName());
       il = new ItemListener() {
          @Override
          public void itemStateChanged(ItemEvent arg0) {
@@ -140,9 +146,22 @@ public class StageChooser extends JPanel implements I18nUser {
       if (!scbTT.equals(stageComboBox.getToolTipText())) {
          stageComboBox.setToolTipText(scbTT);
       }
+      SpinnerNumberModel snm = new SpinnerNumberModel(getUser().getEscalationLevel().intValue(), 1,
+            Stage.MAX_ESCALATION_LEVEL, 1);
+      levelSpinner = new JSpinner(snm);
+      levelSpinner.getModel().addChangeListener(new ChangeListener() {
+         @Override
+         public void stateChanged(ChangeEvent e) {
+            getUser().setEscalationLevel((Integer) levelSpinner.getValue());
+         }
+      });
+      boolean escalation = currentStage.isEscalation();
+      levelSpinner.setVisible(escalation && getUser().canLevelEscalation());
+      
       add(stageTypeIndicator);
       add(textField);
       add(stageComboBox);
+      add(levelSpinner);
    }
    
    public boolean updateStage() {
@@ -165,6 +184,7 @@ public class StageChooser extends JPanel implements I18nUser {
          stageComboBox.setSelectedItem(curStage);
          stageComboBox.addItemListener(il);
          stageTypeIndicator.setVisualized(stage.getType());
+         levelSpinner.setVisible(curStage.isEscalation() && getUser().canLevelEscalation());
       }
       textField.setToolTipText(getString(KEY_FILTER_TOOLTIP));
       stageComboBox.setToolTipText(getString(KEY_STAGE_LIST_TOOLTIP));
