@@ -859,7 +859,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       c.gridwidth = 2;
       Indicator<SpeciesPaint> ind = new Indicator<SpeciesPaint>(this);
       boolean isMega = megaProgress >= megaThreshold && s.getName().equals(curTeam.getMegaSlotName());
-      SpeciesPaint paint = new SpeciesPaint(s, false, isMega);
+      SpeciesPaint paint = new SpeciesPaint(s, s.equals(Species.FREEZE), isMega);
       ind.setVisualized(paint);
       ret.add(ind, c);
       c.gridy += 1;
