@@ -682,7 +682,7 @@ public class ShuffleModel
     */
    public SpeciesPaint getCurrentSpeciesPaint() {
       Species s = getSelectedSpecies();
-      return new SpeciesPaint(s, frozen, isMegaActive(s.getName()));
+      return getSpeciesPaint(s);
    }
    
    /**
@@ -694,11 +694,15 @@ public class ShuffleModel
    public List<SpeciesPaint> getCurrentPaints() {
       List<SpeciesPaint> ret = new ArrayList<SpeciesPaint>();
       for (Species s : getCurrentSpecies()) {
-         boolean isFrozen = !s.getEffect().equals(Effect.AIR) && frozen;
-         boolean isMega = isMegaActive(s.getName());
-         ret.add(new SpeciesPaint(s, isFrozen, isMega));
+         ret.add(getSpeciesPaint(s));
       }
       return ret;
+   }
+   
+   private SpeciesPaint getSpeciesPaint(Species s) {
+      boolean isFrozen = !s.getEffect().equals(Effect.AIR) && frozen ^ s.equals(Species.FREEZE);
+      boolean isMega = isMegaActive(s.getName());
+      return new SpeciesPaint(s, isFrozen, isMega);
    }
    
    public Collection<Species> getCurrentSpecies() {
@@ -1286,7 +1290,7 @@ public class ShuffleModel
       Board curBoard = getBoard();
       for (int row = 1; row <= Board.NUM_ROWS; row++) {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
-            if (curBoard.getSpeciesAt(row, col).equals(Species.AIR)) {
+            if (paint.getSpecies().equals(Species.FREEZE) || curBoard.getSpeciesAt(row, col).equals(Species.AIR)) {
                changed |= paintAt(row, col, paint);
             }
          }

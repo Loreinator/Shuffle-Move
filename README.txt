@@ -37,12 +37,13 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.46 - 2016-02-1
+v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species
 	- Extra entries have been added for Charizard and Mewtwo to for allow their "X" Mega Evolutions
 	- Starting with Diancie, escalation stages will scale their health according to the level
 	- Updates for Mobile v1.5.3
 	- Updates for 3DS v1.2.32
+	- Freeze paint now added! Added from the Team Editor, you can use it to paint freeze or thaw across the board. Use Ctrl-F to apply it everywhere at once.
 v0.3.45 - 2016-02-07
 	- Fixed Mega Swampert's Ability
 	- Updates for Mobile v1.5.2

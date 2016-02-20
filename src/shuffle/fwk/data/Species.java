@@ -48,9 +48,10 @@ public class Species implements Comparable<Species>, I18nUser {
    public static final Species METAL_3 = new Species("Metal_3", 5, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
    public static final Species METAL_2 = new Species("Metal_2", 6, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
    public static final Species METAL_1 = new Species("Metal_1", 7, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species FREEZE = new Species("Freeze", 8, 0, PkmType.NONE, Effect.UNLISTED, null, Effect.NONE);
    
    public static final List<Species> FIXED_SPECIES = Collections.unmodifiableList(Arrays.asList(AIR, WOOD, METAL, COIN,
-         METAL_4, METAL_3, METAL_2, METAL_1));
+         METAL_4, METAL_3, METAL_2, METAL_1, FREEZE));
    
    private static final int[] LEVEL_BONUS = new int[] { 0, // level 0 has 0 bonus
          0, 3, 6, 8, 10, 12, 14, 16, 18, 20 };
