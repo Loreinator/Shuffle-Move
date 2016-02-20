@@ -499,6 +499,36 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       }
    }
    
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#setEscalationLevel(java.lang.Integer)
+    */
+   @Override
+   public void setEscalationLevel(Integer level) {
+      if (getModel().setEscalationLevel(level)) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#canLevelEscalation()
+    */
+   @Override
+   public boolean canLevelEscalation() {
+      return true;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#getEscalationLevel()
+    */
+   @Override
+   public Integer getEscalationLevel() {
+      return getModel().getEscalationLevel();
+   }
+   
    @Override
    public String getTitle() {
       return ShuffleVersion.VERSION_FULL;

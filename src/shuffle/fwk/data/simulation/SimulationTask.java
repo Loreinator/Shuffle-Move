@@ -1014,7 +1014,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     */
    public double getTypeModifier(Species effectSpecies) {
       PkmType stageType = getState().getCore().getStage().getType();
-      double typeMod = PkmType.getMultiplier(effectSpecies.getType(), stageType);
+      double typeMod = PkmType.getMultiplier(getState().getSpeciesType(effectSpecies), stageType);
       return typeMod;
    }
    

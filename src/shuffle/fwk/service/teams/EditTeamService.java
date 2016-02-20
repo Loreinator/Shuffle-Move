@@ -126,6 +126,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private static final String KEY_WOOD = "text.wood";
    private static final String KEY_METAL = "text.metal";
    private static final String KEY_COIN = "text.coin";
+   private static final String KEY_FREEZE = "text.freeze";
    private static final String KEY_REMOVE = "button.remove";
    private static final String KEY_ADD = "button.add";
    private static final String KEY_TITLE = "text.title";
@@ -145,6 +146,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private static final String KEY_WOOD_TOOLTIP = "tooltip.wood";
    private static final String KEY_METAL_TOOLTIP = "tooltip.metal";
    private static final String KEY_COIN_TOOLTIP = "tooltip.coin";
+   private static final String KEY_FREEZE_TOOLTIP = "tooltip.freeze";
    private static final String KEY_REMOVE_TOOLTIP = "tooltip.remove";
    private static final String KEY_KEYBINDS_TOOLTIP = "tooltip.keybinds";
    private static final String KEY_ADD_TOOLTIP = "tooltip.add";
@@ -182,6 +184,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private JCheckBox woodCheckBox;
    private JCheckBox metalCheckBox;
    private JCheckBox coinCheckBox;
+   private JCheckBox freezeCheckBox;
    private StageChooser stageChooser;
    private JScrollPane rosterScrollPane;
    
@@ -448,6 +451,11 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       coinCheckBox = new JCheckBox(getString(KEY_COIN));
       coinCheckBox.setToolTipText(getString(KEY_COIN_TOOLTIP));
       thirdOptionRow.add(coinCheckBox, rowc);
+      
+      rowc.gridx = 5;
+      freezeCheckBox = new JCheckBox(getString(KEY_FREEZE));
+      freezeCheckBox.setToolTipText(getString(KEY_FREEZE_TOOLTIP));
+      thirdOptionRow.add(freezeCheckBox, rowc);
       
       JPanel topPart = new JPanel(new GridBagLayout());
       GridBagConstraints topC = new GridBagConstraints();
@@ -719,7 +727,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
          RosterManager rosterManager = getUser().getRosterManager();
          Integer thisLevel = rosterManager.getLevelForSpecies(selectedSpecies);
          int attack = selectedSpecies.getAttack(thisLevel);
-         PkmType type = selectedSpecies.getType();
+         PkmType type = megaFilter.isSelected() ? selectedSpecies.getMegaType() : selectedSpecies.getType();
          String typeNice = WordUtils.capitalizeFully(type.toString());
          Effect effect = selectedSpecies.getEffect();
          String effectNice = EffectChooser.convertToBox(effect.toString());
@@ -781,9 +789,11 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       boolean hasWood = curTeam.getNames().contains(Species.WOOD.getName());
       boolean hasMetal = curTeam.getNames().contains(Species.METAL.getName());
       boolean hasCoin = curTeam.getNames().contains(Species.COIN.getName());
+      boolean hasFreeze = curTeam.getNames().contains(Species.FREEZE.getName());
       woodCheckBox.setSelected(hasWood);
       metalCheckBox.setSelected(hasMetal);
       coinCheckBox.setSelected(hasCoin);
+      freezeCheckBox.setSelected(hasFreeze);
       
       megaChooser.removeAllItems();
       megaChooser.addItem(getString(KEY_NONE));
@@ -937,6 +947,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
          woodCheckBox.removeItemListener(optionListener);
          metalCheckBox.removeItemListener(optionListener);
          coinCheckBox.removeItemListener(optionListener);
+         freezeCheckBox.removeItemListener(optionListener);
       }
    }
    
@@ -956,6 +967,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       woodCheckBox.addItemListener(optionListener);
       metalCheckBox.addItemListener(optionListener);
       coinCheckBox.addItemListener(optionListener);
+      freezeCheckBox.addItemListener(optionListener);
    }
    
    private void updateFromOptions() {
@@ -978,6 +990,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       boolean hasMetal = curTeam.getNames().contains(metalName);
       String coinName = Species.COIN.getName();
       boolean hasCoin = curTeam.getNames().contains(coinName);
+      String freezeName = Species.FREEZE.getName();
+      boolean hasFreeze = curTeam.getNames().contains(freezeName);
       
       if (hasWood && !woodCheckBox.isSelected()) {
          curTeam.removeName(woodName);
@@ -994,6 +1008,12 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       } else if (!hasCoin && coinCheckBox.isSelected()) {
          curTeam.addName(coinName, getNextBindingFor(coinName, curTeam));
       }
+      if (hasFreeze && !freezeCheckBox.isSelected()) {
+         curTeam.removeName(freezeName);
+      } else if (!hasFreeze && freezeCheckBox.isSelected()) {
+         curTeam.addName(freezeName, getNextBindingFor(freezeName, curTeam));
+      }
+      
       Integer selectedMegaProgress = megaProgressChooser.getItemAt(megaProgressChooser.getSelectedIndex());
       if (selectedMegaProgress != null) {
          if (selectedMegaProgress == megaProgress && wasMegaActive != megaActive.isSelected()) {
@@ -1105,7 +1125,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       List<Predicate<Species>> filters = getBasicFilters();
       PkmType type = getType();
       if (type != null) {
-         filters.add(species -> species.getType().equals(type));
+         filters.add(
+species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType()).equals(type));
       }
       if (!ignoreLevel) {
          Integer curLevelFilter = getLevel();
@@ -1143,6 +1164,33 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    @Override
    public ConfigManager getPreferencesManager() {
       return getUser().getPreferencesManager();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#setEscalationLevel(java.lang.Integer)
+    */
+   @Override
+   public void setEscalationLevel(Integer level) {
+      getUser().setEscalationLevel(level);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#getEscalationLevel()
+    */
+   @Override
+   public Integer getEscalationLevel() {
+      return getUser().getEscalationLevel();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.StageIndicatorUser#canLevelEscalation()
+    */
+   @Override
+   public boolean canLevelEscalation() {
+      return false;
    }
    
 }

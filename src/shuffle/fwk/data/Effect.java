@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import shuffle.fwk.data.simulation.SimulationCore;
+import shuffle.fwk.data.simulation.SimulationState;
 import shuffle.fwk.data.simulation.SimulationTask;
 import shuffle.fwk.data.simulation.effects.ActivateComboEffect;
 import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
@@ -350,7 +351,7 @@ public enum Effect {
             return false;
          }
          Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-         PkmType effectType = effectSpecies.getType();
+         PkmType effectType = task.getState().getSpeciesType(effectSpecies);
          PkmType stageType = task.getState().getCore().getStage().getType();
          return PkmType.getMultiplier(effectType, stageType) < 1.0;
       }
@@ -665,8 +666,8 @@ public enum Effect {
          Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
          Species megaSlot = task.getState().getCore().getMegaSlot();
          if (megaSlot != null && effectSpecies != null) {
-            PkmType effectType = effectSpecies.getType();
-            PkmType megaType = megaSlot.getType();
+            PkmType effectType = task.getState().getSpeciesType(effectSpecies);
+            PkmType megaType = task.getState().getSpeciesType(megaSlot);
             return effectType.equals(megaType);
          } else {
             return false;
@@ -1894,7 +1895,8 @@ public enum Effect {
          } else {
             ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
             Species dontMatch = task.getEffectSpecies(effect.getCoords());
-            Species sel = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
+            Species sel = getRandomSpeciesOfTypeFrom(task.getState().getSpeciesType(dontMatch),
+                  task.getState().getBoard(), dontMatch, task);
             List<Integer> coords = task.findMatches(33, false, (r, c, s) -> s.equals(sel));
             if (coords.size() / 2 > 3) {
                task.setIsRandom();
@@ -1956,6 +1958,37 @@ public enum Effect {
       @Override
       public int getValueLimit() {
          return 33;
+      }
+      
+   },
+   /**
+    * Replace 3 random Psychic types with Mewtwo. Only one species is selected at a time.
+    */
+   MEWTWO_X {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return BLAZIKEN.handlePlans(comboEffect, task);
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return BLAZIKEN.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public void handleExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks) {
+         BLAZIKEN.handleExtraBlocks(comboEffect, task, extraBlocks);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return BLAZIKEN.getValueLimit();
       }
       
    },
@@ -2259,7 +2292,8 @@ public enum Effect {
             effect = (ActivateMegaComboEffect) comboEffect;
          } else {
             effect = new ActivateMegaComboEffect(comboEffect);
-            toMatch = getRandomSpeciesOfOtherTypeFrom(dontMatch.getType(), task.getState().getBoard(), task);
+            toMatch = getRandomSpeciesOfOtherTypeFrom(task.getState().getSpeciesType(dontMatch),
+                  task.getState().getBoard(), task);
             effect.setTargetSpecies(toMatch);
          }
          return effect;
@@ -2278,7 +2312,8 @@ public enum Effect {
             toMatch = ((ActivateMegaComboEffect) comboEffect).getTargetSpecies();
          } else {
             Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
-            toMatch = getRandomSpeciesOfOtherTypeFrom(dontMatch.getType(), task.getState().getBoard(), task);
+            toMatch = getRandomSpeciesOfOtherTypeFrom(task.getState().getSpeciesType(dontMatch),
+                  task.getState().getBoard(), task);
          }
          
          List<Integer> toErase = Collections.emptyList();
@@ -2317,7 +2352,8 @@ public enum Effect {
             effect = (ActivateMegaComboEffect) comboEffect;
          } else {
             effect = new ActivateMegaComboEffect(comboEffect);
-            toMatch = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
+            toMatch = getRandomSpeciesOfTypeFrom(task.getState().getSpeciesType(dontMatch), task.getState().getBoard(),
+                  dontMatch, task);
             effect.setTargetSpecies(toMatch);
          }
          return effect;
@@ -2336,7 +2372,8 @@ public enum Effect {
             toMatch = ((ActivateMegaComboEffect) comboEffect).getTargetSpecies();
          } else {
             Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
-            toMatch = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
+            toMatch = getRandomSpeciesOfTypeFrom(task.getState().getSpeciesType(dontMatch), task.getState().getBoard(),
+                  dontMatch, task);
          }
          
          List<Integer> toErase = Collections.emptyList();
@@ -2374,7 +2411,8 @@ public enum Effect {
          } else {
             ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
             Species dontMatch = task.getEffectSpecies(effect.getCoords());
-            Species sel = getRandomSpeciesOfTypeFrom(dontMatch.getType(), task.getState().getBoard(), dontMatch, task);
+            Species sel = getRandomSpeciesOfTypeFrom(task.getState().getSpeciesType(dontMatch),
+                  task.getState().getBoard(), dontMatch, task);
             List<Integer> coords = task.findMatches(33, false, (r, c, s) -> s.equals(sel));
             if (coords.size() / 2 > 3) {
                task.setIsRandom();
@@ -2786,6 +2824,25 @@ public enum Effect {
       // must not implement anything special - this is the default effect.
    },
    /**
+    * Placeholder effect for those who don't want to be listed in roster or species.
+    */
+   UNLISTED {
+      @Override
+      public boolean canLevel() {
+         return false;
+      }
+      
+      @Override
+      public boolean isAutoGenerated() {
+         return false;
+      }
+      
+      @Override
+      public boolean isPickable() {
+         return false;
+      }
+   },
+   /**
     * Coin block, has a bonus GOLD production by 100,300,500 for 3x,4x,5x matches.
     */
    COIN {
@@ -2960,10 +3017,11 @@ public enum Effect {
    public List<Species> getSpeciesOfOtherTypeFrom(PkmType type, Board board, SimulationTask task) {
       List<Species> options = new ArrayList<Species>();
       Set<Species> contained = new HashSet<Species>();
+      SimulationState state = task.getState();
       for (int row = 1; row <= Board.NUM_ROWS; row++) {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             Species cur = board.getSpeciesAt(row, col);
-            if (!contained.contains(cur) && !cur.getType().equals(type) && !task.isActive(row, col)
+            if (!contained.contains(cur) && !state.getSpeciesType(cur).equals(type) && !task.isActive(row, col)
                   && cur.getEffect().canLevel()) {
                contained.add(cur);
                options.add(cur);
@@ -3002,10 +3060,11 @@ public enum Effect {
    public List<Species> getSpeciesOfTypeFrom(PkmType type, Board board, Species dontMatch, SimulationTask task) {
       List<Species> options = new ArrayList<Species>();
       Set<Species> contained = new HashSet<Species>();
+      SimulationState state = task.getState();
       for (int row = 1; row <= Board.NUM_ROWS; row++) {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             Species cur = board.getSpeciesAt(row, col);
-            if (!contained.contains(cur) && cur.getType().equals(type) && !cur.equals(dontMatch)
+            if (!contained.contains(cur) && state.getSpeciesType(cur).equals(type) && !cur.equals(dontMatch)
                   && !task.isActive(row, col)) {
                contained.add(cur);
                options.add(cur);
@@ -3256,7 +3315,7 @@ public enum Effect {
     */
    public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-      NumberSpan multiplier = task.getSpecialTypeMultiplier(effectSpecies.getType());
+      NumberSpan multiplier = task.getSpecialTypeMultiplier(task.getState().getSpeciesType(effectSpecies));
       return multiplier;
    }
    
@@ -3342,7 +3401,7 @@ public enum Effect {
    
    protected final NumberSpan getMultiplier(ActivateComboEffect comboEffect, SimulationTask task, Number bonus) {
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-      NumberSpan multiplier = task.getSpecialTypeMultiplier(effectSpecies.getType());
+      NumberSpan multiplier = task.getSpecialTypeMultiplier(task.getState().getSpeciesType(effectSpecies));
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
             multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(multiplier);

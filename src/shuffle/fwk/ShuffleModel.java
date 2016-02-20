@@ -122,6 +122,7 @@ public class ShuffleModel
    private static final String KEY_EFFECT_THRESHOLD = "EFFECT_THRESHOLD";
    private static final String KEY_SWAP_TO_PAINT = "SWAP_TO_PAINT";
    private static final String KEY_MOBILE_MODE = "MOBILE_MODE";
+   private static final String KEY_ESCALATION_LEVEL = "ESCALATION_LEVEL";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -681,7 +682,7 @@ public class ShuffleModel
     */
    public SpeciesPaint getCurrentSpeciesPaint() {
       Species s = getSelectedSpecies();
-      return new SpeciesPaint(s, frozen, isMegaActive(s.getName()));
+      return getSpeciesPaint(s);
    }
    
    /**
@@ -693,11 +694,15 @@ public class ShuffleModel
    public List<SpeciesPaint> getCurrentPaints() {
       List<SpeciesPaint> ret = new ArrayList<SpeciesPaint>();
       for (Species s : getCurrentSpecies()) {
-         boolean isFrozen = !s.getEffect().equals(Effect.AIR) && frozen;
-         boolean isMega = isMegaActive(s.getName());
-         ret.add(new SpeciesPaint(s, isFrozen, isMega));
+         ret.add(getSpeciesPaint(s));
       }
       return ret;
+   }
+   
+   private SpeciesPaint getSpeciesPaint(Species s) {
+      boolean isFrozen = !s.getEffect().equals(Effect.AIR) && frozen ^ s.equals(Species.FREEZE);
+      boolean isMega = isMegaActive(s.getName());
+      return new SpeciesPaint(s, isFrozen, isMega);
    }
    
    public Collection<Species> getCurrentSpecies() {
@@ -1154,7 +1159,29 @@ public class ShuffleModel
     * @return The amount of health remaining, as an integer.
     */
    public int getRemainingHealth() {
-      return Math.max(0, getCurrentStage().getHealth() - getCurrentScore());
+      return Math.max(0, getCurrentStage().getHealth(getEscalationLevel()) - getCurrentScore());
+   }
+   
+   /**
+    * Sets the current Escalation Level.
+    * 
+    * @param level
+    * @return True if the stage health changed.
+    */
+   public boolean setEscalationLevel(Integer level) {
+      int curStageHealth = getCurrentStage().getHealth(getEscalationLevel());
+      getPreferencesManager().setEntry(EntryType.INTEGER, KEY_ESCALATION_LEVEL, level);
+      int newStageHealth = getCurrentStage().getHealth(level);
+      return curStageHealth != newStageHealth;
+   }
+   
+   /**
+    * Gets the current Escalation Level.
+    * 
+    * @return The escalation level
+    */
+   public Integer getEscalationLevel() {
+      return getPreferencesManager().getIntegerValue(KEY_ESCALATION_LEVEL, 1);
    }
    
    /**
@@ -1263,7 +1290,7 @@ public class ShuffleModel
       Board curBoard = getBoard();
       for (int row = 1; row <= Board.NUM_ROWS; row++) {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
-            if (curBoard.getSpeciesAt(row, col).equals(Species.AIR)) {
+            if (paint.getSpecies().equals(Species.FREEZE) || curBoard.getSpeciesAt(row, col).equals(Species.AIR)) {
                changed |= paintAt(row, col, paint);
             }
          }

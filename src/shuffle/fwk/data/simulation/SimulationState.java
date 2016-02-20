@@ -19,6 +19,7 @@
 package shuffle.fwk.data.simulation;
 
 import shuffle.fwk.data.Board;
+import shuffle.fwk.data.PkmType;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.simulation.util.NumberSpan;
 
@@ -173,6 +174,16 @@ public class SimulationState {
    
    public boolean isMegaActive() {
       return getCore().isMegaAllowed() && getCore().getMegaThreshold() <= getMegaProgress();
+   }
+   
+   public PkmType getSpeciesType(Species species) {
+      PkmType speciesType = species.getType();
+      PkmType megaType = species.getMegaType();
+      if (!megaType.equals(speciesType) && isMegaActive() && megaType != null && !megaType.equals(PkmType.NONE)
+            && getCore().getMegaSlot().equals(species)) {
+         speciesType = species.getMegaType();
+      }
+      return speciesType;
    }
    
    /**

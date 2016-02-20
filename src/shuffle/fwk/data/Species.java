@@ -48,9 +48,10 @@ public class Species implements Comparable<Species>, I18nUser {
    public static final Species METAL_3 = new Species("Metal_3", 5, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
    public static final Species METAL_2 = new Species("Metal_2", 6, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
    public static final Species METAL_1 = new Species("Metal_1", 7, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species FREEZE = new Species("Freeze", 8, 0, PkmType.NONE, Effect.UNLISTED, null, Effect.NONE);
    
    public static final List<Species> FIXED_SPECIES = Collections.unmodifiableList(Arrays.asList(AIR, WOOD, METAL, COIN,
-         METAL_4, METAL_3, METAL_2, METAL_1));
+         METAL_4, METAL_3, METAL_2, METAL_1, FREEZE));
    
    private static final int[] LEVEL_BONUS = new int[] { 0, // level 0 has 0 bonus
          0, 3, 6, 8, 10, 12, 14, 16, 18, 20 };
@@ -63,6 +64,7 @@ public class Species implements Comparable<Species>, I18nUser {
    private final Effect effect;
    private final String megaName;
    private final Effect megaEffect;
+   private final PkmType megaType;
    private final int number;
    private final String toString;
    private final Integer ID;
@@ -82,6 +84,11 @@ public class Species implements Comparable<Species>, I18nUser {
    
    public Species(String name, Integer number, int attack, PkmType type, Effect effect, String megaName,
          Effect megaEffect) {
+      this(name, number, attack, type, effect, megaName, megaEffect, type);
+   }
+   
+   public Species(String name, Integer number, int attack, PkmType type, Effect effect, String megaName,
+         Effect megaEffect, PkmType megaType) {
       if (name == null || type == null || effect == null) {
          throw new NullPointerException(String.format(
                "Cannot specify a null Species name (%s), type (%s), or effect (%s).", name, type, effect));
@@ -99,7 +106,7 @@ public class Species implements Comparable<Species>, I18nUser {
       this.effect = effect;
       this.megaName = megaName == null || megaName.trim().isEmpty() ? null : megaName.trim();
       this.megaEffect = megaEffect == null ? Effect.NONE : megaEffect;
-      
+      this.megaType = megaType == null ? type : (megaType == PkmType.NONE ? type : megaType);
       toString = getString();
       ID = getId(toString);
       hash = 37 * toString.hashCode();
@@ -158,6 +165,10 @@ public class Species implements Comparable<Species>, I18nUser {
       return megaEffect;
    }
    
+   public PkmType getMegaType() {
+      return megaType;
+   }
+   
    public boolean isFreezable() {
       return !getEffect().equals(Effect.AIR);
    }
@@ -167,6 +178,9 @@ public class Species implements Comparable<Species>, I18nUser {
             .toString(), getEffect().toString());
       if (getMegaName() != null) {
          s = s + String.format(" %s %s", getMegaName(), getMegaEffect().toString());
+         if (getMegaType() != getType()) {
+            s = s + String.format(" %s", getMegaType());
+         }
       }
       return s;
    }

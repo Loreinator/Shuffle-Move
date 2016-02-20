@@ -75,9 +75,7 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
    }
    
    /**
-    * @param includeNoFilter
-    *           TODO
-    * 
+    * Sets up the entries
     */
    private void setup() {
       refill();

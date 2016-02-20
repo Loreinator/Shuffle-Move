@@ -18,11 +18,15 @@
 
 package shuffle.fwk.data;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Queue;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * @author Andrew Meyers
@@ -30,12 +34,16 @@ import java.util.regex.Pattern;
  */
 public class Stage implements Comparable<Stage> {
    
+   private static final Logger LOG = Logger.getLogger(Species.class.getName());
+   
    public static final int DEFAULT_MOVES = 20;
    public static final int DEFAULT_HEALTH = 10000;
+   public static final int MAX_ESCALATION_LEVEL = 500;
    
    private static final Pattern MAIN = Pattern.compile("^\\s*(\\d+)\\s*$");
    private static final Pattern SPECIAL = Pattern.compile("^\\s*SP[_ ](\\d+)?\\S*\\s*$");
    private static final Pattern EX = Pattern.compile("^\\s*EX(\\d+)\\s*$");
+   private static final Pattern ESCALATION = Pattern.compile("^\\s*(\\d+)(?:[-](\\d+))?[:](\\d+)(?:[+](\\d+))?$");
    private static final int EX_OFFSET = 10000;
    private static final int SPECIAL_OFFSET = 100000000;
    private static final int TYPE_OFFSET = Integer.MAX_VALUE - 1;
@@ -45,6 +53,8 @@ public class Stage implements Comparable<Stage> {
    private final PkmType targetType;
    private final int stageMoves;
    private final int stageHealth;
+   private final Integer[] stageHealthByLevel;
+   private final String escalationString;
    private final String toString;
    
    private final int ordering;
@@ -54,11 +64,22 @@ public class Stage implements Comparable<Stage> {
    }
 
    public Stage(String name, String target, PkmType type, int moves, int health) {
+      this(name, target, type, moves, health, null);
+   }
+   
+   public Stage(String name, String target, PkmType type, int moves, int health, String escalationData) {
       stageName = name;
       targetName = target;
       targetType = type;
       stageMoves = moves;
-      stageHealth = health;
+      stageHealthByLevel = parseEscalationData(escalationData);
+      escalationString = escalationData;
+      if (stageHealthByLevel == null) {
+         stageHealth = health;
+      } else {
+         int maxIndex = stageHealthByLevel.length - 1;
+         stageHealth = stageHealthByLevel[maxIndex];
+      }
       
       StringBuilder sb = new StringBuilder();
       if (targetType.toString().equals(targetName)) {
@@ -99,7 +120,76 @@ public class Stage implements Comparable<Stage> {
    }
    
    public int getHealth() {
-      return stageHealth;
+      return getHealth(0);
+   }
+   
+   public int getHealth(Integer level) {
+      if (level == null || level < 1 || stageHealthByLevel == null || level > stageHealthByLevel.length) {
+         return stageHealth;
+      } else {
+         return stageHealthByLevel[level - 1];
+      }
+   }
+   
+   /**
+    * @param escalationData
+    * @return
+    */
+   private Integer[] parseEscalationData(String escalationData) {
+      Integer[] ret;
+      if (escalationData == null) {
+         ret = null;
+      } else {
+         ret = new Integer[MAX_ESCALATION_LEVEL];
+         int maxHealth = 0;
+         for (String entry : escalationData.split(";")) {
+            try {
+               Matcher m = ESCALATION.matcher(entry);
+               if (m.find()) {
+                  String start = m.group(1);
+                  String end = m.group(2);
+                  String base = m.group(3);
+                  String increment = m.group(4);
+                  Integer startLevel = Integer.parseInt(start);
+                  Integer baseHealth = Integer.parseInt(base);
+                  Integer endLevel = end == null ? startLevel : Integer.parseInt(end);
+                  Integer healthIncrement = increment == null ? 0 : Integer.parseInt(increment);
+                  assert startLevel > 0;
+                  assert startLevel <= endLevel;
+                  assert baseHealth > 0;
+                  assert healthIncrement >= 0;
+                  int curHealth = baseHealth;
+                  for (int curLevel = startLevel; curLevel <= endLevel; curLevel++) {
+                     ret[curLevel - 1] = curHealth;
+                     maxHealth = Math.max(maxHealth, curHealth);
+                     curHealth += healthIncrement;
+                  }
+               } else {
+                  throw new Exception("No match for entry: " + entry);
+               }
+            } catch (Exception e) {
+               LOG.severe(stageName + " has an escalation definition problem: " + e.getMessage());
+               StringWriter sw = new StringWriter();
+               e.printStackTrace(new PrintWriter(sw));
+               String exceptionDetails = sw.toString();
+               LOG.severe(exceptionDetails);
+            }
+         }
+         for (int i = 0; i < MAX_ESCALATION_LEVEL; i++) {
+            if (ret[i] == null || ret[i].intValue() == 0) {
+               ret[i] = maxHealth;
+            }
+         }
+      }
+      return ret;
+   }
+   
+   public boolean isEscalation() {
+      return escalationString != null;
+   }
+   
+   public String getEscalationString() {
+      return escalationString;
    }
    
    public static int getOrderValue(Stage s) {

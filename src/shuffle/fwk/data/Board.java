@@ -90,7 +90,7 @@ public class Board {
    }
    
    public boolean setSpeciesAt(int row, int column, Species s) {
-      if (row < 1 || row > NUM_ROWS || column < 1 || column > NUM_COLS || s == null) {
+      if (row < 1 || row > NUM_ROWS || column < 1 || column > NUM_COLS || s == null || s.equals(Species.FREEZE)) {
          return false;
       }
       boolean changed = !s.equals(getSpeciesAt(row, column));
