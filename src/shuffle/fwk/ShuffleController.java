@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.UUID;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -142,6 +143,18 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          userHomeArg = System.getProperty("user.home") + File.separator + "Shuffle-Move";
       }
       setUserHome(userHomeArg);
+      try {
+         FileHandler handler = new FileHandler();
+         Logger toRoot = LOG;
+         while (toRoot.getParent() != null) {
+            toRoot = toRoot.getParent();
+         }
+         toRoot.addHandler(handler);
+      } catch (SecurityException e1) {
+         e1.printStackTrace();
+      } catch (IOException e1) {
+         e1.printStackTrace();
+      }
 
       if (levelToSetArg != null) {
          try {
@@ -174,6 +187,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          File absoluteFile = new File(userHome).getCanonicalFile();
          absoluteFile.mkdir();
          System.setProperty("user.dir", absoluteFile.getCanonicalPath());
+         System.setProperty("user.home", absoluteFile.getCanonicalPath());
          try (InputStream is = ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE)) {
             File logDir = new File("log").getAbsoluteFile();
             if (!logDir.exists() && !logDir.mkdirs()) {
