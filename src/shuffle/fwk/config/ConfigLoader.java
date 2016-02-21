@@ -209,7 +209,7 @@ public class ConfigLoader {
       for (EntryType type : EntryType.values()) {
          ret.put(type, new LinkedHashMap<String, ConfigEntry>());
       }
-      try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+      try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF8"))) {
          String line;
          while ((line = br.readLine()) != null) {
             Matcher m = ENTRY_PATTERN.matcher(line);
