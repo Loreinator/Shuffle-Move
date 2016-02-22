@@ -2201,11 +2201,6 @@ public enum Effect {
          return 10;
       }
       
-      @Override
-      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(100 * typeModifier);
-      }
-      
    },
    /**
     * Erases blocks (max 10), increasing by 1/6 for each additional block, same chosen order and
