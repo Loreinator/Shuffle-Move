@@ -44,6 +44,7 @@ v0.3.47 - 2016-02-
 	- Diancie's effect has been fixed
 	- Documents can now be internationalized
 	- French translations now added, including help, bug report, and update dialogs
+	- The "Name" filter box will now be wide enough in all languages
 v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species
 	- Extra entries have been added for Charizard and Mewtwo to for allow their "X" Mega Evolutions

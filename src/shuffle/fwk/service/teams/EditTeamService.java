@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -187,6 +188,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private JCheckBox freezeCheckBox;
    private StageChooser stageChooser;
    private JScrollPane rosterScrollPane;
+   private Supplier<Dimension> getMinUpperPanel = null;
    
    private JPanel selectedComponent = null;
    private Species selectedSpecies = null;
@@ -245,13 +247,21 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       int height = preferencesManager.getIntegerValue(KEY_EDIT_TEAM_HEIGHT, defaultHeight);
       d.repaint();
       d.pack();
-      d.setMinimumSize(new Dimension(DEFAULT_POPUP_WIDTH, DEFAULT_POPUP_HEIGHT));
+      d.setMinimumSize(new Dimension(getMinimumWidth(), DEFAULT_POPUP_HEIGHT));
       d.setSize(new Dimension(width, height));
       d.setLocationRelativeTo(null);
       d.setResizable(true);
       addActionListeners();
       
       setDialog(d);
+   }
+   
+   private int getMinimumWidth() {
+      int ret = 0;
+      if (getMinUpperPanel != null) {
+         ret += Math.max(0, getMinUpperPanel.get().width);
+      }
+      return Math.max(ret, DEFAULT_POPUP_WIDTH);
    }
    
    @Override
@@ -347,6 +357,22 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       });
       copyToLauncher.setToolTipText(getString(KEY_MAKE_DEFAULT_TOOLTIP));
       ret.add(copyToLauncher, c);
+      
+      getMinUpperPanel = new Supplier<Dimension>() {
+         
+         @Override
+         public Dimension get() {
+            Dimension ret = new Dimension(10 + 50, 0);
+            for (Component c : new Component[] { typePanel, levelPanel, stringPanel, megaFilter, effectFilter,
+                  copyToLauncher }) {
+               Dimension temp = c.getPreferredSize();
+               int width = temp.width + ret.width;
+               int height = Math.max(temp.height, ret.height);
+               ret.setSize(width, height);
+            }
+            return ret;
+         }
+      };
       
       return ret;
    }

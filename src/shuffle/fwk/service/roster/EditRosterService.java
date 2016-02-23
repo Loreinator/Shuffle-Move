@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -134,6 +135,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private JComboBox<Integer> speedups = null;
    private ItemListener speedupsListener = null;
    private JCheckBox teamFilter = null;
+   private Supplier<Dimension> getMinUpperPanel = null;
    
    private RosterManager myData = null;
    
@@ -186,13 +188,21 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       int height = preferencesManager.getIntegerValue(KEY_EDIT_ROSTER_HEIGHT, defaultHeight);
       d.repaint();
       d.pack();
-      d.setMinimumSize(new Dimension(DEFAULT_POPUP_WIDTH, DEFAULT_POPUP_HEIGHT));
+      d.setMinimumSize(new Dimension(getMinimumWidth(), DEFAULT_POPUP_HEIGHT));
       d.setSize(new Dimension(width, height));
       d.setLocationRelativeTo(null);
       d.setResizable(true);
       addActionListeners();
       setDialog(d);
       getUser().addObserver(this);
+   }
+   
+   private int getMinimumWidth() {
+      int ret = 0;
+      if (getMinUpperPanel != null) {
+         ret += Math.max(0, getMinUpperPanel.get().width);
+      }
+      return Math.max(ret, DEFAULT_POPUP_WIDTH);
    }
    
    @Override
@@ -286,6 +296,21 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       effectFilter = new EffectChooser(false, EffectChooser.DefaultEntry.NO_FILTER);
       effectFilter.setToolTipText(getString(KEY_EFFECT_FILTER_TOOLTIP));
       ret.add(effectFilter, c);
+      
+      getMinUpperPanel = new Supplier<Dimension>() {
+         
+         @Override
+         public Dimension get() {
+            Dimension ret = new Dimension(10 + 50, 0);
+            for (Component c : new Component[] { typePanel, levelPanel, stringPanel, megaFilter, effectFilter }) {
+               Dimension temp = c.getPreferredSize();
+               int width = temp.width + ret.width;
+               int height = Math.max(temp.height, ret.height);
+               ret.setSize(width, height);
+            }
+            return ret;
+         }
+      };
       
       return ret;
    }
