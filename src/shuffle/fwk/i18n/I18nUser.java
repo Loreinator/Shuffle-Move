@@ -23,6 +23,17 @@ package shuffle.fwk.i18n;
  *
  */
 public interface I18nUser {
+   
+   /**
+    * Returns the i18n string for the user and key. If the key is not found the key itself is
+    * returned.
+    * 
+    * @param key
+    *           The key for the i18n
+    * @param params
+    *           Optional parameters to format into the string automatically.
+    * @return The key given, or the internationalized string.
+    */
    public default String getString(String key, Object... args) {
       return I18nFactory.getString(getClass(), key, args);
    }

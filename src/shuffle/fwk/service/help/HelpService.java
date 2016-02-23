@@ -29,11 +29,19 @@ import shuffle.fwk.service.textdisplay.TextDisplayService;
  */
 public class HelpService extends TextDisplayService implements I18nUser {
    private static final String KEY_TITLE = "text.title";
+   private static final String KEY_RESOURCE_PATH = "resource.path";
    public static final String KEY_AUTOLAUNCH_HELP = "AUTOLAUNCH_HELP";
+   private static final String DEFAULT_FILE_KEY = "HELP_FILE";
    
    @Override
-   protected String getFileKey() {
-      return "HELP_FILE";
+   protected String getFilePath() {
+      String path = getString(KEY_RESOURCE_PATH);
+      return path.equals(KEY_RESOURCE_PATH) ? null : path;
+   }
+   
+   @Override
+   protected String getDefaultFileKey() {
+      return DEFAULT_FILE_KEY;
    }
    
    @Override

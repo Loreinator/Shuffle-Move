@@ -50,7 +50,6 @@ import shuffle.fwk.service.BaseService;
 public class BugReportService extends BaseService<BugReportServiceUser> implements I18nUser {
    
    private static final Logger LOG = Logger.getLogger(BugReportService.class.getName());
-   private static final String KEY_BUGS_FILE = "BUGS_FILE";
    private static final String KEY_TITLE = "text.title";
    private static final String KEY_CREATE = "button.create";
    private static final String KEY_CANCEL = "button.cancel";
@@ -58,6 +57,9 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
    private static final String KEY_TEXTAREA_TOOLTIP = "tooltip.textarea";
    private static final String KEY_CREATE_TOOLTIP = "tooltip.create";
    private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
+   private static final String KEY_RESOURCE_PATH = "resource.path";
+   
+   private static final String DEFAULT_FILE_KEY = "BUGS_FILE";
    
    private JTextArea textArea;
    
@@ -173,13 +175,22 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
       JScrollPane jsp = new JScrollPane(textPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
       jsp.getVerticalScrollBar().setUnitIncrement(30);
-      String text = getUser().getPathManager().readEntireFileOrResource(KEY_BUGS_FILE);
+      String text = getUser().getPathManager().readEntireDocument(getFilePath(), getDefaultFileKey());
       textPane.setText(text);
       textPane.setSelectionStart(0);
       textPane.setSelectionEnd(0);
       textPane.repaint();
       jsp.validate();
       return jsp;
+   }
+   
+   private String getDefaultFileKey() {
+      return DEFAULT_FILE_KEY;
+   }
+   
+   private String getFilePath() {
+      String path = getString(KEY_RESOURCE_PATH);
+      return path.equals(KEY_RESOURCE_PATH) ? null : path;
    }
    
    private void doSubmit() {

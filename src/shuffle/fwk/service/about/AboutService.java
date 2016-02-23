@@ -26,15 +26,23 @@ import shuffle.fwk.service.textdisplay.TextDisplayService;
  */
 public class AboutService extends TextDisplayService {
    
+   private static final String KEY_RESOURCE_PATH = "resource.path";
    private static final String KEY_TITLE = "text.title";
+   private static final String DEFAULT_FILE_KEY = "ABOUT_FILE";
    
    /*
     * (non-Javadoc)
     * @see shuffle.fwk.service.textdisplay.TextDisplayService#getFileKey()
     */
    @Override
-   protected String getFileKey() {
-      return "ABOUT_FILE";
+   protected String getFilePath() {
+      String path = getString(KEY_RESOURCE_PATH);
+      return path.equals(KEY_RESOURCE_PATH) ? null : path;
+   }
+   
+   @Override
+   protected String getDefaultFileKey() {
+      return DEFAULT_FILE_KEY;
    }
    
    @Override

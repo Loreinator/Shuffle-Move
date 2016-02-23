@@ -57,7 +57,7 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
    
    private static final Logger LOG = Logger.getLogger(UpdateService.class.getName());
    
-   private static final String KEY_UPDATE_FILE = "UPDATE_FILE";
+   private static final String DEFAULT_FILE_KEY = "UPDATE_FILE";
    private static final String KEY_UPDATE_MIN_WIDTH = "UPDATE_MIN_WIDTH";
    private static final String KEY_UPDATE_MIN_HEIGHT = "UPDATE_MIN_HEIGHT";
    private static final int DEFAULT_UPDATE_WIDTH = 300;
@@ -74,6 +74,7 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
    public static final String KEY_DOWNLOADING = "text.downloading";
    public static final String KEY_PLEASE_UNPACK = "text.pleaseunpack";
    public static final String KEY_UPTODATE = "text.uptodate";
+   private static final String KEY_RESOURCE_PATH = "resource.path";
    
    private JDialog d = null;
    private JPanel progressPanel = null;
@@ -117,7 +118,7 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
             }
          }
       });
-      String text = getUser().getPathManager().readEntireFileOrResource(KEY_UPDATE_FILE);
+      String text = getUser().getPathManager().readEntireDocument(getFilePath(), getDefaultFileKey());
       textArea.setText(text);
       textArea.setSelectionStart(0);
       textArea.setSelectionEnd(0);
@@ -203,6 +204,15 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
       d.setResizable(true);
       d.setLocationRelativeTo(null);
       setDialog(d);
+   }
+   
+   private String getDefaultFileKey() {
+      return DEFAULT_FILE_KEY;
+   }
+   
+   private String getFilePath() {
+      String path = getString(KEY_RESOURCE_PATH);
+      return path.equals(KEY_RESOURCE_PATH) ? null : path;
    }
    
    @Override

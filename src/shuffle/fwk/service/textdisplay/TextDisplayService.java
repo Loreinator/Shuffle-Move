@@ -119,14 +119,16 @@ public abstract class TextDisplayService extends BaseService<TextDisplayServiceU
    @Override
    protected void updateGUIFrom(TextDisplayServiceUser user) {
       ConfigManager pathManager = user.getPathManager();
-      String text = pathManager.readEntireFileOrResource(getFileKey());
+      String text = pathManager.readEntireDocument(getFilePath(), getDefaultFileKey());
       textArea.setText(text);
       textArea.setSelectionStart(0);
       textArea.setSelectionEnd(0);
       textArea.repaint();
    }
    
-   protected abstract String getFileKey();
+   protected abstract String getFilePath();
+   
+   protected abstract String getDefaultFileKey();
    
    /**
     * @param title
