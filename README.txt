@@ -32,6 +32,7 @@ Splash screen and window icons: reddit.com/u/ArmpitWrestling
 German Translations: reddit.com/u/ArmpitWrestling
 Finnish Translations: reddit.com/u/I_get_in
 Chinese Translations: reddit.com/u/Pingtendo
+French Translations: reddit.com/u/TherkFr
 Species Icons: serebii.net
 
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
@@ -42,6 +43,7 @@ v0.3.47 - 2016-02-
 	- Fixed the i18n problem with Flabebe
 	- Diancie's effect has been fixed
 	- Documents can now be internationalized
+	- French translations now added, including help, bug report, and update dialogs
 v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species
 	- Extra entries have been added for Charizard and Mewtwo to for allow their "X" Mega Evolutions
