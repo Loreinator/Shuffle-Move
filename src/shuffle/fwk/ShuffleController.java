@@ -248,7 +248,6 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
             if (tableFontValue != null && tableFontValue instanceof FontUIResource) {
                FontUIResource fromFont = (FontUIResource) tableFontValue;
                bestRowHeight = fromFont.getSize();
-               System.out.println("table font starts as " + bestRowHeight);
             }
             Object rowHeightValue = UIManager.getLookAndFeel().getDefaults().get("Table.rowHeight");
             if (rowHeightValue != null && rowHeightValue instanceof Number) {
@@ -257,7 +256,6 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
                if (bestRowHeight == null || bestRowHeight.intValue() < rowHeight.intValue()) {
                   bestRowHeight = rowHeight;
                }
-               System.out.println("row height starts as " + rowHeight);
             }
             if (bestRowHeight != null) {
                bestRowHeight = bestRowHeight.doubleValue() * (4.0 / 3.0);
