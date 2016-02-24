@@ -224,7 +224,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          factory = new ConfigFactory();
       }
       Integer menuFontOverride = getPreferencesManager().getIntegerValue(KEY_FONT_SIZE_SCALING);
-      if (menuFontOverride != null && menuFontOverride != 100) {
+      if (menuFontOverride != null && menuFontOverride != 100 && menuFontOverride > 0 && menuFontOverride < 10000) {
          float scale = menuFontOverride.floatValue() / 100.0f;
          try {
             // This is the cleanest and most bug-free way to do this hack.
