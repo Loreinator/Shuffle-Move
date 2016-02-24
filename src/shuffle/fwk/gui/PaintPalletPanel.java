@@ -20,6 +20,7 @@ package shuffle.fwk.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -123,6 +125,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private ChangeListener scoreListener;
    private ItemListener movesListener;
    private ChangeListener attackPowerListener;
+   private Supplier<Integer> minimumWidthGetter = () -> 0;
    
    private List<SpeciesPaint> prevPaints = Collections.emptyList();
    private Team prevTeam = null;
@@ -144,6 +147,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          @Override
          public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
+            d.width = minimumWidthGetter.get();
             int height = d.height;
             d = function.apply(d); // allows us to grab the same width as the scroll pane, since we
                                    // can't have a circular reference
@@ -209,6 +213,17 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       c.gridy = 2;
       c.fill = GridBagConstraints.BOTH;
       add(optionPanel, c);
+      minimumWidthGetter = new Supplier<Integer>() {
+         @Override
+         public Integer get() {
+            int ret = 0;
+            for (Component component : new Component[] { megaPanel, frozenBox, woodBox, metalBox, coinBox,
+                  enableAttackPowerUpBox, scorePanel, healthLabel, movesPanel }) {
+               ret = Math.max(ret, component.getPreferredSize().width);
+            }
+            return ret;
+         }
+      };
       jsp = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
          @Override
@@ -245,6 +260,13 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       jsp.getVerticalScrollBar().setUnitIncrement(30);
       addOptionListeners();
       updateAll();
+   }
+   
+   @Override
+   public Dimension getPreferredSize() {
+      Dimension d = super.getPreferredSize();
+      d.width = minimumWidthGetter.get();
+      return d;
    }
    
    private PaintsIndicatorUser getUser() {

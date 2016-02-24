@@ -115,7 +115,9 @@ public class ShuffleFrame extends JFrame implements I18nUser {
    public void updateMinimumSize() {
       Dimension d = getMinimumSize();
       
-      d.width = gridPanel.getPreferredSize().width + modeIndicator.getPreferredSize().width;
+      int rightSectionWidth = Math.max(modeIndicator.getPreferredSize().width, paintPalletPanel.getPreferredSize().width);
+      int leftSectionWidth = Math.max(gridPanel.getPreferredSize().width, stageChooser.getPreferredSize().width);
+      d.width = leftSectionWidth + rightSectionWidth;
       d.height = gridPanel.getPreferredSize().height + alertsLog.getPreferredSize().height
             + moveIndicator.getPreferredSize().height + stageChooser.getPreferredSize().height;
       
@@ -258,7 +260,7 @@ public class ShuffleFrame extends JFrame implements I18nUser {
       paintPalletPanel = new PaintPalletPanel(getUser(), new Function<Dimension, Dimension>() {
          @Override
          public Dimension apply(Dimension d) {
-            d.width = modeIndicator.getPreferredSize().width - 20;
+            d.width = Math.max(modeIndicator.getPreferredSize().width - 20, d.width);
             d.height = Math.max(gridPanel.getPreferredSize().height, gridPanel.getSize().height);
             d.height += Math.max(moveIndicator.getPreferredSize().height, moveIndicator.getSize().height);
             d.height += Math.max(stageChooser.getPreferredSize().height, stageChooser.getSize().height);

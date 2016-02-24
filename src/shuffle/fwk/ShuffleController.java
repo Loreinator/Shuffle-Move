@@ -25,9 +25,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -38,6 +40,7 @@ import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.FontUIResource;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -111,6 +114,8 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    private static final String KEY_IMAGES_CHANGED = "log.images.changed";
    private static final String KEY_SPECIES_CHANGED = "log.species.changed";
    private static final String KEY_GRADING_CHANGED = "log.grading.changed";
+   
+   private static final String KEY_FONT_SIZE_SCALING = "FONT_SIZE_SCALING";
    
    /** The model for this controller. */
    private ShuffleModel model;
@@ -217,6 +222,55 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          factory = new ConfigFactory(configPaths[0]);
       } else {
          factory = new ConfigFactory();
+      }
+      Integer menuFontOverride = getPreferencesManager().getIntegerValue(KEY_FONT_SIZE_SCALING);
+      if (menuFontOverride != null && menuFontOverride != 100) {
+         float scale = menuFontOverride.floatValue() / 100.0f;
+         try {
+            // This is the cleanest and most bug-free way to do this hack.
+            Set<Object> allKeys = new HashSet<Object>();
+            allKeys.add("JMenu.font");
+            // Yes we're not supposed to use this, but it is the only one that works with Nimbus LAF
+            allKeys.addAll(UIManager.getLookAndFeelDefaults().keySet());
+            Object value = UIManager.get("defaultFont");
+            if (value != null && value instanceof FontUIResource) {
+               FontUIResource fromFont = (javax.swing.plaf.FontUIResource) value;
+               FontUIResource toFont = new FontUIResource(fromFont.deriveFont(fromFont.getSize() * scale));
+               // This one is necessary
+               UIManager.getLookAndFeel().getDefaults().put("defaultFont", toFont);
+               // And this one allows other LAF to be used in the future
+               UIManager.getDefaults().put("defaultFont", toFont);
+            }
+            
+            // Needed for Nimbus's JTable row height adjustment
+            Object tableFontValue = UIManager.getLookAndFeel().getDefaults().get("Table.font");
+            Number bestRowHeight = null;
+            if (tableFontValue != null && tableFontValue instanceof FontUIResource) {
+               FontUIResource fromFont = (FontUIResource) tableFontValue;
+               bestRowHeight = fromFont.getSize();
+               System.out.println("table font starts as " + bestRowHeight);
+            }
+            Object rowHeightValue = UIManager.getLookAndFeel().getDefaults().get("Table.rowHeight");
+            if (rowHeightValue != null && rowHeightValue instanceof Number) {
+               Number rowHeight = (Number) rowHeightValue;
+               rowHeight = rowHeight.doubleValue() * scale;
+               if (bestRowHeight == null || bestRowHeight.intValue() < rowHeight.intValue()) {
+                  bestRowHeight = rowHeight;
+               }
+               System.out.println("row height starts as " + rowHeight);
+            }
+            if (bestRowHeight != null) {
+               bestRowHeight = bestRowHeight.doubleValue() * (4.0 / 3.0);
+            }
+            if (bestRowHeight != null && bestRowHeight.intValue() > 0) {
+               UIManager.getLookAndFeel().getDefaults().put("Table.rowHeight", bestRowHeight.intValue());
+            }
+         } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            LOG.log(Level.SEVERE, "Cannot override menu font sizes!", e);
+         }
       }
       try {
          setModel(new ShuffleModel(this));

@@ -75,7 +75,7 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
       GridBagConstraints c = new GridBagConstraints();
       c.fill = GridBagConstraints.BOTH;
       c.weightx = 1.0;
-      c.weighty = 0.0;
+      c.weighty = 1.0;
       c.gridwidth = 5;
       
       c.gridy = 1;
