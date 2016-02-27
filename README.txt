@@ -46,6 +46,7 @@ v0.3.47 - 2016-02-
 	- French translations now added, including help, bug report, and update dialogs
 	- The "Name" filter box will now be wide enough in all languages
 	- GUI Font scaling via "FONT_SIZE_SCALING"
+	- Metal blocks are now not advanced in express mode unless preferences.txt specifies "ENABLE_EXPRESS_METAL_ADVANCE" as true
 v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species
 	- Extra entries have been added for Charizard and Mewtwo to for allow their "X" Mega Evolutions

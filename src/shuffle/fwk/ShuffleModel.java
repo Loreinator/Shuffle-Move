@@ -123,6 +123,7 @@ public class ShuffleModel
    private static final String KEY_SWAP_TO_PAINT = "SWAP_TO_PAINT";
    private static final String KEY_MOBILE_MODE = "MOBILE_MODE";
    private static final String KEY_ESCALATION_LEVEL = "ESCALATION_LEVEL";
+   private static final String KEY_ENABLE_EXPRESS_METAL_ADVANCE = "ENABLE_EXPRESS_METAL_ADVANCE";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -396,7 +397,11 @@ public class ShuffleModel
       }
       boolean changed = false;
       Species cur = getBoardManager().getBoard().getSpeciesAt(row, col);
-      if (paint != null && paint.getEffect().equals(Effect.METAL) && cur.getEffect().equals(Effect.METAL)) {
+      // If the paint and the current species are both Metal, and we're either not in express or
+      // Express metal advancement is enabled, THEN you can set this to the next metal block.
+      if (paint != null && paint.getEffect().equals(Effect.METAL) && cur.getEffect().equals(Effect.METAL)
+            && (getPreferencesManager().getBooleanValue(KEY_ENABLE_EXPRESS_METAL_ADVANCE, false)
+                  || !getCurrentMode().equals(EntryMode.EXPRESS))) {
          paint = Species.getNextMetal(cur);
       }
       changed |= getBoardManager().getBoard().setSpeciesAt(row, col, paint);
