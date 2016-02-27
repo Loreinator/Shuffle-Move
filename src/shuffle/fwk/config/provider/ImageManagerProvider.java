@@ -26,4 +26,6 @@ import shuffle.fwk.config.manager.ImageManager;
  */
 public interface ImageManagerProvider {
    ImageManager getImageManager();
+   
+   Integer scaleBorderThickness(int given);
 }

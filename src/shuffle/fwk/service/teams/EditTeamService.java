@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -659,18 +660,14 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       SpeciesManager speciesManager = getUser().getSpeciesManager();
       List<Predicate<Species>> filters = getCurrentFilters(false);
       Collection<Species> speciesValues = speciesManager.getSpeciesByFilters(filters);
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
       for (Species s : speciesValues) {
          JPanel component = createRosterComponent(s);
          if (s.equals(selectedSpecies)) {
             newSpecies = s;
             newComponent = component;
-            setBorderFor(component, true, true, borderThick, marginThick, outlineThick);
+            setBorderFor(component, true, true);
          } else {
-            setBorderFor(component, false, true, borderThick, marginThick, outlineThick);
+            setBorderFor(component, false, true);
          }
          rosterPanel.add(component);
       }
@@ -734,15 +731,11 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    
    private void setSelected(Species s, JPanel newComponent) {
       selectedSpecies = s;
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
       if (selectedComponent != null) {
-         setBorderFor(selectedComponent, false, true, borderThick, marginThick, outlineThick);
+         setBorderFor(selectedComponent, false, true);
       }
       selectedComponent = newComponent;
-      setBorderFor(selectedComponent, true, true, borderThick, marginThick, outlineThick);
+      setBorderFor(selectedComponent, true, true);
       rebuildSelectedLabel();
    }
    
@@ -762,9 +755,15 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       selectedDisplayLabel.setText(textToUse);
    }
    
-   private void setBorderFor(JComponent c, boolean isSelected, boolean haveSelect, int borderThick, int marginThick,
-         int outlineThick) {
+   private void setBorderFor(JComponent c, boolean isSelected, boolean haveSelect) {
       if (c != null) {
+         ConfigManager manager = getUser().getPreferencesManager();
+         int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
+         borderThick = getUser().scaleBorderThickness(borderThick);
+         int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
+         outlineThick = getUser().scaleBorderThickness(outlineThick);
+         int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
+         marginThick = getUser().scaleBorderThickness(marginThick);
          Border margin = new EmptyBorder(marginThick, marginThick, marginThick, marginThick);
          Border greyOutline = new LineBorder(Color.gray, outlineThick);
          Border innerChunk = BorderFactory.createCompoundBorder(greyOutline, margin);
@@ -928,11 +927,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       keybindsComboBox.setToolTipText(getString(KEY_KEYBINDS_TOOLTIP));
       ret.add(keybindsComboBox, c);
       
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
-      setBorderFor(ret, false, false, borderThick, marginThick, outlineThick);
+      setBorderFor(ret, false, false);
       return ret;
    }
    
@@ -1217,6 +1212,24 @@ species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType())
    @Override
    public boolean canLevelEscalation() {
       return false;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.IndicatorUser#scaleFont(java.awt.Font)
+    */
+   @Override
+   public Font scaleFont(Font fontToUse) {
+      return getUser() == null ? fontToUse : getUser().scaleFont(fontToUse);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.config.provider.ImageManagerProvider#getScaledBorderThickness(int)
+    */
+   @Override
+   public Integer scaleBorderThickness(int given) {
+      return getUser() == null ? given : getUser().scaleBorderThickness(given);
    }
    
 }

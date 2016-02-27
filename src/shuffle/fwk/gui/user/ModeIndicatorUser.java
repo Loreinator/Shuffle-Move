@@ -18,6 +18,8 @@
 
 package shuffle.fwk.gui.user;
 
+import java.awt.Font;
+
 import shuffle.fwk.EntryMode;
 import shuffle.fwk.EntryModeUser;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
@@ -37,5 +39,9 @@ public interface ModeIndicatorUser extends EntryModeUser, PreferencesManagerProv
     * @return
     */
    EntryMode getCurrentMode();
+   
+   Font scaleFont(Font givenFont);
+   
+   Integer scaleBorderThickness(int given);
    
 }

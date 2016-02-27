@@ -45,7 +45,7 @@ v0.3.47 - 2016-02-
 	- Documents can now be internationalized
 	- French translations now added, including help, bug report, and update dialogs
 	- The "Name" filter box will now be wide enough in all languages
-	- GUI Font scaling via "FONT_SIZE_SCALING"
+	- Global GUI Scaling See here for details: https://github.com/Loreinator/Shuffle-Move/wiki/Display-Size-Configuration
 	- Metal blocks are now not advanced in express mode unless preferences.txt specifies "ENABLE_EXPRESS_METAL_ADVANCE" as true
 v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species

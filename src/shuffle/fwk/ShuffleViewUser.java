@@ -20,12 +20,14 @@ package shuffle.fwk;
 
 import shuffle.fwk.config.provider.BoardManagerProvider;
 import shuffle.fwk.config.provider.ConfigFactoryProvider;
+import shuffle.fwk.config.provider.ImageManagerProvider;
 import shuffle.fwk.config.provider.TeamManagerProvider;
 
 /**
  * @author Andrew Meyers
  *
  */
-public interface ShuffleViewUser extends TeamManagerProvider, BoardManagerProvider, ConfigFactoryProvider {
+public interface ShuffleViewUser
+      extends TeamManagerProvider, BoardManagerProvider, ConfigFactoryProvider, ImageManagerProvider {
    
 }

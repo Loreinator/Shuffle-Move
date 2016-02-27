@@ -492,18 +492,14 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       Species newSpecies = null;
       JPanel newComponent = null;
       Collection<Species> speciesValues = speciesData.getAllSpecies();
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
       for (Species s : speciesValues) {
          JPanel component = createRosterComponent(s);
          if (s.equals(selectedSpecies)) {
             newSpecies = s;
             newComponent = component;
-            setBorderFor(component, true, borderThick, marginThick, outlineThick);
+            setBorderFor(component, true);
          } else {
-            setBorderFor(component, false, borderThick, marginThick, outlineThick);
+            setBorderFor(component, false);
          }
          speciesSelectPanel.add(component);
       }
@@ -513,20 +509,23 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
    
    private void setSelected(Species species, JPanel newComponent) {
       selectedSpecies = species;
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
       if (selectedComponent != null) {
-         setBorderFor(selectedComponent, false, borderThick, marginThick, outlineThick);
+         setBorderFor(selectedComponent, false);
       }
       selectedComponent = newComponent;
-      setBorderFor(selectedComponent, true, borderThick, marginThick, outlineThick);
+      setBorderFor(selectedComponent, true);
       setDisplayedSpecies(species);
    }
    
-   private void setBorderFor(JPanel c, boolean doBorder, int borderThick, int marginThick, int outlineThick) {
+   private void setBorderFor(JPanel c, boolean doBorder) {
       if (c != null) {
+         ConfigManager manager = getUser().getPreferencesManager();
+         int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
+         borderThick = getUser().scaleBorderThickness(borderThick);
+         int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
+         outlineThick = getUser().scaleBorderThickness(outlineThick);
+         int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
+         marginThick = getUser().scaleBorderThickness(marginThick);
          Border main;
          Border margin = new EmptyBorder(marginThick, marginThick, marginThick, marginThick);
          if (doBorder) {

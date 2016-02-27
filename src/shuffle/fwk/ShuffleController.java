@@ -18,6 +18,7 @@
 
 package shuffle.fwk;
 
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -115,7 +116,9 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    private static final String KEY_SPECIES_CHANGED = "log.species.changed";
    private static final String KEY_GRADING_CHANGED = "log.grading.changed";
    
+   // Scaling config keys
    private static final String KEY_FONT_SIZE_SCALING = "FONT_SIZE_SCALING";
+   private static final String KEY_BORDER_SCALING = "BORDER_SCALING";
    
    /** The model for this controller. */
    private ShuffleModel model;
@@ -224,7 +227,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          factory = new ConfigFactory();
       }
       Integer menuFontOverride = getPreferencesManager().getIntegerValue(KEY_FONT_SIZE_SCALING);
-      if (menuFontOverride != null && menuFontOverride != 100 && menuFontOverride > 0 && menuFontOverride < 10000) {
+      if (menuFontOverride != null && menuFontOverride != 100 && menuFontOverride >= 1 && menuFontOverride <= 10000) {
          float scale = menuFontOverride.floatValue() / 100.0f;
          try {
             // This is the cleanest and most bug-free way to do this hack.
@@ -281,6 +284,37 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          e.printStackTrace(pw);
          LOG.log(Level.SEVERE, "Failure on start:", e);
       }
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ModeIndicatorUser#scaleFont(java.awt.Font)
+    */
+   @Override
+   public Font scaleFont(Font givenFont) {
+      Font retFont = givenFont;
+      Integer menuFontOverride = getPreferencesManager().getIntegerValue(KEY_FONT_SIZE_SCALING);
+      if (menuFontOverride != null && menuFontOverride != 100 && menuFontOverride > 0 && menuFontOverride < 10000) {
+         float scale = menuFontOverride.floatValue() / 100.0f;
+         float adjustedSize = retFont.getSize2D() * scale;
+         retFont = retFont.deriveFont(adjustedSize);
+      }
+      return retFont;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.config.provider.ImageManagerProvider#scaleBorderThickness(int)
+    */
+   @Override
+   public Integer scaleBorderThickness(int given) {
+      Integer borderScale = getPreferencesManager().getIntegerValue(KEY_BORDER_SCALING);
+      Integer ret = given;
+      if (borderScale != null && borderScale != 100 && borderScale >= 1 && borderScale <= 10000) {
+         float scale = borderScale.floatValue() * ret.floatValue() / 100.0f;
+         ret = Math.round(scale);
+      }
+      return ret;
    }
    
    /**
@@ -502,7 +536,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    
    @Override
    public ImageManager getImageManager() {
-      return getView().getImageManager();
+      return getConfigFactory().getImageManager();
    }
    
    @Override

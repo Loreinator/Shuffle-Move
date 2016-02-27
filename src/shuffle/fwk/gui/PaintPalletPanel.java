@@ -418,18 +418,15 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          prevTeam = curTeam;
       }
       removeAllIndicators();
-      ConfigManager manager = getUser().getPreferencesManager();
-      int thickness = manager.getIntegerValue(KEY_SELECT_PAINT_THICK, DEFAULT_SELECT_THICK);
-      int outlineThick = manager.getIntegerValue(KEY_OUTLINE_PAINT_THICK, DEFAULT_OUTLINE_THICK);
       for (int i = 0; i < curPaints.size(); i++) {
          SpeciesPaint value = curPaints.get(i);
          String text = getUser().getTextFor(value);
          Indicator<SpeciesPaint> ind = new Indicator<SpeciesPaint>(getUser());
          ind.setVisualized(value, text);
          if (value.equals(curPaint)) { // border necessary
-            setBorderFor(ind, true, thickness, outlineThick);
+            setBorderFor(ind, true);
          } else { // buffer needed to keep a nice look
-            setBorderFor(ind, false, thickness, outlineThick);
+            setBorderFor(ind, false);
          }
          addIndicator(ind);
       }
@@ -441,13 +438,10 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
     * 
     */
    private void updateIndicatorBorders() {
-      ConfigManager manager = getUser().getPreferencesManager();
-      int thickness = manager.getIntegerValue(KEY_SELECT_PAINT_THICK, DEFAULT_SELECT_THICK);
-      int outlineThick = manager.getIntegerValue(KEY_OUTLINE_PAINT_THICK, DEFAULT_OUTLINE_THICK);
       SpeciesPaint curPaint = getUser().getSelectedSpeciesPaint();
       for (Indicator<SpeciesPaint> ind : indicators) {
          SpeciesPaint paint = ind.getValue();
-         setBorderFor(ind, curPaint == paint || curPaint != null && curPaint.equals(paint), thickness, outlineThick);
+         setBorderFor(ind, curPaint == paint || curPaint != null && curPaint.equals(paint));
       }
    }
    
@@ -612,9 +606,14 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       return getUser().getPreferencesManager().getColorValue(KEY_PAINT_SELECT_COLOR, Color.BLACK);
    }
    
-   private boolean setBorderFor(Indicator<SpeciesPaint> ind, boolean selected, int thickness, int outlineThick) {
+   private boolean setBorderFor(Indicator<SpeciesPaint> ind, boolean selected) {
       boolean changed = false;
       if (ind != null) {
+         ConfigManager manager = getUser().getPreferencesManager();
+         int thickness = manager.getIntegerValue(KEY_SELECT_PAINT_THICK, DEFAULT_SELECT_THICK);
+         thickness = getUser().scaleBorderThickness(thickness);
+         int outlineThick = manager.getIntegerValue(KEY_OUTLINE_PAINT_THICK, DEFAULT_OUTLINE_THICK);
+         outlineThick = getUser().scaleBorderThickness(outlineThick);
          Border b;
          if (selected) {
             b = new LineBorder(getPaintSelectColor(), thickness);

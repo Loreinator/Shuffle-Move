@@ -63,6 +63,7 @@ public class ImageManager extends ConfigManager implements I18nUser {
    private static final String ICON_HEIGHT = "ICON_HEIGHT";
    private static final String CANDY_WIDTH = "CANDY_WIDTH";
    private static final String CANDY_HEIGHT = "CANDY_HEIGHT";
+   private static final String KEY_IMAGE_SCALING = "IMAGE_SCALING";
    public static final String KEY_CANDY = "Candy";
    private static final Collection<String> SPECIAL_NAMES = Arrays.asList(KEY_FROZEN_MASK, KEY_CANDY);
    
@@ -221,6 +222,16 @@ public class ImageManager extends ConfigManager implements I18nUser {
       iconHeight = prefConfigManager.getIntegerValue(ICON_HEIGHT, DEFAULT_ICON_HEIGHT);
       specialWidth = prefConfigManager.getIntegerValue(CANDY_WIDTH, DEFAULT_CANDY_WIDTH);
       specialHeight = prefConfigManager.getIntegerValue(CANDY_HEIGHT, DEFAULT_CANDY_HEIGHT);
+      Integer imageScale = prefConfigManager.getIntegerValue(KEY_IMAGE_SCALING);
+      if (imageScale != null && imageScale >= 1 && imageScale <= 10000) {
+         float scale = imageScale.floatValue() / 100.0f;
+         typeWidth *= scale;
+         typeHeight *= scale;
+         iconWidth *= scale;
+         iconHeight *= scale;
+         specialWidth *= scale;
+         specialHeight *= scale;
+      }
    }
    
    private ImageIcon getImageIconForImage(BufferedImage source, int width, int height) {

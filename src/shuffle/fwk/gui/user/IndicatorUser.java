@@ -18,6 +18,8 @@
 
 package shuffle.fwk.gui.user;
 
+import java.awt.Font;
+
 import shuffle.fwk.config.provider.ImageManagerProvider;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 
@@ -28,5 +30,7 @@ import shuffle.fwk.config.provider.PreferencesManagerProvider;
 public interface IndicatorUser<Y extends Object> extends ImageManagerProvider, PreferencesManagerProvider {
    
    String getTextFor(Y value);
+   
+   Font scaleFont(Font fontToUse);
    
 }
