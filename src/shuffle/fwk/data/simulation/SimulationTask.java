@@ -1214,7 +1214,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       Species primarySpecies = getEffectSpecies(primaryCoords);
       Effect primaryEffect = getEffectFor(primarySpecies);
       // If primary is a horizontal non-mega combo,
-      if (primaryCombo.isHorizontal() && !primaryEffect.isPersistent() && !state.getCore().isMobileMode()) {
+      if (primaryCombo.isHorizontal() && !state.getCore().isMobileMode()
+            && (!primaryEffect.isPersistent() || primaryCombo.getNumCombosOnActivate() > 0)) {
          List<Integer> limits = SimulationTask.getLimits(primaryCoords);
          int minRow = limits.get(0);
          int minCol = limits.get(1);
