@@ -2848,9 +2848,15 @@ public enum Effect {
       
       @Override
       public void handleEffectFinished(ActivateComboEffect effect, SimulationTask task) {
-         int n = effect.getNumBlocks();
-         int coins = 200 * n - 500;
+         int coins = getCoinsForBlocks(effect.getNumBlocks());
+         for (ActivateComboEffect glitchEffect : task.getExtraGlitchCombos(effect)) {
+            coins += getCoinsForBlocks(glitchEffect.getNumBlocks());
+         }
          task.getState().addGold(coins);
+      }
+      
+      private int getCoinsForBlocks(int blocks) {
+         return 200 * blocks - 500;
       }
       
       @Override
@@ -3249,10 +3255,12 @@ public enum Effect {
     * @param task
     */
    public void handleBonusScore(ActivateComboEffect comboEffect, SimulationTask task) {
-      NumberSpan value = getBonusValue(comboEffect, task);
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
       double basicScore = task.getBasicScoreFor(effectSpecies);
       double typeModifier = task.getTypeModifier(effectSpecies);
+      int multiplier = task.getExtraGlitchCombos(comboEffect).size() + 1;
+      NumberSpan bonusValue = getBonusValue(comboEffect, task);
+      NumberSpan value = bonusValue.multiplyBy(multiplier);
       NumberSpan bonusScore = getBonusScoreFor(basicScore, value, typeModifier);
       if (bonusScore.getAverage() > 0) {
          task.addScore(new NumberSpan(bonusScore));
@@ -3410,7 +3418,10 @@ public enum Effect {
       if (canActivate(comboEffect, task)) {
          Number value = supplier.get();
          if (value.doubleValue() > 0) {
-            task.addScore(new NumberSpan(0, value, getOdds(task, comboEffect.getNumBlocks())));
+            NumberSpan score = new NumberSpan(0, value, getOdds(task, comboEffect.getNumBlocks()));
+            int multiplier = task.getExtraGlitchCombos(comboEffect).size() + 1;
+            NumberSpan scoreToAdd = score.multiplyBy(multiplier);
+            task.addScore(scoreToAdd);
          }
       }
    }
