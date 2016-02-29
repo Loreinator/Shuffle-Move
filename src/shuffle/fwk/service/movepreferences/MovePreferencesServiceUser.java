@@ -52,5 +52,7 @@ public interface MovePreferencesServiceUser {
    boolean isMobileMode();
    
    boolean isExpressMetalAdvanceEnabled();
+   
+   boolean isExtendedMetalEnabled();
 
 }

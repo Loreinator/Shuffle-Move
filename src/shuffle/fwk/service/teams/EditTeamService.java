@@ -1020,9 +1020,20 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
          curTeam.addName(woodName, getNextBindingFor(woodName, curTeam));
       }
       if (hasMetal && !metalCheckBox.isSelected()) {
+         for (Species metalSpecies : Species.EXTENDED_METAL) {
+            String name = metalSpecies.getName();
+            curTeam.removeName(name);
+         }
          curTeam.removeName(metalName);
       } else if (!hasMetal && metalCheckBox.isSelected()) {
-         curTeam.addName(metalName, getNextBindingFor(metalName, curTeam));
+         if (getUser().isExtendedMetalEnabled()) {
+            for (Species metalSpecies : Species.EXTENDED_METAL) {
+               String name = metalSpecies.getName();
+               curTeam.addName(name, getNextBindingFor(name, curTeam));
+            }
+         } else {
+            curTeam.addName(metalName, getNextBindingFor(metalName, curTeam));
+         }
       }
       if (hasCoin && !coinCheckBox.isSelected()) {
          curTeam.removeName(coinName);

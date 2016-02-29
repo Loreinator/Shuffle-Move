@@ -52,6 +52,8 @@ public class Species implements Comparable<Species>, I18nUser {
    
    public static final List<Species> FIXED_SPECIES = Collections.unmodifiableList(Arrays.asList(AIR, WOOD, METAL, COIN,
          METAL_4, METAL_3, METAL_2, METAL_1, FREEZE));
+   public static final List<Species> EXTENDED_METAL = Collections
+         .unmodifiableList(Arrays.asList(METAL, METAL_1, METAL_2, METAL_3, METAL_4));
    
    private static final int[] LEVEL_BONUS = new int[] { 0, // level 0 has 0 bonus
          0, 3, 6, 8, 10, 12, 14, 16, 18, 20 };

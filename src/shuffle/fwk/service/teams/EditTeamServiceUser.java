@@ -36,4 +36,6 @@ public interface EditTeamServiceUser extends ImageManagerProvider, RosterManager
       TeamManagerProvider, StageIndicatorUser, PreferencesManagerProvider, MegaProgressUser, EffectManagerProvider {
    
    void loadFromTeamManager(TeamManager manager);
+   
+   boolean isExtendedMetalEnabled();
 }
