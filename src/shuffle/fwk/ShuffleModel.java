@@ -399,10 +399,12 @@ public class ShuffleModel
       Species cur = getBoardManager().getBoard().getSpeciesAt(row, col);
       // If the paint and the current species are both Metal, and we're either not in express or
       // Express metal advancement is enabled, THEN you can set this to the next metal block.
-      if (paint != null && paint.getEffect().equals(Effect.METAL) && cur.getEffect().equals(Effect.METAL)
-            && (getPreferencesManager().getBooleanValue(KEY_ENABLE_EXPRESS_METAL_ADVANCE, false)
-                  || !getCurrentMode().equals(EntryMode.EXPRESS))) {
-         paint = Species.getNextMetal(cur);
+      if (paint != null && paint.getEffect().equals(Effect.METAL) && cur.getEffect().equals(Effect.METAL)) {
+         if (isExpressMetalAdvanceEnabled() || !getCurrentMode().equals(EntryMode.EXPRESS)) {
+            paint = Species.getNextMetal(cur);
+         } else {
+            paint = cur;
+         }
       }
       changed |= getBoardManager().getBoard().setSpeciesAt(row, col, paint);
       changed |= getBoardManager().getBoard().setFrozenAt(row, col, freeze);
@@ -1335,5 +1337,13 @@ public class ShuffleModel
       boolean result = getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_MOBILE_MODE, mobileMode);
       setCurrentStage(getCurrentStage());
       return result;
+   }
+   
+   public boolean isExpressMetalAdvanceEnabled() {
+      return getPreferencesManager().getBooleanValue(KEY_ENABLE_EXPRESS_METAL_ADVANCE, false);
+   }
+   
+   public boolean setExpressMetalAdvanceEnabled(boolean enable) {
+      return getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_ENABLE_EXPRESS_METAL_ADVANCE, enable);
    }
 }

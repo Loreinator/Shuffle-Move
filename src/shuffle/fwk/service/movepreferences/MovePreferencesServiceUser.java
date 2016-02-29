@@ -50,5 +50,7 @@ public interface MovePreferencesServiceUser {
    boolean isSwapToPaint();
    
    boolean isMobileMode();
+   
+   boolean isExpressMetalAdvanceEnabled();
 
 }

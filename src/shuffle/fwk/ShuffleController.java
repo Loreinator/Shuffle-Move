@@ -1188,6 +1188,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       Collection<Effect> disabledEffects = service.getDisabledEffects();
       int threshold = service.getThreshold();
       boolean mobileMode = service.isMobileMode();
+      boolean expressMetal = service.isExpressMetalAdvanceEnabled();
       
       boolean changed = false;
       // These DO affect simulation results.
@@ -1202,6 +1203,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       }
       // This doesn't affect simulation results.
       getModel().setSwapToPaint(swapToPaint);
+      getModel().setExpressMetalAdvanceEnabled(expressMetal);
    }
    
    /*
@@ -1249,6 +1251,16 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public boolean isMobileMode() {
       return factory.isMobileMode();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see
+    * shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#isExpressMetalAdvanceEnabled()
+    */
+   @Override
+   public boolean isExpressMetalAdvanceEnabled() {
+      return getModel().isExpressMetalAdvanceEnabled();
    }
    
 }
