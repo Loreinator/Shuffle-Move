@@ -38,7 +38,7 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.47 - 2016-02-
+v0.3.47 - 2016-03-0
 	- Fixed the logging bug (wasn't working for portable)
 	- Fixed the i18n problem with Flabebe
 	- Diancie's effect has been fixed
@@ -49,6 +49,7 @@ v0.3.47 - 2016-02-
 	- Metal blocks are now not advanced in express mode unless preferences.txt specifies "ENABLE_EXPRESS_METAL_ADVANCE" as true
 	- Updates for 3DS 1.2.34
 	- Updates for Mobile v1.5.6
+	- Escape and Enter now do something when a popup dialog is focused
 v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species
 	- Extra entries have been added for Charizard and Mewtwo to for allow their "X" Mega Evolutions
