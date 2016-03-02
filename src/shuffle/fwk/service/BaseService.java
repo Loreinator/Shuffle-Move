@@ -19,12 +19,20 @@
 package shuffle.fwk.service;
 
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+
+import com.sun.glass.events.KeyEvent;
 
 /**
  * The base service implementation, which takes care of creation, maintentance, and disposal.
@@ -45,6 +53,8 @@ public abstract class BaseService<Y extends Object> implements Service<Y> {
    private Frame owner = null;
    /** If disposal is allowed. */
    private boolean disposeEnabled = true;
+   /** The button to be activated when Enter is hit. */
+   private JButton defaultButton = null;
    
    /**
     * The constructor for a service.
@@ -129,8 +139,27 @@ public abstract class BaseService<Y extends Object> implements Service<Y> {
             dispose();
          }
       });
+      JRootPane root = dialog.getRootPane();
+      root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "closeDialog");
+      root.getActionMap().put("closeDialog", new AbstractAction() {
+         private static final long serialVersionUID = 2759447330549410101L;
+         
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            BaseService.this.dispose();
+         }
+      });
+      root.setDefaultButton(defaultButton);
    }
    
+   protected void setDefaultButton(JButton button) {
+      defaultButton = button;
+      if (dialog != null) {
+         dialog.getRootPane().setDefaultButton(button);
+      }
+   }
+
+   @Override
    public JDialog getDialog() {
       return dialog;
    }

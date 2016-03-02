@@ -94,6 +94,7 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
    public void onSetupGUI() {
       JButton getNewestButton = new JButton(new UpdateNowAction(getString(KEY_GETNEWEST), this, false));
       getNewestButton.setToolTipText(getString(KEY_GETNEWEST_TOOLTIP));
+      setDefaultButton(getNewestButton);
       JButton forceNewestButton = new JButton(new UpdateNowAction(getString(KEY_FORCE), this, true));
       forceNewestButton.setToolTipText(getString(KEY_FORCE_TOOLTIP));
       JButton closeButton = new JButton(new DisposeAction(getString(KEY_CLOSE), this));
@@ -102,6 +103,7 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
             b -> forceNewestButton.setEnabled(!b), b -> closeButton.setEnabled(!b)));
       
       JEditorPane textArea = new JEditorPane();
+      textArea.setFocusable(false);
       textArea.setEditable(false);
       textArea.setContentType("text/html");
       textArea.addHyperlinkListener(new HyperlinkListener() {

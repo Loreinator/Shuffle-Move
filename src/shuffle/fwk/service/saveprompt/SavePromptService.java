@@ -112,6 +112,7 @@ public class SavePromptService extends BaseService<SavePromptServiceUser> implem
       
       c.gridx++;
       d.add(saveButton, c);
+      setDefaultButton(saveButton);
       
       c.gridx++;
       d.add(closeButton, c);

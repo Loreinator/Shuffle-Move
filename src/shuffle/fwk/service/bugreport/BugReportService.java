@@ -139,6 +139,7 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
       d.repaint();
       d.setLocationRelativeTo(null);
       setDialog(d);
+      setDefaultButton(submitButton);
    }
    
    /**
@@ -156,6 +157,7 @@ public class BugReportService extends BaseService<BugReportServiceUser> implemen
             return d;
          }
       };
+      textPane.setFocusable(false);
       textPane.setEditable(false);
       textPane.setContentType("text/html");
       textPane.addHyperlinkListener(new HyperlinkListener() {

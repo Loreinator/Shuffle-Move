@@ -230,6 +230,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       });
       okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       d.add(okButton, c);
+      setDefaultButton(okButton);
       
       c.gridx += 1;
       @SuppressWarnings("serial")

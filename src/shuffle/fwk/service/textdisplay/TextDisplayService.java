@@ -97,6 +97,7 @@ public abstract class TextDisplayService extends BaseService<TextDisplayServiceU
             }
          }
       });
+      textArea.setFocusable(false);
       jsp = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
       d.add(jsp, BorderLayout.CENTER);
@@ -105,6 +106,7 @@ public abstract class TextDisplayService extends BaseService<TextDisplayServiceU
       JButton close = new JButton(new DisposeAction(getString(KEY_CLOSE_BUTTON), this));
       close.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
       d.add(close, BorderLayout.SOUTH);
+      setDefaultButton(close);
       d.pack();
       d.setSize(new Dimension(width, height));
       d.repaint();

@@ -581,6 +581,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       JButton okButton = new JButton(getString(KEY_OK));
       okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       ret.add(okButton, c);
+      setDefaultButton(okButton);
       
       c.anchor = GridBagConstraints.CENTER;
       c.weightx = 0.0;

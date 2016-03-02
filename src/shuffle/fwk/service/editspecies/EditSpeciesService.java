@@ -456,6 +456,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       JButton okButton = new JButton(getString(KEY_OK));
       okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       ret.add(okButton, c);
+      setDefaultButton(okButton);
       
       c.anchor = GridBagConstraints.CENTER;
       c.weightx = 0.0;
