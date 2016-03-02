@@ -38,7 +38,7 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.47 - 2016-03-0
+v0.3.47 - 2016-03-02
 	- Fixed the logging bug (wasn't working for portable)
 	- Fixed the i18n problem with Flabebe
 	- Diancie's effect has been fixed
@@ -47,6 +47,7 @@ v0.3.47 - 2016-03-0
 	- The "Name" filter box will now be wide enough in all languages
 	- Global GUI Scaling See here for details: https://github.com/Loreinator/Shuffle-Move/wiki/Display-Size-Configuration
 	- Metal blocks are now not advanced in express mode unless preferences.txt specifies "ENABLE_EXPRESS_METAL_ADVANCE" as true
+	- While in 3ds mode, the combo duplication glitch is simulated
 	- Updates for 3DS 1.2.34
 	- Updates for Mobile v1.5.6
 	- Escape and Enter now do something when a popup dialog is focused
