@@ -47,6 +47,8 @@ v0.3.47 - 2016-02-
 	- The "Name" filter box will now be wide enough in all languages
 	- Global GUI Scaling See here for details: https://github.com/Loreinator/Shuffle-Move/wiki/Display-Size-Configuration
 	- Metal blocks are now not advanced in express mode unless preferences.txt specifies "ENABLE_EXPRESS_METAL_ADVANCE" as true
+	- Updates for 3DS 1.2.34
+	- Updates for Mobile v1.5.6
 v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species
 	- Extra entries have been added for Charizard and Mewtwo to for allow their "X" Mega Evolutions
