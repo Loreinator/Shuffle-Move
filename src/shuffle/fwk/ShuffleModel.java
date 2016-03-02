@@ -407,6 +407,9 @@ public class ShuffleModel
             paint = cur;
          }
       }
+      if (Species.METAL_5.equals(paint)) {
+         paint = Species.METAL;
+      }
       changed |= getBoardManager().getBoard().setSpeciesAt(row, col, paint);
       changed |= getBoardManager().getBoard().setFrozenAt(row, col, freeze);
       return changed;
