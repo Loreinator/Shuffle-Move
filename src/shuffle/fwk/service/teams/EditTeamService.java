@@ -1020,21 +1020,10 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       } else if (!hasWood && woodCheckBox.isSelected()) {
          curTeam.addName(woodName, getNextBindingFor(woodName, curTeam));
       }
-      if (hasMetal && !metalCheckBox.isSelected()) {
-         for (Species metalSpecies : Species.EXTENDED_METAL) {
-            String name = metalSpecies.getName();
-            curTeam.removeName(name);
-         }
-         curTeam.removeName(metalName);
-      } else if (!hasMetal && metalCheckBox.isSelected()) {
-         if (getUser().isExtendedMetalEnabled()) {
-            for (Species metalSpecies : Species.EXTENDED_METAL) {
-               String name = metalSpecies.getName();
-               curTeam.addName(name, getNextBindingFor(name, curTeam));
-            }
-         } else {
-            curTeam.addName(metalName, getNextBindingFor(metalName, curTeam));
-         }
+      boolean metalSelected = metalCheckBox.isSelected();
+      if (hasMetal != metalSelected) {
+         boolean extendedMetalEnabled = getUser().isExtendedMetalEnabled();
+         getUser().getTeamManager().setMetalInTeam(curTeam, metalSelected, extendedMetalEnabled);
       }
       if (hasCoin && !coinCheckBox.isSelected()) {
          curTeam.removeName(coinName);

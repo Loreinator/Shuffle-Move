@@ -312,21 +312,10 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
                } else if (!hasWood && woodBox.isSelected()) {
                   curTeam.addName(woodName, getNextBindingFor(woodName, curTeam));
                }
-               if (hasMetal && !metalBox.isSelected()) {
-                  for (Species metalSpecies : Species.EXTENDED_METAL) {
-                     String name = metalSpecies.getName();
-                     curTeam.removeName(name);
-                  }
-                  curTeam.removeName(metalName);
-               } else if (!hasMetal && metalBox.isSelected()) {
-                  if (getUser().isExtendedMetalEnabled()) {
-                     for (Species metalSpecies : Species.EXTENDED_METAL) {
-                        String name = metalSpecies.getName();
-                        curTeam.addName(name, getNextBindingFor(name, curTeam));
-                     }
-                  } else {
-                     curTeam.addName(metalName, getNextBindingFor(metalName, curTeam));
-                  }
+               boolean metalSelected = metalBox.isSelected();
+               if (hasMetal != metalSelected) {
+                  boolean extendedMetalEnabled = getUser().isExtendedMetalEnabled();
+                  getUser().getTeamManager().setMetalInTeam(curTeam, metalSelected, extendedMetalEnabled);
                }
                if (hasCoin && !coinBox.isSelected()) {
                   curTeam.removeName(coinName);

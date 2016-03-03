@@ -80,6 +80,7 @@ import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
 import shuffle.fwk.data.Team;
+import shuffle.fwk.data.TeamImpl;
 import shuffle.fwk.data.simulation.SimulationCore;
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.i18n.I18nUser;
@@ -1356,6 +1357,13 @@ public class ShuffleModel
    }
    
    public boolean setMetalExtended(boolean enabled) {
-      return getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_METAL_EXTENDED, enabled);
+      boolean changed = getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_METAL_EXTENDED, enabled);
+      if (changed) {
+         TeamImpl team = (TeamImpl) getCurrentTeam();
+         boolean hasMetal = team.getNames().contains(Species.METAL.getName());
+         getTeamManager().setMetalInTeam(team, hasMetal, enabled);
+         changed &= getTeamManager().setTeamForStage(team, getCurrentStage());
+      }
+      return changed;
    }
 }

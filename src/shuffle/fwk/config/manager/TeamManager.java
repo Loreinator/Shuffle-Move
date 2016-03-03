@@ -398,4 +398,50 @@ public class TeamManager extends ConfigManager {
    private static boolean isLegacyFile(String filePath) {
       return filePath.endsWith("teams.txt");
    }
+   
+   public boolean setMetalInTeam(TeamImpl team, boolean include, boolean extended) {
+      TeamImpl before = new TeamImpl(team);
+      String metalName = Species.METAL.getName();
+      if (!include) {
+         // Remove all metal species
+         for (Species metalSpecies : Species.EXTENDED_METAL) {
+            String name = metalSpecies.getName();
+            team.removeName(name);
+         }
+         team.removeName(metalName);
+      } else if (include) {
+         // Add metal species
+         if (extended) {
+            // add ALL metal species.
+            for (Species metalSpecies : Species.EXTENDED_METAL) {
+               String name = metalSpecies.getName();
+               if (!team.getNames().contains(name)) {
+                  team.addName(name, getNextBindingFor(name, team));
+               }
+            }
+            // Ensure the basic metal species is included
+            if (!team.getNames().contains(metalName)) {
+               team.addName(metalName, getNextBindingFor(metalName, team));
+            }
+         } else {
+            // Ensure ONLY the base "METAL" species is there
+            for (Species metalSpecies : Species.EXTENDED_METAL) {
+               if (!metalSpecies.equals(Species.METAL)) {
+                  // Don't remove the base metal species, to be kind to key-binds
+                  String name = metalSpecies.getName();
+                  team.removeName(name);
+               }
+            }
+            // Ensure the basic metal species is included
+            if (!team.getNames().contains(metalName)) {
+               team.addName(metalName, getNextBindingFor(metalName, team));
+            }
+         }
+      }
+      return !before.equals(team);
+   }
+   
+   public char getNextBindingFor(String name, Team team) {
+      return getAllAvailableBindingsFor(name, team).iterator().next();
+   }
 }
