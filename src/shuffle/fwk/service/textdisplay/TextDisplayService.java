@@ -97,6 +97,7 @@ public abstract class TextDisplayService extends BaseService<TextDisplayServiceU
             }
          }
       });
+      textArea.setFocusable(false);
       jsp = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
       d.add(jsp, BorderLayout.CENTER);
@@ -105,6 +106,7 @@ public abstract class TextDisplayService extends BaseService<TextDisplayServiceU
       JButton close = new JButton(new DisposeAction(getString(KEY_CLOSE_BUTTON), this));
       close.setToolTipText(getString(KEY_CLOSE_TOOLTIP));
       d.add(close, BorderLayout.SOUTH);
+      setDefaultButton(close);
       d.pack();
       d.setSize(new Dimension(width, height));
       d.repaint();
@@ -119,14 +121,16 @@ public abstract class TextDisplayService extends BaseService<TextDisplayServiceU
    @Override
    protected void updateGUIFrom(TextDisplayServiceUser user) {
       ConfigManager pathManager = user.getPathManager();
-      String text = pathManager.readEntireFileOrResource(getFileKey());
+      String text = pathManager.readEntireDocument(getFilePath(), getDefaultFileKey());
       textArea.setText(text);
       textArea.setSelectionStart(0);
       textArea.setSelectionEnd(0);
       textArea.repaint();
    }
    
-   protected abstract String getFileKey();
+   protected abstract String getFilePath();
+   
+   protected abstract String getDefaultFileKey();
    
    /**
     * @param title

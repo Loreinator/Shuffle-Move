@@ -87,6 +87,7 @@ public class SimulationCore extends RecursiveAction {
    private final int effectThreshold;
    private final EffectManager effectManager;
    private final GradingMode defaultGradingMode;
+   private final boolean mobileMode;
    
    // Gets all the data it needs from the user, as deep copies of all relevant information.
    public SimulationCore(SimulationUser user, UUID processUUID) {
@@ -122,6 +123,7 @@ public class SimulationCore extends RecursiveAction {
       attackPowerUp = user.getAttackPowerUp();
       effectThreshold = user.getEffectThreshold();
       defaultGradingMode = user.getGradingModeManager().getDefaultGradingMode();
+      mobileMode = user.isMobileMode();
    }
    
    public UUID getId() {
@@ -183,6 +185,10 @@ public class SimulationCore extends RecursiveAction {
    
    public double getMultiplier(Effect effect) {
       return effectManager.getMult(effect);
+   }
+   
+   public boolean isMobileMode() {
+      return mobileMode;
    }
    
    @Override

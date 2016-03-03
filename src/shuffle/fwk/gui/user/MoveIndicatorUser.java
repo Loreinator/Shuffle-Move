@@ -18,6 +18,8 @@
 
 package shuffle.fwk.gui.user;
 
+import java.awt.Font;
+
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.data.simulation.util.SimulationResultProvider;
 
@@ -27,4 +29,5 @@ import shuffle.fwk.data.simulation.util.SimulationResultProvider;
  */
 public interface MoveIndicatorUser extends SimulationResultProvider, PreferencesManagerProvider {
    
+   Font scaleFont(Font givenFont);
 }

@@ -1,4 +1,4 @@
-Shuffle Move v0.3.46
+Shuffle Move v0.3.47
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -32,11 +32,26 @@ Splash screen and window icons: reddit.com/u/ArmpitWrestling
 German Translations: reddit.com/u/ArmpitWrestling
 Finnish Translations: reddit.com/u/I_get_in
 Chinese Translations: reddit.com/u/Pingtendo
+French Translations: reddit.com/u/TherkFr
 Species Icons: serebii.net
 
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.47 - 2016-03-02
+	- Fixed the logging bug (wasn't working for portable)
+	- Fixed the i18n problem with Flabebe
+	- Diancie's effect has been fixed
+	- Documents can now be internationalized
+	- French translations now added, including help, bug report, and update dialogs
+	- The "Name" filter box will now be wide enough in all languages
+	- Global GUI Scaling See here for details: https://github.com/Loreinator/Shuffle-Move/wiki/Display-Size-Configuration
+	- Metal blocks are now not advanced in express mode unless enabled via Move Preferences
+	- While in 3ds mode, the combo duplication glitch is simulated
+	- Updates for 3DS 1.2.34
+	- Updates for Mobile v1.5.6
+	- Escape and Enter now do something when a popup dialog is focused
+	- Mega Charizard X effect implemented
 v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species
 	- Extra entries have been added for Charizard and Mewtwo to for allow their "X" Mega Evolutions

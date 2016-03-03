@@ -2201,11 +2201,6 @@ public enum Effect {
          return 10;
       }
       
-      @Override
-      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
-         return value.multiplyBy(100 * typeModifier);
-      }
-      
    },
    /**
     * Erases blocks (max 10), increasing by 1/6 for each additional block, same chosen order and
@@ -2642,6 +2637,51 @@ public enum Effect {
       
    },
    /**
+    * Charizard X: <br>
+    * Erases tiles in a X shape.
+    */
+   CHARIZARD_X {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            effect.addPlannedOptions(Arrays.asList(3, 3, 3, 4, 4, 3, 4, 4));
+            effect.addPlannedOptions(Arrays.asList(2, 2, 2, 5, 5, 2, 5, 5));
+            effect.addPlannedOptions(Arrays.asList(1, 1, 1, 6, 6, 1, 6, 6));
+            return effect;
+         }
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return SABLEYE.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return 9;
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 12;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
     * Charizard Y: <br>
     * Erases tiles in a Y shape.
     */
@@ -2853,9 +2893,15 @@ public enum Effect {
       
       @Override
       public void handleEffectFinished(ActivateComboEffect effect, SimulationTask task) {
-         int n = effect.getNumBlocks();
-         int coins = 200 * n - 500;
+         int coins = getCoinsForBlocks(effect.getNumBlocks());
+         for (ActivateComboEffect glitchEffect : task.getExtraGlitchCombos(effect)) {
+            coins += getCoinsForBlocks(glitchEffect.getNumBlocks());
+         }
          task.getState().addGold(coins);
+      }
+      
+      private int getCoinsForBlocks(int blocks) {
+         return 200 * blocks - 500;
       }
       
       @Override
@@ -3254,10 +3300,12 @@ public enum Effect {
     * @param task
     */
    public void handleBonusScore(ActivateComboEffect comboEffect, SimulationTask task) {
-      NumberSpan value = getBonusValue(comboEffect, task);
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
       double basicScore = task.getBasicScoreFor(effectSpecies);
       double typeModifier = task.getTypeModifier(effectSpecies);
+      int multiplier = task.getExtraGlitchCombos(comboEffect).size() + 1;
+      NumberSpan bonusValue = getBonusValue(comboEffect, task);
+      NumberSpan value = bonusValue.multiplyBy(multiplier);
       NumberSpan bonusScore = getBonusScoreFor(basicScore, value, typeModifier);
       if (bonusScore.getAverage() > 0) {
          task.addScore(new NumberSpan(bonusScore));
@@ -3415,7 +3463,10 @@ public enum Effect {
       if (canActivate(comboEffect, task)) {
          Number value = supplier.get();
          if (value.doubleValue() > 0) {
-            task.addScore(new NumberSpan(0, value, getOdds(task, comboEffect.getNumBlocks())));
+            NumberSpan score = new NumberSpan(0, value, getOdds(task, comboEffect.getNumBlocks()));
+            int multiplier = task.getExtraGlitchCombos(comboEffect).size() + 1;
+            NumberSpan scoreToAdd = score.multiplyBy(multiplier);
+            task.addScore(scoreToAdd);
          }
       }
    }

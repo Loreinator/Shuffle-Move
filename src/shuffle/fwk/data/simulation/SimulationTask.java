@@ -938,9 +938,13 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    }
    
    public NumberSpan getScoreFor(ActivateComboEffect comboEffect) {
+      int numCombos = comboEffect.getNumCombosOnActivate();
+      return getScoreFor(comboEffect, numCombos);
+   }
+   
+   public NumberSpan getScoreFor(ActivateComboEffect comboEffect, int numCombos) {
+      double comboMultiplier = getComboMultiplier(numCombos + 1);
       Species effectSpecies = getEffectSpecies(comboEffect.getCoords());
-      int combos = comboEffect.getNumCombosOnActivate();
-      double comboMultiplier = getComboMultiplier(combos + 1);
       int basicScore = getBasicScoreFor(effectSpecies);
       double typeMod = getTypeModifier(effectSpecies);
       double numBlocksModifier = getNumBlocksMultiplier(comboEffect.getNumBlocks());
@@ -966,9 +970,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       if (getState().getCore().isAttackPowerUp()) {
          finalScore = finalScore.multiplyBy(2.0);
       }
-      // finalScore.add(0.000000001);
       return finalScore;
-      // This precision adjustment is over 1,000 times as large as it is needed for all known cases
    }
    
    /**
@@ -1052,6 +1054,12 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    
    public void handleMainComboResult(ActivateComboEffect comboEffect, Effect effect) {
       NumberSpan scoreToAdd = getScoreFor(comboEffect);
+      if (comboEffect.isHorizontal() && !state.getCore().isMobileMode()) {
+         int numCombos = comboEffect.getNumCombosOnActivate();
+         for (ActivateComboEffect ace : getExtraGlitchCombos(comboEffect)) {
+            scoreToAdd = scoreToAdd.add(getScoreFor(ace, numCombos));
+         }
+      }
       if (logFiner) {
          logFinerWithId("Adding main score of %s for combo %s", scoreToAdd, comboEffect);
       }
@@ -1198,5 +1206,43 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     */
    public void setIsRandom() {
       getState().setIsRandom();
+   }
+   
+   public Collection<ActivateComboEffect> getExtraGlitchCombos(ActivateComboEffect primaryCombo) {
+      Collection<ActivateComboEffect> ret = new ArrayList<ActivateComboEffect>();
+      List<Integer> primaryCoords = primaryCombo.getCoords();
+      Species primarySpecies = getEffectSpecies(primaryCoords);
+      Effect primaryEffect = getEffectFor(primarySpecies);
+      // If primary is a horizontal non-mega combo,
+      if (primaryCombo.isHorizontal() && !state.getCore().isMobileMode()
+            && (!primaryEffect.isPersistent() || primaryCombo.getNumCombosOnActivate() > 0)) {
+         List<Integer> limits = SimulationTask.getLimits(primaryCoords);
+         int minRow = limits.get(0);
+         int minCol = limits.get(1);
+         int maxRow = limits.get(2);
+         int maxCol = limits.get(3);
+         // Ensure we are dealing with a perfectly horizontal match
+         if (minRow == maxRow && minCol != maxCol) {
+            for (ActivateComboEffect prospectiveCombo : prospecticeCombosSet) {
+               List<Integer> prospectiveCoords = prospectiveCombo.getCoords();
+               Species prospectiveSpecies = getEffectSpecies(prospectiveCoords);
+               // If the prospective combo is vertical and the same as the primary species,
+               if (!prospectiveCombo.isHorizontal() && prospectiveSpecies.equals(primarySpecies)
+                     && prospectiveCombo.getNumBlocks() <= primaryCombo.getNumBlocks()) {
+                  List<Integer> pLimits = SimulationTask.getLimits(prospectiveCoords);
+                  int pMinCol = pLimits.get(1);
+                  int pMaxRow = pLimits.get(2);
+                  int pMaxCol = pLimits.get(3);
+                  // Ensure lowest point matches the primary
+                  // And the column is within the range of the primary.
+                  // And the combo is perfectly vertical (sanity check)
+                  if (pMaxRow == maxRow && pMinCol >= minCol && pMinCol <= maxCol && pMinCol == pMaxCol) {
+                     ret.add(prospectiveCombo);
+                  }
+               }
+            }
+         }
+      }
+      return ret;
    }
 }

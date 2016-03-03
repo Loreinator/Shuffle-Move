@@ -18,6 +18,7 @@
 
 package shuffle.fwk;
 
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,10 +26,13 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
+import java.util.Set;
 import java.util.UUID;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -37,6 +41,7 @@ import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.FontUIResource;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -111,6 +116,10 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    private static final String KEY_SPECIES_CHANGED = "log.species.changed";
    private static final String KEY_GRADING_CHANGED = "log.grading.changed";
    
+   // Scaling config keys
+   private static final String KEY_FONT_SIZE_SCALING = "FONT_SIZE_SCALING";
+   private static final String KEY_BORDER_SCALING = "BORDER_SCALING";
+   
    /** The model for this controller. */
    private ShuffleModel model;
    /** The view for this controller. */
@@ -142,6 +151,18 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          userHomeArg = System.getProperty("user.home") + File.separator + "Shuffle-Move";
       }
       setUserHome(userHomeArg);
+      try {
+         FileHandler handler = new FileHandler();
+         Logger toRoot = LOG;
+         while (toRoot.getParent() != null) {
+            toRoot = toRoot.getParent();
+         }
+         toRoot.addHandler(handler);
+      } catch (SecurityException e1) {
+         e1.printStackTrace();
+      } catch (IOException e1) {
+         e1.printStackTrace();
+      }
 
       if (levelToSetArg != null) {
          try {
@@ -174,6 +195,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          File absoluteFile = new File(userHome).getCanonicalFile();
          absoluteFile.mkdir();
          System.setProperty("user.dir", absoluteFile.getCanonicalPath());
+         System.setProperty("user.home", absoluteFile.getCanonicalPath());
          try (InputStream is = ClassLoader.getSystemResourceAsStream(LOG_CONFIG_FILE)) {
             File logDir = new File("log").getAbsoluteFile();
             if (!logDir.exists() && !logDir.mkdirs()) {
@@ -204,6 +226,53 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       } else {
          factory = new ConfigFactory();
       }
+      Integer menuFontOverride = getPreferencesManager().getIntegerValue(KEY_FONT_SIZE_SCALING);
+      if (menuFontOverride != null && menuFontOverride != 100 && menuFontOverride >= 1 && menuFontOverride <= 10000) {
+         float scale = menuFontOverride.floatValue() / 100.0f;
+         try {
+            // This is the cleanest and most bug-free way to do this hack.
+            Set<Object> allKeys = new HashSet<Object>();
+            allKeys.add("JMenu.font");
+            // Yes we're not supposed to use this, but it is the only one that works with Nimbus LAF
+            allKeys.addAll(UIManager.getLookAndFeelDefaults().keySet());
+            Object value = UIManager.get("defaultFont");
+            if (value != null && value instanceof FontUIResource) {
+               FontUIResource fromFont = (javax.swing.plaf.FontUIResource) value;
+               FontUIResource toFont = new FontUIResource(fromFont.deriveFont(fromFont.getSize() * scale));
+               // This one is necessary
+               UIManager.getLookAndFeel().getDefaults().put("defaultFont", toFont);
+               // And this one allows other LAF to be used in the future
+               UIManager.getDefaults().put("defaultFont", toFont);
+            }
+            
+            // Needed for Nimbus's JTable row height adjustment
+            Object tableFontValue = UIManager.getLookAndFeel().getDefaults().get("Table.font");
+            Number bestRowHeight = null;
+            if (tableFontValue != null && tableFontValue instanceof FontUIResource) {
+               FontUIResource fromFont = (FontUIResource) tableFontValue;
+               bestRowHeight = fromFont.getSize();
+            }
+            Object rowHeightValue = UIManager.getLookAndFeel().getDefaults().get("Table.rowHeight");
+            if (rowHeightValue != null && rowHeightValue instanceof Number) {
+               Number rowHeight = (Number) rowHeightValue;
+               rowHeight = rowHeight.doubleValue() * scale;
+               if (bestRowHeight == null || bestRowHeight.intValue() < rowHeight.intValue()) {
+                  bestRowHeight = rowHeight;
+               }
+            }
+            if (bestRowHeight != null) {
+               bestRowHeight = bestRowHeight.doubleValue() * (4.0 / 3.0);
+            }
+            if (bestRowHeight != null && bestRowHeight.intValue() > 0) {
+               UIManager.getLookAndFeel().getDefaults().put("Table.rowHeight", bestRowHeight.intValue());
+            }
+         } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            LOG.log(Level.SEVERE, "Cannot override menu font sizes!", e);
+         }
+      }
       try {
          setModel(new ShuffleModel(this));
          setView(new ShuffleView(this));
@@ -215,6 +284,37 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          e.printStackTrace(pw);
          LOG.log(Level.SEVERE, "Failure on start:", e);
       }
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ModeIndicatorUser#scaleFont(java.awt.Font)
+    */
+   @Override
+   public Font scaleFont(Font givenFont) {
+      Font retFont = givenFont;
+      Integer menuFontOverride = getPreferencesManager().getIntegerValue(KEY_FONT_SIZE_SCALING);
+      if (menuFontOverride != null && menuFontOverride != 100 && menuFontOverride > 0 && menuFontOverride < 10000) {
+         float scale = menuFontOverride.floatValue() / 100.0f;
+         float adjustedSize = retFont.getSize2D() * scale;
+         retFont = retFont.deriveFont(adjustedSize);
+      }
+      return retFont;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.config.provider.ImageManagerProvider#scaleBorderThickness(int)
+    */
+   @Override
+   public Integer scaleBorderThickness(int given) {
+      Integer borderScale = getPreferencesManager().getIntegerValue(KEY_BORDER_SCALING);
+      Integer ret = given;
+      if (borderScale != null && borderScale != 100 && borderScale >= 1 && borderScale <= 10000) {
+         float scale = borderScale.floatValue() * ret.floatValue() / 100.0f;
+         ret = Math.round(scale);
+      }
+      return ret;
    }
    
    /**
@@ -436,7 +536,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    
    @Override
    public ImageManager getImageManager() {
-      return getView().getImageManager();
+      return getConfigFactory().getImageManager();
    }
    
    @Override
@@ -981,7 +1081,6 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public void setTeamForStage(Team team, Stage stage) {
       if (getModel().getTeamManager().setTeamForStage(team, stage)) {
-         getModel().setDataChanged();
          repaint();
       }
    }
@@ -1088,6 +1187,8 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       Collection<Effect> disabledEffects = service.getDisabledEffects();
       int threshold = service.getThreshold();
       boolean mobileMode = service.isMobileMode();
+      boolean expressMetal = service.isExpressMetalAdvanceEnabled();
+      boolean extendedMetal = service.isExtendedMetalEnabled();
       
       boolean changed = false;
       // These DO affect simulation results.
@@ -1095,13 +1196,17 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       changed |= getModel().setDisabledEffects(disabledEffects);
       changed |= getModel().setEffectThreshold(threshold);
       changed |= getModel().setMobileMode(mobileMode);
+      boolean teamChanged = getModel().setMetalExtended(extendedMetal);
       
       if (changed) {
          getModel().setDataChanged();
+      }
+      if (changed || teamChanged) {
          repaint();
       }
       // This doesn't affect simulation results.
       getModel().setSwapToPaint(swapToPaint);
+      getModel().setExpressMetalAdvanceEnabled(expressMetal);
    }
    
    /*
@@ -1149,6 +1254,25 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public boolean isMobileMode() {
       return factory.isMobileMode();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see
+    * shuffle.fwk.service.movepreferences.MovePreferencesServiceUser#isExpressMetalAdvanceEnabled()
+    */
+   @Override
+   public boolean isExpressMetalAdvanceEnabled() {
+      return getModel().isExpressMetalAdvanceEnabled();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.service.teams.EditTeamServiceUser#isMetalExtended()
+    */
+   @Override
+   public boolean isExtendedMetalEnabled() {
+      return getModel().isExtendedMetalEnabled();
    }
    
 }

@@ -69,6 +69,7 @@ public class Indicator<Y extends Object> extends JLabel {
       this.maxTextLength = maxTextLength;
       ConfigManager manager = user.getPreferencesManager();
       Font fontToUse = manager.getFontValue(KEY_INDICATOR_FONT, DEFAULT_FONT);
+      fontToUse = this.user.scaleFont(fontToUse);
       setupIndicator(fontToUse);
    }
    

@@ -22,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -187,6 +189,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private JCheckBox freezeCheckBox;
    private StageChooser stageChooser;
    private JScrollPane rosterScrollPane;
+   private Supplier<Dimension> getMinUpperPanel = null;
    
    private JPanel selectedComponent = null;
    private Species selectedSpecies = null;
@@ -245,13 +248,21 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       int height = preferencesManager.getIntegerValue(KEY_EDIT_TEAM_HEIGHT, defaultHeight);
       d.repaint();
       d.pack();
-      d.setMinimumSize(new Dimension(DEFAULT_POPUP_WIDTH, DEFAULT_POPUP_HEIGHT));
+      d.setMinimumSize(new Dimension(getMinimumWidth(), DEFAULT_POPUP_HEIGHT));
       d.setSize(new Dimension(width, height));
       d.setLocationRelativeTo(null);
       d.setResizable(true);
       addActionListeners();
       
       setDialog(d);
+   }
+   
+   private int getMinimumWidth() {
+      int ret = 0;
+      if (getMinUpperPanel != null) {
+         ret += Math.max(0, getMinUpperPanel.get().width);
+      }
+      return Math.max(ret, DEFAULT_POPUP_WIDTH);
    }
    
    @Override
@@ -347,6 +358,22 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       });
       copyToLauncher.setToolTipText(getString(KEY_MAKE_DEFAULT_TOOLTIP));
       ret.add(copyToLauncher, c);
+      
+      getMinUpperPanel = new Supplier<Dimension>() {
+         
+         @Override
+         public Dimension get() {
+            Dimension ret = new Dimension(10 + 50, 0);
+            for (Component c : new Component[] { typePanel, levelPanel, stringPanel, megaFilter, effectFilter,
+                  copyToLauncher }) {
+               Dimension temp = c.getPreferredSize();
+               int width = temp.width + ret.width;
+               int height = Math.max(temp.height, ret.height);
+               ret.setSize(width, height);
+            }
+            return ret;
+         }
+      };
       
       return ret;
    }
@@ -554,6 +581,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       JButton okButton = new JButton(getString(KEY_OK));
       okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       ret.add(okButton, c);
+      setDefaultButton(okButton);
       
       c.anchor = GridBagConstraints.CENTER;
       c.weightx = 0.0;
@@ -633,18 +661,14 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       SpeciesManager speciesManager = getUser().getSpeciesManager();
       List<Predicate<Species>> filters = getCurrentFilters(false);
       Collection<Species> speciesValues = speciesManager.getSpeciesByFilters(filters);
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
       for (Species s : speciesValues) {
          JPanel component = createRosterComponent(s);
          if (s.equals(selectedSpecies)) {
             newSpecies = s;
             newComponent = component;
-            setBorderFor(component, true, true, borderThick, marginThick, outlineThick);
+            setBorderFor(component, true, true);
          } else {
-            setBorderFor(component, false, true, borderThick, marginThick, outlineThick);
+            setBorderFor(component, false, true);
          }
          rosterPanel.add(component);
       }
@@ -708,15 +732,11 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    
    private void setSelected(Species s, JPanel newComponent) {
       selectedSpecies = s;
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
       if (selectedComponent != null) {
-         setBorderFor(selectedComponent, false, true, borderThick, marginThick, outlineThick);
+         setBorderFor(selectedComponent, false, true);
       }
       selectedComponent = newComponent;
-      setBorderFor(selectedComponent, true, true, borderThick, marginThick, outlineThick);
+      setBorderFor(selectedComponent, true, true);
       rebuildSelectedLabel();
    }
    
@@ -736,9 +756,15 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       selectedDisplayLabel.setText(textToUse);
    }
    
-   private void setBorderFor(JComponent c, boolean isSelected, boolean haveSelect, int borderThick, int marginThick,
-         int outlineThick) {
+   private void setBorderFor(JComponent c, boolean isSelected, boolean haveSelect) {
       if (c != null) {
+         ConfigManager manager = getUser().getPreferencesManager();
+         int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
+         borderThick = getUser().scaleBorderThickness(borderThick);
+         int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
+         outlineThick = getUser().scaleBorderThickness(outlineThick);
+         int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
+         marginThick = getUser().scaleBorderThickness(marginThick);
          Border margin = new EmptyBorder(marginThick, marginThick, marginThick, marginThick);
          Border greyOutline = new LineBorder(Color.gray, outlineThick);
          Border innerChunk = BorderFactory.createCompoundBorder(greyOutline, margin);
@@ -902,11 +928,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       keybindsComboBox.setToolTipText(getString(KEY_KEYBINDS_TOOLTIP));
       ret.add(keybindsComboBox, c);
       
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
-      setBorderFor(ret, false, false, borderThick, marginThick, outlineThick);
+      setBorderFor(ret, false, false);
       return ret;
    }
    
@@ -998,10 +1020,10 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       } else if (!hasWood && woodCheckBox.isSelected()) {
          curTeam.addName(woodName, getNextBindingFor(woodName, curTeam));
       }
-      if (hasMetal && !metalCheckBox.isSelected()) {
-         curTeam.removeName(metalName);
-      } else if (!hasMetal && metalCheckBox.isSelected()) {
-         curTeam.addName(metalName, getNextBindingFor(metalName, curTeam));
+      boolean metalSelected = metalCheckBox.isSelected();
+      if (hasMetal != metalSelected) {
+         boolean extendedMetalEnabled = getUser().isExtendedMetalEnabled();
+         getUser().getTeamManager().setMetalInTeam(curTeam, metalSelected, extendedMetalEnabled);
       }
       if (hasCoin && !coinCheckBox.isSelected()) {
          curTeam.removeName(coinName);
@@ -1191,6 +1213,24 @@ species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType())
    @Override
    public boolean canLevelEscalation() {
       return false;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.IndicatorUser#scaleFont(java.awt.Font)
+    */
+   @Override
+   public Font scaleFont(Font fontToUse) {
+      return getUser() == null ? fontToUse : getUser().scaleFont(fontToUse);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.config.provider.ImageManagerProvider#getScaledBorderThickness(int)
+    */
+   @Override
+   public Integer scaleBorderThickness(int given) {
+      return getUser() == null ? given : getUser().scaleBorderThickness(given);
    }
    
 }

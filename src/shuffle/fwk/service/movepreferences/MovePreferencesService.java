@@ -66,6 +66,8 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private static final String KEY_THRESHOLD = "text.threshold";
    private static final String KEY_SWAPTOPAINT = "text.autoswappaint";
    private static final String KEY_MOBILE = "text.mobilemode";
+   private static final String KEY_EXPRESS_METAL_ADVANCE = "text.expressmetaladvance";
+   private static final String KEY_EXTENDED_METAL = "text.extendedmetal";
    private static final String KEY_SIMULATIONS_TOOLTIP = "tooltip.simulations";
    private static final String KEY_AUTOCOMPUTE_TOOLTIP = "tooltip.autocompute";
    private static final String KEY_AUTOSWITCH_TOOLTIP = "tooltip.autoswitch";
@@ -76,6 +78,8 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private static final String KEY_OK_TOOLTIP = "tooltip.ok";
    private static final String KEY_APPLY_TOOLTIP = "tooltip.apply";
    private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
+   private static final String KEY_EXPRESS_METAL_ADVANCE_TOOLTIP = "tooltip.expressmetaladvance";
+   private static final String KEY_EXTENDED_METAL_TOOLTIP = "tooltip.extendedmetal";
    
    private JSpinner numFeederSpinner;
    private JSpinner feederHeightSpinner;
@@ -86,6 +90,8 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    private JSpinner thresholdSpinner;
    private JCheckBox autoSwapToPaint;
    private JCheckBox mobileModeCheckBox;
+   private JCheckBox expressMetalAdvanceCheckBox;
+   private JCheckBox extendedMetalCheckBox;
    
    /*
     * (non-Javadoc)
@@ -109,6 +115,8 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       thresholdSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 5));
       autoSwapToPaint = new JCheckBox(getString(KEY_SWAPTOPAINT));
       mobileModeCheckBox = new JCheckBox(getString(KEY_MOBILE));
+      expressMetalAdvanceCheckBox = new JCheckBox(getString(KEY_EXPRESS_METAL_ADVANCE));
+      extendedMetalCheckBox = new JCheckBox(getString(KEY_EXTENDED_METAL));
       
       d.setLayout(new GridBagLayout());
       
@@ -155,6 +163,18 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       c.gridwidth = maxWidth;
       mobileModeCheckBox.setToolTipText(getString(KEY_MOBILEMODE_TOOLTIP));
       d.add(mobileModeCheckBox, c);
+      
+      c.gridx = 1;
+      c.gridy++;
+      c.gridwidth = maxWidth;
+      expressMetalAdvanceCheckBox.setToolTipText(getString(KEY_EXPRESS_METAL_ADVANCE_TOOLTIP));
+      d.add(expressMetalAdvanceCheckBox, c);
+      
+      c.gridx = 1;
+      c.gridy++;
+      c.gridwidth = maxWidth;
+      extendedMetalCheckBox.setToolTipText(getString(KEY_EXTENDED_METAL_TOOLTIP));
+      d.add(extendedMetalCheckBox, c);
       
       c.gridx = 1;
       c.gridy++;
@@ -210,6 +230,7 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       });
       okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       d.add(okButton, c);
+      setDefaultButton(okButton);
       
       c.gridx += 1;
       @SuppressWarnings("serial")
@@ -267,6 +288,14 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
    public boolean isMobileMode() {
       return mobileModeCheckBox.isSelected();
    }
+   
+   public boolean isExpressMetalAdvanceEnabled() {
+      return expressMetalAdvanceCheckBox.isSelected();
+   }
+   
+   public boolean isExtendedMetalEnabled() {
+      return extendedMetalCheckBox.isSelected();
+   }
 
    public int getThreshold() {
       return Math.max(0, Math.min(100, (int) thresholdSpinner.getValue()));
@@ -291,6 +320,8 @@ public class MovePreferencesService extends BaseService<MovePreferencesServiceUs
       thresholdSpinner.setValue(user.getEffectThreshold());
       autoSwapToPaint.setSelected(user.isSwapToPaint());
       mobileModeCheckBox.setSelected(user.isMobileMode());
+      expressMetalAdvanceCheckBox.setSelected(user.isExpressMetalAdvanceEnabled());
+      extendedMetalCheckBox.setSelected(user.isExtendedMetalEnabled());
    }
    
 }

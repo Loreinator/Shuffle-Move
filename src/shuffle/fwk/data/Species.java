@@ -44,14 +44,17 @@ public class Species implements Comparable<Species>, I18nUser {
    public static final Species WOOD = new Species("Wood", 1, 0, PkmType.WOOD, Effect.WOOD, null, Effect.NONE);
    public static final Species METAL = new Species("Metal", 2, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
    public static final Species COIN = new Species("Coin", 3, 100, PkmType.NONE, Effect.COIN, null, Effect.NONE);
-   public static final Species METAL_4 = new Species("Metal_4", 4, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
-   public static final Species METAL_3 = new Species("Metal_3", 5, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
-   public static final Species METAL_2 = new Species("Metal_2", 6, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
-   public static final Species METAL_1 = new Species("Metal_1", 7, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
-   public static final Species FREEZE = new Species("Freeze", 8, 0, PkmType.NONE, Effect.UNLISTED, null, Effect.NONE);
+   public static final Species METAL_1 = new Species("Metal_1", 4, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species METAL_2 = new Species("Metal_2", 5, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species METAL_3 = new Species("Metal_3", 6, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species METAL_4 = new Species("Metal_4", 7, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species METAL_5 = new Species("Metal_5", 8, 0, PkmType.NONE, Effect.METAL, null, Effect.NONE);
+   public static final Species FREEZE = new Species("Freeze", 9, 0, PkmType.NONE, Effect.UNLISTED, null, Effect.NONE);
    
    public static final List<Species> FIXED_SPECIES = Collections.unmodifiableList(Arrays.asList(AIR, WOOD, METAL, COIN,
-         METAL_4, METAL_3, METAL_2, METAL_1, FREEZE));
+         METAL_5, METAL_4, METAL_3, METAL_2, METAL_1, FREEZE));
+   public static final List<Species> EXTENDED_METAL = Collections
+         .unmodifiableList(Arrays.asList(METAL, METAL_1, METAL_2, METAL_3, METAL_4, METAL_5));
    
    private static final int[] LEVEL_BONUS = new int[] { 0, // level 0 has 0 bonus
          0, 3, 6, 8, 10, 12, 14, 16, 18, 20 };
@@ -244,7 +247,7 @@ public class Species implements Comparable<Species>, I18nUser {
    }
    
    public static Species getNextMetal(Species cur) {
-      if (cur.equals(METAL)) {
+      if (cur.equals(METAL) || cur.equals(METAL_5)) {
          return METAL_4;
       } else if (cur.equals(METAL_4)) {
          return METAL_3;

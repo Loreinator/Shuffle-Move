@@ -159,7 +159,7 @@ public class Stage implements Comparable<Stage> {
                   assert baseHealth > 0;
                   assert healthIncrement >= 0;
                   int curHealth = baseHealth;
-                  for (int curLevel = startLevel; curLevel <= endLevel; curLevel++) {
+                  for (int curLevel = startLevel; curLevel <= endLevel && curLevel < MAX_ESCALATION_LEVEL; curLevel++) {
                      ret[curLevel - 1] = curHealth;
                      maxHealth = Math.max(maxHealth, curHealth);
                      curHealth += healthIncrement;

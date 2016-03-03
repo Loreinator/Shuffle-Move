@@ -80,6 +80,7 @@ import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
 import shuffle.fwk.data.Team;
+import shuffle.fwk.data.TeamImpl;
 import shuffle.fwk.data.simulation.SimulationCore;
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.i18n.I18nUser;
@@ -123,6 +124,8 @@ public class ShuffleModel
    private static final String KEY_SWAP_TO_PAINT = "SWAP_TO_PAINT";
    private static final String KEY_MOBILE_MODE = "MOBILE_MODE";
    private static final String KEY_ESCALATION_LEVEL = "ESCALATION_LEVEL";
+   private static final String KEY_ENABLE_EXPRESS_METAL_ADVANCE = "ENABLE_EXPRESS_METAL_ADVANCE";
+   private static final String KEY_METAL_EXTENDED = "METAL_EXTENDED";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -396,8 +399,17 @@ public class ShuffleModel
       }
       boolean changed = false;
       Species cur = getBoardManager().getBoard().getSpeciesAt(row, col);
-      if (paint != null && paint.getEffect().equals(Effect.METAL) && cur.getEffect().equals(Effect.METAL)) {
-         paint = Species.getNextMetal(cur);
+      // If the paint and the current species are both Metal, and we're either not in express or
+      // Express metal advancement is enabled, THEN you can set this to the next metal block.
+      if (paint != null && paint.equals(Species.METAL) && cur.getEffect().equals(Effect.METAL)) {
+         if (isExpressMetalAdvanceEnabled() || !getCurrentMode().equals(EntryMode.EXPRESS)) {
+            paint = Species.getNextMetal(cur);
+         } else {
+            paint = cur;
+         }
+      }
+      if (Species.METAL_5.equals(paint)) {
+         paint = Species.METAL;
       }
       changed |= getBoardManager().getBoard().setSpeciesAt(row, col, paint);
       changed |= getBoardManager().getBoard().setFrozenAt(row, col, freeze);
@@ -1330,5 +1342,28 @@ public class ShuffleModel
       boolean result = getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_MOBILE_MODE, mobileMode);
       setCurrentStage(getCurrentStage());
       return result;
+   }
+   
+   public boolean isExpressMetalAdvanceEnabled() {
+      return getPreferencesManager().getBooleanValue(KEY_ENABLE_EXPRESS_METAL_ADVANCE, false);
+   }
+   
+   public boolean setExpressMetalAdvanceEnabled(boolean enable) {
+      return getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_ENABLE_EXPRESS_METAL_ADVANCE, enable);
+   }
+   
+   public boolean isExtendedMetalEnabled() {
+      return getPreferencesManager().getBooleanValue(KEY_METAL_EXTENDED, false);
+   }
+   
+   public boolean setMetalExtended(boolean enabled) {
+      boolean changed = getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_METAL_EXTENDED, enabled);
+      if (changed) {
+         TeamImpl team = (TeamImpl) getCurrentTeam();
+         boolean hasMetal = team.getNames().contains(Species.METAL.getName());
+         getTeamManager().setMetalInTeam(team, hasMetal, enabled);
+         changed &= getTeamManager().setTeamForStage(team, getCurrentStage());
+      }
+      return changed;
    }
 }

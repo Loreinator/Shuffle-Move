@@ -224,7 +224,9 @@ public class TeamImpl implements Team {
          return false;
       }
       Character oldKey = nameToKey.remove(s);
-      keyToName.remove(oldKey);
+      if (oldKey != null) {
+         keyToName.remove(oldKey);
+      }
       if (s.equals(megaSlotName)) {
          megaSlotName = null;
       }
@@ -246,7 +248,9 @@ public class TeamImpl implements Team {
          return false;
       }
       boolean changed = teamNames.add(s);
-      changed |= setBinding(s, binding);
+      if (changed) {
+         changed |= setBinding(s, binding);
+      }
       return changed;
    }
    
@@ -278,6 +282,19 @@ public class TeamImpl implements Team {
          }
       }
       return sb.toString();
+   }
+   
+   @Override
+   public boolean equals(Object obj) {
+      boolean equal = obj != null && obj instanceof TeamImpl;
+      if (equal) {
+         TeamImpl other = (TeamImpl) obj;
+         equal &= teamNames.equals(other.teamNames);
+         equal &= nameToKey.equals(other.nameToKey);
+         equal &= keyToName.equals(other.keyToName);
+         equal &= megaSlotName == other.megaSlotName || megaSlotName != null && megaSlotName.equals(other.megaSlotName);
+      }
+      return equal;
    }
    
    @Override

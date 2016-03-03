@@ -156,6 +156,7 @@ public class MigrateService extends BaseService<MigrateServiceUser> implements I
       });
       okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       d.add(okButton, c);
+      setDefaultButton(okButton);
       
       c.gridx++;
       JButton cancelButton = new JButton(new DisposeAction(getString(KEY_CANCEL), this));

@@ -20,7 +20,6 @@ package shuffle.fwk;
 
 import java.util.logging.Logger;
 
-import shuffle.fwk.config.ConfigFactory;
 import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.provider.ImageManagerProvider;
 import shuffle.fwk.data.Effect;
@@ -39,20 +38,16 @@ public class ShuffleView implements ImageManagerProvider {
    private static final Logger LOG = Logger.getLogger(ShuffleView.class.getName());
    
    /** The controller for this view. */
-   private ShuffleViewUser provider = null;
-   
-   private ImageManager imageManager = null;
+   private ShuffleViewUser user = null;
    
    /**
     * Creates a new ShuffleView bound to the given ShuffleViewUser.
     * 
-    * @param provider
-    *           The provider to bind this new view to.
+    * @param user
+    *           The user to bind this new view to.
     */
-   public ShuffleView(ShuffleViewUser provider) {
-      setProvider(provider);
-      ConfigFactory factory = provider.getConfigFactory();
-      imageManager = factory.getImageManager();
+   public ShuffleView(ShuffleViewUser user) {
+      setUser(user);
    }
    
    /**
@@ -60,26 +55,18 @@ public class ShuffleView implements ImageManagerProvider {
     * 
     * @return the ShuffleViewUser
     */
-   public ShuffleViewUser getProvider() {
-      return provider;
+   public ShuffleViewUser getUser() {
+      return user;
    }
    
    /**
-    * Sets the provider to which this view is bound.
+    * Sets the user to which this view is bound.
     * 
-    * @param provider
+    * @param user
     *           The ShuffleViewUser
     */
-   public void setProvider(ShuffleViewUser provider) {
-      this.provider = provider;
-   }
-   
-   /**
-    * @return the imageManager
-    */
-   @Override
-   public ImageManager getImageManager() {
-      return imageManager;
+   public void setUser(ShuffleViewUser user) {
+      this.user = user;
    }
    
    /**
@@ -103,8 +90,8 @@ public class ShuffleView implements ImageManagerProvider {
             s = ((SpeciesPaint) o).getSpecies();
             frozen = ((SpeciesPaint) o).isFrozen();
          }
-         Stage currentStage = getProvider().getBoardManager().getCurrentStage();
-         Team currentTeam = getProvider().getTeamManager().getTeamForStage(currentStage);
+         Stage currentStage = getUser().getBoardManager().getCurrentStage();
+         Team currentTeam = getUser().getTeamManager().getTeamForStage(currentStage);
          if (s != null && currentTeam != null) {
             Character binding = currentTeam.getBinding(s);
             if (binding != null) {
@@ -125,5 +112,23 @@ public class ShuffleView implements ImageManagerProvider {
          ret = "NA";// Fall back position
       }
       return ret;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.config.provider.ImageManagerProvider#scaleBorderThickness(int)
+    */
+   @Override
+   public Integer scaleBorderThickness(int given) {
+      return getUser().scaleBorderThickness(given);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.config.provider.ImageManagerProvider#getImageManager()
+    */
+   @Override
+   public ImageManager getImageManager() {
+      return getUser().getImageManager();
    }
 }

@@ -95,9 +95,10 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
       ConfigManager manager = getUser().getPreferencesManager();
       Font labelFont = manager.getFontValue(KEY_LABEL_FONT, DEFAULT_FONT);
       labelFont = new JLabel().getFont().deriveFont(labelFont.getStyle(), labelFont.getSize2D());
+      labelFont = getUser().scaleFont(labelFont);
       Font modeFont = manager.getFontValue(KEY_MODE_FONT, DEFAULT_FONT);
       modeFont = new JLabel().getFont().deriveFont(modeFont.getStyle(), modeFont.getSize2D());
-      int selectThick = manager.getIntegerValue(KEY_SELECT_THICK, DEFAULT_SELECT_THICK);
+      modeFont = getUser().scaleFont(modeFont);
       modeLabel.setFont(labelFont);
       modeLabel.setForeground(getModeSelectColor());
       add(modeLabel, c);
@@ -111,7 +112,7 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
          if (!modeTooltipKey.equals(modeTooltipText)) {
             label.setToolTipText(modeTooltipText);
          }
-         setBorderFor(label, mode.equals(oldMode), selectThick);
+         setBorderFor(label, mode.equals(oldMode));
          modeMap.put(mode, label);
          c.gridx++;
          label.addFocusListener(new FocusAdapter() {
@@ -136,10 +137,13 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
       return text;
    }
    
-   private boolean setBorderFor(JLabel label, boolean equals, int thickness) {
+   private boolean setBorderFor(JLabel label, boolean equals) {
       if (label == null) {
          return false;
       }
+      ConfigManager manager = getUser().getPreferencesManager();
+      int thickness = manager.getIntegerValue(KEY_SELECT_THICK, DEFAULT_SELECT_THICK);
+      thickness = getUser().scaleBorderThickness(thickness);
       Border b;
       if (equals) {
          b = new LineBorder(getModeSelectColor(), thickness, true);
@@ -187,10 +191,8 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
       if (changed) {
          JLabel oldSelection = modeMap.get(oldMode);
          JLabel newSelection = modeMap.get(newMode);
-         ConfigManager manager = getUser().getPreferencesManager();
-         int selectThick = manager.getIntegerValue(KEY_SELECT_THICK, DEFAULT_SELECT_THICK);
-         setBorderFor(oldSelection, false, selectThick);
-         setBorderFor(newSelection, true, selectThick);
+         setBorderFor(oldSelection, false);
+         setBorderFor(newSelection, true);
          oldMode = newMode;
       }
       if (!modeMap.get(newMode).hasFocus()) {

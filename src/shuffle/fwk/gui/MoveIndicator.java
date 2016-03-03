@@ -89,6 +89,7 @@ public class MoveIndicator extends JPanel implements I18nUser {
       Color scoreColor = manager.getColorFor(KEY_SCORE_COLOR);
       Font fontToUse = manager.getFontValue(KEY_MOVE_FONT, DEFAULT_FONT_USED);
       fontToUse = new JLabel().getFont().deriveFont(fontToUse.getStyle(), fontToUse.getSize2D());
+      fontToUse = getUser().scaleFont(fontToUse);
       messageLabel = new JLabel(getString(KEY_TEXT_NOMOVE));
       messageLabel.setFont(fontToUse);
       if (scoreColor != null) {

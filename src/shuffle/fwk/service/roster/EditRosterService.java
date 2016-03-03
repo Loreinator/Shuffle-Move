@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -134,6 +135,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private JComboBox<Integer> speedups = null;
    private ItemListener speedupsListener = null;
    private JCheckBox teamFilter = null;
+   private Supplier<Dimension> getMinUpperPanel = null;
    
    private RosterManager myData = null;
    
@@ -186,13 +188,21 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       int height = preferencesManager.getIntegerValue(KEY_EDIT_ROSTER_HEIGHT, defaultHeight);
       d.repaint();
       d.pack();
-      d.setMinimumSize(new Dimension(DEFAULT_POPUP_WIDTH, DEFAULT_POPUP_HEIGHT));
+      d.setMinimumSize(new Dimension(getMinimumWidth(), DEFAULT_POPUP_HEIGHT));
       d.setSize(new Dimension(width, height));
       d.setLocationRelativeTo(null);
       d.setResizable(true);
       addActionListeners();
       setDialog(d);
       getUser().addObserver(this);
+   }
+   
+   private int getMinimumWidth() {
+      int ret = 0;
+      if (getMinUpperPanel != null) {
+         ret += Math.max(0, getMinUpperPanel.get().width);
+      }
+      return Math.max(ret, DEFAULT_POPUP_WIDTH);
    }
    
    @Override
@@ -287,6 +297,21 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       effectFilter.setToolTipText(getString(KEY_EFFECT_FILTER_TOOLTIP));
       ret.add(effectFilter, c);
       
+      getMinUpperPanel = new Supplier<Dimension>() {
+         
+         @Override
+         public Dimension get() {
+            Dimension ret = new Dimension(10 + 50, 0);
+            for (Component c : new Component[] { typePanel, levelPanel, stringPanel, megaFilter, effectFilter }) {
+               Dimension temp = c.getPreferredSize();
+               int width = temp.width + ret.width;
+               int height = Math.max(temp.height, ret.height);
+               ret.setSize(width, height);
+            }
+            return ret;
+         }
+      };
+      
       return ret;
    }
    
@@ -363,6 +388,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       JButton okButton = new JButton(getString(KEY_OK));
       okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
       ret.add(okButton, c);
+      setDefaultButton(okButton);
       
       c.anchor = GridBagConstraints.CENTER;
       c.weightx = 0.0;
@@ -444,18 +470,14 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       SpeciesManager speciesManager = getUser().getSpeciesManager();
       List<Predicate<Species>> filters = getCurrentFilters(false);
       Collection<Species> speciesValues = speciesManager.getSpeciesByFilters(filters);
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
       for (Species s : speciesValues) {
          JPanel component = createRosterComponent(s);
          if (s.equals(selectedSpecies)) {
             newSpecies = s;
             newComponent = component;
-            setBorderFor(component, true, borderThick, marginThick, outlineThick);
+            setBorderFor(component, true);
          } else {
-            setBorderFor(component, false, borderThick, marginThick, outlineThick);
+            setBorderFor(component, false);
          }
          rosterEntryPanel.add(component);
       }
@@ -530,15 +552,11 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    
    private void setSelected(Species s, JPanel newComponent) {
       selectedSpecies = s;
-      ConfigManager manager = getUser().getPreferencesManager();
-      int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
-      int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
-      int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
       if (selectedComponent != null) {
-         setBorderFor(selectedComponent, false, borderThick, marginThick, outlineThick);
+         setBorderFor(selectedComponent, false);
       }
       selectedComponent = newComponent;
-      setBorderFor(selectedComponent, true, borderThick, marginThick, outlineThick);
+      setBorderFor(selectedComponent, true);
       rebuildSelectedLabel();
    }
    
@@ -595,8 +613,15 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       speedups.removeItemListener(speedupsListener);
    }
    
-   private void setBorderFor(JPanel c, boolean doBorder, int borderThick, int marginThick, int outlineThick) {
+   private void setBorderFor(JPanel c, boolean doBorder) {
       if (c != null) {
+         ConfigManager manager = getUser().getPreferencesManager();
+         int borderThick = manager.getIntegerValue(KEY_ROSTER_CELL_BORDER_THICK, DEFAULT_BORDER_WIDTH);
+         borderThick = getUser().scaleBorderThickness(borderThick);
+         int outlineThick = manager.getIntegerValue(KEY_ROSTER_CELL_OUTLINE_THICK, DEFAULT_BORDER_OUTLINE);
+         outlineThick = getUser().scaleBorderThickness(outlineThick);
+         int marginThick = manager.getIntegerValue(KEY_ROSTER_CELL_MARGIN_THICK, DEFAULT_BORDER_MARGIN);
+         marginThick = getUser().scaleBorderThickness(marginThick);
          Border main;
          Border margin = new EmptyBorder(marginThick, marginThick, marginThick, marginThick);
          if (doBorder) {

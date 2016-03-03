@@ -58,7 +58,6 @@ public class GridPanel extends JPanel {
    public static final String KEY_CUR_CURSOR_COLOR = "CUR_CURSOR_COLOR";
    public static final String KEY_PREV_CURSOR_COLOR = "PREV_CURSOR_COLOR";
    public static final String KEY_CELL_BORDER_THICK_INNER = "CELL_BORDER_THICK";
-   public static final String KEY_CELL_BORDER_THICK_OUTER = "CELL_BORDER_THICK_OUTER";
    public static final String KEY_GRID_BORDER_THICK = "GRID_BORDER_THICK";
    public static final String KEY_CELL_OUTLINE_THICK = "CELL_OUTLINE_THICK";
    
@@ -123,43 +122,35 @@ public class GridPanel extends JPanel {
     * @return
     */
    private int getCellBorderInnerThickness() {
-      return getUser().getPreferencesManager().getIntegerValue(KEY_CELL_BORDER_THICK_INNER, DEFAULT_CELL_BORDER_THICK);
+      ConfigManager preferencesManager = getUser().getPreferencesManager();
+      Integer thick = preferencesManager.getIntegerValue(KEY_CELL_BORDER_THICK_INNER, DEFAULT_CELL_BORDER_THICK);
+      return getUser().scaleBorderThickness(thick);
    }
-   
-   // /**
-   // * @return
-   // */
-   // private int getCellBorderOuterThickness() {
-   // return getUser().getPreferencesManager().getIntegerValue(KEY_CELL_BORDER_THICK_OUTER,
-   // DEFAULT_CELL_BORDER_THICK);
-   // }
    
    /**
     * @return
     */
    private int getGridBorderThickness() {
-      return getUser().getPreferencesManager().getIntegerValue(KEY_GRID_BORDER_THICK, DEFAULT_GRID_BORDER_THICK);
+      ConfigManager preferencesManager = getUser().getPreferencesManager();
+      Integer thick = preferencesManager.getIntegerValue(KEY_GRID_BORDER_THICK, DEFAULT_GRID_BORDER_THICK);
+      return getUser().scaleBorderThickness(thick);
    }
    
    private int getCellOutlineThickness() {
-      return getUser().getPreferencesManager().getIntegerValue(KEY_CELL_OUTLINE_THICK, DEFAULT_CELL_OUTLINE_THICK);
+      ConfigManager preferencesManager = getUser().getPreferencesManager();
+      Integer thick = preferencesManager.getIntegerValue(KEY_CELL_OUTLINE_THICK, DEFAULT_CELL_OUTLINE_THICK);
+      return getUser().scaleBorderThickness(thick);
    }
    
    private Border getBorderFor(Color inner) {
-      Border innerBorder = new EmptyBorder(getCellBorderInnerThickness() * 2, getCellBorderInnerThickness() * 2,
-            getCellBorderInnerThickness() * 2, getCellBorderInnerThickness() * 2);
-      // Border outerBorder = new EmptyBorder(getCellBorderOuterThickness(),
-      // getCellBorderOuterThickness(),
-      // getCellBorderOuterThickness(), getCellBorderOuterThickness());
-      // if (outer != null) {
-      // outerBorder = new LineBorder(outer, getCellBorderOuterThickness(), true);
-      // }
+      int cellOutlineThickness = getCellOutlineThickness();
+      int cellBorderInnerThickness = getCellBorderInnerThickness() * 2;
+      Border innerBorder = new EmptyBorder(cellBorderInnerThickness, cellBorderInnerThickness, cellBorderInnerThickness,
+            cellBorderInnerThickness);
       if (inner != null) {
-         innerBorder = new LineBorder(inner, getCellBorderInnerThickness() * 2, true);
+         innerBorder = new LineBorder(inner, cellBorderInnerThickness, true);
       }
-      // CompoundBorder coloredBorder = BorderFactory.createCompoundBorder(outerBorder,
-      // innerBorder);
-      Border greyOutline = new LineBorder(Color.gray, getCellOutlineThickness());
+      Border greyOutline = new LineBorder(Color.gray, cellOutlineThickness);
       CompoundBorder finalBorder = BorderFactory.createCompoundBorder(greyOutline, innerBorder);
       return finalBorder;
    }
@@ -273,8 +264,8 @@ public class GridPanel extends JPanel {
       EntryMode curMode = getUser().getCurrentMode();
       if (!curMode.equals(mode)) {
          mode = curMode;
-         Color gridOutline = preferencesManager.getColorFor(mode);
-         content.setBorder(new LineBorder(gridOutline, getGridBorderThickness(), true));
+         Color gridOutlineColor = preferencesManager.getColorFor(mode);
+         content.setBorder(new LineBorder(gridOutlineColor, getGridBorderThickness(), true));
          changed = true;
       }
       if (changed) {

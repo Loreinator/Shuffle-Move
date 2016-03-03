@@ -36,6 +36,18 @@ public class I18nFactory {
    
    private static Map<Object, ResourceBundle> bundles = new HashMap<Object, ResourceBundle>();
    
+   /**
+    * Returns the i18n string for the current locale and key. If the key is not found the key itself
+    * is returned.
+    * 
+    * @param c
+    *           The class that the resource bundle should be registered to.
+    * @param key
+    *           The key for the i18n
+    * @param params
+    *           Optional parameters to format into the string automatically.
+    * @return The key given, or the internationalized string.
+    */
    public static String getString(Class<? extends Object> c, String key, Object... params) {
       I18nResource resource = getResource(c.getName());
       String value = null;

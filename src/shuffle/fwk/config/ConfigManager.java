@@ -193,7 +193,9 @@ public class ConfigManager {
             }
          }
          Long fileBuildDate = getLongValue(KEY_BUILD_DATE, 0l);
-         uptodate &= fileBuildDate >= ShuffleVersion.BUILD_DATE;
+         if (fileBuildDate < ShuffleVersion.BUILD_DATE) {
+            uptodate = false;
+         }
          return !uptodate;
       } catch (Exception e) {
          // then we assume it has no saved version.
@@ -522,6 +524,19 @@ public class ConfigManager {
     */
    public String readEntireFile(String key) {
       File f = getFileValue(key);
+      return readEntireFileFromFile(f);
+   }
+   
+   public String readEntireFileFromPath(String filePath) {
+      String ret = null;
+      if (filePath != null) {
+         File f = new File(filePath);
+         ret = readEntireFileFromFile(f);
+      }
+      return ret == null ? "" : ret;
+   }
+   
+   private String readEntireFileFromFile(File f) {
       String ret = null;
       if (f != null && f.exists() && f.canRead()) {
          Path path = Paths.get(f.toURI());
@@ -586,11 +601,6 @@ public class ConfigManager {
       return getValues(EntryType.RESOURCE, String.class);
    }
    
-   public InputStream getResourceAsInputStream(String key) {
-      String path = getResourceValue(key);
-      return getResourceInputStream(path);
-   }
-   
    public InputStream getResourceInputStream(String path) {
       InputStream result = null;
       if (path != null) {
@@ -608,17 +618,24 @@ public class ConfigManager {
     * @return
     */
    public String readEntireResource(String key) {
-      InputStream is = getResourceAsInputStream(key);
+      String path = getResourceValue(key);
+      return readEntireResourceFromPath(path);
+   }
+   
+   public String readEntireResourceFromPath(String path) {
+      InputStream is = getResourceInputStream(path);
       String result = null;
-      try {
-         result = IOUtils.toString(is);
-      } catch (IOException e) {
-         LOG.log(Level.FINE, "Cannot parse file due to an IOException: ", e);
-      } finally {
+      if (is != null) {
          try {
-            is.close();
+            result = IOUtils.toString(is);
          } catch (IOException e) {
             LOG.log(Level.FINE, "Cannot parse file due to an IOException: ", e);
+         } finally {
+            try {
+               is.close();
+            } catch (IOException e) {
+               LOG.log(Level.FINE, "Cannot parse file due to an IOException: ", e);
+            }
          }
       }
       return result == null ? "" : result;
@@ -628,6 +645,38 @@ public class ConfigManager {
       String ret = readEntireFile(key);
       if (ret.isEmpty()) {
          ret = readEntireResource(key);
+      }
+      return ret;
+   }
+   
+   /**
+    * Return the entire file or resource as a string, given the path.
+    * 
+    * @param path
+    * @return Null if not found.
+    */
+   public String readEntireFileOrResourceFromPath(String path) {
+      String ret = readEntireFileFromPath(path);
+      if (ret.isEmpty()) {
+         ret = readEntireResourceFromPath(path);
+      }
+      return ret;
+   }
+   
+   /**
+    * Return the entire file or resource as a String, given the path and fall-back key.
+    * 
+    * @param path
+    *           Attempted first to find a non-empty document.
+    * @param key
+    *           Used if the path specified a non-existent, unreadable, or otherwise empty file.
+    * @return the file, or resource of the path, or if not available then the file or resource
+    *         specified by the key. Otherwise "" is returned.
+    */
+   public String readEntireDocument(String path, String key) {
+      String ret = readEntireFileOrResourceFromPath(path);
+      if (ret == null || ret.isEmpty()) {
+         ret = readEntireFileOrResource(key);
       }
       return ret;
    }

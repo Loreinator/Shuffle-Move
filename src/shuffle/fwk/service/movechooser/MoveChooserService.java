@@ -216,6 +216,7 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
       });
       doMoveButton.setToolTipText(getString(KEY_DO_TOOLTIP));
       d.add(doMoveButton, c);
+      setDefaultButton(doMoveButton);
       
       c.gridx++;
       closeButton = new JButton(new DisposeAction(getString(KEY_CLOSE), this));

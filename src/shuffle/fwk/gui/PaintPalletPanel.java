@@ -20,6 +20,7 @@ package shuffle.fwk.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -123,6 +125,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private ChangeListener scoreListener;
    private ItemListener movesListener;
    private ChangeListener attackPowerListener;
+   private Supplier<Integer> minimumWidthGetter = () -> 0;
    
    private List<SpeciesPaint> prevPaints = Collections.emptyList();
    private Team prevTeam = null;
@@ -144,6 +147,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          @Override
          public Dimension getPreferredSize() {
             Dimension d = super.getPreferredSize();
+            d.width = minimumWidthGetter.get();
             int height = d.height;
             d = function.apply(d); // allows us to grab the same width as the scroll pane, since we
                                    // can't have a circular reference
@@ -209,6 +213,17 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       c.gridy = 2;
       c.fill = GridBagConstraints.BOTH;
       add(optionPanel, c);
+      minimumWidthGetter = new Supplier<Integer>() {
+         @Override
+         public Integer get() {
+            int ret = 0;
+            for (Component component : new Component[] { megaPanel, frozenBox, woodBox, metalBox, coinBox,
+                  enableAttackPowerUpBox, scorePanel, healthLabel, movesPanel }) {
+               ret = Math.max(ret, component.getPreferredSize().width);
+            }
+            return ret;
+         }
+      };
       jsp = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
          @Override
@@ -245,6 +260,13 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       jsp.getVerticalScrollBar().setUnitIncrement(30);
       addOptionListeners();
       updateAll();
+   }
+   
+   @Override
+   public Dimension getPreferredSize() {
+      Dimension d = super.getPreferredSize();
+      d.width = minimumWidthGetter.get();
+      return d;
    }
    
    private PaintsIndicatorUser getUser() {
@@ -290,10 +312,10 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
                } else if (!hasWood && woodBox.isSelected()) {
                   curTeam.addName(woodName, getNextBindingFor(woodName, curTeam));
                }
-               if (hasMetal && !metalBox.isSelected()) {
-                  curTeam.removeName(metalName);
-               } else if (!hasMetal && metalBox.isSelected()) {
-                  curTeam.addName(metalName, getNextBindingFor(metalName, curTeam));
+               boolean metalSelected = metalBox.isSelected();
+               if (hasMetal != metalSelected) {
+                  boolean extendedMetalEnabled = getUser().isExtendedMetalEnabled();
+                  getUser().getTeamManager().setMetalInTeam(curTeam, metalSelected, extendedMetalEnabled);
                }
                if (hasCoin && !coinBox.isSelected()) {
                   curTeam.removeName(coinName);
@@ -396,18 +418,15 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          prevTeam = curTeam;
       }
       removeAllIndicators();
-      ConfigManager manager = getUser().getPreferencesManager();
-      int thickness = manager.getIntegerValue(KEY_SELECT_PAINT_THICK, DEFAULT_SELECT_THICK);
-      int outlineThick = manager.getIntegerValue(KEY_OUTLINE_PAINT_THICK, DEFAULT_OUTLINE_THICK);
       for (int i = 0; i < curPaints.size(); i++) {
          SpeciesPaint value = curPaints.get(i);
          String text = getUser().getTextFor(value);
          Indicator<SpeciesPaint> ind = new Indicator<SpeciesPaint>(getUser());
          ind.setVisualized(value, text);
          if (value.equals(curPaint)) { // border necessary
-            setBorderFor(ind, true, thickness, outlineThick);
+            setBorderFor(ind, true);
          } else { // buffer needed to keep a nice look
-            setBorderFor(ind, false, thickness, outlineThick);
+            setBorderFor(ind, false);
          }
          addIndicator(ind);
       }
@@ -419,13 +438,10 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
     * 
     */
    private void updateIndicatorBorders() {
-      ConfigManager manager = getUser().getPreferencesManager();
-      int thickness = manager.getIntegerValue(KEY_SELECT_PAINT_THICK, DEFAULT_SELECT_THICK);
-      int outlineThick = manager.getIntegerValue(KEY_OUTLINE_PAINT_THICK, DEFAULT_OUTLINE_THICK);
       SpeciesPaint curPaint = getUser().getSelectedSpeciesPaint();
       for (Indicator<SpeciesPaint> ind : indicators) {
          SpeciesPaint paint = ind.getValue();
-         setBorderFor(ind, curPaint == paint || curPaint != null && curPaint.equals(paint), thickness, outlineThick);
+         setBorderFor(ind, curPaint == paint || curPaint != null && curPaint.equals(paint));
       }
    }
    
@@ -590,9 +606,14 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       return getUser().getPreferencesManager().getColorValue(KEY_PAINT_SELECT_COLOR, Color.BLACK);
    }
    
-   private boolean setBorderFor(Indicator<SpeciesPaint> ind, boolean selected, int thickness, int outlineThick) {
+   private boolean setBorderFor(Indicator<SpeciesPaint> ind, boolean selected) {
       boolean changed = false;
       if (ind != null) {
+         ConfigManager manager = getUser().getPreferencesManager();
+         int thickness = manager.getIntegerValue(KEY_SELECT_PAINT_THICK, DEFAULT_SELECT_THICK);
+         thickness = getUser().scaleBorderThickness(thickness);
+         int outlineThick = manager.getIntegerValue(KEY_OUTLINE_PAINT_THICK, DEFAULT_OUTLINE_THICK);
+         outlineThick = getUser().scaleBorderThickness(outlineThick);
          Border b;
          if (selected) {
             b = new LineBorder(getPaintSelectColor(), thickness);

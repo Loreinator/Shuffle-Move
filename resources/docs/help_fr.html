@@ -1,0 +1,177 @@
+<div style="text-align: center;"><strong><big><big>Aide de Shuffle Move</big></big></strong><br><strong></strong></div><strong><br></strong><div style="text-align: center;"><strong>Pour une aide mise &agrave; jour, vous pouvez consulter le <a href="https://github.com/Loreinator/Shuffle-Move/wiki" target="_blank">GitHub wiki</a>,
+ou n'h&eacute;sitez pas &agrave; poser vos questions sur <a href="https://www.reddit.com/r/ShuffleMove" target="_blank">/r/ShuffleMove</a></strong><br>
+<br>
+Si vous souhaitez soutenir les d&eacute;veloppeurs, <strong>merci de <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=all4atlantis%40gmail%2ecom&amp;lc=CA&amp;item_name=Lore%20Softworks&amp;currency_code=CAD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" target="_blank">faire un don via paypal</a>.</strong><br>
+<br>
+La derni&egrave;re version peut toujours &ecirc;tre r&eacute;cup&eacute;r&eacute;e <strong><a href="http://loresoftworks.noip.me/shuffleversion.html" target="_blank">ici
+(site &agrave; jour)</a></strong>, ou <a href="https://www.reddit.com/r/ShuffleMove/wiki/versionlinks" target="_blank">ici (page wiki)</a>
+, ou <a href="https://github.com/Loreinator/Shuffle-Move/releases/latest">ici (derni&egrave;re version de GitHub)</a>.<br></div>
+<br>
+<div style="text-align: center;"><big style="text-decoration: underline;">Utilisation de base :</big><br>
+</div><ol>
+  <li>&Eacute;tablissez votre index en indiquant les niveaux de chaque 
+  esp&egrave;ce que vous poss&eacute;dez d&eacute;j&agrave;. Pour cela,
+  appuyez sur Ctrl+R ou allez sur Index &gt; Modifier<br>
+  </li>
+  <li>S&eacute;lectionnez votre &eacute;quipe, c'est-&agrave;-dire l'ensemble des esp&egrave;ces
+  et entraves que vous allez utiliser pour chaque niveau.
+  Pour cela, appuyez sur Ctrl+T ou allez sur Equipe &gt; Modifier</li>
+  <li>Utilisez l'interface principale en mode Paint ou Express pour 
+  modifier la grille affich&eacute;e. Voir plus bas pour plus de 
+  pr&eacute;cisions sur chaque mode. Appuyez sur &laquo; f &raquo; 
+  pour mettre de la glace,
+  en fonction du mode utilis&eacute; et de votre configuration.</li>
+  <li>Lorsque vous modifiez la grille, le coup optimal changera
+  (si la grille est telle qu'elle pourrait &ecirc;tre finie).
+  Voir la section &laquo; Simulateur de coups &raquo; plus bas
+  pour plus de pr&eacute;cisions.</li>
+  <li>Vous pouvez effacer la grille avec Ctrl+Suppr, et changer la 
+  grille en ce qu'elle deviendra apr&egrave;s le meilleur coup avec Ctrl+Entr&eacute;e.</li>
+  <li>Vous pouvez sauvegarder toutes vos donn&eacute;es avec Ctrl+S et les 
+  charger avec Ctrl+L. Vous pouvez aussi sauvegarder individuellement 
+  certains des &eacute;l&eacute;ments en eux-m&ecirc;me : Grille, Index, ou Equipe. Grille 
+  inclut l'&eacute;tat actuel de la grille et le niveau, Index inclut l'index 
+  complet, et Equipe inclut toute la configuration de l'&eacute;quipe pour un 
+  niveau donn&eacute;.<span style="font-style: italic;"></span></li>
+</ol>
+<div style="text-align: center;"><span style="font-style: italic;">Remarque : Cette fen&ecirc;tre 
+appara&icirc;tra automatiquement si vous n'avez pas de grille enregistr&eacute;e dans
+ ./boards/boards.txt</span><br><br>
+<div style="text-align: center;"><big style="text-decoration: underline;">S&eacute;lection du niveau :</big><br>
+</div>
+Pour s&eacute;lectionner un niveau, cliquez sur le menu d&eacute;roulant (le niveau par d&eacute;faut est le niveau &laquo; NORMAL &raquo;),
+ puis faites le d&eacute;filer pour s&eacute;lectionner le niveau auquel vous voulez jouer. S'il n'est pas encore
+ impl&eacute;ment&eacute;, s&eacute;lectionnez le &laquo; type &raquo; du niveau auquel vous voulez jouer. 
+<span style="font-style: italic;">Vous pouvez filtrer les niveaux en &eacute;crivant dans la petite case &agrave; gauche du menu d&eacute;roulant.</span>
+<br><br>
+<big style="text-decoration: underline;">Modifier l'Index :</big><br></div><div style="text-align: center;">
+(Pour modifier le niveau des esp&egrave;ces que vous poss&eacute;dez)<br></div>
+Quelques filtres permettent de modifier quelles esp&egrave;ces apparaissent.<br>
+<ul>
+  <li>Type : Si autre chose que &laquo; Aucun filtre &raquo; est s&eacute;lectionn&eacute;, alors
+  seulement les esp&egrave;ces du type s&eacute;lectionn&eacute; appara&icirc;tront.</li>
+  <li>Niveau : Seules les esp&egrave;ces de ce niveau ou plus appara&icirc;tront.</li>
+  <li>Nom : Seules les esp&egrave;ces dont le nom contient cette cha&icirc;ne 
+  non-sensible &agrave; la casse appara&icirc;tront.</li>
+  <li>Talent : Seules les esp&egrave;ces dont le talent est s&eacute;lectionn&eacute; appara&icirc;tront, si autre chose que &laquo; Aucun filtre &raquo; est s&eacute;lectionn&eacute;.</li>
+  <li>M&eacute;ga seulement : Si s&eacute;lectionn&eacute;, seulement les esp&egrave;ces avec une m&eacute;ga-&eacute;volution configur&eacute;e appara&icirc;tront.
+  Sinon, toutes les esp&egrave;ces appara&icirc;tront.</li>
+  <li>Vous pouvez aussi ne faire appara&icirc;tre que votre &eacute;quipe actuelle, en cochant l'option &laquo; Equipe &raquo; en bas de la fen&ecirc;tre.</li>
+</ul>
+Vous pouvez appuyer sur le bouton &laquo; Tous au m&ecirc;me niveau &raquo; lorsque vous le
+ d&eacute;sirez pour une ou plusieurs esp&egrave;ces en fonction des conditions suivantes :<br>
+<ul>
+  <li>S'il n'y a aucune esp&egrave;ce affich&eacute;e et qu'il y en aurait au 
+  moins une d'affich&eacute;e si le filtre &eacute;tait &laquo; niveau &eacute;gal &agrave; 0 &raquo;, alors
+  ces esp&egrave;ces obtiennent le niveau indiqu&eacute; dans le filtre.</li>
+  <li>S'il n'y a aucune esp&egrave;ce affich&eacute;e et qu'il ne serait affich&eacute;
+  aucune esp&egrave;ce si le filtre &eacute;tait &laquo; niveau &eacute;gal &agrave; 0 &raquo;, alors toutes
+  les esp&egrave;ces obtiennent le niveau indiqu&eacute; dans le filtre.<br>
+  </li>
+  <li>Sinon, seules les esp&egrave;ces affich&eacute;es obtiendront le niveau 
+  indiqu&eacute;. <br>
+  </li>
+</ul>
+Pour changer le niveau d'une seule esp&egrave;ce, cliquez sur le nombre 
+sous son ic&ocirc;ne et s&eacute;lectionnez son niveau.<br>
+<br>
+Pour faire appara&icirc;tre Nom, Puissance, Type et Talent d'une esp&egrave;ce
+ pr&eacute;sente dans l'index, s&eacute;lectionnez-la simplement en cliquant
+ sur son nom ou son ic&ocirc;ne.<br>
+<br>
+Pour appliquer votre param&eacute;trage, cliquez sur Appliquer ou OK. 
+OK et Annuler fermeront la fen&ecirc;tre. Fermer la fen&ecirc;tre via le bouton
+ de fermeture du syst&egrave;me agira comme si vous aviez appuy&eacute; sur Annuler
+ et ne sauvegardera pas vos changements.<br>
+<br><div style="text-align: center;">
+<big><span style="text-decoration: underline;">Modifier l'Equipe :</span></big><br><big><span style="text-decoration: underline;"></span></big></div><big><span style="text-decoration: underline;">
+</span></big><div style="text-align: center;">(pour changer le contenu des cases dans chaque niveau)<br></div>
+Les m&ecirc;mes filtres que dans l'Index sont disponibles dans l'Editeur d'Equipe.
+ Voir plus bas pour plus de pr&eacute;cisions.<br>
+<br>
+Les &eacute;quipes sont sauvegard&eacute;es niveau par niveau. Si un niveau n'a pas d'&eacute;quipe 
+enregistr&eacute;e, il reviendra d'abord &agrave; l'&eacute;quipe du niveau par d&eacute;faut pour ce
+ type, puis, s'il n'y a pas d'&eacute;quipe pour ce niveau, il reviendra &agrave; l'&eacute;quipe 
+ du premier niveau (via stages.txt) dont le type correspond et dont le plus 
+ grand nombre d'esp&egrave;ces a d&eacute;j&agrave; &eacute;t&eacute; configur&eacute;.<br>
+<br>
+Vous pouvez effacer l'&eacute;quipe en cours en appuyant sur &laquo; Effacer &eacute;quipe &raquo;. 
+Si vous &ecirc;tes en train d'utiliser une &eacute;quipe pr&eacute;c&eacute;demment sauvegard&eacute;e, cela 
+effacera votre &eacute;quipe. Si vous n'&ecirc;tes pas en train d'utiliser une &eacute;quip&eacute;e 
+pr&eacute;c&eacute;demment sauvegard&eacute;e, cela vous mettra la premi&egrave;re &eacute;quipe de rechange 
+comme expliqu&eacute; plus haut.<br>
+<br>
+Pour ajouter une esp&egrave;ce &agrave; votre &eacute;quipe actuelle, cliquez sur le bouton 
+&laquo; Ajouter &raquo;. Pour en retirer une, appuyez sur le bouton &laquo; R &raquo; dans 
+l'interface d'&eacute;quipe, sur la droite. Vous pouvez ajouter ou retirer 
+des ic&ocirc;nes de bois ou de m&eacute;tal en cochant les cases appropri&eacute;es &agrave; 
+droite de l'interface.<br>
+<br>
+Le choix du M&eacute;ga (L'esp&egrave;ce la plus &agrave; gauche de l'&eacute;quipe dans l'interface 
+du jeu) doit &ecirc;tre correctement indiqu&eacute;. Si vous avez d&eacute;j&agrave; commenc&eacute; un 
+niveau et que votre M&eacute;ga est actif, cochez la case &laquo; Actif &raquo; pour que 
+le programme comprenne qu'il a m&eacute;ga-&eacute;volu&eacute;. L'ic&ocirc;ne devrait changer 
+pour le confirmer. Si l'esp&egrave;ce n'a pas encore m&eacute;ga-&eacute;volu&eacute;, indiquez sa 
+progression &agrave; droite de la case &laquo; Actif &raquo; en inscrivant le nombre 
+d'ic&ocirc;nes d&eacute;j&agrave; associ&eacute;es. Une croix de deux fois trois ic&ocirc;nes en associe 
+6, pas 5. M&eacute;ga-Puissance augmente ce nombre de 3. La simulation 
+augmentera automatiquement ce nombre si vous utilisez le bouton &laquo; Jouer 
+le coup &raquo; correctement (cependant, des erreurs dues au caract&egrave;re 
+al&eacute;atoire peuvent appara&icirc;tre, v&eacute;rifiez donc que la valeur corresponde 
+bien &agrave; votre jauge de m&eacute;ga-&eacute;volution en jeu).<br>
+<br>
+Des raccourcis clavier pour chaque membre de l'&eacute;quipe se trouvent sous 
+leur ic&ocirc;ne. Les esp&egrave;ces nouvellement ajout&eacute;es &agrave; l'&eacute;quipe h&eacute;riteront du 
+raccourci clavier que vous avez le plus utilis&eacute; avant pour cette esp&egrave;ce, 
+ou ils seront assign&eacute;s en fonction de la configuration pr&eacute;sente dans 
+config/other.txt. Vous pouvez les changer pour n'importe quel raccourci 
+clavier valable, mais les raccourcis d&eacute;j&agrave; choisis sont g&eacute;n&eacute;ralement plus 
+efficaces pour une saisie rapide dans le Mode Express.<br>
+<br>
+Les boutons OK, Appliquer et Annuler de l'Editeur d'&eacute;quipe agissent 
+comme ceux de l'Index.<br>
+<br><div style="text-align: center;">
+<big><span style="text-decoration: underline;">Modes de saisie :</span></big><br></div>
+Appuyer sur Tab basculera entre les deux modes de saisie. Appuyer sur 
+f ou F activera ou d&eacute;sactivera le mode gel&eacute; en fonction du mode en cours.<br>
+Le Mode Paint vous permet de remplir la grille en cliquant ou en faisant 
+glisser la souris en restant appuy&eacute;. Vous pouvez supprimer des ic&ocirc;nes en 
+cliquant ou en les faisant glisser. Vous pouvez remplir la grille en 
+utilisant les raccourcis claviers pour vos esp&egrave;ces ou pour geler les 
+ic&ocirc;nes (la touche f/F est celle par d&eacute;faut pour cela).<br>
+Le Mode Express vous permet de remplir la grille en avan&ccedil;ant de case en 
+case en utilisant les raccourcis clavier pour les membres de votre &eacute;quipe 
+ou pour geler ceux-ci (la case gel&eacute;e &eacute;tant la pr&eacute;c&eacute;dente). Vous pouvez 
+sauter une case en appuyant sur la barre d'espace et revenir &agrave; la case 
+pr&eacute;c&eacute;dente en appuyant sur la touche Retour arri&egrave;re. Vous pouvez aussi 
+d&eacute;placer le curseur n'importe o&ugrave; sur la grille en cliquant et/ou en faisant 
+glisser la souris en restant appuy&eacute;..<br>
+<br><div style="text-align: center;">
+<big><span style="text-decoration: underline;">Affichage des coups :</span>
+</big><br></div>
+Le coup optimal pour la grille en cours est mis &agrave; jour &agrave; chaque fois 
+que la grille, l'index ou votre &eacute;quipe change. Les couleurs affich&eacute;es 
+indiquent les positions de d&eacute;part et d'arriv&eacute;e des ic&ocirc;nes sur la grille. 
+Vous devez d&eacute;placer l'ic&ocirc;ne indiqu&eacute;e de la position de d&eacute;part &agrave; la position 
+d'arriv&eacute;e pour avoir de meilleures chances d'obtenir un super r&eacute;sultat dans 
+le niveau auquel vous jouez.<br>
+Vous pouvez configurer ceci via la section Pr&eacute;f&eacute;rences du menu Coups pour 
+obtenir une simulation qui se base sur plus d'une seule version de ce qui 
+va potentiellement tomber.
+<span style="font-weight: bold;">Attention, param&eacute;trer ceci &agrave; des valeurs 
+trop &eacute;lev&eacute;es risque de ralentir l'apparition des r&eacute;sultats (et de 
+particuli&egrave;rement utiliser votre processeur). Je ne suis pas responsable si 
+vous endommagez votre ordinateur en indiquant des valeurs trop &eacute;lev&eacute;es 
+(qui surchargeraient &agrave; l'extr&ecirc;me votre processeur). <br></span>
+ <div style="text-align: center;"><br>
+<big><span style="text-decoration: underline;">Simulateur de coups :</span>
+</big><br></div>
+Vous pouvez choisir votre coup &agrave; partir d'une liste de coups possibles, 
+class&eacute;s selon la m&eacute;thode de classement que vous avez choisie. Essayez-les 
+pour vous faire une id&eacute;e de leur utilit&eacute;. Se cantonner &agrave; une seule m&eacute;thode 
+risque de produire des r&eacute;sultats d&eacute;savantageux sur le long terme. Le 
+classement par d&eacute;faut est le classement par score d&eacute;croissant, mais 
+les autres m&eacute;thodes sont viables pour diff&eacute;rentes situations, comme 
+une grille qui a beaucoup d'entraves (Entraves) ou pour le niveau 
+sp&eacute;cial de Miaouss qui appara&icirc;t le week-end (Aucune ou toutes).
+ 
