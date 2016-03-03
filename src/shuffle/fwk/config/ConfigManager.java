@@ -193,7 +193,9 @@ public class ConfigManager {
             }
          }
          Long fileBuildDate = getLongValue(KEY_BUILD_DATE, 0l);
-         uptodate &= fileBuildDate >= ShuffleVersion.BUILD_DATE;
+         if (fileBuildDate < ShuffleVersion.BUILD_DATE) {
+            uptodate = false;
+         }
          return !uptodate;
       } catch (Exception e) {
          // then we assume it has no saved version.
