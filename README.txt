@@ -51,6 +51,7 @@ v0.3.47 - 2016-03-02
 	- Updates for 3DS 1.2.34
 	- Updates for Mobile v1.5.6
 	- Escape and Enter now do something when a popup dialog is focused
+	- Mega Charizard X effect implemented
 v0.3.46 - 2016-02-20
 	- Mega Evolutions can now have a different type than their base species
 	- Extra entries have been added for Charizard and Mewtwo to for allow their "X" Mega Evolutions
