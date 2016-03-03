@@ -1081,7 +1081,6 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public void setTeamForStage(Team team, Stage stage) {
       if (getModel().getTeamManager().setTeamForStage(team, stage)) {
-         getModel().setDataChanged();
          repaint();
       }
    }
@@ -1197,15 +1196,17 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       changed |= getModel().setDisabledEffects(disabledEffects);
       changed |= getModel().setEffectThreshold(threshold);
       changed |= getModel().setMobileMode(mobileMode);
+      boolean teamChanged = getModel().setMetalExtended(extendedMetal);
       
       if (changed) {
          getModel().setDataChanged();
+      }
+      if (changed || teamChanged) {
          repaint();
       }
       // This doesn't affect simulation results.
       getModel().setSwapToPaint(swapToPaint);
       getModel().setExpressMetalAdvanceEnabled(expressMetal);
-      getModel().setMetalExtended(extendedMetal);
    }
    
    /*
