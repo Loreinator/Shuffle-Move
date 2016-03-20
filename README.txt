@@ -38,6 +38,9 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.48 - 2016-03-20
+	- Updates for 3DS 1.2.35
+	- Updates for Mobile 1.5.7
 v0.3.47 - 2016-03-02
 	- Fixed the logging bug (wasn't working for portable)
 	- Fixed the i18n problem with Flabebe
