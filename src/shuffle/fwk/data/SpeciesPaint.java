@@ -27,7 +27,7 @@ public class SpeciesPaint {
    public static final SpeciesPaint AIR = new SpeciesPaint(Species.AIR);
    
    private final Species s;
-   private final boolean frozen;
+   private final Boolean frozen;
    private final boolean mega;
    
    private final String str;
@@ -46,7 +46,7 @@ public class SpeciesPaint {
          throw new NullPointerException("Cannot specify a null species for a paint. Air would be acceptable.");
       }
       s = paint;
-      frozen = isFrozen == null ? false : isFrozen.booleanValue();
+      frozen = isFrozen;
       mega = isMega == null ? false : isMega.booleanValue();
       StringBuilder sb = new StringBuilder();
       if (isFrozen()) {
@@ -65,7 +65,11 @@ public class SpeciesPaint {
    }
    
    public boolean isFrozen() {
-      return frozen;
+      return frozen == null ? false : frozen.booleanValue();
+   }
+   
+   public boolean ignoreFrozen() {
+      return frozen == null;
    }
    
    public boolean isMega() {

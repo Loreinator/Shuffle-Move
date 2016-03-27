@@ -428,7 +428,8 @@ public class ShuffleModel
     * @return True if this action changed anything. False otherwise.
     */
    protected boolean paintAt(int row, int col, SpeciesPaint paint) {
-      return paintAt(row, col, paint.getSpecies(), paint.isFrozen());
+      Boolean frozen = paint.ignoreFrozen() ? null : paint.isFrozen();
+      return paintAt(row, col, paint.getSpecies(), frozen);
    }
    
    /**

@@ -101,7 +101,12 @@ public enum EntryMode {
             if (!Species.AIR.equals(species)) {
                user.setSelectedSpecies(species);
                SpeciesPaint curPaint = user.getCurrentSpeciesPaint();
+               Species curSpecies = curPaint.getSpecies();
+               if (!Species.FREEZE.equals(curSpecies)) {
+                  curPaint = new SpeciesPaint(species, null);
+               }
                paintWith(user, curPaint);
+               
             }
          }
       }
