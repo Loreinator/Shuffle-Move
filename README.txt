@@ -40,6 +40,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 ~~ Changelog ~~
 v0.3.49 - 2016-03-2
 	- Express entry is now more logically consistent, including the freeze paint.
+	- Removed 3DS glitch code (fixed in game).
 	- TBD
 v0.3.48 - 2016-03-20
 	- Updates for 3DS 1.2.35
