@@ -87,7 +87,7 @@ public enum EntryMode {
          } else if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
             user.advanceCursorBy(-1);
          } else if (evt.getKeyChar() == KeyEvent.VK_DELETE) {
-            paintWith(user, Species.AIR);
+            paintWith(user, SpeciesPaint.AIR);
          } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             user.advanceCursorBy(-Board.NUM_COLS);
          } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -98,9 +98,10 @@ public enum EntryMode {
             user.advanceCursorBy(+1);
          } else {
             Species species = getSpeciesFor(user, evt);
-            if (!species.equals(Species.AIR)) {
+            if (!Species.AIR.equals(species)) {
                user.setSelectedSpecies(species);
-               paintWith(user, species);
+               SpeciesPaint curPaint = user.getCurrentSpeciesPaint();
+               paintWith(user, curPaint);
             }
          }
       }
@@ -120,9 +121,9 @@ public enum EntryMode {
     * @param user
     * @param species
     */
-   protected static void paintWith(EntryModeUser user, Species species) {
+   protected static void paintWith(EntryModeUser user, SpeciesPaint paint) {
       List<Integer> coords = user.getCurrentCursor();
-      user.paintAt(new SpeciesPaint(species, false), coords.get(0), coords.get(1));
+      user.paintAt(paint, coords.get(0), coords.get(1));
       user.advanceCursorBy(1);
    }
    
