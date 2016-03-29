@@ -43,6 +43,8 @@ v0.3.49 - 2016-03-29
 	- Removed 3DS glitch code (fixed in game).
 	- Survival Mode added - An stage-isolated persistent team for use while working on Survival Mode.
 	- Roster levels can now be set up to 15, and attack power will match according to http://pastebin.com/08rfcFxv
+	- Updates for 3DS 1.3.0 - 1.3.4
+	- Updates for Mobile 1.5.8
 v0.3.48 - 2016-03-20
 	- Updates for 3DS 1.2.35
 	- Updates for Mobile 1.5.7

@@ -1993,6 +1993,37 @@ public enum Effect {
       
    },
    /**
+    * Replace 3 random Psychic types with Sceptile. Only one species is selected at a time.
+    */
+   SCEPTILE {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return BLAZIKEN.handlePlans(comboEffect, task);
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return BLAZIKEN.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public void handleExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks) {
+         BLAZIKEN.handleExtraBlocks(comboEffect, task, extraBlocks);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return BLAZIKEN.getValueLimit();
+      }
+      
+   },
+   /**
     * Erases diagonal Pokemon from upper right to lower left corner. Blocks 3,5,7 in the 1-9 blocks
     * for each quadrant is the exact pattern. Same scoring as other megas that clear blocks.
     */

@@ -24,6 +24,7 @@ RESOURCE Fearow img/icons/022.png
 RESOURCE Ekans img/icons/023.png
 RESOURCE Arbok img/icons/024.png
 RESOURCE Pikachu img/icons/025.png
+RESOURCE Pikachu_a img/icons/025-a.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Sandshrew img/icons/027.png
 RESOURCE Sandslash img/icons/028.png
@@ -720,6 +721,7 @@ RESOURCE Noivern img/icons/715.png
 RESOURCE Xerneas img/icons/716.png
 RESOURCE Yveltal img/icons/717.png
 RESOURCE Zygarde img/icons/718.png
+RESOURCE Zygarde-10 img/icons/718-10.png
 RESOURCE Diancie img/icons/719.png
 RESOURCE Mega_Venusaur img/icons/003-m.png
 RESOURCE Mega_Charizard_x img/icons/006-m.png
