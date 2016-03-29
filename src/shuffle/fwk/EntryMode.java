@@ -21,11 +21,12 @@ package shuffle.fwk;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
+import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.TeamManager;
 import shuffle.fwk.data.Board;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
-import shuffle.fwk.data.Stage;
+import shuffle.fwk.data.Team;
 
 public enum EntryMode {
    PAINT("paint") {
@@ -101,10 +102,6 @@ public enum EntryMode {
             if (!Species.AIR.equals(species)) {
                user.setSelectedSpecies(species);
                SpeciesPaint curPaint = user.getCurrentSpeciesPaint();
-               Species curSpecies = curPaint.getSpecies();
-               if (!Species.FREEZE.equals(curSpecies)) {
-                  curPaint = new SpeciesPaint(species, null);
-               }
                paintWith(user, curPaint);
                
             }
@@ -146,10 +143,10 @@ public enum EntryMode {
    }
    
    protected Species getSpeciesFor(EntryModeUser user, KeyEvent evt) {
-      TeamManager teamManager = user.getTeamManager();
+      Team team = user.getCurrentTeam();
+      SpeciesManager speciesManager = user.getSpeciesManager();
       char c = evt.getKeyChar();
-      Stage currentStage = user.getCurrentStage();
-      return teamManager.getSpeciesFor(c, currentStage);
+      return team.getSpecies(c, speciesManager);
    }
    
    public abstract String getColorKey();

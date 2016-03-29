@@ -757,7 +757,10 @@ public class ShuffleModel
    }
    
    private SpeciesPaint getSpeciesPaint(Species s) {
-      boolean isFrozen = !s.getEffect().equals(Effect.AIR) && frozen ^ s.equals(Species.FREEZE);
+      boolean isFreeze = Species.FREEZE.equals(s);
+      boolean isPaintMode = EntryMode.PAINT.equals(getCurrentMode());
+      boolean isFrozen = !s.getEffect().equals(Effect.AIR)
+            && (isFreeze && !frozen || isPaintMode && !isFreeze && frozen);
       boolean isMega = isMegaActive(s.getName());
       return new SpeciesPaint(s, isFrozen, isMega);
    }
