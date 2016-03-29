@@ -38,11 +38,11 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
-v0.3.49 - 2016-03-2
+v0.3.49 - 2016-03-29
 	- Express entry is now more logically consistent, including the freeze paint.
 	- Removed 3DS glitch code (fixed in game).
 	- Survival Mode added - An stage-isolated persistent team for use while working on Survival Mode.
-	- TBD
+	- Roster levels can now be set up to 15, and attack power will match according to http://pastebin.com/08rfcFxv
 v0.3.48 - 2016-03-20
 	- Updates for 3DS 1.2.35
 	- Updates for Mobile 1.5.7
