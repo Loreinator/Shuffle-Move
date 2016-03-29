@@ -54,6 +54,7 @@ import javax.swing.event.ChangeListener;
 
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.manager.SpeciesManager;
+import shuffle.fwk.config.manager.StageManager;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
@@ -278,7 +279,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          megaActiveListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-               Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());
+               Team curTeam = getUser().getTeamManager().getTeamForStage(getCurrentStage());
                int megaThreshold = curTeam.getMegaThreshold(getUser().getSpeciesManager(), getUser().getRosterManager(),
                      getUser().getEffectManager());
                getUser().setMegaProgress(megaActive.isSelected() ? megaThreshold : 0);
@@ -298,7 +299,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          specialSpeciesListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-               Stage stage = getUser().getCurrentStage();
+               Stage stage = getCurrentStage();
                TeamImpl curTeam = new TeamImpl(getUser().getTeamManager().getTeamForStage(stage));
                String woodName = Species.WOOD.getName();
                boolean hasWood = curTeam.getNames().contains(woodName);
@@ -405,7 +406,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private void updateIndicators() {
       List<SpeciesPaint> curPaints = getUser().getCurrentPaints();
       SpeciesPaint curPaint = getUser().getSelectedSpeciesPaint();
-      Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());
+      Team curTeam = getUser().getTeamManager().getTeamForStage(getCurrentStage());
       if (curPaints.equals(prevPaints) && (curTeam == prevTeam || curTeam != null && curTeam.equals(prevTeam))) {
          if (!(prevPaint == curPaint || prevPaint != null && prevPaint.equals(curPaint))) {
             updateIndicatorBorders();
@@ -535,7 +536,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          enableAttackPowerUpBox.setToolTipText(atkTT);
       }
       
-      Team curTeam = getUser().getTeamManager().getTeamForStage(getUser().getCurrentStage());
+      Stage currentStage = getCurrentStage();
+      Team curTeam = getUser().getTeamManager().getTeamForStage(currentStage);
       SpeciesManager speciesManager = getUser().getSpeciesManager();
       String megaSlotName = curTeam.getMegaSlotName();
       Species megaSpecies = megaSlotName == null ? null : speciesManager.getSpeciesValue(megaSlotName);
@@ -575,7 +577,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       
       scoreField.getModel().setValue(getUser().getCurrentScore());
       movesLeft.removeAllItems();
-      for (int i = getUser().getCurrentStage().getMoves() + 5; i >= 1; i--) {
+      
+      for (int i = currentStage.getMoves() + 5; i >= 1; i--) {
          movesLeft.addItem(i);
       }
       movesLeft.setSelectedItem(getUser().getRemainingMoves());
@@ -662,4 +665,11 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       });
    }
    
+   private Stage getCurrentStage() {
+      Stage stage = getUser().getCurrentStage();
+      if (getUser().isSurvival()) {
+         stage = StageManager.SURVIVAL;
+      }
+      return stage;
+   }
 }

@@ -95,12 +95,14 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_UPDATE = "menuitem.update";
    private static final String KEY_GRADING_MENU = "menuitem.grading";
    private static final String KEY_CHOOSE_MOVE = "menuitem.choosemove";
+   private static final String KEY_SURVIVAL_MODE = "menuitem.survival";
    
    // config keys
    public static final String KEY_AVAILABLE_LOCALES = "AVAILABLE_LOCALES";
    
    private ShuffleMenuUser user;
    private JCheckBoxMenuItem autoComputeItem;
+   private JCheckBoxMenuItem survivalItem;
    private Map<GradingMode, AbstractButton> modeMap;
    private Frame owner;
    private Map<AbstractButton, Supplier<String>> buttonToi18nKeyMap = null;
@@ -144,6 +146,10 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    
    public void updateAutoCompute(boolean selected) {
       autoComputeItem.setSelected(selected);
+   }
+   
+   public void updateSurvival(boolean selected) {
+      survivalItem.setSelected(selected);
    }
    
    private void doSetup() {
@@ -220,6 +226,19 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       
       MenuAction activateMega = new MenuAction(() -> getString(KEY_TOGGLE_MEGA), e -> getUser().toggleActiveMega());
       addMenuAction(menu, activateMega);
+      
+      survivalItem = new JCheckBoxMenuItem(getString(KEY_SURVIVAL_MODE));
+      if (getUser().isSurvival()) {
+         survivalItem.setSelected(true);
+      }
+      survivalItem.addItemListener(new ItemListener() {
+         @Override
+         public void itemStateChanged(ItemEvent e) {
+            getUser().setSurvival(e.getStateChange() == ItemEvent.SELECTED);
+         }
+      });
+      buttonToi18nKeyMap.put(survivalItem, () -> getString(KEY_SURVIVAL_MODE));
+      menu.add(survivalItem);
       
       menu.addSeparator();
       
@@ -410,6 +429,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
     */
    public void updateAll() {
       updateAutoCompute(getUser().isAutoCompute());
+      updateSurvival(getUser().isSurvival());
       updateGradingMode(getUser().getCurrentGradingMode());
       Locale defLocale = Locale.getDefault();
       if (prevLocale == null || !prevLocale.equals(defLocale)) {

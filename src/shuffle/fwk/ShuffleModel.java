@@ -107,6 +107,7 @@ public class ShuffleModel
    private static final boolean DEFAULT_AUTO_COMPUTE = true;
    private static final int DEFAULT_FEEDER_HEIGHT = 0;
    private static final int DEFAULT_NUM_FEEDERS = 1;
+   private static final int DEFAULT_SURVIVAL_MOVES = 5;
    private static final String BUILD_REPORT_FILE = "bugs/buildReport.xml";
    private static final String BUILD_REPORT_RESOURCE = "config/buildReport.xml";
    private static final String BUG_DETAILS_FILE = "bugs/bugDetails.txt";
@@ -126,6 +127,8 @@ public class ShuffleModel
    private static final String KEY_ESCALATION_LEVEL = "ESCALATION_LEVEL";
    private static final String KEY_ENABLE_EXPRESS_METAL_ADVANCE = "ENABLE_EXPRESS_METAL_ADVANCE";
    private static final String KEY_METAL_EXTENDED = "METAL_EXTENDED";
+   private static final String KEY_SURVIVAL_MODE = "SURVIVAL_MODE";
+   private static final String KEY_SURVIVAL_MODE_MOVES = "SURVIVAL_MODE_MOVES";
    // i18n keys
    private static final String KEY_SIMULATION_START = "log.sim.start";
    private static final String KEY_SIMULATION_COMPLETE = "log.sim.complete";
@@ -153,6 +156,7 @@ public class ShuffleModel
    private int curPos = 1;
    // private GradingMode gradeMode = null;
    private Locale prevLocale = null;
+   private Stage prevStage = null;
    
    private boolean resultsCurrent = false;
    private boolean resultsComputing = false;
@@ -442,6 +446,34 @@ public class ShuffleModel
    }
    
    /**
+    * Returns true if Survival Mode is enabled.
+    */
+   public boolean isSurvivalMode() {
+      return getPreferencesManager().getBooleanValue(KEY_SURVIVAL_MODE, false);
+   }
+   
+   /**
+    * Sets the enabled state of Survival Mode.
+    */
+   public boolean setSurvivalMode(boolean enabled) {
+      boolean changed = getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_SURVIVAL_MODE, enabled);
+      if (changed) {
+         Stage currentStage = getCurrentStage();
+         if (enabled) {
+            prevStage = currentStage;
+            if (getRemainingMoves() == 0) {
+               setRemainingMoves(DEFAULT_SURVIVAL_MOVES);
+            }
+         } else if (!currentStage.equals(prevStage)) {
+            // going to non-survival, and the stage has changed.
+            // Set the remaining moves as normal.
+            setRemainingMoves(currentStage.getMoves());
+         }
+      }
+      return changed;
+   }
+   
+   /**
     * Sets the current stage to the given value. Returns true if this altered the model in some way.
     * 
     * @param stage
@@ -456,7 +488,9 @@ public class ShuffleModel
          setCursorTo(1, 1);
          Team newTeam = getCurrentTeam();
          if (newTeam == null || newTeam.getNames().isEmpty()) {
-            getTeamManager().setTeamForStage(prevTeam, stage);
+            if (!isSurvivalMode()) {
+               getTeamManager().setTeamForStage(prevTeam, stage);
+            }
          }
          
          int newThreshold = newTeam.getMegaThreshold(getSpeciesManager(), getUser().getRosterManager(),
@@ -472,7 +506,9 @@ public class ShuffleModel
          setMegaProgress(newProgress);
          
          setCurrentScore(0);
-         setRemainingMoves(stage.getMoves());
+         if (!isSurvivalMode()) {
+            setRemainingMoves(stage.getMoves());
+         }
          undoStack.clear();
          redoStack.clear();
       }
@@ -501,7 +537,11 @@ public class ShuffleModel
       changed |= getBoardManager().loadBoardForStage(getCurrentStage(), true);
       changed |= setMegaProgress(0);
       changed |= setCurrentScore(0);
-      changed |= setRemainingMoves(getCurrentStage().getMoves());
+      int moves = getCurrentStage().getMoves();
+      if (isSurvivalMode()) {
+         moves = DEFAULT_SURVIVAL_MOVES;
+      }
+      changed |= setRemainingMoves(moves);
       if (changed) {
          setCursorTo(1, 1);
       }
@@ -509,8 +549,12 @@ public class ShuffleModel
    }
    
    // Team methods
-   private Team getCurrentTeam() {
-      return getTeamManager().getTeamForStage(getCurrentStage());
+   protected Team getCurrentTeam() {
+      Stage stage = getCurrentStage();
+      if (isSurvivalMode()) {
+         stage = StageManager.SURVIVAL;
+      }
+      return getTeamManager().getTeamForStage(stage);
    }
    
    // Cur mode methods
@@ -1163,7 +1207,11 @@ public class ShuffleModel
     * @return The number of moves left, as an integer.
     */
    public int getRemainingMoves() {
-      return getPreferencesManager().getIntegerValue(KEY_MOVES_REMAINING, Stage.DEFAULT_MOVES);
+      if (isSurvivalMode()) {
+         return getPreferencesManager().getIntegerValue(KEY_SURVIVAL_MODE_MOVES, DEFAULT_SURVIVAL_MOVES);
+      } else {
+         return getPreferencesManager().getIntegerValue(KEY_MOVES_REMAINING, Stage.DEFAULT_MOVES);
+      }
    }
    
    /**
@@ -1219,7 +1267,11 @@ public class ShuffleModel
     * Sets the remaining moves for the current stage.
     */
    protected boolean setRemainingMoves(int moves) {
-      return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_MOVES_REMAINING, moves);
+      if (isSurvivalMode()) {
+         return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_SURVIVAL_MODE_MOVES, moves);
+      } else {
+         return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_MOVES_REMAINING, moves);
+      }
    }
    
    private class UndoRedoItem {
@@ -1363,7 +1415,11 @@ public class ShuffleModel
          TeamImpl team = (TeamImpl) getCurrentTeam();
          boolean hasMetal = team.getNames().contains(Species.METAL.getName());
          getTeamManager().setMetalInTeam(team, hasMetal, enabled);
-         changed &= getTeamManager().setTeamForStage(team, getCurrentStage());
+         Stage currentStage = getCurrentStage();
+         if (isSurvivalMode()) {
+            currentStage = StageManager.SURVIVAL;
+         }
+         changed &= getTeamManager().setTeamForStage(team, currentStage);
       }
       return changed;
    }
