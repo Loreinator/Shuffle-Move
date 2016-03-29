@@ -38,6 +38,7 @@ import shuffle.fwk.data.Stage;
  */
 public class StageManager extends ConfigManager {
    public static final Stage DEFAULT_STAGE = new Stage(PkmType.NORMAL);
+   public static final Stage SURVIVAL = new Stage("Other", "Survival", PkmType.NONE, 95, 0);
    private static List<Stage> typeStages = null;
    
    public StageManager(List<String> loadPaths, List<String> writePaths, ConfigFactory factory) {
@@ -77,6 +78,7 @@ public class StageManager extends ConfigManager {
                typeStages.add(new Stage(type));
             }
          }
+         typeStages.add(new Stage(PkmType.NONE));
       }
       return typeStages;
    }

@@ -93,7 +93,9 @@ public class BoardTest {
    public static Species getRandomSpecies() {
       PkmType t = PkmType.values()[rand.nextInt(PkmType.values().length)];
       Predicate<Species> filter = species -> species.getType().equals(t);
-      List<Species> options = new ArrayList<Species>(mngr.getSpeciesByFilters(Arrays.asList(filter)));
+      Predicate<Species> notFreeze = species -> !species.equals(Species.FREEZE);
+      List<Predicate<Species>> filters = Arrays.asList(filter, notFreeze);
+      List<Species> options = new ArrayList<Species>(mngr.getSpeciesByFilters(filters));
       if (options.isEmpty()) {
          options = Arrays.asList(Species.AIR);
       }

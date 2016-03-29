@@ -38,6 +38,17 @@ public class Species implements Comparable<Species>, I18nUser {
    @SuppressWarnings("unused")
    private static final Logger LOG = Logger.getLogger(Species.class.getName());
 
+   // Must be initialized before the static species
+   private static final int[] BASE_ATTACK = new int[] { 30, 40, 50, 60, 70, 80, 90 };
+   private static final int[][] LEVEL_BONUS = new int[][] {
+         /* 30 */ { 0, 5, 9, 12, 15, 17, 19, 21, 23, 25, 31, 37, 43, 49, 55 },
+         /* 40 */ { 0, 3, 6, 8, 10, 12, 14, 16, 18, 20, 26, 32, 38, 44, 50 },
+         /* 50 */ { 0, 3, 6, 8, 10, 12, 14, 16, 18, 20, 25, 30, 35, 40, 50 },
+         /* 60 */ { 0, 3, 6, 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 45 },
+         /* 70 */ { 0, 3, 6, 8, 10, 12, 14, 16, 18, 20, 23, 26, 29, 32, 40 },
+         /* 80 */ { 0, 3, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 35 },
+         /* 90 */ { 0, 3, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 } };
+         
    private static final Map<String, Integer> STRING_TO_ID = new HashMap<String, Integer>();
 
    public static final Species AIR = new Species("Air", 0, 0, PkmType.NONE, Effect.AIR, null, Effect.NONE);
@@ -56,10 +67,6 @@ public class Species implements Comparable<Species>, I18nUser {
    public static final List<Species> EXTENDED_METAL = Collections
          .unmodifiableList(Arrays.asList(METAL, METAL_1, METAL_2, METAL_3, METAL_4, METAL_5));
    
-   private static final int[] LEVEL_BONUS = new int[] { 0, // level 0 has 0 bonus
-         0, 3, 6, 8, 10, 12, 14, 16, 18, 20 };
-   private static final int[] LEVEL_BONUS_30 = new int[] { 0, // level 0 has 0 bonus
-         0, 5, 9, 12, 15, 17, 19, 21, 23, 25 };
    
    private final String name;
    private final int attack;
@@ -72,6 +79,7 @@ public class Species implements Comparable<Species>, I18nUser {
    private final String toString;
    private final Integer ID;
    private final int hash;
+   private final int[] levelBonus;
    
    public Species(Species other) {
       this(other.name, other.number, other.attack, other.type, other.effect, other.megaName, other.megaEffect);
@@ -104,6 +112,23 @@ public class Species implements Comparable<Species>, I18nUser {
          this.attack = 999;
       } else {
          this.attack = attack;
+      }
+      int i = 0;
+      while (i < BASE_ATTACK.length && BASE_ATTACK[i] < this.attack) {
+         i++;
+         // Seek to the smallest slot that is equal to or greater than this,
+         // or the largest slot if none are sufficient.
+      }
+      if (i >= BASE_ATTACK.length) {
+         // If beyond the bound, go to the highest bound.
+         i = BASE_ATTACK.length - 1;
+      }
+      if (i < 0) {
+         // if the highest bound is less than 0 (there are no bonuses defined), then use 0.
+         this.levelBonus = new int[] { 0 };
+      } else {
+         // Otherwise, use the appropriate level bounds.
+         this.levelBonus = LEVEL_BONUS[i];
       }
       this.type = type;
       this.effect = effect;
@@ -138,17 +163,12 @@ public class Species implements Comparable<Species>, I18nUser {
    
    public int getAttack(int level) {
       int lev = level;
-      if (lev > 10) {
-         lev = 10;
-      } else if (lev < 0) {
-         lev = 0;
+      if (lev > levelBonus.length) {
+         lev = levelBonus.length;
+      } else if (lev < 1) {
+         lev = 1;
       }
-      int bonus;
-      if (attack == 30) {
-         bonus = LEVEL_BONUS_30[lev];
-      } else {
-         bonus = LEVEL_BONUS[lev];
-      }
+      int bonus = levelBonus[lev - 1];
       return getBaseAttack() + bonus;
    }
    

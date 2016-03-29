@@ -304,7 +304,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       attackComboBox = new JComboBox<Integer>();
       ConfigManager manager = getUser().getPreferencesManager();
       int attackStart = manager.getIntegerValue("ATTACK_CHOSER_START", 30);
-      int attackEnd = manager.getIntegerValue("ATTACK_CHOSER_END", 80);
+      int attackEnd = manager.getIntegerValue("ATTACK_CHOSER_END", 90);
       for (int i = attackStart; i <= attackEnd; i += 10) {
          attackComboBox.addItem(i);
       }

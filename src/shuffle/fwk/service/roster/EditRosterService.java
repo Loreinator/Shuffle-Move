@@ -253,7 +253,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       c.weightx = 0.0;
       JPanel levelPanel = new JPanel();
       levelPanel.add(new JLabel(getString(KEY_LEVEL)));
-      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 10, 1);
+      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 15, 1);
       levelSpinner = new JSpinner(snm);
       levelPanel.add(levelSpinner);
       levelPanel.setToolTipText(getString(KEY_LEVEL_TOOLTIP));
@@ -523,7 +523,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       jLabel.addMouseListener(ma);
       ret.add(jLabel, c);
       JComboBox<Integer> level = new JComboBox<Integer>();
-      for (int i = 0; i <= 10; i++) {
+      for (int i = 0; i <= 15; i++) {
          level.addItem(i);
       }
       Integer thisLevel = getLevelFor(s);
@@ -564,8 +564,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       String textToUse = getString(KEY_NONE_SELECTED);
       if (selectedSpecies != null) {
          String name = selectedSpecies.getLocalizedName();
-         RosterManager rosterManager = getUser().getRosterManager();
-         Integer thisLevel = rosterManager.getLevelForSpecies(selectedSpecies);
+         Integer thisLevel = myData.getLevelForSpecies(selectedSpecies);
          int attack = selectedSpecies.getAttack(thisLevel);
          PkmType type = megaFilter.isSelected() ? selectedSpecies.getMegaType() : selectedSpecies.getType();
          String typeNice = WordUtils.capitalizeFully(type.toString());

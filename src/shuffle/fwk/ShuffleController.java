@@ -1275,4 +1275,36 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return getModel().isExtendedMetalEnabled();
    }
    
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.service.teams.EditTeamServiceUser#isSurvival()
+    */
+   @Override
+   public boolean isSurvival() {
+      return getModel().isSurvivalMode();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.service.teams.EditTeamServiceUser#setSurvival(boolean)
+    */
+   @Override
+   public boolean setSurvival(boolean enabled) {
+      boolean changed = getModel().setSurvivalMode(enabled);
+      if (changed) {
+         getModel().setDataChanged();
+         repaint();
+      }
+      return changed;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.ShuffleViewUser#getCurrentTeam()
+    */
+   @Override
+   public Team getCurrentTeam() {
+      return getModel().getCurrentTeam();
+   }
+   
 }

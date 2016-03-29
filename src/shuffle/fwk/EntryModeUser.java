@@ -20,16 +20,19 @@ package shuffle.fwk;
 
 import java.util.List;
 
-import shuffle.fwk.config.manager.TeamManager;
+import shuffle.fwk.config.provider.SpeciesManagerProvider;
+import shuffle.fwk.config.provider.TeamManagerProvider;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
-import shuffle.fwk.data.Stage;
+import shuffle.fwk.data.Team;
 
 /**
  * @author Andrew Meyers
  *
  */
-public interface EntryModeUser {
+public interface EntryModeUser extends SpeciesManagerProvider, TeamManagerProvider {
+   
+   Team getCurrentTeam();
    
    /**
     * @param i
@@ -54,17 +57,7 @@ public interface EntryModeUser {
    /**
     * @return
     */
-   Stage getCurrentStage();
-   
-   /**
-    * @return
-    */
    List<Integer> getPreviousCursor();
-   
-   /**
-    * @return
-    */
-   TeamManager getTeamManager();
    
    /**
     * @param curPaint

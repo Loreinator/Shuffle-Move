@@ -25,7 +25,6 @@ import shuffle.fwk.config.provider.ImageManagerProvider;
 import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
-import shuffle.fwk.data.Stage;
 import shuffle.fwk.data.Team;
 
 /**
@@ -90,8 +89,7 @@ public class ShuffleView implements ImageManagerProvider {
             s = ((SpeciesPaint) o).getSpecies();
             frozen = ((SpeciesPaint) o).isFrozen();
          }
-         Stage currentStage = getUser().getBoardManager().getCurrentStage();
-         Team currentTeam = getUser().getTeamManager().getTeamForStage(currentStage);
+         Team currentTeam = getUser().getCurrentTeam();
          if (s != null && currentTeam != null) {
             Character binding = currentTeam.getBinding(s);
             if (binding != null) {

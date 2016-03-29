@@ -116,6 +116,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private static final String KEY_NO_BINDINGS = "error.nobindings";
    private static final String KEY_NONE_SELECTED = "text.noneselected";
    private static final String KEY_SELECTED = "text.selected";
+   private static final String KEY_SURVIVAL = "text.survival";
    private static final String KEY_OK = "button.ok";
    private static final String KEY_APPLY = "button.apply";
    private static final String KEY_CANCEL = "button.cancel";
@@ -153,6 +154,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private static final String KEY_KEYBINDS_TOOLTIP = "tooltip.keybinds";
    private static final String KEY_ADD_TOOLTIP = "tooltip.add";
    private static final String KEY_SELECTED_TOOLTIP = "tooltip.selected";
+   private static final String KEY_SURVIVAL_TOOLTIP = "tooltip.survival";
    private static final String KEY_OK_TOOLTIP = "tooltip.ok";
    private static final String KEY_APPLY_TOOLTIP = "tooltip.apply";
    private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
@@ -190,6 +192,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private StageChooser stageChooser;
    private JScrollPane rosterScrollPane;
    private Supplier<Dimension> getMinUpperPanel = null;
+   private JCheckBox survivalMode;
    
    private JPanel selectedComponent = null;
    private Species selectedSpecies = null;
@@ -285,6 +288,12 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       levelSpinner.getModel().addChangeListener(listener);
       megaFilter.addItemListener(listener);
       effectFilter.addItemListener(listener);
+      survivalMode.addItemListener(new ItemListener() {
+         @Override
+         public void itemStateChanged(ItemEvent e) {
+            updateTeamPanel();
+         }
+      });
    }
    
    private Component makeUpperPanel() {
@@ -382,11 +391,9 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
     * 
     */
    protected void makeTeamDefault() {
-      Stage curStage = getCurrentStage();
-      Team curTeam = myData.getTeamForStage(curStage);
-      PkmType t = curStage.getType();
+      PkmType t = getCurrentStage().getType();
       Stage fallbackStage = new Stage(t);
-      myData.setTeamForStage(new TeamImpl(curTeam), fallbackStage);
+      myData.setTeamForStage(getCurrentTeamImpl(), fallbackStage);
       updateTeamPanel();
    }
    
@@ -577,6 +584,15 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       
       c.anchor = GridBagConstraints.LINE_END;
       c.weightx = 1.0;
+      c.gridx++;
+      survivalMode = new JCheckBox(getString(KEY_SURVIVAL));
+      JPanel survivalModePanel = new JPanel(new BorderLayout());
+      survivalModePanel.add(survivalMode, BorderLayout.WEST);
+      survivalMode.setToolTipText(getString(KEY_SURVIVAL_TOOLTIP));
+      ret.add(survivalModePanel, c);
+      
+      c.anchor = GridBagConstraints.LINE_END;
+      c.weightx = 0.0;
       c.gridx += 1;
       JButton okButton = new JButton(getString(KEY_OK));
       okButton.setToolTipText(getString(KEY_OK_TOOLTIP));
@@ -618,6 +634,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    }
    
    private void onApply() {
+      getUser().setSurvival(survivalMode.isSelected());
       getUser().setCurrentStage(getCurrentStage());
       getUser().loadFromTeamManager(myData);
       getUser().setMegaProgress(megaProgress);
@@ -640,6 +657,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    @Override
    protected void updateGUIFrom(EditTeamServiceUser user) {
       myData = new TeamManager(user.getTeamManager());
+      survivalMode.setSelected(user.isSurvival());
       curStage = user.getCurrentStage();
       megaProgress = user.getMegaProgress();
       megaThreshold = getCurrentTeam().getMegaThreshold(user.getSpeciesManager(), user.getRosterManager(),
@@ -788,10 +806,10 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    
    private void updateTeamPanel() {
       stageChooser.updateStage();
-      Team curTeam = myData.getTeamForStage(getCurrentStage());
+      Team curTeam = getCurrentTeam();
       if (prevTeam != null && !prevTeam.getNames().isEmpty() && (curTeam == null || curTeam.getNames().isEmpty())) {
          curTeam = new TeamImpl(prevTeam);
-         myData.setTeamForStage(curTeam, getCurrentStage());
+         setTeamForCurrentStage(curTeam);
       }
       prevTeam = null;
       
@@ -877,7 +895,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    }
    
    private Component createTeamComponent(Species s) {
-      Team curTeam = myData.getTeamForStage(getCurrentStage());
+      Team curTeam = getCurrentTeam();
       JPanel ret = new JPanel(new GridBagLayout());
       GridBagConstraints c = new GridBagConstraints();
       c.gridx = 1;
@@ -933,14 +951,14 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    }
    
    private void setBinding(Species species, Character newBinding) {
-      TeamImpl curTeam = new TeamImpl(myData.getTeamForStage(getCurrentStage()));
+      TeamImpl curTeam = getCurrentTeamImpl();
       curTeam.setBinding(species, newBinding);
       Team newTeam = curTeam;
-      myData.setEntry(EntryType.TEAM, getCurrentStage().getName(), newTeam);
+      setTeamForCurrentStage(newTeam);
    }
    
    private void updateKeybindComboBoxes() {
-      Team curTeam = myData.getTeamForStage(getCurrentStage());
+      Team curTeam = getCurrentTeam();
       for (String name : curTeam.getNames()) {
          ItemListener itemListener = nameToItemListenerMap.get(name);
          JComboBox<Character> box = nameToKeybindComboboxMap.get(name);
@@ -993,7 +1011,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    }
    
    private void updateFromOptions() {
-      TeamImpl curTeam = new TeamImpl(myData.getTeamForStage(getCurrentStage()));
+      TeamImpl curTeam = getCurrentTeamImpl();
       String megaSlotDisplayed = getMegaSlot();
       String megaSlot = null;
       if (megaSlotDisplayed != null) {
@@ -1045,7 +1063,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
          }
          wasMegaActive = megaActive.isSelected();
       }
-      myData.setTeamForStage(curTeam, getCurrentStage());
+      setTeamForCurrentStage(curTeam);
    }
    
    private char getNextBindingFor(String name, Team team) {
@@ -1053,11 +1071,27 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    }
    
    private Team getCurrentTeam() {
-      return new TeamImpl(myData.getTeamForStage(getCurrentStage()));
+      return getCurrentTeamImpl();
+   }
+   
+   private TeamImpl getCurrentTeamImpl() {
+      Stage currentStage = getCurrentStage();
+      if (survivalMode.isSelected()) {
+         currentStage = StageManager.SURVIVAL;
+      }
+      return new TeamImpl(myData.getTeamForStage(currentStage));
+   }
+   
+   private void setTeamForCurrentStage(Team team) {
+      Stage currentStage = getCurrentStage();
+      if (survivalMode.isSelected()) {
+         currentStage = StageManager.SURVIVAL;
+      }
+      myData.setTeamForStage(team, currentStage);
    }
    
    private void addSpeciesToTeam(Species species) {
-      TeamImpl curTeam = new TeamImpl(getCurrentTeam());
+      TeamImpl curTeam = getCurrentTeamImpl();
       curTeam.addName(species.getName(), getNextBindingFor(species.getName(), curTeam));
       if (curTeam.getMegaSlotName() == null && species.getMegaName() != null) {
          curTeam.setMegaSlot(species.getName());
@@ -1067,24 +1101,27 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
                getUser().getEffectManager());
          megaProgress = Math.min(megaProgress, megaThreshold);
       }
-      myData.setTeamForStage(curTeam, getCurrentStage());
+      setTeamForCurrentStage(curTeam);
    }
    
    private void removeSpeciesFromTeam(String name) {
       TeamImpl curTeam = new TeamImpl(getCurrentTeam());
       curTeam.removeName(name);
-      myData.setTeamForStage(curTeam, getCurrentStage());
+      setTeamForCurrentStage(curTeam);
    }
    
    private void clearTeam() {
-      Team curTeam = myData.getTeamForStage(getCurrentStage(), false);
-      if (curTeam == null || !curTeam.getNames().isEmpty()) {
-         // Forbids it from needing fallbacks
-         myData.setTeamForStage(new TeamImpl(), getCurrentStage());
-      } else {
-         // Forces it to require fallbacks
-         myData.removeTeamForStage(getCurrentStage());
+      Stage currentStage = getCurrentStage();
+      if (survivalMode.isSelected()) {
+         currentStage = StageManager.SURVIVAL;
       }
+      Team curTeam = myData.getTeamForStage(currentStage, false);
+      Team newTeam = null;
+      if (curTeam == null || !curTeam.getNames().isEmpty()) {
+         // make it be empty if it didn't exist or if it had entries.
+         newTeam = new TeamImpl();
+      }
+      setTeamForCurrentStage(newTeam);
       updateTeamPanel();
    }
    
@@ -1135,7 +1172,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    
    @Override
    public void setCurrentStage(Stage stage) {
-      prevTeam = myData.getTeamForStage(curStage);
+      prevTeam = getCurrentTeam();
       curStage = stage;
       updateTeamPanel();
    }

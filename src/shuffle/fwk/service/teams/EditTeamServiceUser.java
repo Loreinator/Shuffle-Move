@@ -38,4 +38,8 @@ public interface EditTeamServiceUser extends ImageManagerProvider, RosterManager
    void loadFromTeamManager(TeamManager manager);
    
    boolean isExtendedMetalEnabled();
+   
+   boolean isSurvival();
+   
+   boolean setSurvival(boolean enabled);
 }

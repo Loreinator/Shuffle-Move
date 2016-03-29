@@ -102,28 +102,113 @@ public class SpeciesTest {
       assertEquals(42, new Species("name", 42, PkmType.STEEL, Effect.AIR).getBaseAttack());
       assertEquals(88, new Species("name", 88, PkmType.STEEL, Effect.AIR).getBaseAttack());
    }
+         
+   private static int[] MIN_LEVELS = new int[] { -1000, -1, 0, 1 };
+   private static int[] MAX_LEVELS = new int[] { 15, 50, 100, 1000 };
    
    /**
     * Test method for {@link shuffle.fwk.data.Species#getAttack(int)}.
     */
    @Test
    public final void testGetAttack() {
-      assertEquals(40, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(-1000));
-      assertEquals(40, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(-1));
-      assertEquals(40, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(0));
-      assertEquals(40, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(1));
-      assertEquals(43, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(2));
-      assertEquals(46, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(3));
-      assertEquals(48, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(4));
-      assertEquals(50, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(5));
-      assertEquals(52, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(6));
-      assertEquals(54, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(7));
-      assertEquals(56, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(8));
-      assertEquals(58, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(9));
-      assertEquals(60, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(10));
-      assertEquals(60, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(11));
-      assertEquals(60, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(50));
-      assertEquals(60, new Species("name", 40, PkmType.STEEL, Effect.AIR).getAttack(100));
+      // Thorough check for base 30
+      for (int i = 0; i < MIN_LEVELS.length; i++) {
+         assertEquals(30, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(MIN_LEVELS[i]));
+      }
+      assertEquals(30, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(1));
+      assertEquals(35, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(2));
+      assertEquals(39, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(3));
+      assertEquals(42, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(4));
+      assertEquals(45, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(5));
+      assertEquals(47, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(6));
+      assertEquals(49, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(7));
+      assertEquals(51, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(8));
+      assertEquals(53, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(9));
+      assertEquals(55, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(10));
+      assertEquals(61, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(11));
+      assertEquals(67, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(12));
+      assertEquals(73, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(13));
+      assertEquals(79, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(14));
+      assertEquals(85, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(15));
+      for (int i = 0; i < MAX_LEVELS.length; i++) {
+         assertEquals(85, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
+      }
+      
+      // Rapidly test all base attacks other than 30 for levels 1 through 10.
+      int[] bonuses = new int[] { 0, 3, 6, 8, 10, 12, 14, 16, 18, 20 };
+      assertEquals(30, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(-1000));
+      assertEquals(30, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(-1));
+      assertEquals(30, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(0));
+      // 40+ base attack with up to level 10 bonuses
+      for (int base = 40; base <= 90; base += 10) {
+         for (int i = 0; i < MIN_LEVELS.length; i++) {
+            assertEquals(base, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(MIN_LEVELS[i]));
+         }
+         for (int i = 0; i < bonuses.length; i++) {
+            assertEquals(base + bonuses[i], new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(i + 1));
+         }
+      }
+      // Level 11+ checking for 40+ base attack:
+      int base = 40;
+      assertEquals(base + 26, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(11));
+      assertEquals(base + 32, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(12));
+      assertEquals(base + 38, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(13));
+      assertEquals(base + 44, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(14));
+      assertEquals(base + 50, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(15));
+      for (int i = 0; i < MAX_LEVELS.length; i++) {
+         assertEquals(90, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
+      }
+      
+      base = 50;
+      assertEquals(base + 25, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(11));
+      assertEquals(base + 30, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(12));
+      assertEquals(base + 35, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(13));
+      assertEquals(base + 40, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(14));
+      assertEquals(base + 50, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(15));
+      for (int i = 0; i < MAX_LEVELS.length; i++) {
+         assertEquals(100, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
+      }
+      
+      base = 60;
+      assertEquals(base + 24, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(11));
+      assertEquals(base + 28, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(12));
+      assertEquals(base + 32, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(13));
+      assertEquals(base + 36, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(14));
+      assertEquals(base + 45, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(15));
+      for (int i = 0; i < MAX_LEVELS.length; i++) {
+         assertEquals(105, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
+      }
+      
+      base = 70;
+      assertEquals(base + 23, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(11));
+      assertEquals(base + 26, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(12));
+      assertEquals(base + 29, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(13));
+      assertEquals(base + 32, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(14));
+      assertEquals(base + 40, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(15));
+      for (int i = 0; i < MAX_LEVELS.length; i++) {
+         assertEquals(110, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
+      }
+      
+      base = 80;
+      assertEquals(base + 22, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(11));
+      assertEquals(base + 24, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(12));
+      assertEquals(base + 26, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(13));
+      assertEquals(base + 28, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(14));
+      assertEquals(base + 35, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(15));
+      for (int i = 0; i < MAX_LEVELS.length; i++) {
+         assertEquals(115, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
+      }
+      
+      base = 90;
+      assertEquals(base + 22, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(11));
+      assertEquals(base + 24, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(12));
+      assertEquals(base + 26, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(13));
+      assertEquals(base + 28, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(14));
+      assertEquals(base + 30, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(15));
+      for (int i = 0; i < MAX_LEVELS.length; i++) {
+         assertEquals(120, new Species("name", base, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
+      }
+      
    }
    
    /**
