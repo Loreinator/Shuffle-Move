@@ -1,4 +1,4 @@
-Shuffle Move v0.3.49
+Shuffle Move v0.3.50
 
 ~~ About ~~
 A program to identify and display the best next move for the game Pokemon Shuffle. I do not own any part of Pokemon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
@@ -38,6 +38,9 @@ Species Icons: serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ~~ Changelog ~~
+v0.3.50 - 2016-04-
+	- Fixed Mega Charizard X's type
+	- TBD
 v0.3.49 - 2016-03-29
 	- Express entry is now more logically consistent, including the freeze paint.
 	- Removed 3DS glitch code (fixed in game).
