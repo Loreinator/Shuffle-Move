@@ -456,6 +456,7 @@ public class ShuffleModel
     * Sets the enabled state of Survival Mode.
     */
    public boolean setSurvivalMode(boolean enabled) {
+      int prevThreshold = getCurrentThreshold();
       boolean changed = getPreferencesManager().setEntry(EntryType.BOOLEAN, KEY_SURVIVAL_MODE, enabled);
       if (changed) {
          Stage currentStage = getCurrentStage();
@@ -469,6 +470,17 @@ public class ShuffleModel
             // Set the remaining moves as normal.
             setRemainingMoves(currentStage.getMoves());
          }
+         int newThreshold = getCurrentTeam().getMegaThreshold(getSpeciesManager(), getUser().getRosterManager(),
+               getUser().getEffectManager());
+         int prevProgress = getMegaProgress();
+         int newProgress;
+         if (prevProgress == prevThreshold) {
+            newProgress = newThreshold;
+         } else {
+            newProgress = Math.min(prevProgress, newThreshold);
+         }
+         setMegaProgress(newProgress);
+         
       }
       return changed;
    }
@@ -549,7 +561,8 @@ public class ShuffleModel
    }
    
    // Team methods
-   protected Team getCurrentTeam() {
+   @Override
+   public Team getCurrentTeam() {
       Stage stage = getCurrentStage();
       if (isSurvivalMode()) {
          stage = StageManager.SURVIVAL;

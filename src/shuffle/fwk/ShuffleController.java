@@ -813,7 +813,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
 	 */
    @Override
    public void toggleActiveMega() {
-      Team team = getTeamManager().getTeamForStage(getCurrentStage());
+      Team team = getCurrentTeam();
       String megaSlotName = team.getMegaSlotName();
       if (megaSlotName != null) {
          boolean wasActive = getModel().isMegaSlotActive();
