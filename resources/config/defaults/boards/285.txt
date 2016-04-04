@@ -1,0 +1,13 @@
+STAGE 285
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Igglybuff,Igglybuff,Air,Air
+FROW_3 false,false,true,true,false,false
+ROW_4 Air,Igglybuff,Air,Air,Igglybuff,Air
+FROW_4 false,true,false,false,true,false
+ROW_5 Air,Igglybuff,Air,Air,Igglybuff,Air
+FROW_5 false,true,false,false,true,false
+ROW_6 Air,Air,Igglybuff,Igglybuff,Air,Air
+FROW_6 false,false,true,true,false,false

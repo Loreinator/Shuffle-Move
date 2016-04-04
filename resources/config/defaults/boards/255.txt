@@ -1,0 +1,14 @@
+STAGE 255
+MEGA_PROGRESS 0
+ROW_1 Wood,Air,Joltik,Joltik,Air,Wood
+FROW_1 true,false,false,false,false,true
+ROW_2 Air,Wood,Joltik,Joltik,Wood,Air
+FROW_2 false,true,false,false,true,false
+ROW_3 Air,Air,Wood,Wood,Air,Air
+FROW_3 false,false,true,true,false,false
+ROW_4 Air,Air,Wood,Wood,Air,Air
+FROW_4 false,false,true,true,false,false
+ROW_5 Air,Wood,Joltik,Joltik,Wood,Air
+FROW_5 false,true,false,false,true,false
+ROW_6 Wood,Air,Air,Air,Air,Wood
+FROW_6 true,false,false,false,false,true

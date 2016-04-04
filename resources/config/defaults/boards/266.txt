@@ -1,0 +1,13 @@
+STAGE 266
+ROW_1 Metal,Metal,Skitty,Chansey,Metal,Metal
+FROW_1 false,false,false,false,false,false
+ROW_2 Eevee,Skitty,Pachirisu,Eevee,Pachirisu,Skitty
+FROW_2 false,false,false,false,false,false
+ROW_3 Metal,Metal,Skitty,Chansey,Metal,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Chansey,Eevee,Chansey,Eevee,Chansey,Skitty
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Metal,Skitty,Chansey,Metal,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Eevee,Skitty,Eevee,Pachirisu,Skitty,Skitty
+FROW_6 false,false,false,false,false,false

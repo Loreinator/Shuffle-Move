@@ -1,0 +1,13 @@
+STAGE 325
+ROW_1 Magnemite,Magnezone,Magnemite,Metal,Metal,Metal
+FROW_1 true,false,true,true,true,true
+ROW_2 Magnezone,Magneton,Magnezone,Wood,Wood,Magnezone
+FROW_2 true,false,true,false,false,false
+ROW_3 Magneton,Magnemite,Magneton,Magnemite,Magneton,Magnezone
+FROW_3 true,false,true,false,false,false
+ROW_4 Magnemite,Magnezone,Magnemite,Magnezone,Magneton,Wood
+FROW_4 true,false,true,false,false,false
+ROW_5 Magnezone,Magneton,Magnezone,Magnemite,Wood,Magnezone
+FROW_5 true,false,true,false,false,false
+ROW_6 Magneton,Magnemite,Magneton,Magnezone,Magneton,Magnezone
+FROW_6 true,false,true,false,false,false

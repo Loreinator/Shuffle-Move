@@ -1,0 +1,13 @@
+STAGE SP_376
+ROW_1 Metal,Metal,Air,Air,Metal,Metal
+FROW_1 true,true,false,false,true,true
+ROW_2 Metal,Air,Air,Air,Air,Metal
+FROW_2 true,false,false,false,false,true
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Air,Air,Air,Air,Metal
+FROW_5 true,false,false,false,false,true
+ROW_6 Metal,Metal,Air,Air,Metal,Metal
+FROW_6 true,true,false,false,true,true

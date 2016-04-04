@@ -41,6 +41,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 v0.3.50 - 2016-04-
 	- Fixed Mega Charizard X's type
 	- Fixed bugs with Mega Progress in Survival Mode
+	- Default boards added for stages 251-350 and many Special/Expert stages. Thanks to /u/Manitary!
 	- TBD
 v0.3.49 - 2016-03-29
 	- Express entry is now more logically consistent, including the freeze paint.

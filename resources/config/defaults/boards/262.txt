@@ -1,0 +1,13 @@
+STAGE 262
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Flabébé,Air,Air,Flabébé,Air
+FROW_2 false,true,false,false,true,false
+ROW_3 Air,Flabébé,Air,Air,Flabébé,Air
+FROW_3 false,true,false,false,true,false
+ROW_4 Air,Florges,Air,Air,Florges,Air
+FROW_4 false,true,false,false,true,false
+ROW_5 Flabébé,Air,Flabébé,Flabébé,Air,Flabébé
+FROW_5 true,false,true,true,false,true
+ROW_6 Flabébé,Air,Flabébé,Flabébé,Air,Flabébé
+FROW_6 true,false,true,true,false,true

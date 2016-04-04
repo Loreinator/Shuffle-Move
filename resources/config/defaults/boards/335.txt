@@ -1,0 +1,13 @@
+STAGE 335
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Lumineon,Lumineon,Air,Air,Lumineon
+FROW_2 false,false,false,false,false,true
+ROW_3 Lumineon,Air,Air,Lumineon,Lumineon,Air
+FROW_3 false,false,false,true,true,false
+ROW_4 Lumineon,Air,Air,Lumineon,Air,Lumineon
+FROW_4 false,false,false,true,false,true
+ROW_5 Air,Lumineon,Lumineon,Air,Metal,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Metal,Metal,Metal
+FROW_6 false,false,false,false,false,false
