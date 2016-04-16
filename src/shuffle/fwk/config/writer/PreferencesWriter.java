@@ -20,8 +20,9 @@ package shuffle.fwk.config.writer;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -80,7 +81,7 @@ public class PreferencesWriter implements I18nUser {
                }
             }
             // data is not empty, and file exists.
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
                for (String key : data.keySet()) {
                   for (String value : data.get(key)) {
                      bw.write(String.format(SAVE_PATTERN, String.valueOf(key), String.valueOf(value)));

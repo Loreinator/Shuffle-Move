@@ -74,7 +74,7 @@ public class ConfigParser<Y> {
    
    public static <Y> LinkedHashMap<String, List<Y>> parse(InputStream is, Interpreter<Y> inter) {
       LinkedHashMap<String, List<Y>> ret = new LinkedHashMap<String, List<Y>>();
-      try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+      try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
          String line;
          while ((line = br.readLine()) != null) {
             Map<String, List<Y>> result = inter.interpret(line);
