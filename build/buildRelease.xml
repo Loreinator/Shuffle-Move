@@ -13,9 +13,10 @@
 
 	<target name="verify" unless="name">
 		<echo message="Please specify a name via -Dname='Shuffle Move vM.N.X' or some such value." />
-		<loadfile srcfile="../README.txt" property="name">
+		<loadfile srcfile="../README.md" property="name">
 			<filterchain>
 				<headfilter lines="1" />
+				<deletecharacters chars="#"/>
 			</filterchain>
 		</loadfile>
 		<script language="javascript">
@@ -52,8 +53,8 @@
 				<attribute name="SplashScreen-Image" value="img/splash.png" />
 			</manifest>
 			<fileset dir="../bin" />
-			<fileset file="LICENSE_shuffleMove.txt" />
-			<fileset file="README_shuffleMove.txt" />
+			<fileset file="../LICENSE" />
+			<fileset file="../README.md" />
 			<zipfileset excludes="META-INF/**" src="ant-launcher.jar" />
 			<zipfileset excludes="META-INF/**" src="ant.jar" />
 			<zipfileset excludes="META-INF/**" src="commons-io-2.4.jar" />
@@ -96,7 +97,7 @@
 
 	<target name="copyfiles">
 		<copy file="../LICENSE" tofile="${temp}/LICENSE.txt" />
-		<copy file="../README.txt" tofile="${temp}/README.txt" />
+		<copy file="../README.md" tofile="${temp}/README.md" />
 		<mkdir dir="${temp}/source" />
 		<mkdir dir="${temp}/source/i18n" />
 		<copy todir="${temp}/source/i18n">
