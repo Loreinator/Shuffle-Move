@@ -56,6 +56,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 	- Stage data for main mobile stages have been corrected
 	- Effect activation rates and effects have been updated for 3DS
 	- Added a "Links" menu, with links for the latest release and the subreddit
+	- Improved adherence to UTF-8 encoding on all reads and writes to files
 * **v0.3.49 – 2016-03-29**
 	- Express entry is now more logically consistent, including the freeze paint.
 	- Removed 3DS glitch code (fixed in game).
