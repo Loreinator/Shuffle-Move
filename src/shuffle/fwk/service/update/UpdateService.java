@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -62,6 +64,7 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
    private static final String KEY_UPDATE_MIN_HEIGHT = "UPDATE_MIN_HEIGHT";
    private static final int DEFAULT_UPDATE_WIDTH = 300;
    private static final int DEFAULT_UPDATE_HEIGHT = 200;
+   private static final ExecutorService EXECUTOR = new ScheduledThreadPoolExecutor(1);
    
    private static final String KEY_GETNEWEST = "button.getnewest";
    private static final String KEY_FORCE = "button.force";
@@ -238,23 +241,34 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
          setDisposeEnabled(!inProgress);
          inProgressConsumers.forEach(c -> c.accept(inProgress));
          bar.setIndeterminate(inProgress);
-         if (i18nKey != null) {
-            currentMessage = i18nKey;
-         } else if (inProgress) {
-            currentMessage = KEY_DOWNLOADING;
-         } else {
-            UpdateCheck updateCheck = new UpdateCheck();
-            Map<String, String> availableVersions = updateCheck.getAvailableVersions();
-            if (availableVersions.isEmpty()) {
-               currentMessage = null;
-            } else {
-               String newest = updateCheck.getNewestVersion(availableVersions);
-               currentMessage = UpdateCheck.getZipName(newest);
+         EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+               if (i18nKey != null) {
+                  currentMessage = i18nKey;
+               } else if (inProgress) {
+                  currentMessage = KEY_DOWNLOADING;
+               } else {
+                  
+                  UpdateCheck updateCheck = new UpdateCheck();
+                  Map<String, String> availableVersions = updateCheck.getAvailableVersions();
+                  if (availableVersions.isEmpty()) {
+                     currentMessage = null;
+                  } else {
+                     String newest = updateCheck.getNewestVersion(availableVersions);
+                     currentMessage = UpdateCheck.getZipName(newest);
+                  }
+               }
+               SwingUtilities.invokeLater(new Runnable() {
+                  @Override
+                  public void run() {
+                     setMessage(currentMessage);
+                     bar.setStringPainted(inProgress || currentMessage != null);
+                     bar.repaint();
+                  }
+               });
             }
-         }
-         setMessage(currentMessage);
-         bar.setStringPainted(inProgress || currentMessage != null);
-         bar.repaint();
+         });
       }
    }
    
@@ -302,30 +316,22 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
       @Override
       public void propertyChange(PropertyChangeEvent arg0) {
          if (arg0.getPropertyName().equals(UpdateCheck.PROPERTY_DONE)) {
-            if (SwingUtilities.isEventDispatchThread()) {
-               service.setInProgress(false);
-            } else {
-               SwingUtilities.invokeLater(new Runnable() {
-                  @Override
-                  public void run() {
-                     service.setInProgress(false);
-                  }
-               });
-            }
+            SwingUtilities.invokeLater(new Runnable() {
+               @Override
+               public void run() {
+                  service.setInProgress(false);
+               }
+            });
          } else if (arg0.getPropertyName().equals(UpdateCheck.PROPERTY_MESSAGE)) {
             Object newValue = arg0.getNewValue();
             if (newValue instanceof String) {
                String text = (String) newValue;
-               if (SwingUtilities.isEventDispatchThread()) {
-                  service.setInProgress(false, false, text);
-               } else {
-                  SwingUtilities.invokeLater(new Runnable() {
-                     @Override
-                     public void run() {
-                        service.setInProgress(false, false, text);
-                     }
-                  });
-               }
+               SwingUtilities.invokeLater(new Runnable() {
+                  @Override
+                  public void run() {
+                     service.setInProgress(false, false, text);
+                  }
+               });
             }
          }
       }

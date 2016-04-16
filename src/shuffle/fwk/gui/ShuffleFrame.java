@@ -189,7 +189,12 @@ public class ShuffleFrame extends JFrame implements I18nUser {
             String curVersion = getUser().getCurrentVersion();
             String updateLink = updater.versionCheck(curVersion, availableVersions);
             if (updateLink != null) {
-               BaseServiceManager.launchServiceByClass(UpdateService.class, getUser(), ShuffleFrame.this);
+               SwingUtilities.invokeLater(new Runnable() {
+                  @Override
+                  public void run() {
+                     BaseServiceManager.launchServiceByClass(UpdateService.class, getUser(), ShuffleFrame.this);
+                  }
+               });
             }
          }
       });
