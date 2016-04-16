@@ -1,0 +1,13 @@
+STAGE SP_481
+ROW_1 Vileplume,Vileplume,Air,Air,Vileplume,Vileplume
+FROW_1 false,false,false,false,false,false
+ROW_2 Vileplume,Air,Air,Air,Air,Vileplume
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Vileplume,Vileplume,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Vileplume,Vileplume,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Vileplume,Air,Air,Air,Air,Vileplume
+FROW_5 false,false,false,false,false,false
+ROW_6 Vileplume,Vileplume,Air,Air,Vileplume,Vileplume
+FROW_6 false,false,false,false,false,false

@@ -1,0 +1,13 @@
+STAGE 303
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Phantump,Air,Air,Phantump,Air
+FROW_3 false,true,false,false,true,false
+ROW_4 Air,Phantump,Air,Air,Phantump,Air
+FROW_4 false,true,false,false,true,false
+ROW_5 Phantump,Metal,Phantump,Phantump,Metal,Phantump
+FROW_5 true,false,true,true,false,true
+ROW_6 Phantump,Metal,Phantump,Phantump,Metal,Phantump
+FROW_6 true,false,true,true,false,true

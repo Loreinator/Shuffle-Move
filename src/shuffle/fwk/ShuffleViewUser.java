@@ -22,7 +22,6 @@ import shuffle.fwk.config.provider.BoardManagerProvider;
 import shuffle.fwk.config.provider.ConfigFactoryProvider;
 import shuffle.fwk.config.provider.ImageManagerProvider;
 import shuffle.fwk.config.provider.TeamManagerProvider;
-import shuffle.fwk.data.Team;
 
 /**
  * @author Andrew Meyers
@@ -31,5 +30,4 @@ import shuffle.fwk.data.Team;
 public interface ShuffleViewUser
       extends TeamManagerProvider, BoardManagerProvider, ConfigFactoryProvider, ImageManagerProvider {
    
-   Team getCurrentTeam();
 }

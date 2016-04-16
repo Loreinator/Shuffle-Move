@@ -1,0 +1,13 @@
+STAGE 318
+ROW_1 Fearow,Air,Air,Air,Air,Air
+FROW_1 true,false,false,false,false,false
+ROW_2 Fearow,Air,Air,Air,Air,Air
+FROW_2 true,false,false,false,false,false
+ROW_3 Wood,Fearow,Air,Air,Air,Air
+FROW_3 true,true,false,false,false,false
+ROW_4 Wood,Fearow,Air,Air,Air,Air
+FROW_4 true,true,false,false,false,false
+ROW_5 Fearow,Wood,Fearow,Air,Air,Air
+FROW_5 true,true,true,false,false,false
+ROW_6 Fearow,Wood,Fearow,Air,Air,Air
+FROW_6 true,true,true,false,false,false

@@ -1,0 +1,13 @@
+STAGE SP_421
+ROW_1 Zekrom,Metal,Zekrom,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Zekrom,Metal,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Zekrom,Metal,Zekrom,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Zekrom,Metal,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Zekrom,Metal,Zekrom,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Zekrom,Metal,Air,Air,Air
+FROW_6 false,false,false,false,false,false

@@ -1,0 +1,13 @@
+STAGE 314
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Spheal,Air,Air,Air,Air,Spheal
+FROW_2 false,false,false,false,false,false
+ROW_3 Spheal,Air,Spheal,Spheal,Air,Spheal
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Air,Wood,Wood,Air,Wood
+FROW_4 true,false,true,true,false,true
+ROW_5 Spheal,Air,Spheal,Spheal,Air,Spheal
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Spheal,Spheal,Air,Air
+FROW_6 false,false,false,false,false,false

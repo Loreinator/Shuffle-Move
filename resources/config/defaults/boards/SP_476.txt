@@ -1,0 +1,13 @@
+STAGE SP_476
+ROW_1 Air,Air,Wood,Air,Wood,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Wood,Air,Wood,Air,Machamp
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Wood,Wood,Air,Machamp
+FROW_3 false,false,false,false,false,false
+ROW_4 Machamp,Air,Wood,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Machamp,Air,Air,Wood,Wood,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Wood,Kabuto,Wood,Air
+FROW_6 false,false,false,false,false,false

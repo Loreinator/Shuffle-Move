@@ -97,7 +97,7 @@ public class SimulationCore extends RecursiveAction {
       Board userBoard = user.getBoardManager().getBoard();
       board = new Board(userBoard);
       stage = user.getBoardManager().getCurrentStage();
-      Team userTeam = user.getTeamManager().getTeamForStage(stage);
+      Team userTeam = user.getCurrentTeam();
       megaSlotName = userTeam.getMegaSlotName();
       megaProgress = user.getMegaProgress();
       megaAllowed = user.isMegaAllowed();

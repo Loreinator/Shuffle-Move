@@ -1,0 +1,13 @@
+STAGE SP_500
+ROW_1 Clefable,Clefable,Wood,Air,Wood,Clefable
+FROW_1 false,false,false,false,false,false
+ROW_2 Clefable,Clefable,Wood,Air,Wood,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Wood,Wood,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Wood,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Wood,Wood,Air,Wood,Clefable
+FROW_5 false,false,false,false,false,false
+ROW_6 Clefable,Clefable,Wood,Air,Wood,Clefable
+FROW_6 false,false,false,false,false,false

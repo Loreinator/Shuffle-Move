@@ -16,7 +16,7 @@
 		<pathelement location="build/org.hamcrest.core_1.3.0.v201303031735.jar" />
 	</path>
 	<target name="updateversion">
-		<loadfile srcfile="README.txt" property="version.full">
+		<loadfile srcfile="README.md" property="version.full">
 			<filterchain>
 				<headfilter lines="1" />
 			</filterchain>

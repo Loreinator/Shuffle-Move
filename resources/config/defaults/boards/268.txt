@@ -1,0 +1,13 @@
+STAGE 268
+ROW_1 Air,Air,Air,Air,Metal,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Metal,Air,Metal,Metal,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Metal,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Metal,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Metal,Metal,Air,Metal,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Metal,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

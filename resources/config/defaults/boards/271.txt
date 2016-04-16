@@ -1,0 +1,13 @@
+STAGE 271
+ROW_1 Tympole,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Tympole,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Tympole,Air
+FROW_4 false,false,false,false,true,false
+ROW_5 Air,Air,Air,Tympole,Wood,Tympole
+FROW_5 false,false,false,true,true,true
+ROW_6 Tympole,Air,Tympole,Wood,Tympole,Wood
+FROW_6 true,false,true,true,true,true

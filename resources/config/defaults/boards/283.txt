@@ -1,0 +1,13 @@
+STAGE 283
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Air,Air,Wood,Wood
+FROW_4 true,true,false,false,true,true
+ROW_5 Air,Air,Wood,Wood,Air,Air
+FROW_5 false,false,true,true,false,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

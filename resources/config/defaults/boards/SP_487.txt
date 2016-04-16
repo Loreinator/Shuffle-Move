@@ -1,0 +1,13 @@
+STAGE SP_487
+ROW_1 Wood,Wood,Wood,Air,Amaura,Amaura
+FROW_1 false,false,false,false,false,false
+ROW_2 Amaura,Amaura,Air,Wood,Wood,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Wood,Wood,Air,Amaura,Amaura
+FROW_3 false,false,false,false,false,false
+ROW_4 Amaura,Amaura,Air,Wood,Wood,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Wood,Wood,Air,Amaura,Amaura
+FROW_5 false,false,false,false,false,false
+ROW_6 Amaura,Amaura,Air,Wood,Wood,Wood
+FROW_6 false,false,false,false,false,false

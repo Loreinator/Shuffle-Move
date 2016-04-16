@@ -1,0 +1,13 @@
+STAGE 263
+ROW_1 Makuhita,Air,Air,Air,Air,Makuhita
+FROW_1 true,false,false,false,false,true
+ROW_2 Makuhita,Makuhita,Air,Air,Makuhita,Makuhita
+FROW_2 true,true,false,false,true,true
+ROW_3 Air,Makuhita,Air,Air,Makuhita,Air
+FROW_3 false,true,false,false,true,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Makuhita,Makuhita,Air,Air
+FROW_5 false,false,true,true,false,false
+ROW_6 Air,Air,Makuhita,Makuhita,Air,Air
+FROW_6 false,false,true,true,false,false

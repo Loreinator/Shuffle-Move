@@ -1,0 +1,13 @@
+STAGE 346
+ROW_1 Metal,Krokorok,Metal,Metal,Metal,Metal
+FROW_1 true,false,true,true,true,true
+ROW_2 Metal,Wood,Metal,Wood,Wood,Air
+FROW_2 true,false,true,false,false,false
+ROW_3 Metal,Krokorok,Air,Air,Wood,Air
+FROW_3 true,false,false,false,false,false
+ROW_4 Metal,Wood,Wood,Air,Wood,Air
+FROW_4 true,false,false,false,false,false
+ROW_5 Metal,Krokorok,Air,Air,Air,Air
+FROW_5 true,false,false,false,false,false
+ROW_6 Metal,Krokorok,Air,Air,Air,Air
+FROW_6 true,false,false,false,false,false

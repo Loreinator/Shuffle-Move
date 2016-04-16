@@ -1,0 +1,13 @@
+STAGE SP_495
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Uxie,Air,Air,Air,Air,Uxie
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Uxie,Uxie,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Uxie,Air,Air,Air,Air,Uxie
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

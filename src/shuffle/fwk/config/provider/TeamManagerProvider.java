@@ -19,6 +19,7 @@
 package shuffle.fwk.config.provider;
 
 import shuffle.fwk.config.manager.TeamManager;
+import shuffle.fwk.data.Team;
 
 /**
  * @author Andrew Meyers
@@ -26,4 +27,6 @@ import shuffle.fwk.config.manager.TeamManager;
  */
 public interface TeamManagerProvider {
    TeamManager getTeamManager();
+   
+   Team getCurrentTeam();
 }

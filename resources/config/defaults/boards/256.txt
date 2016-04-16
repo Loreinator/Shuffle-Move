@@ -1,0 +1,13 @@
+STAGE 256
+ROW_1 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Skiddo,Skiddo,Gogoat,Gogoat,Skiddo,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Wood,Wood,Wood,Gogoat,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Skiddo,Skiddo,Air,Wood,Gogoat,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Wood,Skiddo,Wood,Skiddo,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Gogoat,Wood,Skiddo,Wood,Skiddo,Wood
+FROW_6 false,false,false,false,false,false

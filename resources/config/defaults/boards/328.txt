@@ -1,0 +1,13 @@
+STAGE 328
+ROW_1 Air,Air,Air,Magneton,Magneton,Magnezone
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Magnemite,Magneton,Wood,Magnezone
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Magnemite,Magnemite,Wood,Magneton,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Magnemite,Wood,Magneton,Magneton,Magnezone
+FROW_4 false,false,false,false,false,false
+ROW_5 Magnezone,Wood,Magnemite,Air,Air,Magnezone
+FROW_5 false,false,false,false,false,false
+ROW_6 Magnezone,Magnemite,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

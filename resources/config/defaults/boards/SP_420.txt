@@ -1,0 +1,13 @@
+STAGE SP_420
+ROW_1 Air,Air,Air,Reshiram,Air,Reshiram
+FROW_1 false,false,false,true,false,true
+ROW_2 Air,Air,Air,Air,Reshiram,Air
+FROW_2 false,false,false,false,true,false
+ROW_3 Air,Air,Air,Reshiram,Air,Reshiram
+FROW_3 false,false,false,true,false,true
+ROW_4 Air,Air,Air,Air,Reshiram,Air
+FROW_4 false,false,false,false,true,false
+ROW_5 Air,Air,Air,Reshiram,Air,Reshiram
+FROW_5 false,false,false,true,false,true
+ROW_6 Air,Air,Air,Air,Reshiram,Air
+FROW_6 false,false,false,false,true,false

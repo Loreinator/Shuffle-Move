@@ -1,0 +1,13 @@
+STAGE 288
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Luvdisc,Luvdisc,Qwilfish,Alomomola,Lapras,Lapras
+FROW_2 false,false,false,false,false,false
+ROW_3 Qwilfish,Lapras,Qwilfish,Lapras,Wood,Staryu
+FROW_3 false,false,false,false,false,false
+ROW_4 Luvdisc,Staryu,Lapras,Luvdisc,Luvdisc,Qwilfish
+FROW_4 false,false,false,false,false,false
+ROW_5 Luvdisc,Qwilfish,Wood,Qwilfish,Metal,Staryu
+FROW_5 false,false,false,false,false,false
+ROW_6 Lapras,Alomomola,Alomomola,Wood,Alomomola,Alomomola
+FROW_6 false,false,false,false,false,false

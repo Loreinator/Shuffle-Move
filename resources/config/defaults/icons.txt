@@ -643,10 +643,13 @@ RESOURCE Cobalion img/icons/638.png
 RESOURCE Terrakion img/icons/639.png
 RESOURCE Virizion img/icons/640.png
 RESOURCE Tornadus img/icons/641.png
+RESOURCE Tornadus_t img/icons/641-t.png
 RESOURCE Thundurus img/icons/642.png
+RESOURCE Thundurus_t img/icons/642-t.png
 RESOURCE Reshiram img/icons/643.png
 RESOURCE Zekrom img/icons/644.png
 RESOURCE Landorus img/icons/645.png
+RESOURCE Landorus_t img/icons/645-t.png
 RESOURCE Kyurem img/icons/646.png
 RESOURCE Keldeo img/icons/647.png
 RESOURCE Keldeo_r img/icons/647-r.png
@@ -661,6 +664,7 @@ RESOURCE Delphox img/icons/655.png
 RESOURCE Froakie img/icons/656.png
 RESOURCE Frogadier img/icons/657.png
 RESOURCE Greninja img/icons/658.png
+RESOURCE Greninja_a img/icons/658.png
 RESOURCE Bunnelby img/icons/659.png
 RESOURCE Diggersby img/icons/660.png
 RESOURCE Fletchling img/icons/661.png
@@ -722,6 +726,7 @@ RESOURCE Xerneas img/icons/716.png
 RESOURCE Yveltal img/icons/717.png
 RESOURCE Zygarde img/icons/718.png
 RESOURCE Zygarde-10 img/icons/718-10.png
+RESOURCE Zygarde-50 img/icons/718.png
 RESOURCE Diancie img/icons/719.png
 RESOURCE Mega_Venusaur img/icons/003-m.png
 RESOURCE Mega_Charizard_x img/icons/006-m.png

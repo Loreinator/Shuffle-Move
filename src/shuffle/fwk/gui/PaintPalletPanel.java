@@ -279,7 +279,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          megaActiveListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-               Team curTeam = getUser().getTeamManager().getTeamForStage(getCurrentStage());
+               Team curTeam = getUser().getCurrentTeam();
                int megaThreshold = curTeam.getMegaThreshold(getUser().getSpeciesManager(), getUser().getRosterManager(),
                      getUser().getEffectManager());
                getUser().setMegaProgress(megaActive.isSelected() ? megaThreshold : 0);
@@ -299,8 +299,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          specialSpeciesListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-               Stage stage = getCurrentStage();
-               TeamImpl curTeam = new TeamImpl(getUser().getTeamManager().getTeamForStage(stage));
+               TeamImpl curTeam = new TeamImpl(getUser().getCurrentTeam());
                String woodName = Species.WOOD.getName();
                boolean hasWood = curTeam.getNames().contains(woodName);
                String metalName = Species.METAL.getName();
@@ -322,6 +321,10 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
                   curTeam.removeName(coinName);
                } else if (!hasCoin && coinBox.isSelected()) {
                   curTeam.addName(coinName, getNextBindingFor(coinName, curTeam));
+               }
+               Stage stage = getCurrentStage();
+               if (getUser().isSurvival()) {
+                  stage = StageManager.SURVIVAL;
                }
                getUser().setTeamForStage(curTeam, stage);
             }
@@ -406,7 +409,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private void updateIndicators() {
       List<SpeciesPaint> curPaints = getUser().getCurrentPaints();
       SpeciesPaint curPaint = getUser().getSelectedSpeciesPaint();
-      Team curTeam = getUser().getTeamManager().getTeamForStage(getCurrentStage());
+      Team curTeam = getUser().getCurrentTeam();
       if (curPaints.equals(prevPaints) && (curTeam == prevTeam || curTeam != null && curTeam.equals(prevTeam))) {
          if (!(prevPaint == curPaint || prevPaint != null && prevPaint.equals(curPaint))) {
             updateIndicatorBorders();
@@ -537,7 +540,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       }
       
       Stage currentStage = getCurrentStage();
-      Team curTeam = getUser().getTeamManager().getTeamForStage(currentStage);
+      Team curTeam = getUser().getCurrentTeam();
       SpeciesManager speciesManager = getUser().getSpeciesManager();
       String megaSlotName = curTeam.getMegaSlotName();
       Species megaSpecies = megaSlotName == null ? null : speciesManager.getSpeciesValue(megaSlotName);

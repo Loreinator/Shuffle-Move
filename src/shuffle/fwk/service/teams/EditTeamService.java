@@ -951,9 +951,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    }
    
    private void setBinding(Species species, Character newBinding) {
-      TeamImpl curTeam = getCurrentTeamImpl();
-      curTeam.setBinding(species, newBinding);
-      Team newTeam = curTeam;
+      TeamImpl newTeam = getCurrentTeamImpl();
+      newTeam.setBinding(species, newBinding);
       setTeamForCurrentStage(newTeam);
    }
    
