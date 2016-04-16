@@ -47,7 +47,11 @@ This program is licensed under GNU General Public License Version 3. Please read
 	- Fixed Mega Charizard X's type
 	- Fixed bugs with Mega Progress in Survival Mode
 	- Default boards added for stages 251-350 and many Special/Expert stages. Thanks to /u/Manitary!
-	- TBD
+	- Updates for 3DS 1.3.6
+	- Updates for Mobile 1.5.10
+	- Also added escalation health for Latios and Keldeo (Resolute). Thanks to /u/Manitary
+	- Readme is now a *.md format. Thanks to /u/Manitary
+	- Updated Build Process
 * **v0.3.49 – 2016-03-29**
 	- Express entry is now more logically consistent, including the freeze paint.
 	- Removed 3DS glitch code (fixed in game).
