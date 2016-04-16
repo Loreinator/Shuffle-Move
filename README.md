@@ -43,7 +43,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.50 – 2016-04-**
+* **v0.3.50 – 2016-04-16**
 	- Fixed Mega Charizard X's type
 	- Fixed bugs with Mega Progress in Survival Mode
 	- Default boards added for stages 251-350 and many Special/Expert stages. Thanks to /u/Manitary!
@@ -53,6 +53,9 @@ This program is licensed under GNU General Public License Version 3. Please read
 	- Readme is now a *.md format. Thanks to /u/Manitary
 	- Updated Build Process
 	- Update Checker is now invoked in a separate thread and will no longer block GUI responsiveness
+	- Stage data for main mobile stages have been corrected
+	- Effect activation rates and effects have been updated for 3DS
+	- Added a "Links" menu, with links for the latest release and the subreddit
 * **v0.3.49 – 2016-03-29**
 	- Express entry is now more logically consistent, including the freeze paint.
 	- Removed 3DS glitch code (fixed in game).

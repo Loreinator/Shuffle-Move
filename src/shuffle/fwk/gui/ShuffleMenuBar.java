@@ -18,12 +18,16 @@
 
 package shuffle.fwk.gui;
 
+import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +35,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
@@ -65,7 +70,10 @@ import shuffle.fwk.service.update.UpdateService;
  */
 @SuppressWarnings("serial")
 public class ShuffleMenuBar extends JMenuBar implements I18nUser {
+   private static final Logger LOG = Logger.getLogger(ShuffleMenuBar.class.getName());
+   
    // i18n Keys... a lot of them!
+   private static final String KEY_BAD_LINK = "error.badlink";
    private static final String KEY_FILE = "menuitem.file";
    private static final String KEY_LOAD = "menuitem.load";
    private static final String KEY_SAVE = "menuitem.save";
@@ -96,9 +104,16 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_GRADING_MENU = "menuitem.grading";
    private static final String KEY_CHOOSE_MOVE = "menuitem.choosemove";
    private static final String KEY_SURVIVAL_MODE = "menuitem.survival";
+   private static final String KEY_LINKS = "menuitem.links";
+   private static final String KEY_LATEST_LINK = "menuitem.latest";
+   private static final String KEY_SUBREDDIT_LINK = "menuitem.subreddit";
    
    // config keys
    public static final String KEY_AVAILABLE_LOCALES = "AVAILABLE_LOCALES";
+   
+   // Hard-coded to avoid tampering
+   public static final String LATEST_LINK = "https://github.com/Loreinator/Shuffle-Move/releases/latest";
+   public static final String SUBREDDIT_LINK = "https://www.reddit.com/r/ShuffleMove/";
    
    private ShuffleMenuUser user;
    private JCheckBoxMenuItem autoComputeItem;
@@ -159,6 +174,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       setupGridMenu();
       setupMoveMenu();
       setupHelpMenu();
+      setupLinksMenu();
    }
    
    private void setupFileMenu() {
@@ -397,9 +413,23 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
             e -> BaseServiceManager.launchServiceByClass(UpdateService.class, getUser(), getOwner()));
       addMenuAction(menu, updateAction);
       
-      MenuAction aboutAction = new MenuAction(() -> getString(KEY_ABOUT), e -> BaseServiceManager.launchServiceByClass(
-            AboutService.class, getUser(), getOwner()));
+      MenuAction aboutAction = new MenuAction(() -> getString(KEY_ABOUT),
+            e -> BaseServiceManager.launchServiceByClass(AboutService.class, getUser(), getOwner()));
       addMenuAction(menu, aboutAction);
+      
+      add(menu);
+   }
+   
+   private void setupLinksMenu() {
+      JMenu menu = new JMenu(getString(KEY_LINKS));
+      buttonToi18nKeyMap.put(menu, () -> getString(KEY_LINKS));
+      menu.setMnemonic(KeyEvent.VK_L);
+      
+      MenuAction latestAction = new MenuAction(() -> getString(KEY_LATEST_LINK), e -> openLink(LATEST_LINK));
+      addMenuAction(menu, latestAction);
+      
+      MenuAction subredditAction = new MenuAction(() -> getString(KEY_SUBREDDIT_LINK), e -> openLink(SUBREDDIT_LINK));
+      addMenuAction(menu, subredditAction);
       
       add(menu);
    }
@@ -460,6 +490,16 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       
       public String getNewText() {
          return getText.get();
+      }
+   }
+   
+   private void openLink(String url) {
+      if (Desktop.isDesktopSupported()) {
+         try {
+            Desktop.getDesktop().browse(new URL(url).toURI());
+         } catch (IOException | URISyntaxException | NullPointerException exception) {
+            LOG.severe(getString(KEY_BAD_LINK, exception.getMessage()));
+         }
       }
    }
 }
