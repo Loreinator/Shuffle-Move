@@ -32,7 +32,7 @@ Reddit: https://www.reddit.com/r/ShuffleMove/wiki/index
 
 ##License
 
-Copyright 2015 Andrew Meyers  
+Copyright 2015-2016 Andrew Meyers  
 Splash screen and window icons: http://reddit.com/u/ArmpitWrestling  
 German Translations: http://reddit.com/u/ArmpitWrestling  
 Finnish Translations: https://github.com/Igetin  
