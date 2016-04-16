@@ -21,9 +21,10 @@ package shuffle.fwk;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -1037,7 +1038,7 @@ public class ShuffleModel
             if (!file.canWrite()) {
                LOG.warning(getString(KEY_BUG_FILE_READONLY, file.getAbsolutePath()));
             }
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
                bw.write(message);
             } catch (IOException e) {
                LOG.log(Level.WARNING, getString(KEY_BUG_FILE_SAVEPROBLEM, file.getAbsolutePath()), e);

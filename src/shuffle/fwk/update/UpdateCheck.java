@@ -78,7 +78,7 @@ public class UpdateCheck implements I18nUser {
    public Map<String, String> getAvailableVersions() {
       Map<String, String> ret = new HashMap<String, String>();
       try (InputStream is = new URL(VERSION_SITE).openStream()) {
-         BufferedReader br = new BufferedReader(new InputStreamReader(is));
+         BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
          String line;
          while ((line = br.readLine()) != null) {
             Matcher m = VERSION_PATTERN.matcher(line);
