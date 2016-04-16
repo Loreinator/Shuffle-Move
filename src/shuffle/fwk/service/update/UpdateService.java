@@ -303,9 +303,14 @@ public class UpdateService extends BaseService<UpdateServiceUser> implements I18
       public void actionPerformed(ActionEvent e) {
          if (!service.isInProgress()) {
             service.setInProgress(true);
-            UpdateCheck updateCheck = new UpdateCheck();
-            String curVersion = service.getUser().getCurrentVersion();
-            updateCheck.doUpdate(curVersion, force, UpdateNowAction.this);
+            EXECUTOR.execute(new Runnable() {
+               @Override
+               public void run() {
+                  UpdateCheck updateCheck = new UpdateCheck();
+                  String curVersion = service.getUser().getCurrentVersion();
+                  updateCheck.doUpdate(curVersion, force, UpdateNowAction.this);
+               }
+            });
          }
       }
       

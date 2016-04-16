@@ -52,6 +52,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 	- Also added escalation health for Latios and Keldeo (Resolute). Thanks to /u/Manitary
 	- Readme is now a *.md format. Thanks to /u/Manitary
 	- Updated Build Process
+	- Update Checker is now invoked in a separate thread and will no longer block GUI responsiveness
 * **v0.3.49 – 2016-03-29**
 	- Express entry is now more logically consistent, including the freeze paint.
 	- Removed 3DS glitch code (fixed in game).
