@@ -45,6 +45,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 ##Changelog
 * **v0.3.51 – 2016-04-**
 	- Increased score display limit to 999,999
+	- Added icon for Greninja (Ash's)
 * **v0.3.50 – 2016-04-16**
 	- Fixed Mega Charizard X's type
 	- Fixed bugs with Mega Progress in Survival Mode

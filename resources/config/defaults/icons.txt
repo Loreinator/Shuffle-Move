@@ -664,7 +664,7 @@ RESOURCE Delphox img/icons/655.png
 RESOURCE Froakie img/icons/656.png
 RESOURCE Frogadier img/icons/657.png
 RESOURCE Greninja img/icons/658.png
-RESOURCE Greninja_a img/icons/658.png
+RESOURCE Greninja_a img/icons/658-a.png
 RESOURCE Bunnelby img/icons/659.png
 RESOURCE Diggersby img/icons/660.png
 RESOURCE Fletchling img/icons/661.png
