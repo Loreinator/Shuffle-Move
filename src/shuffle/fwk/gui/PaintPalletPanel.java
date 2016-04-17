@@ -52,6 +52,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import shuffle.fwk.ShuffleModel;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.StageManager;
@@ -181,7 +182,7 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       
       scoreLabel = new JLabel(getString(KEY_SCORE));
       scoreLabel.setToolTipText(getString(KEY_SCORE_TOOLTIP));
-      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 99999, 50);
+      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, ShuffleModel.MAX_SCORE, 50);
       scoreField = new JSpinner(snm);
       scoreField.setToolTipText(getString(KEY_SCORE_TOOLTIP));
       JPanel scorePanel = new JPanel(new BorderLayout());

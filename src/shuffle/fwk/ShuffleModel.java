@@ -112,6 +112,8 @@ public class ShuffleModel
    private static final String BUILD_REPORT_FILE = "bugs/buildReport.xml";
    private static final String BUILD_REPORT_RESOURCE = "config/buildReport.xml";
    private static final String BUG_DETAILS_FILE = "bugs/bugDetails.txt";
+   // Constants
+   public static final int MAX_SCORE = 9999999;
    // config keys
    private static final String KEY_AUTO_COMPUTE = "AUTO_COMPUTE";
    private static final String KEY_NUM_FEEDERS = "NUM_FEEDERS";
@@ -1277,7 +1279,7 @@ public class ShuffleModel
     */
    protected boolean setCurrentScore(int score) {
       return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_CURRENT_SCORE,
-            Math.min(Math.max(0, score), 99999));
+            Math.min(Math.max(0, score), MAX_SCORE));
    }
    
    /**
