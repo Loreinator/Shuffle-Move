@@ -23,6 +23,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +43,7 @@ import shuffle.fwk.EntryMode;
 import shuffle.fwk.ShuffleModel;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.data.Board;
+import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.gui.user.FocusRequester;
@@ -74,6 +77,8 @@ public class GridPanel extends JPanel {
    private EntryMode mode;
    private FocusRequester focusRequester;
    private JPanel content;
+   
+   private SpeciesPaint transferIcon = SpeciesPaint.AIR;
    
    public GridPanel(GridPanelUser user, FocusRequester focusRequester) {
       super(new GridBagLayout());
@@ -162,6 +167,12 @@ public class GridPanel extends JPanel {
          final int col = coords.get(1);
          Indicator<SpeciesPaint> indicator = cellMap.get(pos);
          if (indicator != null) {
+            indicator.addMouseWheelListener(new MouseWheelListener() {
+               @Override
+               public void mouseWheelMoved(MouseWheelEvent e) {
+                  swapPaintAt(row, col);
+               }
+            });
             indicator.addMouseListener(new PressOrClickMouseAdapter() {
                private void handlePress(boolean erase) {
                   EntryMode currentMode = getUser().getCurrentMode();
@@ -176,6 +187,11 @@ public class GridPanel extends JPanel {
                @Override
                protected void onRight(MouseEvent e) {
                   handlePress(true);
+               }
+               
+               @Override
+               protected void onMiddle(MouseEvent e) {
+                  swapPaintAt(row, col);
                }
                
                @Override
@@ -272,6 +288,19 @@ public class GridPanel extends JPanel {
          content.repaint();
       }
       return changed;
+   }
+
+   /**
+    * @param row
+    * @param col
+    */
+   public void swapPaintAt(final int row, final int col) {
+      SpeciesPaint newTransfer = getUser().getPaintAt(row, col);
+      if (newTransfer.getSpecies().equals(Species.METAL)) {
+         newTransfer = new SpeciesPaint(Species.METAL_5, newTransfer.isFrozen(), newTransfer.isMega());
+      }
+      getUser().paintAt(transferIcon, row, col);
+      transferIcon = newTransfer;
    }
    
 }

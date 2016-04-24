@@ -47,6 +47,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 	- Increased score display limit to 999,999
 	- Added the google doc link for the mega guide for Pokemon Shuffle
 	- Added icon for Greninja (Ash's)
+	- Added functionality for manipulating icons on the board: Middle click (aka Mouse Button 2) or scroll wheel will swap the selected SpeciesPaint with the stored icon. The stored icon defaults to an empty cell.
 * **v0.3.50 – 2016-04-16**
 	- Fixed Mega Charizard X's type
 	- Fixed bugs with Mega Progress in Survival Mode
