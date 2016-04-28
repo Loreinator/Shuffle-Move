@@ -202,6 +202,8 @@ RESOURCE Murkrow img/icons/198.png
 RESOURCE Slowking img/icons/199.png
 RESOURCE Misdreavus img/icons/200.png
 RESOURCE Unown img/icons/201.png
+RESOURCE Unown-26 img/icons/201-26.png
+RESOURCE Unown-27 img/icons/201-27.png
 RESOURCE Wobbuffet img/icons/202.png
 RESOURCE Girafarig img/icons/203.png
 RESOURCE Pineco img/icons/204.png
@@ -727,6 +729,7 @@ RESOURCE Yveltal img/icons/717.png
 RESOURCE Zygarde img/icons/718.png
 RESOURCE Zygarde-10 img/icons/718-10.png
 RESOURCE Zygarde-50 img/icons/718.png
+RESOURCE Zygarde-c img/icons/718-c.png
 RESOURCE Diancie img/icons/719.png
 RESOURCE Mega_Venusaur img/icons/003-m.png
 RESOURCE Mega_Charizard_x img/icons/006-m.png
