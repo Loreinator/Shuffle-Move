@@ -98,6 +98,11 @@ public class ImageManager extends ConfigManager implements I18nUser {
       super(manager);
    }
    
+   @Override
+   protected boolean shouldUpdate() {
+      return true;
+   }
+   
    /**
     * @return the iconMap
     */

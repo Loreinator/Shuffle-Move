@@ -107,6 +107,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_LINKS = "menuitem.links";
    private static final String KEY_LATEST_LINK = "menuitem.latest";
    private static final String KEY_SUBREDDIT_LINK = "menuitem.subreddit";
+   private static final String KEY_GUIDE_LINK = "menuitem.guide";
    
    // config keys
    public static final String KEY_AVAILABLE_LOCALES = "AVAILABLE_LOCALES";
@@ -114,6 +115,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    // Hard-coded to avoid tampering
    public static final String LATEST_LINK = "https://github.com/Loreinator/Shuffle-Move/releases/latest";
    public static final String SUBREDDIT_LINK = "https://www.reddit.com/r/ShuffleMove/";
+   public static final String GUIDE_LINK = "https://docs.google.com/spreadsheets/d/1hF-TquHrYSY4dP8K_LUsd13HXBx9ck_klASiNKrGVck/htmlview#";
    
    private ShuffleMenuUser user;
    private JCheckBoxMenuItem autoComputeItem;
@@ -430,6 +432,9 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       
       MenuAction subredditAction = new MenuAction(() -> getString(KEY_SUBREDDIT_LINK), e -> openLink(SUBREDDIT_LINK));
       addMenuAction(menu, subredditAction);
+      
+      MenuAction guideAction = new MenuAction(() -> getString(KEY_GUIDE_LINK), e -> openLink(GUIDE_LINK));
+      addMenuAction(menu, guideAction);
       
       add(menu);
    }

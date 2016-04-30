@@ -2539,6 +2539,62 @@ public enum Effect {
       }
       
    },
+   SCIZOR {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return 10;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            task.setIsRandom();
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            int row1 = 1 + getRandomInt(3); // [1,3]
+            int row2 = 4 + getRandomInt(3); // [4,6]
+            effect.addPlannedOptions(Arrays.asList(row1, 1, row2, 1));
+            if (row2 >= 6) {
+               row2--;
+            }
+            effect.addPlannedOptions(Arrays.asList(row1 + 1, 2, row2 + 1, 2));
+            for (int col = 3; col <= Board.NUM_COLS; col += 2) {
+               effect.addPlannedOptions(Arrays.asList(row1, col, row2, col));
+               effect.addPlannedOptions(Arrays.asList(row1 + 1, col + 1, row2 + 1, col + 1));
+            }
+            return effect;
+         }
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         // Mega Ampharos is a honey badger. It makes its own selection and doesn't care
+         // what the effect or task are. Its a honey badger so it doesn't give a %*(@.
+         return getNextPlan(comboEffect);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 12;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+   },
    /**
     * A random lightning strike erases a jagged line of blocks. This line is produced by
     * independently tracking two ignorant strikes which begin at the left column, and each tick

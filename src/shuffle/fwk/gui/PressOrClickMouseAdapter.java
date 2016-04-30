@@ -37,6 +37,10 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
    
    protected abstract void onRight(MouseEvent e);
    
+   protected void onMiddle(MouseEvent e) {
+      // do nothing by default.
+   }
+   
    protected abstract void onEnter();
    
    protected boolean ignoreClick() {
@@ -53,6 +57,8 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
       } else if (SwingUtilities.isLeftMouseButton(e)) {
          // System.out.println("Left click");
          onLeft(e);
+      } else if (SwingUtilities.isMiddleMouseButton(e)) {
+         onMiddle(e);
       }
    }
    
@@ -65,6 +71,8 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
          } else if (b1Down(e)) {
             // System.out.println("Left entered");
             onLeft(e);
+         } else if (b2Down(e)) {
+            onMiddle(e);
          }
       }
    }
@@ -77,6 +85,10 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
    
    private boolean b1Down(MouseEvent e) {
       return (e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) != 0;
+   }
+   
+   private boolean b2Down(MouseEvent e) {
+      return (e.getModifiersEx() & InputEvent.BUTTON2_DOWN_MASK) != 0;
    }
    
    private boolean b3Down(MouseEvent e) {
