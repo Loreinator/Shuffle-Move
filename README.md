@@ -43,7 +43,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.51 – 2016-04-**
+* **v0.3.51 – 2016-04-30**
 	- Increased score display limit to 999,999
 	- Added the google doc link for the mega guide for Pokemon Shuffle
 	- Added icon for Greninja (Ash's)
