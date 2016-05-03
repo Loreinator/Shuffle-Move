@@ -1,0 +1,13 @@
+STAGE SP_497
+ROW_1 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Volbeat,Air,Volbeat,Air,Volbeat
+FROW_2 false,false,false,false,false,false
+ROW_3 Volbeat,Air,Volbeat,Air,Volbeat,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Volbeat,Air,Volbeat,Air,Volbeat,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Volbeat,Air,Volbeat,Air,Volbeat
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_6 false,false,false,false,false,false

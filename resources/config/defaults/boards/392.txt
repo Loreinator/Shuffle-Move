@@ -1,0 +1,13 @@
+STAGE 392
+ROW_1 Huntail,Wood,Wood,Wood,Wood,Gorebyss
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Huntail,Wood,Wood,Gorebyss,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Huntail,Wood,Wood,Wood,Wood,Gorebyss
+FROW_3 false,false,false,false,false,false
+ROW_4 Clamperl,Air,Clamperl,Clamperl,Air,Clamperl
+FROW_4 false,false,false,false,false,false
+ROW_5 Huntail,Wood,Wood,Wood,Wood,Gorebyss
+FROW_5 false,false,false,false,false,false
+ROW_6 Huntail,Wood,Huntail,Gorebyss,Wood,Gorebyss
+FROW_6 false,false,false,false,false,false

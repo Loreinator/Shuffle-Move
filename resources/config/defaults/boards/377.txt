@@ -1,0 +1,13 @@
+STAGE 377
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Air,Air,Air,Air,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Metal,Air,Air,Wood,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Air,Wood,Metal,Air,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Metal,Air,Air,Wood,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false
