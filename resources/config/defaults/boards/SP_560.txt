@@ -1,0 +1,13 @@
+STAGE SP_560
+ROW_1 Wood,Solrock,Air,Air,Solrock,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Solrock,Solrock,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Solrock,Air,Wood,Wood,Air,Solrock
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Solrock,Wood,Wood,Solrock,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Solrock,Air,Air,Solrock,Wood
+FROW_6 false,false,false,false,false,false

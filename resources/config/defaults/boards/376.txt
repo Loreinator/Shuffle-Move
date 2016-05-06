@@ -1,0 +1,13 @@
+STAGE 376
+ROW_1 Wood,Wood,Metal,Metal,Wood,Wood
+FROW_1 true,true,true,true,true,true
+ROW_2 Wood,Wood,Scrafty,Scraggy,Wood,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Wood,Scraggy,Scrafty,Wood,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Scraggy,Scrafty,Scraggy,Scrafty,Wood
+FROW_4 false,false,true,true,false,false
+ROW_5 Scraggy,Scrafty,Scraggy,Scrafty,Scraggy,Scrafty
+FROW_5 false,false,true,true,false,false
+ROW_6 Wood,Scraggy,Scrafty,Scraggy,Scrafty,Wood
+FROW_6 false,false,false,false,false,false
