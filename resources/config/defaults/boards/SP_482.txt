@@ -1,0 +1,13 @@
+STAGE SP_482
+ROW_1 Oddish,Oddish,Vileplume,Vileplume,Gloom,Gloom
+FROW_1 false,false,false,false,false
+ROW_2 Gloom,Oddish,Vileplume,Gloom,Oddish,Vileplume
+FROW_2 false,false,false,false,false
+ROW_3 Oddish,Vileplume,Oddish,Vileplume,Oddish,Vileplume
+FROW_3 false,false,false,false,false
+ROW_4 Vileplume,Oddish,Gloom,Vileplume,Gloom,Gloom
+FROW_4 false,false,false,false,false
+ROW_5 Vileplume,Gloom,Vileplume,Gloom,Vileplume,Gloom
+FROW_5 false,false,false,false,false
+ROW_6 Gloom,Gloom,Vileplume,Vileplume,Oddish,Oddish
+FROW_6 false,false,false,false,false
