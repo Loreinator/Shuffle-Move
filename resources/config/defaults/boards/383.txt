@@ -1,0 +1,13 @@
+STAGE 383
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Unown-26,Metal,Metal,Metal,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Unown-26,Unown-27,Unown-26,Unown-27,Unown-26,Metal
+FROW_3 false,true,false,false,false,false
+ROW_4 Metal,Unown-26,Metal,Metal,Unown-27,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Unown-26,Unown-27,Unown-26,Metal,Unown-26,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Metal,Metal,Unown-26,Unown-27,Unown-26
+FROW_6 false,false,false,false,false,false

@@ -43,6 +43,11 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
+* **v0.3.53 – 2016-05-10**
+	- Added default boards for the update of April 26th 2016
+	- Corrected Chinesse translations for Zygarde Formes
+	- Stage name for main stage 150 for 3DS has been corrected to "Mega Mewtwo Y"
+	- Mega Rayquaza effect fix for issue #130
 * **v0.3.52 – 2016-05-01**
 	- Added Azelf and corrected Unown ?'s entry number to allow it to be visible.
 * **v0.3.51 – 2016-04-30**

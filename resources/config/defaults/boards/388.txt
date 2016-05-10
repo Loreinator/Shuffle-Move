@@ -1,0 +1,13 @@
+STAGE 388
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Air,Wood,Wood,Air,Wood
+FROW_3 false,false,false,false,false,false
+ROW_3 Wood,Air,Wood,Wood,Air,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Wood,Air,Air,Wood,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

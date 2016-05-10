@@ -1,0 +1,13 @@
+STAGE EX40
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 false,false,false,false,false,false
+ROW_2 Ludicolo,Ludicolo,Air,Air,Ludicolo,Ludicolo
+FROW_2 true,true,false,false,true,true
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Ludicolo,Ludicolo,Air,Air,Ludicolo,Ludicolo
+FROW_5 true,true,false,false,true,true
+ROW_6 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_6 false,false,false,false,false,false

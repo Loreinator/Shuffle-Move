@@ -2319,7 +2319,7 @@ public enum Effect {
          } else {
             effect = new ActivateMegaComboEffect(comboEffect);
             toMatch = getRandomSpeciesOfOtherTypeFrom(task.getState().getSpeciesType(dontMatch),
-                  task.getState().getBoard(), task);
+                  task.getState().getBoard(), task, true);
             effect.setTargetSpecies(toMatch);
          }
          return effect;
@@ -2339,7 +2339,7 @@ public enum Effect {
          } else {
             Species dontMatch = task.getEffectSpecies(comboEffect.getCoords());
             toMatch = getRandomSpeciesOfOtherTypeFrom(task.getState().getSpeciesType(dontMatch),
-                  task.getState().getBoard(), task);
+                  task.getState().getBoard(), task, true);
          }
          
          List<Integer> toErase = Collections.emptyList();
@@ -3125,7 +3125,12 @@ public enum Effect {
     * @return
     */
    protected Species getRandomSpeciesOfOtherTypeFrom(PkmType type, Board board, SimulationTask task) {
-      List<Species> options = getSpeciesOfOtherTypeFrom(type, board, task);
+      return getRandomSpeciesOfOtherTypeFrom(type, board, task, false);
+   }
+   
+   protected Species getRandomSpeciesOfOtherTypeFrom(PkmType type, Board board, SimulationTask task,
+         boolean includeActive) {
+      List<Species> options = getSpeciesOfOtherTypeFrom(type, board, task, includeActive);
       if (options.size() > 1) {
          task.setIsRandom();
       }
@@ -3145,13 +3150,19 @@ public enum Effect {
     * @return
     */
    public List<Species> getSpeciesOfOtherTypeFrom(PkmType type, Board board, SimulationTask task) {
+      return getSpeciesOfOtherTypeFrom(type, board, task, false);
+   }
+   
+   public List<Species> getSpeciesOfOtherTypeFrom(PkmType type, Board board, SimulationTask task,
+         boolean includeActive) {
       List<Species> options = new ArrayList<Species>();
       Set<Species> contained = new HashSet<Species>();
       SimulationState state = task.getState();
       for (int row = 1; row <= Board.NUM_ROWS; row++) {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             Species cur = board.getSpeciesAt(row, col);
-            if (!contained.contains(cur) && !state.getSpeciesType(cur).equals(type) && !task.isActive(row, col)
+            if (!contained.contains(cur) && !state.getSpeciesType(cur).equals(type)
+                  && (includeActive || !task.isActive(row, col))
                   && cur.getEffect().canLevel()) {
                contained.add(cur);
                options.add(cur);
