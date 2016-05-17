@@ -124,28 +124,42 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
       setSelectedItem(toSelect);
    }
    
+   /**
+    * Converts a given string, s, from the Enumerator name to an nicely legible name. Any occurrence
+    * of "_P_" becomes a "+_". Then, any trailing "_P" become "+". Finally, all "_" are replaced by
+    * spaces and the string is fully capitalized.
+    * 
+    * @param s
+    * @return
+    */
    public static String convertToBox(String s) {
-      String cap = WordUtils.capitalizeFully(s);
-      String temp = cap.replaceAll("_", " ");
-      if (temp.endsWith(" p p")) {
-         return temp.substring(0, temp.length() - 4) + "++";
-      } else if (temp.endsWith(" p")) {
-         return temp.substring(0, temp.length() - 2) + "+";
-      } else {
-         return temp;
+      String temp = s.replaceAll("_P_", "+_");
+      if (temp.endsWith("_P")) {
+         temp = temp.substring(0, temp.length() - 2) + "+";
       }
+      temp = temp.replaceAll("_", " ");
+      return WordUtils.capitalizeFully(temp);
    }
    
+   /**
+    * Reverses the effect of {@link #convertToBox(String)}. Replaces all "+" with "_P", and all
+    * spaces with "_".
+    * 
+    * @param s
+    * @return
+    */
    public static String convertFromBox(String s) {
-      String ret = s.toUpperCase();
-      String temp = ret.replaceAll(" ", "_");
-      if (temp.endsWith("++")) {
-         return temp.substring(0, temp.length() - 2) + "_P_P";
-      } else if (temp.endsWith("+")) {
-         return temp.substring(0, temp.length() - 1) + "_P";
-      } else {
-         return temp;
+      StringBuilder sb = new StringBuilder();
+      for (char c : s.toCharArray()) {
+         if (c == '+') {
+            sb.append("_P");
+         } else if (c == ' ') {
+            sb.append('_');
+         } else {
+            sb.append(Character.toUpperCase(c));
+         }
       }
+      return sb.toString();
    }
    
    public Effect getSelectedEffect() {

@@ -1103,6 +1103,24 @@ public enum Effect {
       }
    },
    /**
+    * Making a T-shaped match deals more damage than usual.
+    */
+   T_BOOST {
+      
+   },
+   /**
+    * Making a +-shaped match deals more damage than usual.
+    */
+   _P_BOOST {
+      
+   },
+   /**
+    * Boosts damage done by combos by 50% if the foe is asleep.
+    */
+   SLEEP_COMBO {
+      
+   },
+   /**
     * Same as {@link KANGASKHAN} but the mega threshold is slightly lower.
     */
    VENUSAUR {
