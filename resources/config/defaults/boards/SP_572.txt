@@ -1,0 +1,13 @@
+STAGE SP_572
+ROW_1 Elgyem,Air,Air,Air,Air,Elgyem
+FROW_1 false,false,false,false,false,false
+ROW_2 Elgyem,Air,Air,Air,Air,Elgyem
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Wood,Air,Air,Wood,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Elgyem,Air,Air,Air,Air,Elgyem
+FROW_4 false,false,false,false,false,false
+ROW_5 Elgyem,Air,Air,Air,Air,Elgyem
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Wood,Air,Air,Wood,Air
+FROW_6 false,false,false,false,false,false
