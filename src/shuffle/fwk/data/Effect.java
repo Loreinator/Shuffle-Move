@@ -243,6 +243,11 @@ public enum Effect {
     */
    CROWD_CONTROL {
       
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
       /**
        * {@inheritDoc}
        */
@@ -274,6 +279,11 @@ public enum Effect {
     */
    COUNTERATTACK {
       
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
       /**
        * {@inheritDoc}
        */
@@ -298,6 +308,11 @@ public enum Effect {
     * Does more damage when the opponent has more HP left.
     */
    VITALITY_DRAIN {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -721,6 +736,11 @@ public enum Effect {
     */
    CROWD_POWER {
       
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
       /**
        * {@inheritDoc}
        */
@@ -1078,6 +1098,11 @@ public enum Effect {
    POISONOUS_MIST {
       
       @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
+      @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
       }
@@ -1086,6 +1111,11 @@ public enum Effect {
     * Does more damage when the opponent has more HP left.
     */
    DOWNPOUR {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -2243,6 +2273,11 @@ public enum Effect {
    STEELIX {
       
       @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
+      @Override
       public boolean isPersistent() {
          return true;
       }
@@ -2274,6 +2309,11 @@ public enum Effect {
     * order and timing as for Gengar.
     */
    AERODACTYL {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
       
       @Override
       public boolean isPersistent() {
@@ -3397,6 +3437,9 @@ public enum Effect {
       double typeModifier = task.getTypeModifier(effectSpecies);
       NumberSpan value = getBonusValue(comboEffect, task);
       NumberSpan bonusScore = getBonusScoreFor(basicScore, value, typeModifier);
+      if (isAttackPowerEffective() && task.getState().getCore().isAttackPowerUp()) {
+         bonusScore = bonusScore.multiplyBy(2.0);
+      }
       if (bonusScore.getAverage() > 0) {
          task.addScore(new NumberSpan(bonusScore));
       }
@@ -3554,6 +3597,9 @@ public enum Effect {
          Number value = supplier.get();
          if (value.doubleValue() > 0) {
             NumberSpan score = new NumberSpan(0, value, getOdds(task, comboEffect.getNumBlocks()));
+            if (isAttackPowerEffective() && task.getState().getCore().isAttackPowerUp()) {
+               score = score.multiplyBy(2.0);
+            }
             task.addScore(score);
          }
       }
@@ -3566,5 +3612,9 @@ public enum Effect {
             task.setSpecialTypeMultiplier(type, new NumberSpan(1, bonus, getOdds(task, comboEffect.getNumBlocks())));
          }
       }
+   }
+   
+   protected boolean isAttackPowerEffective() {
+      return true;
    }
 }
