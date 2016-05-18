@@ -43,6 +43,9 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
+* **v0.3.54 – 2016-05-**
+	- Updates and default boards for May 17th 2016
+	- Corrected Mega scores for the pattern clearing mega effects
 * **v0.3.53 – 2016-05-10**
 	- Added default boards for the update of April 26th 2016
 	- Corrected Chinesse translations for Zygarde Formes
