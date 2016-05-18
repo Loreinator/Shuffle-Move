@@ -1304,8 +1304,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         // Mega Ampharos makes its own selection and doesn't care about the effect or task state.
-         return getNextPlan(comboEffect);
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
       }
       
       @Override
@@ -1342,7 +1341,7 @@ public enum Effect {
       
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getNextPlan(comboEffect);
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
       }
       
       @Override
@@ -1508,22 +1507,8 @@ public enum Effect {
       
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         List<Integer> plan = getNextPlan(comboEffect);
-         List<Integer> ret = null;
-         if (plan != null) {
-            ret = new ArrayList<Integer>();
-            // Only erase inactive blocks.
-            // we will still take a turn if the plans is empty or
-            // there was no inactive block
-            for (int i = 0; i * 2 + 1 < plan.size(); i++) {
-               int row = plan.get(i * 2);
-               int col = plan.get(i * 2 + 1);
-               if (!task.getState().isFallingAt(row, col)) {
-                  ret.addAll(Arrays.asList(row, col));
-               }
-            }
-         }
-         return ret;
+         return task.filterPlanBy(getNextPlan(comboEffect), false,
+               (r, c, s) -> (!s.getEffect().equals(AIR) && !task.isFalling(r, c)));
       }
       
       @Override
@@ -1572,7 +1557,7 @@ public enum Effect {
       
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getNextPlan(comboEffect);
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
       }
       
       @Override
@@ -2598,9 +2583,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         // Mega Ampharos is a honey badger. It makes its own selection and doesn't care
-         // what the effect or task are. Its a honey badger so it doesn't give a %*(@.
-         return getNextPlan(comboEffect);
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
       }
       
       @Override
@@ -2661,9 +2644,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         // Mega Ampharos is a honey badger. It makes its own selection and doesn't care
-         // what the effect or task are. Its a honey badger so it doesn't give a %*(@.
-         return getNextPlan(comboEffect);
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
       }
       
       @Override
@@ -2725,9 +2706,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         // Mega Ampharos is a honey badger. It makes its own selection and doesn't care
-         // what the effect or task are. Its a honey badger so it doesn't give a %*(@.
-         return getNextPlan(comboEffect);
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
       }
       
       @Override
@@ -2903,7 +2882,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getNextPlan(comboEffect);
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
       }
       
       @Override

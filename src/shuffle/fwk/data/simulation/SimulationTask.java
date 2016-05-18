@@ -1143,6 +1143,27 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       return match;
    }
    
+   public List<Integer> filterPlanBy(List<Integer> plan, boolean includeActive,
+         TriFunction<Integer, Integer, Species, Boolean> function) {
+      if (plan == null) {
+         return null;
+      }
+      List<Integer> ret = new ArrayList<Integer>();
+      for (int i = 0; i * 2 + 1 < plan.size(); i++) {
+         int row = plan.get(i * 2);
+         int col = plan.get(i * 2 + 1);
+         if (!includeActive && isActive(row, col)) {
+            continue;
+         }
+         Species thisSpecies = getState().getBoard().getSpeciesAt(row, col);
+         if (function.apply(row, col, thisSpecies)) {
+            ret.add(row);
+            ret.add(col);
+         }
+      }
+      return ret;
+   }
+   
    public Effect getEffectFor(Species s) {
       Effect effect = s.getEffect();
       Effect megaEffect = s.getMegaEffect();
