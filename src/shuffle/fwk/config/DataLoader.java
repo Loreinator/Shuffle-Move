@@ -24,7 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import shuffle.fwk.config.interpreter.DefaultInterpreter;
 
@@ -33,8 +32,6 @@ import shuffle.fwk.config.interpreter.DefaultInterpreter;
  *
  */
 public class DataLoader<Y> {
-   @SuppressWarnings("unused")
-   private static final Logger LOG = Logger.getLogger(DataLoader.class.getName());
    private final List<String> fileLocations;
    private final List<String> resourceLocations;
    private boolean shouldReload = true;
@@ -45,9 +42,7 @@ public class DataLoader<Y> {
     * a useless object.
     * 
     * @param resources
-    *           TODO
     * @param files
-    *           TODO
     */
    public DataLoader(List<String> resources, List<String> files) {
       if (resources == null) {

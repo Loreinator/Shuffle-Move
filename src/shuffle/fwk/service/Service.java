@@ -49,7 +49,7 @@ public interface Service<Y extends Object> {
     * Performs setup for the service's GUI.
     * 
     * @param owner
-    *           TODO
+    *           The owner (read:parent) of this service.
     */
    public void setupGUI(Frame owner);
    

@@ -17,8 +17,6 @@
  */
 package shuffle.test.fwk.config.manager;
 
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,19 +58,11 @@ public class EffectManagerTest {
          List<Double> odds = new ArrayList<Double>();
          for (int i = 0; i <= 3; i++) {
             manager.getOddsMap();
-            odds.add(manager.getOdds(e, i + 3));
+            odds.add(manager.getOdds(e, i + 3, 1));
          }
          System.out.printf("Effect %s has a string value of: %s. The odds are registered as: %s%n", e,
                manager.getStringValue(e.toString()), odds.toString());
       }
-   }
-   
-   /**
-    * Test method for {@link shuffle.fwk.config.ConfigManager#getStringValues()}.
-    */
-   @Test
-   public final void testGetStringValues() {
-      fail("Not yet implemented"); // TODO
    }
    
 }

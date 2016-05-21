@@ -464,12 +464,13 @@ public enum EntryType {
     * Parses the given string into the value for this entry type. Exceptions will be thrown if the
     * value is not valid in some way.
     * 
+    * @param key
+    *           The string key for the entry
     * @param value
-    *           TODO
-    * @param value
-    * @param value
-    * @return
+    *           The value to be parsed
+    * @return The parsed value
     * @throws Exception
+    *            If anything goes wrong with the parse, i.e. invalid data.
     */
    public abstract Object parseValue(String key, String value) throws Exception;
    

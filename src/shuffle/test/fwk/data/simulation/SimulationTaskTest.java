@@ -30,22 +30,6 @@ import shuffle.fwk.data.simulation.SimulationTask;
 public class SimulationTaskTest {
    
    /**
-    * Test method for {@link shuffle.fwk.data.simulation.SimulationTask#getComboForLimits(java.util.List)}.
-    */
-   @Test
-   public final void testGetComboForLimits() {
-      // fail("Not yet implemented"); // TODO
-   }
-   
-   /**
-    * Test method for {@link shuffle.fwk.data.simulation.SimulationTask#getLimits(java.util.List)}.
-    */
-   @Test
-   public final void testGetLimits() {
-      // fail("Not yet implemented"); // TODO
-   }
-   
-   /**
     * Test method for {@link shuffle.fwk.data.simulation.SimulationTask#getComboMultiplier(int)}.
     */
    @Test

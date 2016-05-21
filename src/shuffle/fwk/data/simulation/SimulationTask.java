@@ -828,6 +828,13 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       return ret;
    }
    
+   /**
+    * Given a set of coordinates, returns a pair that denotes the lowest row,col and highest row,col
+    * pair to bound the coordinates (inclusive).
+    * 
+    * @param coords
+    * @return
+    */
    public static List<Integer> getLimits(List<Integer> coords) {
       int minRow = coords.get(0);
       int minCol = coords.get(1);
