@@ -799,3 +799,4 @@ RESOURCE Metal_2 img/icons/metalIc_2.png
 RESOURCE Metal_1 img/icons/metalIc_1.png
 RESOURCE Wood img/icons/woodIc.png
 RESOURCE Candy img/icons/candy.png
+RESOURCE Skill_Booster img/icons/Skill_Booster.png

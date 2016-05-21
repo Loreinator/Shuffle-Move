@@ -18,6 +18,8 @@
 
 package shuffle.fwk.data;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -87,6 +89,16 @@ public class Board {
          return Species.AIR;
       }
       return species[row - 1][column - 1];
+   }
+   
+   public Set<Species> getSpeciesPresent() {
+      Set<Species> ret = new HashSet<Species>();
+      for (int row = 1; row <= NUM_ROWS; row++) {
+         for (int col = 1; col <= NUM_COLS; col++) {
+            ret.add(getSpeciesAt(row, col));
+         }
+      }
+      return ret;
    }
    
    public boolean setSpeciesAt(int row, int column, Species s) {

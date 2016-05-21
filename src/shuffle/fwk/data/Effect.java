@@ -45,7 +45,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -55,7 +55,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -65,7 +65,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -74,7 +74,7 @@ public enum Effect {
    POWER_OF_4 {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -83,7 +83,7 @@ public enum Effect {
    POWER_OF_5 {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -93,12 +93,12 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
       }
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -112,7 +112,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -126,7 +126,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -143,12 +143,14 @@ public enum Effect {
             double max = 9.0 / 3.0;
             // The average boost compared to 1.0
             double normalAvgBoost = 2.0 / 3.0;
-            double rate = getOdds(task, comboEffect.getNumBlocks());
+            double rate = getOdds(task, comboEffect);
             double avg = 1 + (normalAvgBoost * rate);
             // Which are merged into a single multiplier here,
             // the min is the lowest it could go, the max is the highest,
             // the 'avg' is the net average multiplier
             NumberSpan multiplier = new NumberSpan(min, max, avg, 1);
+            // Multiply by the base multiplier if skill is leveled up
+            multiplier = multiplier.multiplyBy(getMultiplier(task, comboEffect));
             return multiplier.multiplyBy(super.getScoreMultiplier(comboEffect, task));
          } else {
             // If it CAN'T occur, then don't incorporate it.
@@ -164,12 +166,12 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
       }
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -179,12 +181,12 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() <= 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
       }
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -194,7 +196,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, getBonus(task, comboEffect));
       }
    },
    /**
@@ -204,7 +206,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.DRAGON, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.DRAGON, getBonus(task, comboEffect));
       }
    },
    /**
@@ -214,7 +216,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FIGHTING, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.FIGHTING, getBonus(task, comboEffect));
       }
       
    },
@@ -225,7 +227,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FAIRY, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.FAIRY, getBonus(task, comboEffect));
       }
    },
    /**
@@ -235,7 +237,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.DARK, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.DARK, getBonus(task, comboEffect));
       }
    },
    /**
@@ -248,9 +250,6 @@ public enum Effect {
          return false;
       }
       
-      /**
-       * {@inheritDoc}
-       */
       @Override
       public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
          NumberSpan ret = new NumberSpan();
@@ -263,7 +262,7 @@ public enum Effect {
                               effectSpecies)
                         && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(getMultiplier(task));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
          }
          return ret;
       }
@@ -294,7 +293,7 @@ public enum Effect {
             Board board = task.getState().getBoard();
             int num = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption())
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(getMultiplier(task));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
          }
          return ret;
       }
@@ -326,18 +325,36 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
     * Combos do more damage if the opponent is Ghost type.
     */
    FEARLESS {
-      // TODO Apparently, this causes attacks to be super effective. Is it actually this, or is it a
-      // flat multiplier?
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return PkmType.GHOST.equals(task.getState().getCore().getStage().getType())
+               && super.canActivate(comboEffect, task);
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         double multiplier = getMultiplier(task, comboEffect);
+         Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+         PkmType effectType = task.getState().getSpeciesType(effectSpecies);
+         PkmType stageType = task.getState().getCore().getStage().getType();
+         double typeEffectiveness = PkmType.getMultiplier(effectType, stageType);
+         if (typeEffectiveness < 2.0 && typeEffectiveness > 0.0) {
+            multiplier = multiplier * (2.0 / typeEffectiveness);
+         }
+         return getMultiplier(comboEffect, task, multiplier - 1.0);
+      }
    },
    /**
-    * Does more damage against Flying, Bug, or Fairy types.
+    * Does more damage against Flying, Bug, or Fairy types. Attacks become super effective in these
+    * cases.
     */
    SWAT {
       
@@ -352,7 +369,15 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         double multiplier = getMultiplier(task, comboEffect);
+         Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+         PkmType effectType = task.getState().getSpeciesType(effectSpecies);
+         PkmType stageType = task.getState().getCore().getStage().getType();
+         double typeEffectiveness = PkmType.getMultiplier(effectType, stageType);
+         if (typeEffectiveness < 2.0 && typeEffectiveness > 0.0) {
+            multiplier = multiplier * (2.0 / typeEffectiveness);
+         }
+         return getMultiplier(comboEffect, task, multiplier - 1.0);
       }
    },
    /**
@@ -365,15 +390,16 @@ public enum Effect {
          if (!super.canActivate(comboEffect, task)) {
             return false;
          }
-         Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-         PkmType effectType = task.getState().getSpeciesType(effectSpecies);
-         PkmType stageType = task.getState().getCore().getStage().getType();
-         return PkmType.getMultiplier(effectType, stageType) < 1.0;
+         return isNVE(comboEffect, task);
       }
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         double multiplier = getMultiplier(task, comboEffect);
+         if (isNVE(comboEffect, task)) {
+            multiplier = multiplier * 2;
+         }
+         return getMultiplier(comboEffect, task, multiplier - 1.0);
       }
    },
    /**
@@ -387,7 +413,7 @@ public enum Effect {
             Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect);
                if (matches.size() / 2 > 1 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -413,12 +439,13 @@ public enum Effect {
             Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 2 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 2);
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toErase = new ArrayList<Integer>();
                   for (Integer i : randoms) {
                      int row = matches.get(i * 2);
@@ -435,7 +462,7 @@ public enum Effect {
     * Occasionally changes when a foe will next disrupt your play.
     */
    PRANK {
-   
+      // TODO when disruption timers are implemented
    },
    /**
     * Occasionally erases one of the foe's disruptions on the board.
@@ -449,7 +476,7 @@ public enum Effect {
             List<Integer> matches = task.findMatches(36, false,
                   (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
+               double odds = getOdds(task, comboEffect);
                if (matches.size() > 2 || odds < 1.0) {
                   task.setIsRandom();
                }
@@ -476,12 +503,13 @@ public enum Effect {
             List<Integer> match = task.findMatches(36, false,
                   (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
             if (!match.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (match.size() / 2 > 2 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (match.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, 2);
+                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, numSwapped);
                   List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
                   for (int i : randoms) {
                      int row = match.get(i * 2);
@@ -536,12 +564,22 @@ public enum Effect {
             }
          }
       }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
    },
    /**
     * Clears clouds within 1 space.
     */
    CLOUD_CLEAR {
-   
+      // TODO when clouds are implemented
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
    },
    /**
     * Clears one unbreakable-block disruption without fail.
@@ -565,12 +603,43 @@ public enum Effect {
             }
          }
       }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
    },
    /**
     * Removes one non-Support Pokemon icon without fail. that means any pokemon that you were forced
     * to have by the stage.
     */
    EJECT {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (matches.size() / 2 > 1 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toErase = new ArrayList<Integer>(Arrays.asList(row, col));
+                  eraseBonus(task, toErase, true);
+               }
+            }
+         }
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
    },
    /**
     * Removes one barrier-type disruption without fail.
@@ -594,35 +663,74 @@ public enum Effect {
          }
       }
       
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
    },
    /**
-    * Can replace a disruption with one of your Pokemon.
+    * Can replace a disruption with this Pokemon.
     */
    SWAP {
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            List<Integer> matches = task.findMatches(36, false,
+ (r, c, s) -> s.getEffect().isDisruption());
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (matches.size() / 2 > 1 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toReplace = new ArrayList<Integer>(Arrays.asList(row, col));
+                  handleReplaceOf(comboEffect, task, toReplace, effectSpecies);
+               }
+            }
+         }
+      }
    },
    /**
     * Can delay your opponent's disruptions for a turn.
     */
    CHILL {
-   
+      // TODO when disruption timers are implemented
    },
    /**
     * Can delay your opponent's disruptions for a turn.
     */
    ASTONISH {
+      // TODO when disruption timers are implemented
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
    
    },
    /**
-    * Occasionally disrupts a Ground-type opponent's disruptions.
+    * Occasionally disrupts your opponent's disruptions.
     */
    FLAP {
+      // TODO when disruption timers are implemented
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
    
    },
    /**
     * Can delay your opponent's disruptions for a turn.
     */
    MIND_ZAP {
+      // TODO when disruption timers are implemented
    
    },
    /**
@@ -630,42 +738,47 @@ public enum Effect {
     * 50%.
     */
    BURN {
+      // TODO when disruption timers are implemented
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, getBonus(task, comboEffect));
       }
    },
    /**
     * Leaves the foe spooked.
     */
    SPOOKIFY {
+      // TODO when disruption timers are implemented
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, getBonus(task, comboEffect));
       }
    },
    /**
     * Has a chance of freezing an opponent.
     */
    FREEZE {
+      // TODO when disruption timers are implemented
       
       @Override
       protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.ICE, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.ICE, getBonus(task, comboEffect));
       }
    },
    /**
     * Inflicts the opponent with sleep for three turns, preventing it from using its distortion.
     */
    SLEEP_CHARM {
+      // TODO when disruption timers are implemented
    
    },
    /**
     * Leaves the foe paralyzed.
     */
    PARALYZE {
+      // TODO when disruption timers are implemented
    
    },
    /**
@@ -692,12 +805,12 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            double odds = getOdds(task, comboEffect.getNumBlocks());
+            double odds = getOdds(task, comboEffect);
             if (odds < 1.0) {
                task.setIsRandom();
             }
             if (odds >= Math.random()) {
-               task.getState().increaseMegaProgress(3);
+               task.getState().increaseMegaProgress((int) getMultiplier(task, comboEffect));
             }
          }
       }
@@ -709,7 +822,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -719,7 +832,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -728,7 +841,7 @@ public enum Effect {
    POWER_OF_5_P {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -741,9 +854,6 @@ public enum Effect {
          return false;
       }
       
-      /**
-       * {@inheritDoc}
-       */
       @Override
       public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
          NumberSpan ret = new NumberSpan();
@@ -756,7 +866,7 @@ public enum Effect {
                               effectSpecies)
                         && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
                   .size() / 2;
-            ret = new NumberSpan(0, num, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(getMultiplier(task));
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
          }
          return ret;
       }
@@ -773,7 +883,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.NORMAL, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.NORMAL, getBonus(task, comboEffect));
       }
    },
    /**
@@ -789,12 +899,12 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            double odds = getOdds(task, comboEffect.getNumBlocks());
+            double odds = getOdds(task, comboEffect);
             if (odds < 1.0) {
                task.setIsRandom();
             }
             if (odds >= Math.random()) {
-               task.getState().increaseMegaProgress(6);
+               task.getState().increaseMegaProgress((int) getMultiplier(task, comboEffect));
             }
          }
       }
@@ -812,12 +922,12 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            double odds = getOdds(task, comboEffect.getNumBlocks());
+            double odds = getOdds(task, comboEffect);
             if (odds < 1.0) {
                task.setIsRandom();
             }
             if (odds >= Math.random()) {
-               task.getState().increaseMegaProgress(9);
+               task.getState().increaseMegaProgress((int) getMultiplier(task, comboEffect));
             }
          }
       }
@@ -834,12 +944,13 @@ public enum Effect {
             List<Integer> match = task.findMatches(36, false,
                   (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
             if (!match.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (match.size() / 2 > 5 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (match.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, 5);
+                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, numSwapped);
                   List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
                   for (int i : randoms) {
                      int row = match.get(i * 2);
@@ -863,12 +974,13 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 3 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 3);
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toErase = new ArrayList<Integer>(randoms.size() * 2);
                   for (int i : randoms) {
                      toErase.add(matches.get(i * 2));
@@ -890,12 +1002,13 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 5 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 5);
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toErase = new ArrayList<Integer>(randoms.size() * 2);
                   for (int i : randoms) {
                      toErase.add(matches.get(i * 2));
@@ -911,16 +1024,18 @@ public enum Effect {
     * Clears 4 clouds within 1 space.
     */
    CLOUD_CLEAR_P {
+      // TODO when clouds are implemented
    
    },
    /**
     * Clears 5 clouds within 1 space.
     */
    CLOUD_CLEAR_P_P {
+      // TODO when clouds are implemented
    
    },
    /**
-    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurance is "Sometimes" and the
+    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurrence is "Sometimes" and the
     * number cleared is 3.
     */
    BLOCK_SMASH_P {
@@ -930,12 +1045,13 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 3 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 3);
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toErase = new ArrayList<Integer>();
                   for (Integer i : randoms) {
                      int row = matches.get(i * 2);
@@ -951,7 +1067,7 @@ public enum Effect {
       }
    },
    /**
-    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurance is "Sometimes" and the
+    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurrence is "Sometimes" and the
     * number cleared is 5.
     */
    BLOCK_SMASH_P_P {
@@ -961,12 +1077,13 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 5 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 5);
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toErase = new ArrayList<Integer>();
                   for (Integer i : randoms) {
                      int row = matches.get(i * 2);
@@ -986,12 +1103,62 @@ public enum Effect {
     * to have by the stage.
     */
    EJECT_P {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  eraseBonus(task, toErase, true);
+               }
+            }
+         }
+      }
    },
    /**
     * Removes 5 non-Support Pokemon icon without fail. that means any pokemon that you were forced
     * to have by the stage.
     */
    EJECT_P_P {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  eraseBonus(task, toErase, true);
+               }
+            }
+         }
+      }
    },
    /**
     * Removes 3 barrier-type disruption without fail.
@@ -1004,12 +1171,13 @@ public enum Effect {
             Board board = task.getState().getBoard();
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c));
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 3 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 3);
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toUnfreeze = new ArrayList<Integer>();
                   for (Integer i : randoms) {
                      int row = matches.get(i * 2);
@@ -1021,7 +1189,6 @@ public enum Effect {
             }
          }
       }
-      
    },
    /**
     * Removes 5 barrier-type disruption without fail.
@@ -1034,12 +1201,13 @@ public enum Effect {
             Board board = task.getState().getBoard();
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c));
             if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect.getNumBlocks());
-               if (matches.size() / 2 > 5 || odds < 1.0) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 5);
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toUnfreeze = new ArrayList<Integer>();
                   for (Integer i : randoms) {
                      int row = matches.get(i * 2);
@@ -1051,19 +1219,66 @@ public enum Effect {
             }
          }
       }
-      
    },
    /**
     * Can replace some disruptions with this Pokemon.
     */
    SWAP_P {
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().isDisruption());
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toReplace = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toReplace.addAll(Arrays.asList(row, col));
+                  }
+                  handleReplaceOf(comboEffect, task, toReplace, effectSpecies);
+               }
+            }
+         }
+      }
    },
    /**
     * Can replace many disruptions with this Pokemon.
     */
    SWAP_P_P {
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().isDisruption());
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toReplace = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toReplace.addAll(Arrays.asList(row, col));
+                  }
+                  handleReplaceOf(comboEffect, task, toReplace, effectSpecies);
+               }
+            }
+         }
+      }
    },
    /**
     * Leaves the foe Paralyzed
@@ -1078,7 +1293,7 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -1088,7 +1303,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FLYING, getBonus(task));
+         ifThenSetSpecial(comboEffect, task, PkmType.FLYING, getBonus(task, comboEffect));
       }
       
    },
@@ -1129,7 +1344,116 @@ public enum Effect {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task));
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Makes it more likely to receive items when set as a Support.
+    */
+   GOOD_LUCK {
+      // Does nothing in the simulation
+   },
+   /**
+    * Making a +-shaped match deals more damage than usual.
+    */
+   _P_BOOST {
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!super.canActivate(comboEffect, task)) {
+            return false;
+         }
+         
+         /*
+          * Attempt to recognize when there is a + match. This searches for: Same species, neither
+          * ends for either combo lies in their intersection, and they are different orientations,
+          * and the second combo is a claim (not yet active).
+          */
+         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
+         int minRow = limits.get(0);
+         int minCol = limits.get(1);
+         int maxRow = limits.get(2);
+         int maxCol = limits.get(3);
+         
+         boolean matchFound = false;
+         Species thisSpecies = task.getEffectSpecies(comboEffect.getCoords());
+         if (comboEffect.isHorizontal()) {
+            // Horizontal, so minRow = maxRow. We're looking for something > minCol and < maxCol.
+            int row = minRow;
+            for (int col = minCol + 1; !matchFound && col < maxCol; col++) {
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (!claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinRow = otherLimits.get(0);
+                  int otherMaxRow = otherLimits.get(2);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinRow < row && otherMaxRow > row && otherSpecies.equals(thisSpecies)
+                        && !firstClaim.isHorizontal();
+               }
+            }
+         } else {
+            // Vertical, so minCol = maxCol. We're looking for something > minRow and < maxRow.
+            int col = minCol;
+            for (int row = minRow + 1; !matchFound && row < maxRow; row++) {
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (!claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinCol = otherLimits.get(1);
+                  int otherMaxCol = otherLimits.get(3);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinCol < col && otherMaxCol > col && otherSpecies.equals(thisSpecies)
+                        && firstClaim.isHorizontal();
+               }
+            }
+         }
+         return matchFound;
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+   },
+   /**
+    * Making an L-Shapped match deals more damage than usual.
+    */
+   L_BOOST {
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!super.canActivate(comboEffect, task)) {
+            return false;
+         }
+         
+         /*
+          * Attempt to recognize when there is a L match. This searches for: Same species, bottom
+          * left of match is the same coordinates, and they are different orientations, and the
+          * second combo is a claim (not yet active).
+          */
+         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
+         int minCol = limits.get(1);
+         int maxRow = limits.get(2);
+         boolean matchFound = false;
+         Species thisSpecies = task.getEffectSpecies(comboEffect.getCoords());
+         Collection<ActivateComboEffect> claims = task.getClaimsFor(maxRow, minCol);
+         if (!claims.isEmpty()) {
+            ActivateComboEffect firstClaim = claims.iterator().next();
+            List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+            int otherMinCol = otherLimits.get(1);
+            int otherMaxRow = otherLimits.get(2);
+            Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+            matchFound = otherMinCol == minCol && otherMaxRow == maxRow && otherSpecies.equals(thisSpecies)
+                  && (comboEffect.isHorizontal() != firstClaim.isHorizontal());
+         }
+         return matchFound;
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -1137,18 +1461,397 @@ public enum Effect {
     */
    T_BOOST {
       
-   },
-   /**
-    * Making a +-shaped match deals more damage than usual.
-    */
-   _P_BOOST {
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!super.canActivate(comboEffect, task)) {
+            return false;
+         }
+         
+         /*
+          * Attempt to recognize when there is a T match. This searches for: Same species, vertical
+          * has min row in the intersection, horizontal does not end in the intersect, and they are
+          * different orientations, and the second combo is a claim (not yet active).
+          */
+         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
+         int minRow = limits.get(0);
+         int minCol = limits.get(1);
+         int maxCol = limits.get(3);
+         
+         boolean matchFound = false;
+         Species thisSpecies = task.getEffectSpecies(comboEffect.getCoords());
+         if (comboEffect.isHorizontal()) {
+            // Horizontal, so minRow = maxRow. We're looking for something > minCol and < maxCol.
+            int row = minRow;
+            for (int col = minCol + 1; !matchFound && col < maxCol; col++) {
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (!claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinRow = otherLimits.get(0);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinRow == row && otherSpecies.equals(thisSpecies)
+                        && !firstClaim.isHorizontal();
+               }
+            }
+         } else {
+            // Vertical, so minCol = maxCol. We're looking for the row=MinRow.
+            int col = minCol;
+            int row = minRow;
+            
+            Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+            if (!claims.isEmpty()) {
+               ActivateComboEffect firstClaim = claims.iterator().next();
+               List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+               int otherMinCol = otherLimits.get(1);
+               int otherMaxCol = otherLimits.get(3);
+               Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+               matchFound = otherMinCol < col && otherMaxCol > col && otherSpecies.equals(thisSpecies)
+                     && firstClaim.isHorizontal();
+            }
+         }
+         return matchFound;
+      }
       
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
    },
    /**
-    * Boosts damage done by combos by 50% if the foe is asleep.
+    * Increases the chance that the next match's skill is triggered.
+    */
+   CHEER {
+      // TODO when released and more data is available
+   },
+   /**
+    * Boosts damage done by combos if the foe is paralyzed.
+    */
+   PARALYSIS_COMBO {
+      // TODO when status conditions are implemented
+   },
+   /**
+    * Boosts damage done by combos if the foe is asleep.
     */
    SLEEP_COMBO {
+      // TODO when status conditions are implemented
+   },
+   /**
+    * Boosts damage done by combos if the foe has any status condition.
+    */
+   RELENTLESS {
+      // TODO when status conditions are implemented
+   },
+   /**
+    * Increases damage done by Poison types in the combo.
+    */
+   POISON_PACT {
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.POISON, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Increases damage done by Ice types in the combo.
+    */
+   ICE_DANCE {
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.ICE, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Increases damage done by Ground types in the combo.
+    */
+   GROUND_FORCES {
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.GROUND, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Having more species of the same type boosts damage dealt
+    */
+   FLASH_MOB {
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
       
+      @Override
+      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
+         NumberSpan ret = new NumberSpan();
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            int num = task
+                  .findMatches(36, true,
+                        (r, c, s) -> (s.equals(
+                              effectSpecies)
+                        && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
+                  .size() / 2;
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
+         }
+         return ret;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value;
+      }
+   },
+   /**
+    * Leaves the foe poisoned
+    */
+   POISON {
+      // TODO more data needed
+   },
+   /**
+    * Does more damage the more times in a row it is triggered.
+    */
+   TOXIC_STRESS {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Attacks sometimes deal greater damage than usual.
+    */
+   FLASHOVER {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Can delay your opponent's disruptions for a turn. 
+    */
+   WHIRLPOOL {
+      // TODO when disruption timers are implemented
+   },
+   /**
+    * Can delay your opponent's disruptions for two turns.
+    */
+   CONSTRICT {
+      // TODO when disruption timers are implemented
+   },
+   /**
+    * Attacks do more damage when there are no more moves left.
+    */
+   FINAL_EFFORT {
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() == 0;
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Attacks do more damage when you make a match of five.
+    */
+   FURY_OF_5 {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * May remove two non-support species.
+    */
+   DRAGON_SWEEP {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (matches.size() / 2 > 2 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, 2);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  eraseBonus(task, toErase, true);
+               }
+            }
+         }
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Leaves the foe paralyzed for a longer period of time.
+    */
+   DRAGON_SHRIEK {
+      // TODO when status conditions are implemented
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * May force the foe to trigger its disruption immediately.
+    */
+   GOAD {
+      // TODO when disruption timers are implemented
+   },
+   /**
+    * Occasionally turns one non-support species into a rock (wood)
+    */
+   ROCKIFY {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (matches.size() / 2 > 1 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toReplace = new ArrayList<Integer>(Arrays.asList(row, col));
+                  handleReplaceOf(comboEffect, task, toReplace, Species.WOOD);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Occasionally turns one non-support species into a block (metal)
+    */
+   BLOCKIFY {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (matches.size() / 2 > 1 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toReplace = new ArrayList<Integer>(Arrays.asList(row, col));
+                  handleReplaceOf(comboEffect, task, toReplace, Species.METAL);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Changes one rock (wood) into a Coin
+    */
+   PROSPECTOR {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (matches.size() / 2 > 1 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toReplace = new ArrayList<Integer>(Arrays.asList(row, col));
+                  handleReplaceOf(comboEffect, task, toReplace, Species.COIN);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Changes one block (Metal) into a Coin
+    */
+   ALCHEMIST {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (matches.size() / 2 > 1 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toReplace = new ArrayList<Integer>(Arrays.asList(row, col));
+                  handleReplaceOf(comboEffect, task, toReplace, Species.COIN);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Changes up to 3 of this species into another Support pokemon.
+    */
+   TRANSFORM {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Species thisSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            List<Species> otherSupports = getOtherSupportSpecies(comboEffect, task);
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(thisSpecies));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0 || otherSupports.size() > 1) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toReplace = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toReplace.addAll(Arrays.asList(row, col));
+                  }
+                  Species randomOtherSpecies = otherSupports.get(getRandomInt(otherSupports.size()));
+                  handleReplaceOf(comboEffect, task, toReplace, randomOtherSpecies);
+               }
+            }
+         }
+      }
+      
+      private List<Species> getOtherSupportSpecies(ActivateComboEffect comboEffect, SimulationTask task) {
+         List<Species> otherSpecies = new ArrayList<Species>(task.getState().getCore().getSupportSpecies());
+         otherSpecies.remove(task.getEffectSpecies(comboEffect.getCoords()));
+         return otherSpecies;
+      }
    },
    /**
     * Same as {@link KANGASKHAN} but the mega threshold is slightly lower.
@@ -1887,22 +2590,7 @@ public enum Effect {
       @Override
       public void handleExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks) {
          Species toReplaceWith = task.getEffectSpecies(comboEffect.getCoords());
-         Board b = task.getState().getBoard();
-         for (int i = 0; i * 2 + 1 < extraBlocks.size(); i++) {
-            int row = extraBlocks.get(i * 2);
-            int col = extraBlocks.get(i * 2 + 1);
-            if (!task.isActive(row, col)) {
-               if (b.getSpeciesAt(row, col).getEffect().isDisruption()) {
-                  task.getState().addDisruptionCleared(1);
-               }
-               b.setSpeciesAt(row, col, toReplaceWith);
-               Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(
-                     task.getClaimsFor(row, col));
-               for (ActivateComboEffect claim : claimsFor) {
-                  task.removeClaim(claim);
-               }
-            }
-         }
+         handleReplaceOf(comboEffect, task, extraBlocks, toReplaceWith);
       }
       
       @Override
@@ -3517,10 +4205,6 @@ public enum Effect {
       return new NumberSpan();
    }
    
-   public static int getCoinBias() {
-      return 1000000;
-   }
-   
    private static Random r = new Random(System.nanoTime());
    
    /**
@@ -3545,16 +4229,23 @@ public enum Effect {
       return !canLevel() && !equals(AIR);
    }
    
-   protected double getOdds(SimulationTask task, int num) {
-      return task.getState().getCore().getOdds(this, num);
+   protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+      int num = e.getNumBlocks();
+      SimulationCore core = task.getState().getCore();
+      Species species = task.getEffectSpecies(e.getCoords());
+      int skillLevel = core.getSkillLevel(species);
+      return core.getOdds(this, num, skillLevel);
    }
    
-   protected double getMultiplier(SimulationTask task) {
-      return task.getState().getCore().getMultiplier(this);
+   protected double getMultiplier(SimulationTask task, ActivateComboEffect e) {
+      SimulationCore core = task.getState().getCore();
+      Species species = task.getEffectSpecies(e.getCoords());
+      int skillLevel = core.getSkillLevel(species);
+      return core.getMultiplier(this, skillLevel);
    }
    
-   protected double getBonus(SimulationTask task) {
-      return getMultiplier(task) - 1.0;
+   protected double getBonus(SimulationTask task, ActivateComboEffect e) {
+      return getMultiplier(task, e) - 1.0;
    }
    
    /**
@@ -3566,13 +4257,13 @@ public enum Effect {
       int threshold = core.getEffectThreshold();
       if (threshold > 0) {
          double adjustedThreshold = threshold / 100.0;
-         coreAllowsIt &= getOdds(task, comboEffect.getNumBlocks()) >= adjustedThreshold;
+         coreAllowsIt &= getOdds(task, comboEffect) >= adjustedThreshold;
       }
       return coreAllowsIt && comboEffect.getNumCombosOnActivate() == 0;
    }
    
    protected boolean doesActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-      double odds = getOdds(task, comboEffect.getNumBlocks());
+      double odds = getOdds(task, comboEffect);
       return odds >= 1.0 || odds >= Math.random();
    }
    
@@ -3585,7 +4276,7 @@ public enum Effect {
       NumberSpan multiplier = task.getSpecialTypeMultiplier(task.getState().getSpeciesType(effectSpecies));
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
-            multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect.getNumBlocks())).multiplyBy(multiplier);
+            multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect)).multiplyBy(multiplier);
          }
       }
       return multiplier;
@@ -3596,7 +4287,7 @@ public enum Effect {
       if (canActivate(comboEffect, task)) {
          Number value = supplier.get();
          if (value.doubleValue() > 0) {
-            NumberSpan score = new NumberSpan(0, value, getOdds(task, comboEffect.getNumBlocks()));
+            NumberSpan score = new NumberSpan(0, value, getOdds(task, comboEffect));
             if (isAttackPowerEffective() && task.getState().getCore().isAttackPowerUp()) {
                score = score.multiplyBy(2.0);
             }
@@ -3609,12 +4300,38 @@ public enum Effect {
          Number bonus) {
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
-            task.setSpecialTypeMultiplier(type, new NumberSpan(1, bonus, getOdds(task, comboEffect.getNumBlocks())));
+            task.setSpecialTypeMultiplier(type, new NumberSpan(1, bonus, getOdds(task, comboEffect)));
          }
       }
    }
    
    protected boolean isAttackPowerEffective() {
       return true;
+   }
+   
+   protected boolean isNVE(ActivateComboEffect comboEffect, SimulationTask task) {
+      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+      PkmType effectType = task.getState().getSpeciesType(effectSpecies);
+      PkmType stageType = task.getState().getCore().getStage().getType();
+      return PkmType.getMultiplier(effectType, stageType) < 1.0;
+   }
+   
+   protected void handleReplaceOf(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks,
+         Species replaceWith) {
+      Board b = task.getState().getBoard();
+      for (int i = 0; i * 2 + 1 < extraBlocks.size(); i++) {
+         int row = extraBlocks.get(i * 2);
+         int col = extraBlocks.get(i * 2 + 1);
+         if (!task.isActive(row, col)) {
+            if (b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+               task.getState().addDisruptionCleared(1);
+            }
+            b.setSpeciesAt(row, col, replaceWith);
+            Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(task.getClaimsFor(row, col));
+            for (ActivateComboEffect claim : claimsFor) {
+               task.removeClaim(claim);
+            }
+         }
+      }
    }
 }

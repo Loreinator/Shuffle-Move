@@ -38,6 +38,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -107,6 +109,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private static final String KEY_LEVEL_TOOLTIP = "tooltip.level";
    private static final String KEY_SELECTED_TOOLTIP = "tooltip.selected";
    private static final String KEY_CANDY_TOOLTIP = "tooltip.candy";
+   private static final String KEY_SKILL_BOOSTER_TOOLTIP = "tooltip.skill";
    private static final String KEY_EFFECT_FILTER_TOOLTIP = "tooltip.effectfilter";
    private static final String KEY_POKEMON_LEVEL_TOOLTIP = "tooltip.specieslevel";
    private static final String KEY_OK_TOOLTIP = "tooltip.ok";
@@ -119,6 +122,9 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private static final String KEY_EDIT_ROSTER_WIDTH = "EDIT_ROSTER_WIDTH";
    private static final String KEY_EDIT_ROSTER_HEIGHT = "EDIT_ROSTER_HEIGHT";
    private static final String KEY_CANDY_ICON = ImageManager.KEY_CANDY;
+   private static final String KEY_SKILL_BOOSTER = ImageManager.KEY_SKILL_BOOSTER;
+   
+   public static final ExecutorService EXECUTOR = new ScheduledThreadPoolExecutor(1);
    
    public static final int DEFAULT_BORDER_WIDTH = 1;
    public static final int DEFAULT_BORDER_OUTLINE = 1;
@@ -133,7 +139,9 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private EffectChooser effectFilter = null;
    private JDialog d = null;
    private JComboBox<Integer> speedups = null;
+   private JComboBox<Integer> skillLevels = null;
    private ItemListener speedupsListener = null;
+   private ItemListener skillLevelsListener = null;
    private JCheckBox teamFilter = null;
    private Supplier<Dimension> getMinUpperPanel = null;
    
@@ -370,6 +378,21 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       c.anchor = GridBagConstraints.LINE_END;
       c.weightx = 0.0;
       c.gridx++;
+      JPanel skillPanel = new JPanel(new BorderLayout());
+      ImageIcon skillBoosterIcon = getUser().getImageManager().getImageFor(KEY_SKILL_BOOSTER);
+      JLabel skillBoosterLabel = new JLabel(skillBoosterIcon);
+      skillPanel.add(skillBoosterLabel, BorderLayout.EAST);
+      skillLevels = new JComboBox<Integer>();
+      skillLevels.setEnabled(false);
+      skillLevels.addItem(1);
+      skillPanel.add(skillLevels, BorderLayout.WEST);
+      skillPanel.setToolTipText(getString(KEY_SKILL_BOOSTER_TOOLTIP));
+      skillLevels.setToolTipText(getString(KEY_SKILL_BOOSTER_TOOLTIP));
+      ret.add(skillPanel, c);
+      
+      c.anchor = GridBagConstraints.LINE_END;
+      c.weightx = 0.0;
+      c.gridx++;
       JPanel speedupPanel = new JPanel(new BorderLayout());
       ImageIcon candyIcon = getUser().getImageManager().getImageFor(KEY_CANDY_ICON);
       JLabel candyLabel = new JLabel(candyIcon);
@@ -461,15 +484,14 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       teamSpecies.clear();
       teamSpecies.addAll(user.getCurrentSpecies());
    }
-
+   
    protected void updateRosterEntryPanel() {
-      rosterEntryPanel.removeAll();
-      
-      Species newSpecies = null;
-      JPanel newComponent = null;
       SpeciesManager speciesManager = getUser().getSpeciesManager();
       List<Predicate<Species>> filters = getCurrentFilters(false);
       Collection<Species> speciesValues = speciesManager.getSpeciesByFilters(filters);
+      rosterEntryPanel.removeAll();
+      Species newSpecies = null;
+      JPanel newComponent = null;
       for (Species s : speciesValues) {
          JPanel component = createRosterComponent(s);
          if (s.equals(selectedSpecies)) {
@@ -535,7 +557,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
          @Override
          public void itemStateChanged(ItemEvent e) {
             int index = level.getSelectedIndex();
-            myData.setEntry(EntryType.INTEGER, s.getName(), index);
+            myData.setLevelForSpecies(s, index);
             rebuildSelectedLabel();
          }
       });
@@ -586,6 +608,17 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
          speedups.setSelectedItem(megaSpeedups);
       }
       addSpeedupsListener();
+      removeSkillLevelListener();
+      skillLevels.setEnabled(selectedSpecies != null);
+      skillLevels.removeAllItems();
+      if (selectedSpecies != null) {
+         for (int i = 1; i <= 5; i++) {
+            skillLevels.addItem(i);
+         }
+         int skillLevel = Math.min(Math.max(myData.getSkillLevelForSpecies(selectedSpecies), 1), 5);
+         skillLevels.setSelectedItem(skillLevel);
+      }
+      addSkillLevelListener();
    }
    
    /**
@@ -610,6 +643,27 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    
    private void removeSpeedupsListener() {
       speedups.removeItemListener(speedupsListener);
+   }
+   
+   private void addSkillLevelListener() {
+      if (skillLevelsListener == null) {
+         skillLevelsListener = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               Integer num = skillLevels.getItemAt(skillLevels.getSelectedIndex());
+               if (num == null) {
+                  num = 1;
+               }
+               myData.setSkillLevelForSpecies(selectedSpecies, num);
+               rebuildSelectedLabel();
+            }
+         };
+      }
+      skillLevels.addItemListener(skillLevelsListener);
+   }
+   
+   private void removeSkillLevelListener() {
+      skillLevels.removeItemListener(skillLevelsListener);
    }
    
    private void setBorderFor(JPanel c, boolean doBorder) {
@@ -644,13 +698,12 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       if (species.isEmpty()) {
          species = getUser().getSpeciesManager().getSpeciesByFilters(getBasicFilters());
       }
-      ConfigManager rosterManager = myData;
       Integer levelToSet = getLevel();
       if (levelToSet == null) {
          levelToSet = 0;
       }
       for (Species s : species) {
-         rosterManager.setEntry(EntryType.INTEGER, s.getName(), levelToSet);
+         myData.setLevelForSpecies(s, levelToSet);
       }
       updateRosterEntryPanel();
    }
@@ -700,8 +753,8 @@ species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType())
          filters.add(species -> myData.getLevelForSpecies(species.getName()) >= minLevel);
       }
       String str = getContainsString().toUpperCase();
-      if (str != null && !str.isEmpty()) {
-         filters.add(species -> species.getLocalizedName().toUpperCase().contains(str));
+      if (!str.isEmpty()) {
+         filters.add(species -> species.getLocalizedName(megaFilter.isSelected()).toUpperCase().contains(str));
       }
       Effect effect = getEffect();
       if (effect != null) {

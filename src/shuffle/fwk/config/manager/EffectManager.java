@@ -18,7 +18,6 @@
 
 package shuffle.fwk.config.manager;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -37,12 +36,15 @@ public class EffectManager extends ConfigManager {
    
    private static final String FORMAT_MEGA_SPEEDUP_CAP = "MEGA_SPEEDUPS_%s";
    private static final String FORMAT_MEGA_THRESHOLD = "MEGA_THRESHOLD_%s";
-   private static final double[] DEFAULT_ODDS = new double[] { 1.0, 1.0, 1.0, 1.0 };
-   private static final double DEFAULT_MULT = 1.0;
+   private static final int DEFAULT_INT = 100;
+   private static final double DEFAULT_DOUBLE = 1.0;
+   private static final String ODDS_TYPE = "ODDS";
+   private static final String MULT_TYPE = "MULT";
    private static final Pattern EFFECT_ODDS_MULT_PATTERN = Pattern
-         .compile("\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)(?:\\s+([0-9]{1,13}(?:\\.[0-9]*)?))?\\s*");
-   private EnumMap<Effect, double[]> oddsMap;
-   private EnumMap<Effect, Double> multMap;
+         .compile("\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(" + MULT_TYPE
+               + "|" + ODDS_TYPE + ")\\s*");
+   private EnumMap<Effect, double[][]> oddsMap;
+   private EnumMap<Effect, double[]> multMap;
    
    /**
     * Creates an EffectManager which manages configurable settings for Effects.
@@ -58,16 +60,21 @@ public class EffectManager extends ConfigManager {
       super(manager);
    }
    
-   public EnumMap<Effect, double[]> getOddsMap() {
+   @Override
+   protected boolean shouldUpdate() {
+      return true;
+   }
+   
+   public EnumMap<Effect, double[][]> getOddsMap() {
       if (oddsMap == null) {
-         oddsMap = new EnumMap<Effect, double[]>(Effect.class);
+         oddsMap = new EnumMap<Effect, double[][]>(Effect.class);
       }
       return oddsMap;
    }
    
-   public EnumMap<Effect, Double> getMultMap() {
+   public EnumMap<Effect, double[]> getMultMap() {
       if (multMap == null) {
-         multMap = new EnumMap<Effect, Double>(Effect.class);
+         multMap = new EnumMap<Effect, double[]>(Effect.class);
       }
       return multMap;
    }
@@ -105,14 +112,47 @@ public class EffectManager extends ConfigManager {
          }
          Matcher m = EFFECT_ODDS_MULT_PATTERN.matcher(dataString);
          if (m.find()) {
-            double[] oddsValues = parseOdds(m.group(1), m.group(2), m.group(3), m.group(4));
-            getOddsMap().put(e, oddsValues);
-            double multiplier = getMultiplier(m.group(5));
-            if (multiplier == 1.0) {
-               getMultMap().remove(e);
-            } else {
-               getMultMap().put(e, multiplier);
+            // Get the odds from the first three values (100 = 100%)
+            int[] oddsValues = parseOdds(m.group(1), m.group(2), m.group(3));
+            // Get the base multiplier from the fourth value (100 = 1.0x)
+            int multiplier = getMultiplier(m.group(4));
+            // Get the scaling skill up values
+            int[] skillUpValues = parseSkillUpValues(m.group(5), m.group(6), m.group(7), m.group(8));
+            // The skill type
+            String skillUpType = m.group(9);
+            
+            // 5 skill levels by 3 odd rates, these are ADDATIVE
+            double[][] oddsArray = new double[5][3];
+            for (int i = 0; i < 5; i++) {
+               int skillValue = 0;
+               if (i > 0 && ODDS_TYPE.equals(skillUpType)) {
+                  skillValue = skillUpValues[i - 1];
+               }
+               double[] resultOdds = new double[] { 1.0, 1.0, 1.0 };
+               for (int oddIndex = 0; oddIndex < oddsValues.length; oddIndex++) {
+                  int oddValue = oddsValues[oddIndex] + skillValue;
+                  // Constrain oddValue between 0 and 100.
+                  oddValue = Math.max(Math.min(oddValue, 100), 0);
+                  // Assign to resultOdds array
+                  resultOdds[oddIndex] = oddValue / 100.0;
+               }
+               oddsArray[i] = resultOdds;
             }
+            
+            // 5 skill levels of multipliers, these REPLACE the base
+            double[] multArray = new double[5];
+            for (int i = 0; i < 5; i++) {
+               int multValue = multiplier;
+               if (i > 0 && MULT_TYPE.equals(skillUpType)) {
+                  multValue = skillUpValues[i - 1];
+               }
+               multArray[i] = multValue / 100.0;
+            }
+            
+            // Set the arrays into the maps
+            getMultMap().put(e, multArray);
+            getOddsMap().put(e, oddsArray);
+            
          } else {
             getOddsMap().remove(e);
             getMultMap().remove(e);
@@ -120,27 +160,24 @@ public class EffectManager extends ConfigManager {
       }
    }
    
-   private double getMultiplier(String toParse) {
-      double ret = 1.0;
-      if (toParse != null) {
-         try {
-            ret = Double.parseDouble(toParse);
-         } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
-         }
-      }
-      return ret;
-   }
-   
-   private double[] parseOdds(String... odds) {
-      double[] ret = Arrays.copyOf(DEFAULT_ODDS, DEFAULT_ODDS.length);
+   /**
+    * Parses the skill values and returns an array of integers.
+    * 
+    * @param group
+    * @param group2
+    * @param group3
+    * @param group4
+    * @return
+    */
+   private int[] parseSkillUpValues(String... skills) {
+      int[] ret = new int[] { DEFAULT_INT, DEFAULT_INT, DEFAULT_INT, DEFAULT_INT };
       try {
-         for (int i = 0; i <= 3 && i < odds.length; i++) {
-            String odd = odds[i];
-            if (odd == null || odd.isEmpty()) {
+         for (int i = 0; i <= 3 && i < skills.length; i++) {
+            String skill = skills[i];
+            if (skill == null || skill.isEmpty()) {
                continue;
             } else {
-               ret[i] = Integer.parseInt(odd.trim()) / 100.0;
+               ret[i] = Integer.parseInt(skill.trim());
             }
          }
       } catch (NumberFormatException nfe) {
@@ -149,20 +186,51 @@ public class EffectManager extends ConfigManager {
       return ret;
    }
    
-   public double getMult(Effect effect) {
+   private int[] parseOdds(String... odds) {
+      int[] ret = new int[] { DEFAULT_INT, DEFAULT_INT, DEFAULT_INT };
+      try {
+         for (int i = 0; i <= 3 && i < odds.length; i++) {
+            String odd = odds[i];
+            if (odd == null || odd.isEmpty()) {
+               continue;
+            } else {
+               ret[i] = Integer.parseInt(odd.trim());
+            }
+         }
+      } catch (NumberFormatException nfe) {
+         nfe.printStackTrace();
+      }
+      return ret;
+   }
+   
+   private int getMultiplier(String toParse) {
+      int ret = DEFAULT_INT;
+      if (toParse != null) {
+         try {
+            ret = Integer.parseInt(toParse.trim());
+         } catch (NumberFormatException nfe) {
+            nfe.printStackTrace();
+         }
+      }
+      return ret;
+   }
+   
+   public double getMult(Effect effect, int skillLevel) {
       if (getMultMap().containsKey(effect)) {
-         return getMultMap().get(effect);
+         int skillIndex = Math.min(Math.max(skillLevel - 1, 0), 4);
+         return getMultMap().get(effect)[skillIndex];
       } else {
-         return DEFAULT_MULT;
+         return DEFAULT_DOUBLE;
       }
    }
    
-   public double getOdds(Effect effect, int num) {
-      int index = Math.max(Math.min(num, 6), 3) - 3;
+   public double getOdds(Effect effect, int num, int skillLevel) {
+      int index = Math.max(Math.min(num, 5), 3) - 3;
       if (getOddsMap().containsKey(effect)) {
-         return getOddsMap().get(effect)[index];
+         int skillIndex = Math.min(Math.max(skillLevel - 1, 0), 4);
+         return getOddsMap().get(effect)[skillIndex][index];
       } else {
-         return DEFAULT_ODDS[index];
+         return DEFAULT_DOUBLE;
       }
    }
    

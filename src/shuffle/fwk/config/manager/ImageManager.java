@@ -65,6 +65,7 @@ public class ImageManager extends ConfigManager implements I18nUser {
    private static final String CANDY_HEIGHT = "CANDY_HEIGHT";
    private static final String KEY_IMAGE_SCALING = "IMAGE_SCALING";
    public static final String KEY_CANDY = "Candy";
+   public static final String KEY_SKILL_BOOSTER = "Skill_Booster";
    private static final Collection<String> SPECIAL_NAMES = Arrays.asList(KEY_FROZEN_MASK, KEY_CANDY);
    
    private static final String KEY_IOE = "error.ioe";
@@ -200,6 +201,10 @@ public class ImageManager extends ConfigManager implements I18nUser {
       if (imageLoadingMap.containsKey(KEY_CANDY)) {
          BufferedImage img = imageLoadingMap.get(KEY_CANDY);
          getIconMap().put(KEY_CANDY, getImageIconForImage(img, specialWidth, specialHeight));
+      }
+      if (imageLoadingMap.containsKey(KEY_SKILL_BOOSTER)) {
+         BufferedImage img = imageLoadingMap.get(KEY_SKILL_BOOSTER);
+         getIconMap().put(KEY_SKILL_BOOSTER, getImageIconForImage(img, specialWidth, specialHeight));
       }
    }
    

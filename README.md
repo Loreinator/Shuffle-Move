@@ -46,6 +46,8 @@ This program is licensed under GNU General Public License Version 3. Please read
 * **v0.3.54 – 2016-05-**
 	- Updates and default boards for May 17th 2016
 	- Corrected Mega scores for the pattern clearing mega effects
+	- Many new effects added
+	- Skill Boosters are now implemented. Set the skill level via the roster editor (select a species and modify the selector at the bottom of the window)
 * **v0.3.53 – 2016-05-10**
 	- Added default boards for the update of April 26th 2016
 	- Corrected Chinesse translations for Zygarde Formes
