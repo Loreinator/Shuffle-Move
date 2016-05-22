@@ -26,6 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Function;
 
 import shuffle.fwk.config.manager.EffectManager;
@@ -38,15 +39,19 @@ import shuffle.fwk.config.manager.SpeciesManager;
  */
 public class TeamImpl implements Team {
    
+   private static final String NO_MEGA = "-";
+   
    private Set<String> teamNames;
    private Map<String, Character> nameToKey;
    private Map<Character, String> keyToName;
+   private Set<String> nonSupport;
    private String megaSlotName = null;
    
    public TeamImpl() {
       teamNames = new LinkedHashSet<String>();
       nameToKey = new HashMap<String, Character>();
       keyToName = new HashMap<Character, String>();
+      nonSupport = new TreeSet<String>();
    }
    
    public TeamImpl(Team ret) {
@@ -56,6 +61,9 @@ public class TeamImpl implements Team {
             addName(s, ret.getBinding(s));
             if (ret.isMegaSlot(s)) {
                megaSlotName = s;
+            }
+            if (ret.isNonSupport(s)) {
+               setNonSupport(s, true);
             }
          }
       }
@@ -152,13 +160,40 @@ public class TeamImpl implements Team {
    
    /*
     * (non-Javadoc)
-    * @see shuffle.fwk.data.Team#getNames()
+    * @see shuffle.fwk.data.Team#getSpecies(SpeciesManager manager)
     */
    @Override
    public List<Species> getSpecies(SpeciesManager manager) {
       List<Species> ret = new ArrayList<Species>();
       if (manager != null) {
          for (String name : teamNames) {
+            Species result = manager.getSpeciesByName(name);
+            if (!result.equals(Species.AIR)) { // AIR can't be on a team.
+               ret.add(result);
+            }
+         }
+      }
+      return ret;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.data.Team#getNonSupportNames()
+    */
+   @Override
+   public List<String> getNonSupportNames() {
+      return Collections.unmodifiableList(new ArrayList<String>(nonSupport));
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.data.Team#getNonSupportSpecies()
+    */
+   @Override
+   public List<Species> getNonSupportSpecies(SpeciesManager manager) {
+      List<Species> ret = new ArrayList<Species>();
+      if (manager != null) {
+         for (String name : nonSupport) {
             Species result = manager.getSpeciesByName(name);
             if (!result.equals(Species.AIR)) { // AIR can't be on a team.
                ret.add(result);
@@ -230,6 +265,7 @@ public class TeamImpl implements Team {
       if (s.equals(megaSlotName)) {
          megaSlotName = null;
       }
+      nonSupport.remove(s);
       return teamNames.remove(s);
    }
    
@@ -250,6 +286,29 @@ public class TeamImpl implements Team {
       boolean changed = teamNames.add(s);
       if (changed) {
          changed |= setBinding(s, binding);
+      }
+      if (Species.FIXED_SPECIES_NAMES.contains(s)) {
+         setNonSupport(s, true);
+      }
+      return changed;
+   }
+   
+   public boolean setNonSupport(Species species, boolean isNonSupport) {
+      return setNonSupport(species.getName(), isNonSupport);
+   }
+   
+   public boolean setNonSupport(String name, boolean isNonSupport) {
+      if (name == null) {
+         return false;
+      }
+      boolean changed = false;
+      if (isNonSupport) {
+         changed = nonSupport.add(name);
+         if (name.equals(megaSlotName)) {
+            megaSlotName = null;
+         }
+      } else {
+         changed = nonSupport.remove(name);
       }
       return changed;
    }
@@ -276,9 +335,21 @@ public class TeamImpl implements Team {
                sb.append(",");
             }
          }
-         if (megaSlotName != null) {
-            sb.append(" ");
+         sb.append(" ");
+         if (megaSlotName == null || megaSlotName.isEmpty()) {
+            sb.append(NO_MEGA);
+         } else {
             sb.append(megaSlotName);
+         }
+         if (!nonSupport.isEmpty()) {
+            sb.append(" ");
+            itr = nonSupport.iterator();
+            while (itr.hasNext()) {
+               sb.append(itr.next());
+               if (itr.hasNext()) {
+                  sb.append(",");
+               }
+            }
          }
       }
       return sb.toString();
@@ -293,6 +364,7 @@ public class TeamImpl implements Team {
          equal &= nameToKey.equals(other.nameToKey);
          equal &= keyToName.equals(other.keyToName);
          equal &= megaSlotName == other.megaSlotName || megaSlotName != null && megaSlotName.equals(other.megaSlotName);
+         equal &= nonSupport.equals(other.nonSupport);
       }
       return equal;
    }
@@ -319,8 +391,26 @@ public class TeamImpl implements Team {
    }
    
    public boolean setMegaSlot(String name) {
-      boolean changed = !(name == megaSlotName || name != null && name.equals(megaSlotName));
-      megaSlotName = name;
-      return changed;
+      String prev = megaSlotName;
+      megaSlotName = NO_MEGA.equals(name) ? null : name;
+      return !(prev == megaSlotName || prev != null && prev.equals(megaSlotName));
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.data.Team#isNonSupport(java.lang.String)
+    */
+   @Override
+   public boolean isNonSupport(String name) {
+      return nonSupport.contains(name);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.data.Team#isNonSupport(shuffle.fwk.data.Species)
+    */
+   @Override
+   public boolean isNonSupport(Species species) {
+      return nonSupport.contains(species.getName());
    }
 }

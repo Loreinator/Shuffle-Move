@@ -47,6 +47,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 	- Updates and default boards for May 17th 2016
 	- Corrected Mega scores for the pattern clearing mega effects
 	- Many new effects added (27 new, also implemented support/non-support functionality). Species in team = support. Not in team = non support.
+	- Non-support functionality is now user-specified in addition to the base assumption that non-team species are non-support. Click the entries in the Team Editor to toggle them between Support (Green) or Non-Support (Red).
 	- Implemented damage bonus for Spookify, Freeze, and Sleep Charm
 	- Skill Boosters are now implemented. Set the skill level via the roster editor (select a species and modify the selector at the bottom of the window)
 	- The main window will now remember its position.
