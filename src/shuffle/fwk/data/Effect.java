@@ -772,7 +772,13 @@ public enum Effect {
     */
    SLEEP_CHARM {
       // TODO when disruption timers are implemented
-   
+      
+      @Override
+      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
+         for (PkmType type : PkmType.values()) {
+            ifThenSetSpecial(comboEffect, task, type, getBonus(task, comboEffect));
+         }
+      }
    },
    /**
     * Leaves the foe paralyzed.
