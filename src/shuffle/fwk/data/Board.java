@@ -34,6 +34,7 @@ public class Board {
    
    private final Species[][] species = new Species[NUM_ROWS][NUM_COLS];
    private final boolean[][] frozen = new boolean[NUM_ROWS][NUM_COLS];
+   private final boolean[][] clouded = new boolean[NUM_ROWS][NUM_COLS];
    private int megaProgress;
    private String toString = null;
    
@@ -119,6 +120,27 @@ public class Board {
    public boolean canMove(int row, int column) {
       return row >= 1 && row <= NUM_ROWS && column >= 1 && column <= NUM_COLS && !frozen[row - 1][column - 1]
             && !species[row - 1][column - 1].getEffect().equals(Effect.AIR);
+   }
+   
+   public boolean isCloudedAt(int row, int column) {
+      if (row < 1 || row > NUM_ROWS || column < 1 || column > NUM_COLS) {
+         return false;
+      }
+      return clouded[row - 1][column - 1];
+   }
+   
+   public boolean setClouded(int row, int column, Boolean encloud) {
+      if (row < 1 || row > NUM_ROWS || column < 1 || column > NUM_COLS || encloud == null) {
+         return false;
+      }
+      Species s = getSpeciesAt(row, column);
+      boolean toSet = s != null && encloud;
+      boolean changed = clouded[row - 1][column - 1] != encloud;
+      clouded[row - 1][column - 1] = toSet;
+      if (changed && toString != null) {
+         toString = null;
+      }
+      return changed;
    }
    
    /**
@@ -231,6 +253,18 @@ public class Board {
          for (int i = 1; i <= NUM_ROWS; i++) {
             for (int j = 1; j <= NUM_COLS; j++) {
                sb.append(Boolean.toString(isFrozenAt(i, j)));
+               if (j < NUM_COLS) {
+                  sb.append(",");
+               }
+            }
+            if (i < NUM_ROWS) {
+               sb.append("\n");
+            }
+         }
+         sb.append("\n");
+         for (int i = 1; i <= NUM_ROWS; i++) {
+            for (int j = 1; j <= NUM_COLS; j++) {
+               sb.append(isCloudedAt(i, j) ? "clouded" : "clear");
                if (j < NUM_COLS) {
                   sb.append(",");
                }
