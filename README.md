@@ -49,6 +49,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 	- Many new effects added (27 new, also implemented support/non-support functionality). Species in team = support. Not in team = non support.
 	- Implemented damage bonus for Spookify, Freeze, and Sleep Charm
 	- Skill Boosters are now implemented. Set the skill level via the roster editor (select a species and modify the selector at the bottom of the window)
+	- The main window will now remember its position.
 * **v0.3.53 – 2016-05-10**
 	- Added default boards for the update of April 26th 2016
 	- Corrected Chinesse translations for Zygarde Formes

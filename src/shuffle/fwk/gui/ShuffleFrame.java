@@ -23,6 +23,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -45,6 +46,7 @@ import javax.swing.WindowConstants;
 
 import shuffle.fwk.ShuffleVersion;
 import shuffle.fwk.config.ConfigManager;
+import shuffle.fwk.config.EntryType;
 import shuffle.fwk.gui.user.ShuffleFrameUser;
 import shuffle.fwk.i18n.I18nUser;
 import shuffle.fwk.log.AlertLogHandler;
@@ -66,6 +68,10 @@ public class ShuffleFrame extends JFrame implements I18nUser {
    // i18n keys
    private static final String KEY_TITLE = "shuffleframe.title";
    private static final String KEY_WELCOME = "shuffleframe.welcome";
+   
+   // config keys
+   private static final String KEY_LOCATION_X = "ShuffleFrame_LOCATION_X";
+   private static final String KEY_LOCATION_Y = "ShuffleFrame_LOCATION_Y";
    
    private static final List<String> iconPaths = Arrays.asList("img/icon_16.png", "img/icon_32.png", "img/icon_64.png",
          "img/icon.png");
@@ -109,7 +115,15 @@ public class ShuffleFrame extends JFrame implements I18nUser {
       updateMinimumSize();
       repaint();
       pack();
-      setLocationRelativeTo(null);
+      
+      ConfigManager preferencesManager = getUser().getPreferencesManager();
+      Integer x = preferencesManager.getIntegerValue(KEY_LOCATION_X);
+      Integer y = preferencesManager.getIntegerValue(KEY_LOCATION_Y);
+      if (x != null && y != null) {
+         setLocation(x, y);
+      } else {
+         setLocationRelativeTo(null);
+      }
    }
    
    public void updateMinimumSize() {
@@ -175,6 +189,17 @@ public class ShuffleFrame extends JFrame implements I18nUser {
    
    private void handleLaunch() {
       ConfigManager manager = getUser().getPreferencesManager();
+      addComponentListener(new ComponentAdapter() {
+         @Override
+         public void componentMoved(ComponentEvent ev) {
+            ConfigManager preferencesManager = getUser().getPreferencesManager();
+            Point p = ShuffleFrame.this.getLocation();
+            int x = new Double(p.getX()).intValue();
+            int y = new Double(p.getY()).intValue();
+            preferencesManager.setEntry(EntryType.INTEGER, KEY_LOCATION_X, x);
+            preferencesManager.setEntry(EntryType.INTEGER, KEY_LOCATION_Y, y);
+         }
+      });
       if (manager.getBooleanValue(MoveChooserService.KEY_CHOOSER_AUTOLAUNCH, false)) {
          BaseServiceManager.launchServiceByClass(MoveChooserService.class, getUser(), this);
       }
