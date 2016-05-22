@@ -291,7 +291,7 @@ public enum Effect {
          NumberSpan ret = new NumberSpan();
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
-            int num = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption())
+            int num = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s, task))
                   .size() / 2;
             ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
          }
@@ -474,7 +474,7 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<Integer> matches = task.findMatches(36, false,
-                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
+                  (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s, task));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                if (matches.size() > 2 || odds < 1.0) {
@@ -501,7 +501,7 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<Integer> match = task.findMatches(36, false,
-                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
+                  (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s, task));
             if (!match.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -533,7 +533,7 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<Integer> match = task.findMatches(36, false,
-                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
+                  (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s, task));
             if (!match.isEmpty()) {
                task.setIsRandom();
                if (doesActivate(comboEffect, task)) {
@@ -677,8 +677,7 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false,
- (r, c, s) -> s.getEffect().isDisruption());
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> isDisruption(s, task));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                if (matches.size() / 2 > 1 || odds < 1.0) {
@@ -948,7 +947,7 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<Integer> match = task.findMatches(36, false,
-                  (r, c, s) -> board.isFrozenAt(r, c) || s.getEffect().isDisruption());
+                  (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s, task));
             if (!match.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1234,7 +1233,7 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().isDisruption());
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> isDisruption(s, task));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1264,7 +1263,7 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().isDisruption());
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> isDisruption(s, task));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -2450,7 +2449,7 @@ public enum Effect {
             int row = extraBlocks.get(i * 2);
             int col = extraBlocks.get(i * 2 + 1);
             if (!task.isActive(row, col)) {
-               if (b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+               if (isDisruption(b.getSpeciesAt(row, col), task)) {
                   task.getState().addDisruptionCleared(1);
                }
                b.setSpeciesAt(row, col, toReplaceWith);
@@ -4329,7 +4328,7 @@ public enum Effect {
          int row = extraBlocks.get(i * 2);
          int col = extraBlocks.get(i * 2 + 1);
          if (!task.isActive(row, col)) {
-            if (b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+            if (isDisruption(b.getSpeciesAt(row, col), task)) {
                task.getState().addDisruptionCleared(1);
             }
             b.setSpeciesAt(row, col, replaceWith);
@@ -4339,5 +4338,9 @@ public enum Effect {
             }
          }
       }
+   }
+   
+   protected boolean isDisruption(Species species, SimulationTask task) {
+      return species.getEffect().isDisruption() || task.getState().getCore().getNonSupportSpecies().contains(species);
    }
 }
