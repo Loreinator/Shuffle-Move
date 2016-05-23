@@ -54,6 +54,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 	- Cloud clear effects are now simulated. The interface is not yet available though.
 	- SP_084 special behaviour: sets moves to 15 when selected, and grading mode to WeekendMeowth. Grading Mode becomes "Score" when at 1 or fewer moves remaining. This switching behaviour can be disengaged by setting the grading mode to something else.
 	- Brute force, Swat, and Fearless have had their implementations greatly improved.
+	- Immunities are now implemented for Burn, Freeze, Paralyze, Quake, Shock Attack, Sleep Charm, and Spookify. See [here](https://www.reddit.com/r/PokemonShuffle/comments/3npjsf/type_immunities_to_status_effects/) for the immunities chart used.
 * **v0.3.53 – 2016-05-10**
 	- Added default boards for the update of April 26th 2016
 	- Corrected Chinesse translations for Zygarde Formes
