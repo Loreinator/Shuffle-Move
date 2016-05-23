@@ -124,7 +124,7 @@ public class SimulationCore extends RecursiveAction {
       Collection<Species> speciesPresent = new HashSet<Species>(userTeam.getSpecies(speciesManager));
       // Support species is all of the team that isn't a non-support
       supportSpecies = new HashSet<Species>(speciesPresent);
-      supportSpecies.removeIf((s) -> userTeam.isNonSupport(s));
+      supportSpecies.removeIf((s) -> userTeam.isNonSupport(s) || Species.FIXED_SPECIES.contains(s));
       // Add all the board species to speciesPresent
       speciesPresent.addAll(board.getSpeciesPresent());
       // NonSupportSpecies is any species that is not support.

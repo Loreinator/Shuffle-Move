@@ -287,9 +287,6 @@ public class TeamImpl implements Team {
       if (changed) {
          changed |= setBinding(s, binding);
       }
-      if (Species.FIXED_SPECIES_NAMES.contains(s)) {
-         setNonSupport(s, true);
-      }
       return changed;
    }
    
@@ -300,6 +297,12 @@ public class TeamImpl implements Team {
    public boolean setNonSupport(String name, boolean isNonSupport) {
       if (name == null) {
          return false;
+      }
+      for (Species species : Species.FIXED_SPECIES) {
+         if (name.equals(species.getName())) {
+            // Force Fixed Species to never be a non-support
+            isNonSupport = false;
+         }
       }
       boolean changed = false;
       if (isNonSupport) {

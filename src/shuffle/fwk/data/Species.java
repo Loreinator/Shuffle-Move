@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import shuffle.fwk.i18n.I18nUser;
 
@@ -65,8 +64,6 @@ public class Species implements Comparable<Species>, I18nUser {
    
    public static final List<Species> FIXED_SPECIES = Collections.unmodifiableList(Arrays.asList(AIR, WOOD, METAL, COIN,
          METAL_5, METAL_4, METAL_3, METAL_2, METAL_1, FREEZE));
-   public static final List<String> FIXED_SPECIES_NAMES = FIXED_SPECIES.stream().map((s) -> s.getName())
-         .collect(Collectors.toList());
    public static final List<Species> EXTENDED_METAL = Collections
          .unmodifiableList(Arrays.asList(METAL, METAL_1, METAL_2, METAL_3, METAL_4, METAL_5));
    

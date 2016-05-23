@@ -967,11 +967,12 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       ret.addMouseListener(ma);
       
       setBorderFor(ret, false, false);
-      boolean isSupport = !curTeam.isNonSupport(s);
-      Color indColor = isSupport ? Color.GREEN : Color.RED;
-      ret.setBackground(indColor);
-      ret.setOpaque(true);
-      
+      if (!Species.FIXED_SPECIES.contains(s)) {
+         boolean isSupport = !curTeam.isNonSupport(s);
+         Color indColor = isSupport ? Color.GREEN : Color.RED;
+         ret.setBackground(indColor);
+         ret.setOpaque(true);
+      }
       return ret;
    }
    
