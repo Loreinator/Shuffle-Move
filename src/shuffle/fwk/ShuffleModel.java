@@ -141,6 +141,12 @@ public class ShuffleModel
    private static final String KEY_BUG_FILE_SAVEPROBLEM = "log.error.bugfile.saveproblem";
    private static final String KEY_BUG_REPORT_PROBLEM = "log.error.bugreport.problem";
    private static final String KEY_SELECTING_RESULT = "log.result.selected";
+   // Special values for SP_084 Meowth (weekend meowth)
+   private static final String SP_084_STAGE_KEY = "SP_084";
+   private static final int SP_084_MOVE_OVERRIDE = 5;
+   private static final String SP_084_GRADING_MODE = "WeekendMeowth";
+   private static final String SP_084_LAST_MOVE_GRADING_MODE = GradingModeManager.SCORE_KEY;
+   private boolean followSP084defaults = true;
    // bug report components
    private Project errorProject = null;
    private BuildListener antListener = null;
@@ -181,6 +187,11 @@ public class ShuffleModel
     */
    public ShuffleModel(ShuffleModelUser user) {
       this.user = user;
+      if (getRemainingMoves() <= 1) {
+         followSP084defaults = (getCurrentGradingMode().getKey().equals(SP_084_LAST_MOVE_GRADING_MODE));
+      } else {
+         followSP084defaults = (getCurrentGradingMode().getKey().equals(SP_084_GRADING_MODE));
+      }
    }
    
    // Important methods
@@ -231,6 +242,11 @@ public class ShuffleModel
       changed |= getBoardManager().loadFromConfig();
       changed |= frozen;
       frozen = false;
+      if (getRemainingMoves() <= 1) {
+         followSP084defaults = (getCurrentGradingMode().getKey().equals(SP_084_LAST_MOVE_GRADING_MODE));
+      } else {
+         followSP084defaults = (getCurrentGradingMode().getKey().equals(SP_084_GRADING_MODE));
+      }
       SpeciesManager manager = getSpeciesManager();
       Iterator<Species> itr = getCurrentTeam().getSpecies(manager).iterator();
       if (itr.hasNext()) {
@@ -523,6 +539,12 @@ public class ShuffleModel
          setCurrentScore(0);
          if (!isSurvivalMode()) {
             setRemainingMoves(stage.getMoves());
+            followSP084defaults = true;
+            if (stage.getName().equals(SP_084_STAGE_KEY)) {
+               setRemainingMoves(stage.getMoves() + SP_084_MOVE_OVERRIDE);
+               setGradingMode(
+                     getGradingModeManager().getGradingModeValue(SP_084_GRADING_MODE, getCurrentGradingMode()));
+            }
          }
          undoStack.clear();
          redoStack.clear();
@@ -925,6 +947,15 @@ public class ShuffleModel
          redoStack.clear();
          setCurrentScore(newScore);
          setRemainingMoves(newMoves);
+         if (followSP084defaults && getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+            if (newMoves <= 1) {
+               setGradingMode(getGradingModeManager().getGradingModeValue(SP_084_LAST_MOVE_GRADING_MODE,
+                     getCurrentGradingMode()));
+            } else {
+               setGradingMode(
+                     getGradingModeManager().getGradingModeValue(SP_084_GRADING_MODE, getCurrentGradingMode()));
+            }
+         }
          setDataChanged();
       }
       return changed;
@@ -1199,7 +1230,7 @@ public class ShuffleModel
    }
    
    protected boolean setGradingMode(GradingMode mode) {
-      boolean changed = mode != null && mode != getCurrentGradingMode() && setGradeMode(mode);
+      boolean changed = mode != null && !mode.equals(getCurrentGradingMode()) && setGradeMode(mode);
       if (changed) {
          if (bestResults != null && !bestResults.isEmpty()) {
             Collection<SimulationResult> prev = new ArrayList<SimulationResult>(bestResults);
@@ -1216,6 +1247,13 @@ public class ShuffleModel
    private boolean setGradeMode(GradingMode mode) {
       if (mode == null) {
          return false;
+      }
+      if (getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+         if (getRemainingMoves() <= 1) {
+            followSP084defaults = (mode.getKey().equals(SP_084_LAST_MOVE_GRADING_MODE));
+         } else {
+            followSP084defaults = (mode.getKey().equals(SP_084_GRADING_MODE));
+         }
       }
       return getGradingModeManager().setCurrentGradingMode(mode);
    }
@@ -1289,6 +1327,21 @@ public class ShuffleModel
       if (isSurvivalMode()) {
          return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_SURVIVAL_MODE_MOVES, moves);
       } else {
+         if (getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+            GradingMode curMode = getCurrentGradingMode();
+            if (followSP084defaults && getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+               if (moves <= 1) {
+                  setGradingMode(getGradingModeManager().getGradingModeValue(SP_084_LAST_MOVE_GRADING_MODE, curMode));
+               } else {
+                  setGradingMode(getGradingModeManager().getGradingModeValue(SP_084_GRADING_MODE, curMode));
+               }
+            }
+            if (moves <= 1) {
+               followSP084defaults = (curMode.getKey().equals(SP_084_LAST_MOVE_GRADING_MODE));
+            } else {
+               followSP084defaults = (curMode.getKey().equals(SP_084_GRADING_MODE));
+            }
+         }
          return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_MOVES_REMAINING, moves);
       }
    }
