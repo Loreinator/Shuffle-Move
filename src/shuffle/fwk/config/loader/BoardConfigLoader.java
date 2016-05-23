@@ -35,6 +35,7 @@ import shuffle.fwk.data.Species;
 public class BoardConfigLoader extends DataLoader<String> {
    public static final String STAGE = "STAGE";
    public static final String FROW_KEY_FORMAT = "FROW_%d";
+   public static final String CROW_KEY_FORMAT = "CROW_%d";
    public static final String ROW_KEY_FORMAT = "ROW_%d";
    public static final String KEY_MEGA_PROGRESS = "MEGA_PROGRESS";
    private Interpreter<String> inter = null;
@@ -140,11 +141,45 @@ public class BoardConfigLoader extends DataLoader<String> {
       return Collections.unmodifiableList(ret);
    }
    
+   public List<List<Boolean>> getConfiguredCloudedRows() {
+      List<List<Boolean>> ret = new ArrayList<List<Boolean>>();
+      for (int i = 1; i < 7; i++) {
+         ret.add(getCloudedRow(i));
+      }
+      return Collections.unmodifiableList(ret);
+   }
+   
+   private List<Boolean> getCloudedRow(int n) {
+      List<Boolean> ret = Arrays.asList(false, false, false, false, false, false);
+      if (n > 6) {
+         n = 6;
+      }
+      if (n < 1) {
+         n = 1;
+      }
+      String key = getCloudedRowKey(n);
+      if (containsKey(key)) {
+         for (String row : getValues(key)) {
+            String[] rowTokens = row.split("[,|]");
+            if (rowTokens.length == 6) {
+               for (int i = 0; i < 6; i++) {
+                  ret.set(i, Boolean.parseBoolean(rowTokens[i]));
+               }
+            }
+         }
+      }
+      return Collections.unmodifiableList(ret);
+   }
+   
    public static String getRowKey(int n) {
       return String.format(ROW_KEY_FORMAT, n);
    }
    
    public static String getFrozenRowKey(int n) {
       return String.format(FROW_KEY_FORMAT, n);
+   }
+   
+   public static String getCloudedRowKey(int n) {
+      return String.format(CROW_KEY_FORMAT, n);
    }
 }

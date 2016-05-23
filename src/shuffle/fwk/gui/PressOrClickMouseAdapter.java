@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
 public abstract class PressOrClickMouseAdapter extends MouseAdapter {
    
    // Static so this is maintained across all mouse adapters
-   private static boolean inside = false;
+   protected static boolean inside = false;
    
    protected abstract void onLeft(MouseEvent e);
    
@@ -55,7 +55,6 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
       if (SwingUtilities.isRightMouseButton(e) | SwingUtilities.isLeftMouseButton(e) && e.isControlDown()) {
          onRight(e);
       } else if (SwingUtilities.isLeftMouseButton(e)) {
-         // System.out.println("Left click");
          onLeft(e);
       } else if (SwingUtilities.isMiddleMouseButton(e)) {
          onMiddle(e);
@@ -69,7 +68,6 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
          if (b1Down(e) && e.isControlDown() || b3Down(e)) {
             onRight(e);
          } else if (b1Down(e)) {
-            // System.out.println("Left entered");
             onLeft(e);
          } else if (b2Down(e)) {
             onMiddle(e);
@@ -83,22 +81,21 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
       inside = false; // This seems to be enough to stop spill over from menu clicks
    }
    
-   private boolean b1Down(MouseEvent e) {
+   protected final boolean b1Down(MouseEvent e) {
       return (e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) != 0;
    }
    
-   private boolean b2Down(MouseEvent e) {
+   protected final boolean b2Down(MouseEvent e) {
       return (e.getModifiersEx() & InputEvent.BUTTON2_DOWN_MASK) != 0;
    }
    
-   private boolean b3Down(MouseEvent e) {
+   protected final boolean b3Down(MouseEvent e) {
       return (e.getModifiersEx() & InputEvent.BUTTON3_DOWN_MASK) != 0;
    }
    
    @Override
    public void mousePressed(MouseEvent e) {
       inside = true;
-      // System.out.println("Mouse Pressed");
       mouseEntered(e);
    }
 }

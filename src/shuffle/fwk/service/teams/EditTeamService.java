@@ -87,6 +87,7 @@ import shuffle.fwk.gui.EffectChooser;
 import shuffle.fwk.gui.Indicator;
 import shuffle.fwk.gui.MultiListener;
 import shuffle.fwk.gui.PressOrClickMouseAdapter;
+import shuffle.fwk.gui.PressToggleMouseAdapter;
 import shuffle.fwk.gui.StageChooser;
 import shuffle.fwk.gui.TypeChooser;
 import shuffle.fwk.gui.WrapLayout;
@@ -843,7 +844,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       megaChooser.addItem(getString(KEY_NONE));
       for (String name : names) {
          Species species = speciesManager.getSpeciesByName(name);
-         if (species.getMegaName() != null) {
+         if (species.getMegaName() != null && !curTeam.isNonSupport(species)) {
             megaChooser.addItem(species.getLocalizedName(true));
          }
       }
@@ -946,8 +947,51 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       keybindsComboBox.setToolTipText(getString(KEY_KEYBINDS_TOOLTIP));
       ret.add(keybindsComboBox, c);
       
+      MouseAdapter ma = new PressToggleMouseAdapter() {
+         
+         @Override
+         protected void onRight(MouseEvent e) {
+            doToggle();
+         }
+         
+         @Override
+         protected void onLeft(MouseEvent e) {
+            doToggle();
+         }
+         
+         private void doToggle() {
+            toggleSupport(s);
+            updateTeamPanel();
+         }
+      };
+      ret.addMouseListener(ma);
+      
       setBorderFor(ret, false, false);
+      if (!Species.FIXED_SPECIES.contains(s)) {
+         boolean isSupport = !curTeam.isNonSupport(s);
+         Color indColor = isSupport ? Color.GREEN : Color.RED;
+         ret.setBackground(indColor);
+         ret.setOpaque(true);
+      }
       return ret;
+   }
+   
+   /**
+    * @param name
+    */
+   protected void toggleSupport(Species species) {
+      TeamImpl curTeam = getCurrentTeamImpl();
+      boolean previous = curTeam.isNonSupport(species.getName());
+      curTeam.setNonSupport(species, !previous);
+      if (curTeam.getMegaSlotName() == null && species.getMegaName() != null && !curTeam.isNonSupport(species)) {
+         curTeam.setMegaSlot(species.getName());
+      }
+      if (curTeam.getMegaSlotName() != null) {
+         megaThreshold = curTeam.getMegaThreshold(getUser().getSpeciesManager(), getUser().getRosterManager(),
+               getUser().getEffectManager());
+         megaProgress = Math.min(megaProgress, megaThreshold);
+      }
+      setTeamForCurrentStage(curTeam);
    }
    
    private void setBinding(Species species, Character newBinding) {
@@ -968,7 +1012,9 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
          LinkedHashSet<Character> availableBindings = new LinkedHashSet<Character>(Arrays.asList(curBinding));
          availableBindings.addAll(myData.getAllAvailableBindingsFor(name, curTeam));
          for (Character ch : availableBindings) {
-            box.addItem(ch);
+            if (ch != null) {
+               box.addItem(ch);
+            }
          }
          box.setSelectedItem(prevSelected);
          if (box.getSelectedIndex() < 0) {
@@ -1016,7 +1062,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       if (megaSlotDisplayed != null) {
          SpeciesManager sm = getUser().getSpeciesManager();
          for (Species s : curTeam.getSpecies(sm)) {
-            if (s.getMegaName() != null && megaSlotDisplayed.equals(s.getLocalizedName(true))) {
+            if (s.getMegaName() != null && megaSlotDisplayed.equals(s.getLocalizedName(true))
+                  && !curTeam.isNonSupport(s)) {
                megaSlot = s.getName();
                break;
             }
@@ -1092,7 +1139,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private void addSpeciesToTeam(Species species) {
       TeamImpl curTeam = getCurrentTeamImpl();
       curTeam.addName(species.getName(), getNextBindingFor(species.getName(), curTeam));
-      if (curTeam.getMegaSlotName() == null && species.getMegaName() != null) {
+      if (curTeam.getMegaSlotName() == null && species.getMegaName() != null && !curTeam.isNonSupport(species)) {
          curTeam.setMegaSlot(species.getName());
       }
       if (curTeam.getMegaSlotName() != null) {

@@ -330,12 +330,10 @@ public enum EntryType {
          if (!m.find()) {
             throw new IllegalArgumentException("Value is not a team." + value);
          }
+         TeamImpl team = new TeamImpl();
          
          String names = m.group(1);
          String binds = m.group(2);
-         String megaName = m.group(3);
-         
-         TeamImpl team = new TeamImpl();
          
          List<String> nameList = Arrays.asList(names.split("[,]"));
          List<String> bindsList = Arrays.asList(binds.split("[,]", -1));
@@ -348,7 +346,19 @@ public enum EntryType {
             }
             team.addName(name, binding);
          }
+         
+         // Handles nulls fine on its own
+         String megaName = m.group(3);
          team.setMegaSlot(megaName);
+         
+         String nonSupports = m.group(4);
+         if (nonSupports != null) {
+            List<String> nonSupportList = Arrays.asList(nonSupports.split("[,]"));
+            for (int i = 0; i < nonSupportList.size(); i++) {
+               String nonSupport = nonSupportList.get(i);
+               team.setNonSupport(nonSupport, true);
+            }
+         }
          return team;
       }
       
@@ -453,9 +463,10 @@ public enum EntryType {
    private static final Pattern STAGE_PATTERN = Pattern
          .compile("^\\s*(\\S+)\\s+(\\S+)(?:\\s+(\\d+)(?:\\s+(\\d+)(?:\\s+(\\S+))?)?)?\\s*$");
    private static final Pattern TEAM_PATTERN = Pattern
-         .compile("^\\s*(\\S+)(?:\\s+((?:[^,\\s]?[,])*[^,\\s]?))?(?:\\s+([^\\s,]+)(?:\\s*[\\s,]\\s*([^\\s,]+))?)?\\s*$");
+.compile(
+         "^\\s*(\\S+)(?:\\s+((?:[^,\\s]+[,])*[^,\\s]+)(?:\\s+((?:[^,\\s]+[,])*[^,\\s]+)(?:\\s+([^\\s]+))?(?:\\s+((?:[^,\\s]+[,])*[^,\\s]+))?)?)?\\s*$");
    // _______________ListofSpecies __________ListofKeybinds _______________MegaName _______,
-   // ________enabled
+   // ________ListOfSupportStatus
    private static final Pattern FONT_PATTERN = Pattern
          .compile("^\\s*(\\S+)\\s+([^,\\s]+(?:,[^,\\s]+)?)\\s+(\\d+)\\s*$");
    private static final Pattern GRADING_PATTERN = Pattern.compile("^\\s*(\\S+)\\s+(\\S+)\\s*$");
@@ -464,12 +475,13 @@ public enum EntryType {
     * Parses the given string into the value for this entry type. Exceptions will be thrown if the
     * value is not valid in some way.
     * 
+    * @param key
+    *           The string key for the entry
     * @param value
-    *           TODO
-    * @param value
-    * @param value
-    * @return
+    *           The value to be parsed
+    * @return The parsed value
     * @throws Exception
+    *            If anything goes wrong with the parse, i.e. invalid data.
     */
    public abstract Object parseValue(String key, String value) throws Exception;
    

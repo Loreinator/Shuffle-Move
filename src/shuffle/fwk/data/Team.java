@@ -113,6 +113,42 @@ public interface Team {
    public abstract List<Species> getSpecies(SpeciesManager manager);
    
    /**
+    * Gets the list of Non-Support names for the team.
+    * 
+    * @return A List of Species
+    */
+   public abstract List<String> getNonSupportNames();
+   
+   /**
+    * Returns a List of all Non-Support Species in this team, using the given manager for name to
+    * species conversion.
+    * 
+    * @param manager
+    *           The Species Manager
+    *           
+    * @return A List of Species
+    */
+   public abstract List<Species> getNonSupportSpecies(SpeciesManager manager);
+   
+   /**
+    * Returns true if the specified name is a non-support for this team.
+    * 
+    * @param name
+    *           The name of the species.
+    * @return True if non-support. False if otherwise (not guaranteed to be a support if false).
+    */
+   public abstract boolean isNonSupport(String name);
+   
+   /**
+    * Returns true if the specified Species is a non-support for this team.
+    * 
+    * @param species
+    *           The Species
+    * @return True if non-support. False if otherwise (not guaranteed to be a support if false).
+    */
+   public abstract boolean isNonSupport(Species species);
+   
+   /**
     * Checks if the given name is this Team's Mega slot.
     * 
     * @param name

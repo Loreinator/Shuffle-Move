@@ -1,4 +1,4 @@
-#Shuffle Move v0.3.53
+#Shuffle Move v0.3.54
 
 A program to identify and display the best next move for the game Pokémon Shuffle. I do not own any part of Pokémon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
 
@@ -43,6 +43,17 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
+* **v0.3.54 – 2016-05-23**
+	- Updates and default boards for May 17th 2016
+	- Corrected Mega scores for the pattern clearing mega effects
+	- Many new effects added (27 new, also implemented support/non-support functionality). Species in team = support. Not in team = non support.
+	- Non-support functionality is now user-specified in addition to the base assumption that non-team species are non-support. Click the entries in the Team Editor to toggle them between Support (Green) or Non-Support (Red).
+	- Implemented damage bonus for Spookify, Freeze, and Sleep Charm
+	- Skill Boosters are now implemented. Set the skill level via the roster editor (select a species and modify the selector at the bottom of the window)
+	- The main window will now remember its position.
+	- Cloud clear effects are now simulated. The interface is not yet available though.
+	- SP_084 special behaviour: sets moves to 15 when selected, and grading mode to WeekendMeowth. Grading Mode becomes "Score" when at 1 or fewer moves remaining. This switching behaviour can be disengaged by setting the grading mode to something else.
+	- Brute force, Swat, and Fearless have had their implementations greatly improved.
 * **v0.3.53 – 2016-05-10**
 	- Added default boards for the update of April 26th 2016
 	- Corrected Chinesse translations for Zygarde Formes

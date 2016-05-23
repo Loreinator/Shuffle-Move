@@ -37,6 +37,7 @@ import shuffle.fwk.data.Species;
 public class RosterManager extends ConfigManager {
    
    private static final String SPEEDUP_FORMAT = "SPEEDUP_%s";
+   private static final String SKILL_FORMAT = "SKILL_%s";
    
    public RosterManager(List<String> loadPaths, List<String> writePaths, ConfigFactory factory) {
       super(loadPaths, writePaths, factory);
@@ -52,6 +53,41 @@ public class RosterManager extends ConfigManager {
    
    public Integer getLevelForSpecies(String speciesName) {
       return getIntegerValue(speciesName, 0);
+   }
+   
+   public boolean setLevelForSpecies(Species species, int level) {
+      return setLevelForSpecies(species.getName(), level);
+   }
+   
+   public boolean setLevelForSpecies(String species, int level) {
+      return setEntry(EntryType.INTEGER, species, level);
+   }
+   
+   public Integer getSkillLevelForSpecies(Species species) {
+      return getSkillLevelForSpecies(species.getName());
+   }
+   
+   public Integer getSkillLevelForSpecies(String speciesName) {
+      return getIntegerValue(getSkillKey(speciesName), 1);
+   }
+   
+   public boolean setSkillLevelForSpecies(Species species, int level) {
+      return setSkillLevelForSpecies(species.getName(), level);
+   }
+   
+   public boolean setSkillLevelForSpecies(String species, int level) {
+      boolean changed;
+      level = Math.max(Math.min(level, 5), 1);
+      if (level == 1) {
+         changed = removeEntry(EntryType.INTEGER, getSkillKey(species));
+      } else {
+         changed = setEntry(EntryType.INTEGER, getSkillKey(species), level);
+      }
+      return changed;
+   }
+   
+   private String getSkillKey(String speciesName) {
+      return String.format(SKILL_FORMAT, speciesName);
    }
    
    public Integer getMegaThresholdFor(Species species, EffectManager effectManager) {

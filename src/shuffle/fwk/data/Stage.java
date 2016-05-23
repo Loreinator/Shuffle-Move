@@ -98,7 +98,6 @@ public class Stage implements Comparable<Stage> {
       this(target.toString(), target.toString(), target, DEFAULT_MOVES, DEFAULT_HEALTH);
    }
    
-   // TODO implement stage-specific configuration for predictable stages.
    public Collection<Queue<Species>> getDropPatterns(int column) {
       return new HashSet<Queue<Species>>();
    }

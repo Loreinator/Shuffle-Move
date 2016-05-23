@@ -32,6 +32,8 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.RecursiveTask;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -97,6 +99,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private HashMap<Integer, Collection<ComboEffect>> activeEffects = new HashMap<Integer, Collection<ComboEffect>>();
    
    private HashMap<PkmType, NumberSpan> typeMultipliers = new HashMap<PkmType, NumberSpan>();
+   private List<BiFunction<ActivateComboEffect, SimulationTask, NumberSpan>> scoreModifiers = new ArrayList<BiFunction<ActivateComboEffect, SimulationTask, NumberSpan>>();
+   private List<BiConsumer<ActivateComboEffect, SimulationTask>> finishedActions = new ArrayList<BiConsumer<ActivateComboEffect, SimulationTask>>();
    /**
     * The prospective combos that are available to activate.
     */
@@ -136,6 +140,43 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    
    public void setSpecialTypeMultiplier(PkmType type, NumberSpan multiplier) {
       typeMultipliers.put(type, multiplier);
+   }
+   
+   public NumberSpan getScoreModifier(ActivateComboEffect comboEffect) {
+      NumberSpan compoundMultiplier = new NumberSpan(1);
+      for (BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier : scoreModifiers) {
+         NumberSpan multiplier = modifier.apply(comboEffect, this);
+         compoundMultiplier = compoundMultiplier.multiplyBy(multiplier);
+      }
+      return compoundMultiplier;
+   }
+   
+   public void addScoreModifier(BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier) {
+      scoreModifiers.add(modifier);
+   }
+   
+   public void removeScoreModifier(BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier) {
+      scoreModifiers.remove(modifier);
+   }
+   
+   public void executeFinishedActions(ActivateComboEffect comboEffect) {
+      if (finishedActions.isEmpty()) {
+         return;
+      }
+      Collection<BiConsumer<ActivateComboEffect, SimulationTask>> toActivate = new ArrayList<BiConsumer<ActivateComboEffect, SimulationTask>>(
+            finishedActions);
+      finishedActions.clear();
+      for (BiConsumer<ActivateComboEffect, SimulationTask> action : toActivate) {
+         action.accept(comboEffect, this);
+      }
+   }
+   
+   public void addFinishedAction(BiConsumer<ActivateComboEffect, SimulationTask> action) {
+      finishedActions.add(action);
+   }
+   
+   public void removeFinishedAction(BiConsumer<ActivateComboEffect, SimulationTask> action) {
+      finishedActions.remove(action);
    }
    
    public String getId() {
@@ -828,6 +869,13 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       return ret;
    }
    
+   /**
+    * Given a set of coordinates, returns a pair that denotes the lowest row,col and highest row,col
+    * pair to bound the coordinates (inclusive).
+    * 
+    * @param coords
+    * @return
+    */
    public static List<Integer> getLimits(List<Integer> coords) {
       int minRow = coords.get(0);
       int minCol = coords.get(1);
@@ -1141,6 +1189,27 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          }
       }
       return match;
+   }
+   
+   public List<Integer> filterPlanBy(List<Integer> plan, boolean includeActive,
+         TriFunction<Integer, Integer, Species, Boolean> function) {
+      if (plan == null) {
+         return null;
+      }
+      List<Integer> ret = new ArrayList<Integer>();
+      for (int i = 0; i * 2 + 1 < plan.size(); i++) {
+         int row = plan.get(i * 2);
+         int col = plan.get(i * 2 + 1);
+         if (!includeActive && isActive(row, col)) {
+            continue;
+         }
+         Species thisSpecies = getState().getBoard().getSpeciesAt(row, col);
+         if (function.apply(row, col, thisSpecies)) {
+            ret.add(row);
+            ret.add(col);
+         }
+      }
+      return ret;
    }
    
    public Effect getEffectFor(Species s) {

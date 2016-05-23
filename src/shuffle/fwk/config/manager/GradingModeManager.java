@@ -30,9 +30,9 @@ import shuffle.fwk.config.EntryType;
  */
 public class GradingModeManager extends ConfigManager {
    
-   private static final String SCORE_KEY = "grading.score";
-   private static final String CURRENT_MODE = "CURRENT_MODE";
-   private static final GradingMode DEFAULT_MODE = new GradingMode(SCORE_KEY, "", false);
+   public static final String SCORE_KEY = "grading.score";
+   public static final String CURRENT_MODE = "CURRENT_MODE";
+   public static final GradingMode DEFAULT_MODE = new GradingMode(SCORE_KEY, "", false);
    
    public GradingModeManager(List<String> loadPaths, List<String> writePaths, ConfigFactory factory) {
       super(loadPaths, writePaths, factory);

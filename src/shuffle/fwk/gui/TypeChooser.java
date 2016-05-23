@@ -49,11 +49,6 @@ public class TypeChooser extends JComboBox<String> implements I18nUser {
       setup();
    }
    
-   /**
-    * @param includeNoFilter
-    *           TODO
-    * 
-    */
    private void setup() {
       refill();
       if (includeNoFilter) {

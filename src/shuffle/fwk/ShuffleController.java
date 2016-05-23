@@ -1081,6 +1081,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public void setTeamForStage(Team team, Stage stage) {
       if (getModel().getTeamManager().setTeamForStage(team, stage)) {
+         getModel().setDataChanged();
          repaint();
       }
    }

@@ -596,7 +596,9 @@ RESOURCE Escavalier img/icons/589.png
 RESOURCE Foongus img/icons/590.png
 RESOURCE Amoonguss img/icons/591.png
 RESOURCE Frillish img/icons/592.png
+RESOURCE Frillish-f img/icons/592-f.png
 RESOURCE Jellicent img/icons/593.png
+RESOURCE Jellicent-f img/icons/593-f.png
 RESOURCE Alomomola img/icons/594.png
 RESOURCE Joltik img/icons/595.png
 RESOURCE Galvantula img/icons/596.png
@@ -797,3 +799,4 @@ RESOURCE Metal_2 img/icons/metalIc_2.png
 RESOURCE Metal_1 img/icons/metalIc_1.png
 RESOURCE Wood img/icons/woodIc.png
 RESOURCE Candy img/icons/candy.png
+RESOURCE Skill_Booster img/icons/Skill_Booster.png
