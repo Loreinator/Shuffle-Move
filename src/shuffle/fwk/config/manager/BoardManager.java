@@ -133,6 +133,7 @@ public class BoardManager {
       curBoard.clear();
       List<List<String>> rows = boardLoader.getConfiguredRows();
       List<List<Boolean>> fRows = boardLoader.getConfiguredFrozenRows();
+      List<List<Boolean>> cRows = boardLoader.getConfiguredCloudedRows();
       SpeciesManager manager = factory.getSpeciesManager();
       for (int r = 1; r <= 6; r++) {
          for (int c = 1; c <= 6; c++) {
@@ -141,6 +142,8 @@ public class BoardManager {
             curBoard.setSpeciesAt(r, c, s);
             Boolean frozen = fRows.get(r - 1).get(c - 1);
             curBoard.setFrozenAt(r, c, frozen == null ? false : frozen);
+            Boolean clouded = cRows.get(r - 1).get(c - 1);
+            curBoard.setClouded(r, c, clouded == null ? false : clouded);
          }
       }
       for (String progress : boardLoader.getConfiguredMegaProgress()) {
@@ -171,11 +174,14 @@ public class BoardManager {
       for (int i = 1; i <= 6; i++) {
          String rowKey = BoardConfigLoader.getRowKey(i);
          String rowfKey = BoardConfigLoader.getFrozenRowKey(i);
+         String rowcKey = BoardConfigLoader.getCloudedRowKey(i);
          List<String> rowSpeciesNames = new ArrayList<String>();
          List<String> rowFrozenStates = new ArrayList<String>();
+         List<String> rowCloudedStates = new ArrayList<String>();
          for (int j = 1; j <= 6; j++) {
             rowSpeciesNames.add(getBoard().getSpeciesAt(i, j).getName());
             rowFrozenStates.add(Boolean.toString(getBoard().isFrozenAt(i, j)));
+            rowCloudedStates.add(Boolean.toString(getBoard().isCloudedAt(i, j)));
          }
          StringBuilder rowBuilder = new StringBuilder();
          Iterator<String> itr = rowSpeciesNames.iterator();
@@ -195,6 +201,15 @@ public class BoardManager {
             }
          }
          data.put(rowfKey, Arrays.asList(fRowBuilder.toString()));
+         StringBuilder cRowBuilder = new StringBuilder();
+         Iterator<String> citr = rowCloudedStates.iterator();
+         while (citr.hasNext()) {
+            cRowBuilder.append(citr.next());
+            if (citr.hasNext()) {
+               cRowBuilder.append(",");
+            }
+         }
+         data.put(rowcKey, Arrays.asList(cRowBuilder.toString()));
       }
       File boardPath = factory.getPathManager().getFileValue(KEY_BOARD);
       List<String> paths = new ArrayList<String>(Arrays.asList(boardPath.getPath()));
