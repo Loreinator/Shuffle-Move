@@ -96,7 +96,6 @@ public abstract class PressOrClickMouseAdapter extends MouseAdapter {
    @Override
    public void mousePressed(MouseEvent e) {
       inside = true;
-      System.out.println("Mouse Pressed, calling mouseEntered");
       mouseEntered(e);
    }
 }

@@ -43,7 +43,6 @@ public abstract class PressToggleMouseAdapter extends PressOrClickMouseAdapter {
    
    @Override
    public void mouseReleased(MouseEvent e) {
-      // System.out.println("Mouse Released");
       PressOrClickMouseAdapter.inside = false;
       // This seems to be enough to stop spill over from menu clicks
    }
