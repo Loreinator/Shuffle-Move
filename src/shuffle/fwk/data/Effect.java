@@ -339,16 +339,27 @@ public enum Effect {
       }
       
       @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         double multiplier = getMultiplier(task, comboEffect);
-         Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-         PkmType effectType = task.getState().getSpeciesType(effectSpecies);
-         PkmType stageType = task.getState().getCore().getStage().getType();
-         double typeEffectiveness = PkmType.getMultiplier(effectType, stageType);
-         if (typeEffectiveness < 2.0 && typeEffectiveness > 0.0) {
-            multiplier = multiplier * (2.0 / typeEffectiveness);
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (super.canActivate(comboEffect, task)) {
+            /*
+             * Inherit the Brute force multiplier and compound it in the SAME NumberSpan since they
+             * activate together
+             */
+            final double baseMultiplier = getMultiplier(task, comboEffect);
+            final double odds = getOdds(task, comboEffect);
+            task.addScoreModifier((ce, t) -> {
+               PkmType stageType = t.getState().getCore().getStage().getType();
+               Species effectSpecies = t.getEffectSpecies(ce.getCoords());
+               PkmType effectType = t.getState().getSpeciesType(effectSpecies);
+               double netMultiplier = baseMultiplier;
+               double typeEffectiveness = PkmType.getMultiplier(effectType, stageType);
+               if (typeEffectiveness < 2.0 && typeEffectiveness > 0.0) {
+                  // Ensure all combos are treated as super effective
+                  netMultiplier = netMultiplier * (2.0 / typeEffectiveness);
+               }
+               return new NumberSpan(1, netMultiplier - 1, odds);
+            });
          }
-         return getMultiplier(comboEffect, task, multiplier - 1.0);
       }
    },
    /**
@@ -367,16 +378,14 @@ public enum Effect {
       }
       
       @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         double multiplier = getMultiplier(task, comboEffect);
-         Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-         PkmType effectType = task.getState().getSpeciesType(effectSpecies);
-         PkmType stageType = task.getState().getCore().getStage().getType();
-         double typeEffectiveness = PkmType.getMultiplier(effectType, stageType);
-         if (typeEffectiveness < 2.0 && typeEffectiveness > 0.0) {
-            multiplier = multiplier * (2.0 / typeEffectiveness);
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            // Skill level multiplier
+            double multiplier = getMultiplier(task, comboEffect);
+            // Double it to make attacks super effective instead of NVE
+            multiplier = multiplier * 2.0;
+            ifThenSetSpecial(comboEffect, task, PkmType.PSYCHIC, multiplier - 1.0);
          }
-         return getMultiplier(comboEffect, task, multiplier - 1.0);
       }
    },
    /**
@@ -385,20 +394,26 @@ public enum Effect {
    BRUTE_FORCE {
       
       @Override
-      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (!super.canActivate(comboEffect, task)) {
-            return false;
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (super.canActivate(comboEffect, task)) {
+            /*
+             * Inherit the Brute force multiplier and compound it in the SAME NumberSpan since they
+             * activate together
+             */
+            final double baseMultiplier = getMultiplier(task, comboEffect);
+            final double odds = getOdds(task, comboEffect);
+            task.addScoreModifier((ce, t) -> {
+               PkmType stageType = t.getState().getCore().getStage().getType();
+               Species effectSpecies = t.getEffectSpecies(ce.getCoords());
+               PkmType effectType = t.getState().getSpeciesType(effectSpecies);
+               double netMultiplier = baseMultiplier;
+               if (PkmType.getMultiplier(effectType, stageType) < 1.0) {
+                  // If NVE, make neutral
+                  netMultiplier = netMultiplier * 2.0;
+               }
+               return new NumberSpan(1, netMultiplier - 1, odds);
+            });
          }
-         return isNVE(comboEffect, task);
-      }
-      
-      @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         double multiplier = getMultiplier(task, comboEffect);
-         if (isNVE(comboEffect, task)) {
-            multiplier = multiplier * 2;
-         }
-         return getMultiplier(comboEffect, task, multiplier - 1.0);
       }
    },
    /**
@@ -587,6 +602,25 @@ public enum Effect {
       }
       
       @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board b = task.getState().getBoard();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> b.isCloudedAt(r, c));
+            double odds = getOdds(task, comboEffect);
+            if (matches.size() / 2 > 1 || odds < 1.0) {
+               task.setIsRandom();
+            }
+            if (odds >= Math.random()) {
+               int blockIndex = getRandomInt(matches.size() / 2);
+               int row = matches.get(blockIndex * 2);
+               int col = matches.get(blockIndex * 2 + 1);
+               List<Integer> toClear = Arrays.asList(row, col);
+               handleClearCloud(toClear, task);
+            }
+         }
+      }
+      
+      @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
@@ -616,25 +650,6 @@ public enum Effect {
                int col = matches.get(blockIndex * 2 + 1);
                List<Integer> toErase = Arrays.asList(row, col);
                eraseBonus(task, toErase, false);
-            }
-         }
-      }
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            Board b = task.getState().getBoard();
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> b.isCloudedAt(r, c));
-            double odds = getOdds(task, comboEffect);
-            if (matches.size() / 2 > 1 || odds < 1.0) {
-               task.setIsRandom();
-            }
-            if (odds >= Math.random()) {
-               int blockIndex = getRandomInt(matches.size() / 2);
-               int row = matches.get(blockIndex * 2);
-               int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toClear = Arrays.asList(row, col);
-               handleClearCloud(toClear, task);
             }
          }
       }
@@ -4328,6 +4343,7 @@ public enum Effect {
    public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
       NumberSpan multiplier = task.getSpecialTypeMultiplier(task.getState().getSpeciesType(effectSpecies));
+      multiplier = multiplier.multiplyBy(task.getScoreModifier(comboEffect));
       return multiplier;
    }
    
@@ -4450,13 +4466,6 @@ public enum Effect {
    
    protected boolean isAttackPowerEffective() {
       return true;
-   }
-   
-   protected boolean isNVE(ActivateComboEffect comboEffect, SimulationTask task) {
-      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-      PkmType effectType = task.getState().getSpeciesType(effectSpecies);
-      PkmType stageType = task.getState().getCore().getStage().getType();
-      return PkmType.getMultiplier(effectType, stageType) < 1.0;
    }
    
    protected void handleReplaceOf(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks,
