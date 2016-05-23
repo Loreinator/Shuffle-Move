@@ -1133,13 +1133,13 @@ public enum Effect {
             }
             if (odds >= Math.random()) {
                List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
-               List<Integer> toErase = new ArrayList<Integer>();
+               List<Integer> toClear = new ArrayList<Integer>();
                for (Integer i : randoms) {
                   int row = matches.get(i * 2);
                   int col = matches.get(i * 2 + 1);
-                  toErase.addAll(Arrays.asList(row, col));
+                  toClear.addAll(Arrays.asList(row, col));
                }
-               eraseBonus(task, toErase, true);
+               handleClearCloud(toClear, task);
             }
          }
       }
@@ -1169,13 +1169,13 @@ public enum Effect {
             }
             if (odds >= Math.random()) {
                List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
-               List<Integer> toErase = new ArrayList<Integer>();
+               List<Integer> toClear = new ArrayList<Integer>();
                for (Integer i : randoms) {
                   int row = matches.get(i * 2);
                   int col = matches.get(i * 2 + 1);
-                  toErase.addAll(Arrays.asList(row, col));
+                  toClear.addAll(Arrays.asList(row, col));
                }
-               eraseBonus(task, toErase, true);
+               handleClearCloud(toClear, task);
             }
          }
       }
