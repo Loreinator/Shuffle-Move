@@ -32,6 +32,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.RecursiveTask;
+import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -97,6 +98,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private HashMap<Integer, Collection<ComboEffect>> activeEffects = new HashMap<Integer, Collection<ComboEffect>>();
    
    private HashMap<PkmType, NumberSpan> typeMultipliers = new HashMap<PkmType, NumberSpan>();
+   private List<BiFunction<ActivateComboEffect, SimulationTask, NumberSpan>> scoreModifiers = new ArrayList<BiFunction<ActivateComboEffect, SimulationTask, NumberSpan>>();
    /**
     * The prospective combos that are available to activate.
     */
@@ -136,6 +138,19 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    
    public void setSpecialTypeMultiplier(PkmType type, NumberSpan multiplier) {
       typeMultipliers.put(type, multiplier);
+   }
+   
+   public NumberSpan getScoreModifier(ActivateComboEffect comboEffect) {
+      NumberSpan compoundMultiplier = new NumberSpan(1);
+      for (BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier : scoreModifiers) {
+         NumberSpan multiplier = modifier.apply(comboEffect, this);
+         compoundMultiplier = compoundMultiplier.multiplyBy(multiplier);
+      }
+      return compoundMultiplier;
+   }
+   
+   public void addScoreModifier(BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier) {
+      scoreModifiers.add(modifier);
    }
    
    public String getId() {
