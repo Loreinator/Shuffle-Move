@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -395,7 +397,7 @@ public enum Effect {
       
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (super.canActivate(comboEffect, task)) {
+         if (canActivate(comboEffect, task)) {
             /*
              * Inherit the Brute force multiplier and compound it in the SAME NumberSpan since they
              * activate together
@@ -1609,8 +1611,31 @@ public enum Effect {
       }
       
       @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            /*
+             * The way this works: Step 1) Create the Bifunction to modifiy the scores for any
+             * effect activated that are NOT peristent (i.e. are not mega). Step 2) create an action
+             * that will remove this modifier when needed. Step 3) create an action that will add
+             * that action to the actions to execute. Step 4) Add the modifier in, and that second
+             * action. The second action will be removed from the list of finished actions, then
+             * activated to add the first action to the queue.
+             */
+            double bonus = getBonus(task, comboEffect);
+            double odds = getOdds(task, comboEffect);
+            final NumberSpan multiplier = new NumberSpan(1, bonus, odds);
+            final NumberSpan one = new NumberSpan(1);
+            final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier = (ce,
+                  t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : multiplier);
+            final BiConsumer<ActivateComboEffect, SimulationTask> removeModifierAction = (ce, t) -> {
+               t.removeScoreModifier(modifier);
+            };
+            BiConsumer<ActivateComboEffect, SimulationTask> doAfter = (ce, t) -> {
+               t.addFinishedAction(removeModifierAction);
+            };
+            task.addScoreModifier(modifier);
+            task.addFinishedAction(doAfter);
+         }
       }
       
    },
@@ -1649,8 +1674,31 @@ public enum Effect {
       }
       
       @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            /*
+             * The way this works: Step 1) Create the Bifunction to modifiy the scores for any
+             * effect activated that are NOT peristent (i.e. are not mega). Step 2) create an action
+             * that will remove this modifier when needed. Step 3) create an action that will add
+             * that action to the actions to execute. Step 4) Add the modifier in, and that second
+             * action. The second action will be removed from the list of finished actions, then
+             * activated to add the first action to the queue.
+             */
+            double bonus = getBonus(task, comboEffect);
+            double odds = getOdds(task, comboEffect);
+            final NumberSpan multiplier = new NumberSpan(1, bonus, odds);
+            final NumberSpan one = new NumberSpan(1);
+            final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier = (ce,
+                  t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : multiplier);
+            final BiConsumer<ActivateComboEffect, SimulationTask> removeModifierAction = (ce, t) -> {
+               t.removeScoreModifier(modifier);
+            };
+            BiConsumer<ActivateComboEffect, SimulationTask> doAfter = (ce, t) -> {
+               t.addFinishedAction(removeModifierAction);
+            };
+            task.addScoreModifier(modifier);
+            task.addFinishedAction(doAfter);
+         }
       }
    },
    /**
@@ -1710,8 +1758,31 @@ public enum Effect {
       }
       
       @Override
-      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            /*
+             * The way this works: Step 1) Create the Bifunction to modifiy the scores for any
+             * effect activated that are NOT peristent (i.e. are not mega). Step 2) create an action
+             * that will remove this modifier when needed. Step 3) create an action that will add
+             * that action to the actions to execute. Step 4) Add the modifier in, and that second
+             * action. The second action will be removed from the list of finished actions, then
+             * activated to add the first action to the queue.
+             */
+            double bonus = getBonus(task, comboEffect);
+            double odds = getOdds(task, comboEffect);
+            final NumberSpan multiplier = new NumberSpan(1, bonus, odds);
+            final NumberSpan one = new NumberSpan(1);
+            final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier = (ce,
+                  t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : multiplier);
+            final BiConsumer<ActivateComboEffect, SimulationTask> removeModifierAction = (ce, t) -> {
+               t.removeScoreModifier(modifier);
+            };
+            BiConsumer<ActivateComboEffect, SimulationTask> doAfter = (ce, t) -> {
+               t.addFinishedAction(removeModifierAction);
+            };
+            task.addScoreModifier(modifier);
+            task.addFinishedAction(doAfter);
+         }
       }
    },
    /**
@@ -4214,6 +4285,7 @@ public enum Effect {
          handleBonusScore(effect, task);
          task.handleMainComboResult(comboEffect, this);
          handleEffectFinished(effect, task);
+         task.executeFinishedActions(comboEffect);
       } else {
          // Erase another bonus
          Set<List<Integer>> extraCoords = new HashSet<List<Integer>>();

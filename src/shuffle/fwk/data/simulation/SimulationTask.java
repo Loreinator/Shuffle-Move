@@ -32,6 +32,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.RecursiveTask;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
@@ -99,6 +100,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    
    private HashMap<PkmType, NumberSpan> typeMultipliers = new HashMap<PkmType, NumberSpan>();
    private List<BiFunction<ActivateComboEffect, SimulationTask, NumberSpan>> scoreModifiers = new ArrayList<BiFunction<ActivateComboEffect, SimulationTask, NumberSpan>>();
+   private List<BiConsumer<ActivateComboEffect, SimulationTask>> finishedActions = new ArrayList<BiConsumer<ActivateComboEffect, SimulationTask>>();
    /**
     * The prospective combos that are available to activate.
     */
@@ -151,6 +153,30 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    
    public void addScoreModifier(BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier) {
       scoreModifiers.add(modifier);
+   }
+   
+   public void removeScoreModifier(BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier) {
+      scoreModifiers.remove(modifier);
+   }
+   
+   public void executeFinishedActions(ActivateComboEffect comboEffect) {
+      if (finishedActions.isEmpty()) {
+         return;
+      }
+      Collection<BiConsumer<ActivateComboEffect, SimulationTask>> toActivate = new ArrayList<BiConsumer<ActivateComboEffect, SimulationTask>>(
+            finishedActions);
+      finishedActions.clear();
+      for (BiConsumer<ActivateComboEffect, SimulationTask> action : toActivate) {
+         action.accept(comboEffect, this);
+      }
+   }
+   
+   public void addFinishedAction(BiConsumer<ActivateComboEffect, SimulationTask> action) {
+      finishedActions.add(action);
+   }
+   
+   public void removeFinishedAction(BiConsumer<ActivateComboEffect, SimulationTask> action) {
+      finishedActions.remove(action);
    }
    
    public String getId() {
