@@ -575,10 +575,10 @@ public enum Effect {
       }
    },
    /**
-    * Clears clouds within 1 space.
+    * Clears a random cloud.
     */
    CLOUD_CLEAR {
-      // TODO Finish implementing
+      
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          Board b = task.getState().getBoard();
@@ -616,6 +616,25 @@ public enum Effect {
                int col = matches.get(blockIndex * 2 + 1);
                List<Integer> toErase = Arrays.asList(row, col);
                eraseBonus(task, toErase, false);
+            }
+         }
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board b = task.getState().getBoard();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> b.isCloudedAt(r, c));
+            double odds = getOdds(task, comboEffect);
+            if (matches.size() / 2 > 1 || odds < 1.0) {
+               task.setIsRandom();
+            }
+            if (odds >= Math.random()) {
+               int blockIndex = getRandomInt(matches.size() / 2);
+               int row = matches.get(blockIndex * 2);
+               int col = matches.get(blockIndex * 2 + 1);
+               List<Integer> toClear = Arrays.asList(row, col);
+               handleClearCloud(toClear, task);
             }
          }
       }
@@ -1074,10 +1093,9 @@ public enum Effect {
       }
    },
    /**
-    * Clears 3 clouds within 1 space.
+    * Clears 3 clouds.
     */
    CLOUD_CLEAR_P {
-      // TODO Finish implementing
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -1085,19 +1103,64 @@ public enum Effect {
          return super.canActivate(comboEffect, task)
                && !task.findMatches(1, false, (r, c, s) -> b.isCloudedAt(r, c)).isEmpty();
       }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board b = task.getState().getBoard();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> b.isCloudedAt(r, c));
+            double odds = getOdds(task, comboEffect);
+            int numSwapped = (int) getMultiplier(task, comboEffect);
+            if (matches.size() / 2 > numSwapped || odds < 1.0) {
+               task.setIsRandom();
+            }
+            if (odds >= Math.random()) {
+               List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+               List<Integer> toErase = new ArrayList<Integer>();
+               for (Integer i : randoms) {
+                  int row = matches.get(i * 2);
+                  int col = matches.get(i * 2 + 1);
+                  toErase.addAll(Arrays.asList(row, col));
+               }
+               eraseBonus(task, toErase, true);
+            }
+         }
+      }
    
    },
    /**
     * Clears 5 clouds within 1 space.
     */
    CLOUD_CLEAR_P_P {
-      // TODO Finish implementing
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          Board b = task.getState().getBoard();
          return super.canActivate(comboEffect, task)
                && !task.findMatches(1, false, (r, c, s) -> b.isCloudedAt(r, c)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board b = task.getState().getBoard();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> b.isCloudedAt(r, c));
+            double odds = getOdds(task, comboEffect);
+            int numSwapped = (int) getMultiplier(task, comboEffect);
+            if (matches.size() / 2 > numSwapped || odds < 1.0) {
+               task.setIsRandom();
+            }
+            if (odds >= Math.random()) {
+               List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+               List<Integer> toErase = new ArrayList<Integer>();
+               for (Integer i : randoms) {
+                  int row = matches.get(i * 2);
+                  int col = matches.get(i * 2 + 1);
+                  toErase.addAll(Arrays.asList(row, col));
+               }
+               eraseBonus(task, toErase, true);
+            }
+         }
       }
    
    },
@@ -4410,6 +4473,20 @@ public enum Effect {
             Collection<ActivateComboEffect> claimsFor = new ArrayList<ActivateComboEffect>(task.getClaimsFor(row, col));
             for (ActivateComboEffect claim : claimsFor) {
                task.removeClaim(claim);
+            }
+         }
+      }
+   }
+   
+   protected void handleClearCloud(List<Integer> toClear, SimulationTask task) {
+      if (toClear != null && !toClear.isEmpty()) {
+         Board b = task.getState().getBoard();
+         for (int i = 0; i < toClear.size() / 2; i++) {
+            int row = toClear.get(i * 2);
+            int col = toClear.get(i * 2 + 1);
+            if (b.isCloudedAt(row, col)) {
+               task.getState().addDisruptionCleared(1);
+               b.setClouded(row, col, false);
             }
          }
       }
