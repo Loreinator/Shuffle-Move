@@ -61,14 +61,12 @@ public abstract class ComboEffect implements SimulationEffect {
       
       // priority - lower number = happens earlier, higher = happens later
       
-      // if the effect is an active one, it will have a lower priority, even more important than
-      // combo size
-      // (This need to be confirmed in how important they are)
-      priority += (isPersistentEffect ? 1 : 0) * 10000;
       // Size is very important
-      priority += (6 - getNumBlocks()) * 1000;
+      priority += (6 - getNumBlocks()) * 10000;
       // Horizontal matches are next
-      priority += isHorizontal ? 0 : 100;
+      priority += isHorizontal ? 0 : 1000;
+      // Mega effect next, mega activate later than non-mega
+      priority += (isPersistentEffect ? 1 : 0) * 100;
       // Finally, the grid position of their upper left corner.
       if (isHorizontal) {
          priority += minCol - 1 + 6 * (minRow - 1);

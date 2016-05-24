@@ -98,7 +98,6 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private HashMap<Integer, Collection<ActivateComboEffect>> effectClaims = new HashMap<Integer, Collection<ActivateComboEffect>>();
    private HashMap<Integer, Collection<ComboEffect>> activeEffects = new HashMap<Integer, Collection<ComboEffect>>();
    
-   private HashMap<PkmType, NumberSpan> typeMultipliers = new HashMap<PkmType, NumberSpan>();
    private List<BiFunction<ActivateComboEffect, SimulationTask, NumberSpan>> scoreModifiers = new ArrayList<BiFunction<ActivateComboEffect, SimulationTask, NumberSpan>>();
    private List<BiConsumer<ActivateComboEffect, SimulationTask>> finishedActions = new ArrayList<BiConsumer<ActivateComboEffect, SimulationTask>>();
    /**
@@ -125,28 +124,18 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          moveString = StringUtils.join(move.toArray(new Integer[0]));
       }
       id = moveString + " feeder:" + feeder.getID().toString();
-      for (PkmType type : PkmType.values()) {
-         typeMultipliers.put(type, new NumberSpan(1.0));
-      }
       createNewStateForMove(simulationCore, move, feeder);
-   }
-   
-   public NumberSpan getSpecialTypeMultiplier(PkmType type) {
-      if (type == null) {
-         return new NumberSpan(1);
-      }
-      return new NumberSpan(typeMultipliers.get(type));
-   }
-   
-   public void setSpecialTypeMultiplier(PkmType type, NumberSpan multiplier) {
-      typeMultipliers.put(type, multiplier);
    }
    
    public NumberSpan getScoreModifier(ActivateComboEffect comboEffect) {
       NumberSpan compoundMultiplier = new NumberSpan(1);
       for (BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier : scoreModifiers) {
-         NumberSpan multiplier = modifier.apply(comboEffect, this);
-         compoundMultiplier = compoundMultiplier.multiplyBy(multiplier);
+         if (modifier != null) {
+            NumberSpan multiplier = modifier.apply(comboEffect, this);
+            if (multiplier != null) {
+               compoundMultiplier = compoundMultiplier.multiplyBy(multiplier);
+            }
+         }
       }
       return compoundMultiplier;
    }
@@ -290,6 +279,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             advanceTimeStamp();
             if (onlyThawing()) {
                getState().setChainPause();
+               scoreModifiers.clear();
             }
             simCounter++; // Loop protection
          }

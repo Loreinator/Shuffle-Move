@@ -38,6 +38,7 @@ import shuffle.fwk.data.simulation.SimulationTask;
 import shuffle.fwk.data.simulation.effects.ActivateComboEffect;
 import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
 import shuffle.fwk.data.simulation.util.NumberSpan;
+import shuffle.fwk.data.simulation.util.TriFunction;
 
 public enum Effect {
    /**
@@ -412,13 +413,16 @@ public enum Effect {
              * Inherit the Brute force multiplier and compound it in the SAME NumberSpan since they
              * activate together
              */
-            final double baseMultiplier = getMultiplier(task, comboEffect);
             final double odds = getOdds(task, comboEffect);
             task.addScoreModifier((ce, t) -> {
-               PkmType stageType = t.getState().getCore().getStage().getType();
+               // The base multiplier depends upon the combo being boosted's current ratio of
+               // power-up.
                Species effectSpecies = t.getEffectSpecies(ce.getCoords());
+               Effect effect = t.getEffectFor(effectSpecies);
+               double netMultiplier = effect.isPersistent() ? 1.0 : effect.getMultiplierRatio(t, ce);
+               // All effects will be made neutral if they are NVE, at least.
+               PkmType stageType = t.getState().getCore().getStage().getType();
                PkmType effectType = t.getState().getSpeciesType(effectSpecies);
-               double netMultiplier = baseMultiplier;
                if (PkmType.getMultiplier(effectType, stageType) < 1.0) {
                   // If NVE, make neutral
                   netMultiplier = netMultiplier * 2.0;
@@ -499,19 +503,25 @@ public enum Effect {
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
-            List<Integer> matches = task.findMatches(36, false,
- (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s));
-            if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect);
-               if (matches.size() > 2 || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  int blockIndex = getRandomInt(matches.size() / 2);
-                  int row = matches.get(blockIndex * 2);
-                  int col = matches.get(blockIndex * 2 + 1);
-                  List<Integer> toErase = Arrays.asList(row, col);
-                  eraseBonus(task, toErase, false);
+            List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
+                        (r, c, s) -> board.isCloudedAt(r, c)));
+            for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
+               List<Integer> matches = task.findMatches(36, false, filter);
+               if (!matches.isEmpty()) {
+                  double odds = getOdds(task, comboEffect);
+                  if (matches.size() > 1 || odds < 1.0) {
+                     task.setIsRandom();
+                  }
+                  if (odds >= Math.random()) {
+                     int blockIndex = getRandomInt(matches.size() / 2);
+                     int row = matches.get(blockIndex * 2);
+                     int col = matches.get(blockIndex * 2 + 1);
+                     List<Integer> toErase = Arrays.asList(row, col);
+                     eraseBonus(task, toErase, false);
+                  }
+                  // Break out if we *could* have erased something
+                  break;
                }
             }
          }
@@ -526,24 +536,32 @@ public enum Effect {
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
-            List<Integer> match = task.findMatches(36, false,
- (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s));
-            if (!match.isEmpty()) {
-               double odds = getOdds(task, comboEffect);
-               int numSwapped = (int) getMultiplier(task, comboEffect);
-               if (match.size() / 2 > numSwapped || odds < 1.0) {
-                  task.setIsRandom();
+            List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
+                        (r, c, s) -> board.isCloudedAt(r, c)));
+            int numSwapped = (int) getMultiplier(task, comboEffect);
+            for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
+               if (numSwapped <= 0) {
+                  break;
                }
-               if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, numSwapped);
+               List<Integer> matches = task.findMatches(36, false, filter);
+               if (!matches.isEmpty()) {
+                  double odds = getOdds(task, comboEffect);
+                  if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                     task.setIsRandom();
+                  }
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
                   for (int i : randoms) {
-                     int row = match.get(i * 2);
-                     int col = match.get(i * 2 + 1);
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
                      toClear.add(row);
                      toClear.add(col);
                   }
-                  eraseBonus(task, toClear, false);
+                  numSwapped -= toClear.size() / 2;
+                  if (odds >= Math.random()) {
+                     eraseBonus(task, toClear, false);
+                  }
                }
             }
          }
@@ -1072,24 +1090,32 @@ public enum Effect {
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
-            List<Integer> match = task.findMatches(36, false,
- (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s));
-            if (!match.isEmpty()) {
-               double odds = getOdds(task, comboEffect);
-               int numSwapped = (int) getMultiplier(task, comboEffect);
-               if (match.size() / 2 > numSwapped || odds < 1.0) {
-                  task.setIsRandom();
+            List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
+                        (r, c, s) -> board.isCloudedAt(r, c)));
+            int numSwapped = (int) getMultiplier(task, comboEffect);
+            for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
+               if (numSwapped <= 0) {
+                  break;
                }
-               if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, numSwapped);
+               List<Integer> matches = task.findMatches(36, false, filter);
+               if (!matches.isEmpty()) {
+                  double odds = getOdds(task, comboEffect);
+                  if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                     task.setIsRandom();
+                  }
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
                   for (int i : randoms) {
-                     int row = match.get(i * 2);
-                     int col = match.get(i * 2 + 1);
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
                      toClear.add(row);
                      toClear.add(col);
                   }
-                  eraseBonus(task, toClear, false);
+                  numSwapped -= toClear.size() / 2;
+                  if (odds >= Math.random()) {
+                     eraseBonus(task, toClear, false);
+                  }
                }
             }
          }
@@ -1655,6 +1681,35 @@ public enum Effect {
                         && !firstClaim.isHorizontal();
                }
             }
+            // The 3DS glitch that allows sideways T matches, except if the column is 1 or 6.
+            if (!matchFound && !task.getState().getCore().isMobileMode()) {
+               // Trying with the |- matches, except for column 1
+               int col = minCol;
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (col != 1 && !claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinRow = otherLimits.get(0);
+                  int otherMaxRow = otherLimits.get(2);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinRow < row && otherMaxRow > row && otherSpecies.equals(thisSpecies)
+                        && !firstClaim.isHorizontal();
+               }
+               // Try with the -| matches now, but exclude column 6.
+               if (!matchFound) {
+                  col = maxCol;
+                  claims = task.getClaimsFor(row, col);
+                  if (col < 6 && !claims.isEmpty()) {
+                     ActivateComboEffect firstClaim = claims.iterator().next();
+                     List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                     int otherMinRow = otherLimits.get(0);
+                     int otherMaxRow = otherLimits.get(2);
+                     Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                     matchFound = otherMinRow < row && otherMaxRow > row && otherSpecies.equals(thisSpecies)
+                           && !firstClaim.isHorizontal();
+                  }
+               }
+            }
          } else {
             // Vertical, so minCol = maxCol. We're looking for something > minRow and < maxRow.
             int col = minCol;
@@ -1715,24 +1770,30 @@ public enum Effect {
          }
          
          /*
-          * Attempt to recognize when there is a L match. This searches for: Same species, bottom
-          * left of match is the same coordinates, and they are different orientations, and the
-          * second combo is a claim (not yet active).
+          * Attempt to recognize when there is a L match. This searches for: Same species, the
+          * intersect of these two combos is composed solely of their ends, and they are different
+          * orientations, and the second combo is a claim (not yet active).
           */
-         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
-         int minCol = limits.get(1);
-         int maxRow = limits.get(2);
          boolean matchFound = false;
          Species thisSpecies = task.getEffectSpecies(comboEffect.getCoords());
-         Collection<ActivateComboEffect> claims = task.getClaimsFor(maxRow, minCol);
-         if (!claims.isEmpty()) {
-            ActivateComboEffect firstClaim = claims.iterator().next();
-            List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
-            int otherMinCol = otherLimits.get(1);
-            int otherMaxRow = otherLimits.get(2);
-            Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
-            matchFound = otherMinCol == minCol && otherMaxRow == maxRow && otherSpecies.equals(thisSpecies)
-                  && (comboEffect.isHorizontal() != firstClaim.isHorizontal());
+         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
+         for (int i = 0; !matchFound && i * 2 + 1 < limits.size(); i++) {
+            int row = limits.get(i * 2);
+            int col = limits.get(i * 2 + 1);
+            Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+            if (!claims.isEmpty()) {
+               ActivateComboEffect firstClaim = claims.iterator().next();
+               List<Integer> otherCoords = firstClaim.getCoords();
+               Species otherSpecies = task.getEffectSpecies(otherCoords);
+               List<Integer> otherLimits = SimulationTask.getLimits(otherCoords);
+               if (otherSpecies.equals(thisSpecies) && (comboEffect.isHorizontal() != firstClaim.isHorizontal())) {
+                  for (int j = 0; !matchFound && j * 2 + 1 < otherLimits.size(); j++) {
+                     int oRow = limits.get(j * 2);
+                     int oCol = limits.get(j * 2 + 1);
+                     matchFound = oRow == row && oCol == col;
+                  }
+               }
+            }
          }
          return matchFound;
       }
@@ -1781,41 +1842,43 @@ public enum Effect {
           * has min row in the intersection, horizontal does not end in the intersect, and they are
           * different orientations, and the second combo is a claim (not yet active).
           */
-         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
+         List<Integer> thisCoords = comboEffect.getCoords();
+         List<Integer> limits = SimulationTask.getLimits(thisCoords);
          int minRow = limits.get(0);
          int minCol = limits.get(1);
+         int maxRow = limits.get(2);
          int maxCol = limits.get(3);
          
          boolean matchFound = false;
-         Species thisSpecies = task.getEffectSpecies(comboEffect.getCoords());
-         if (comboEffect.isHorizontal()) {
-            // Horizontal, so minRow = maxRow. We're looking for something > minCol and < maxCol.
-            int row = minRow;
-            for (int col = minCol + 1; !matchFound && col < maxCol; col++) {
-               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
-               if (!claims.isEmpty()) {
-                  ActivateComboEffect firstClaim = claims.iterator().next();
-                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
-                  int otherMinRow = otherLimits.get(0);
-                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
-                  matchFound = otherMinRow == row && otherSpecies.equals(thisSpecies)
-                        && !firstClaim.isHorizontal();
-               }
-            }
-         } else {
-            // Vertical, so minCol = maxCol. We're looking for the row=MinRow.
-            int col = minCol;
-            int row = minRow;
-            
+         Species thisSpecies = task.getEffectSpecies(thisCoords);
+         for (int i = 0; !matchFound && i * 2 + 1 < thisCoords.size(); i++) {
+            int row = thisCoords.get(i * 2);
+            int col = thisCoords.get(i * 2 + 1);
             Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
             if (!claims.isEmpty()) {
-               ActivateComboEffect firstClaim = claims.iterator().next();
-               List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
-               int otherMinCol = otherLimits.get(1);
-               int otherMaxCol = otherLimits.get(3);
-               Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
-               matchFound = otherMinCol < col && otherMaxCol > col && otherSpecies.equals(thisSpecies)
-                     && firstClaim.isHorizontal();
+               ActivateComboEffect claim = claims.iterator().next();
+               Species otherSpecies = task.getEffectSpecies(claim.getCoords());
+               if (otherSpecies.equals(thisSpecies) && (comboEffect.isHorizontal() != claim.isHorizontal())) {
+                  List<Integer> otherLimits = SimulationTask.getLimits(claim.getCoords());
+                  int otherMinRow = otherLimits.get(0);
+                  int otherMinCol = otherLimits.get(1);
+                  int otherMaxRow = otherLimits.get(2);
+                  int otherMaxCol = otherLimits.get(3);
+                  /*
+                   * If our current point in the primary combo is at either end, then we're looking
+                   * for an adjoining claim that does not have either of its ends on this point.
+                   */
+                  if (comboEffect.isHorizontal() && (col == minCol || col == maxCol)
+                        || (!comboEffect.isHorizontal() && (row == minRow || row == maxRow))) {
+                     // Which can be found by checking if the other min and max of either dimension
+                     // surrounds the current point (exclusive)
+                     matchFound = (otherMinCol < col && otherMaxCol > col) || (otherMinRow < row && otherMaxRow > row);
+                  } else {
+                     // Otherwise we're in the middle of the primary.
+                     matchFound = (comboEffect.isHorizontal() && (row == otherMinRow || row == otherMaxRow)
+                           || !comboEffect.isHorizontal() && (col == otherMinCol || col == otherMaxCol));
+                  }
+               }
             }
          }
          return matchFound;
@@ -4416,9 +4479,14 @@ public enum Effect {
    public void handleBonusScore(ActivateComboEffect comboEffect, SimulationTask task) {
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
       double basicScore = task.getBasicScoreFor(effectSpecies);
-      double typeModifier = task.getTypeModifier(effectSpecies);
       NumberSpan value = getBonusValue(comboEffect, task);
+      double typeModifier = task.getTypeModifier(effectSpecies);
       NumberSpan bonusScore = getBonusScoreFor(basicScore, value, typeModifier);
+      
+      Effect effect = task.getEffectFor(effectSpecies);
+      NumberSpan effectSpecial = effect.getScoreMultiplier(comboEffect, task);
+      
+      bonusScore = bonusScore.multiplyBy(effectSpecial);
       if (isAttackPowerEffective() && task.getState().getCore().isAttackPowerUp()) {
          bonusScore = bonusScore.multiplyBy(2.0);
       }
@@ -4477,10 +4545,7 @@ public enum Effect {
     * @return
     */
    public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-      NumberSpan multiplier = task.getSpecialTypeMultiplier(task.getState().getSpeciesType(effectSpecies));
-      multiplier = multiplier.multiplyBy(task.getScoreModifier(comboEffect));
-      return multiplier;
+      return task.getScoreModifier(comboEffect);
    }
    
    /**
@@ -4539,6 +4604,19 @@ public enum Effect {
       return core.getMultiplier(this, skillLevel);
    }
    
+   protected double getMultiplierRatio(SimulationTask task, ActivateComboEffect e) {
+      SimulationCore core = task.getState().getCore();
+      Species species = task.getEffectSpecies(e.getCoords());
+      int skillLevel = core.getSkillLevel(species);
+      double curMultiplier = core.getMultiplier(this, skillLevel);
+      double baseMultiplier = core.getMultiplier(this, 1);
+      if (baseMultiplier < 0.1) {
+         // Simple divide by 0 safety.
+         baseMultiplier = 1.0;
+      }
+      return curMultiplier / baseMultiplier;
+   }
+   
    protected double getBonus(SimulationTask task, ActivateComboEffect e) {
       return getMultiplier(task, e) - 1.0;
    }
@@ -4567,8 +4645,7 @@ public enum Effect {
    }
    
    protected final NumberSpan getMultiplier(ActivateComboEffect comboEffect, SimulationTask task, Number bonus) {
-      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-      NumberSpan multiplier = task.getSpecialTypeMultiplier(task.getState().getSpeciesType(effectSpecies));
+      NumberSpan multiplier = getScoreMultiplier(comboEffect, task);
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
             multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect)).multiplyBy(multiplier);
@@ -4593,9 +4670,15 @@ public enum Effect {
    
    protected final void ifThenSetSpecial(ActivateComboEffect comboEffect, SimulationTask task, PkmType type,
          Number bonus) {
+      ifThenSetSpecial(comboEffect, task, Arrays.asList(type), bonus);
+   }
+   
+   protected final void ifThenSetSpecial(ActivateComboEffect comboEffect, final SimulationTask task,
+         Collection<PkmType> types, Number bonus) {
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
-            task.setSpecialTypeMultiplier(type, new NumberSpan(1, bonus, getOdds(task, comboEffect)));
+            NumberSpan multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect));
+            task.addScoreModifier((ce, t) -> types.contains(getType(ce, t)) ? multiplier : null);
          }
       }
    }
@@ -4639,5 +4722,10 @@ public enum Effect {
    
    protected boolean isDisruption(Species species) {
       return species.getEffect().isDisruption();
+   }
+   
+   protected PkmType getType(ActivateComboEffect comboEffect, SimulationTask task) {
+      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+      return task.getState().getSpeciesType(effectSpecies);
    }
 }
