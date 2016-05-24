@@ -418,7 +418,7 @@ public enum Effect {
                // power-up.
                Species effectSpecies = t.getEffectSpecies(ce.getCoords());
                Effect effect = t.getEffectFor(effectSpecies);
-               double netMultiplier = effect.getMultiplierRatio(t, ce);
+               double netMultiplier = effect.isPersistent() ? 1.0 : effect.getMultiplierRatio(t, ce);
                // All effects will be made neutral if they are NVE, at least.
                PkmType stageType = t.getState().getCore().getStage().getType();
                PkmType effectType = t.getState().getSpeciesType(effectSpecies);
