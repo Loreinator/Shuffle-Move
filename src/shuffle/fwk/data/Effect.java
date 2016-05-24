@@ -539,27 +539,29 @@ public enum Effect {
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
                   Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
                         (r, c, s) -> board.isCloudedAt(r, c)));
+            int numSwapped = (int) getMultiplier(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
+               if (numSwapped <= 0) {
+                  break;
+               }
                List<Integer> matches = task.findMatches(36, false, filter);
                if (!matches.isEmpty()) {
                   double odds = getOdds(task, comboEffect);
-                  int numSwapped = (int) getMultiplier(task, comboEffect);
                   if (matches.size() / 2 > numSwapped || odds < 1.0) {
                      task.setIsRandom();
                   }
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  for (int i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toClear.add(row);
+                     toClear.add(col);
+                  }
+                  numSwapped -= toClear.size() / 2;
                   if (odds >= Math.random()) {
-                     List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
-                     List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                     for (int i : randoms) {
-                        int row = matches.get(i * 2);
-                        int col = matches.get(i * 2 + 1);
-                        toClear.add(row);
-                        toClear.add(col);
-                     }
                      eraseBonus(task, toClear, false);
                   }
-                  // Break out if we *could* have erased something
-                  break;
                }
             }
          }
@@ -1091,27 +1093,29 @@ public enum Effect {
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
                   Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
                         (r, c, s) -> board.isCloudedAt(r, c)));
+            int numSwapped = (int) getMultiplier(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
+               if (numSwapped <= 0) {
+                  break;
+               }
                List<Integer> matches = task.findMatches(36, false, filter);
                if (!matches.isEmpty()) {
                   double odds = getOdds(task, comboEffect);
-                  int numSwapped = (int) getMultiplier(task, comboEffect);
                   if (matches.size() / 2 > numSwapped || odds < 1.0) {
                      task.setIsRandom();
                   }
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  for (int i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toClear.add(row);
+                     toClear.add(col);
+                  }
+                  numSwapped -= toClear.size() / 2;
                   if (odds >= Math.random()) {
-                     List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
-                     List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                     for (int i : randoms) {
-                        int row = matches.get(i * 2);
-                        int col = matches.get(i * 2 + 1);
-                        toClear.add(row);
-                        toClear.add(col);
-                     }
                      eraseBonus(task, toClear, false);
                   }
-                  // Break out if we *could* have erased something
-                  break;
                }
             }
          }
