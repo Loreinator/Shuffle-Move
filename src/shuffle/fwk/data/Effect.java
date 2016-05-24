@@ -1658,6 +1658,35 @@ public enum Effect {
                         && !firstClaim.isHorizontal();
                }
             }
+            // The 3DS glitch that allows sideways T matches, except if the column is 1 or 6.
+            if (!matchFound && !task.getState().getCore().isMobileMode()) {
+               // Trying with the |- matches, except for column 1
+               int col = minCol;
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (col != 1 && !claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinRow = otherLimits.get(0);
+                  int otherMaxRow = otherLimits.get(2);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinRow < row && otherMaxRow > row && otherSpecies.equals(thisSpecies)
+                        && !firstClaim.isHorizontal();
+               }
+               // Try with the -| matches now, but exclude column 6.
+               if (!matchFound) {
+                  col = maxCol;
+                  claims = task.getClaimsFor(row, col);
+                  if (col < 6 && !claims.isEmpty()) {
+                     ActivateComboEffect firstClaim = claims.iterator().next();
+                     List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                     int otherMinRow = otherLimits.get(0);
+                     int otherMaxRow = otherLimits.get(2);
+                     Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                     matchFound = otherMinRow < row && otherMaxRow > row && otherSpecies.equals(thisSpecies)
+                           && !firstClaim.isHorizontal();
+                  }
+               }
+            }
          } else {
             // Vertical, so minCol = maxCol. We're looking for something > minRow and < maxRow.
             int col = minCol;
