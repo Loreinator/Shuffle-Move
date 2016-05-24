@@ -412,13 +412,16 @@ public enum Effect {
              * Inherit the Brute force multiplier and compound it in the SAME NumberSpan since they
              * activate together
              */
-            final double baseMultiplier = getMultiplier(task, comboEffect);
             final double odds = getOdds(task, comboEffect);
             task.addScoreModifier((ce, t) -> {
-               PkmType stageType = t.getState().getCore().getStage().getType();
+               // The base multiplier depends upon the combo being boosted's current ratio of
+               // power-up.
                Species effectSpecies = t.getEffectSpecies(ce.getCoords());
+               Effect effect = t.getEffectFor(effectSpecies);
+               double netMultiplier = effect.getMultiplierRatio(t, ce);
+               // All effects will be made neutral if they are NVE, at least.
+               PkmType stageType = t.getState().getCore().getStage().getType();
                PkmType effectType = t.getState().getSpeciesType(effectSpecies);
-               double netMultiplier = baseMultiplier;
                if (PkmType.getMultiplier(effectType, stageType) < 1.0) {
                   // If NVE, make neutral
                   netMultiplier = netMultiplier * 2.0;
@@ -4537,6 +4540,19 @@ public enum Effect {
       Species species = task.getEffectSpecies(e.getCoords());
       int skillLevel = core.getSkillLevel(species);
       return core.getMultiplier(this, skillLevel);
+   }
+   
+   protected double getMultiplierRatio(SimulationTask task, ActivateComboEffect e) {
+      SimulationCore core = task.getState().getCore();
+      Species species = task.getEffectSpecies(e.getCoords());
+      int skillLevel = core.getSkillLevel(species);
+      double curMultiplier = core.getMultiplier(this, skillLevel);
+      double baseMultiplier = core.getMultiplier(this, 1);
+      if (baseMultiplier < 0.1) {
+         // Simple divide by 0 safety.
+         baseMultiplier = 1.0;
+      }
+      return curMultiplier / baseMultiplier;
    }
    
    protected double getBonus(SimulationTask task, ActivateComboEffect e) {
