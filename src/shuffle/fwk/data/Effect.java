@@ -38,6 +38,7 @@ import shuffle.fwk.data.simulation.SimulationTask;
 import shuffle.fwk.data.simulation.effects.ActivateComboEffect;
 import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
 import shuffle.fwk.data.simulation.util.NumberSpan;
+import shuffle.fwk.data.simulation.util.TriFunction;
 
 public enum Effect {
    /**
@@ -502,19 +503,25 @@ public enum Effect {
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
-            List<Integer> matches = task.findMatches(36, false,
- (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s));
-            if (!matches.isEmpty()) {
-               double odds = getOdds(task, comboEffect);
-               if (matches.size() > 2 || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  int blockIndex = getRandomInt(matches.size() / 2);
-                  int row = matches.get(blockIndex * 2);
-                  int col = matches.get(blockIndex * 2 + 1);
-                  List<Integer> toErase = Arrays.asList(row, col);
-                  eraseBonus(task, toErase, false);
+            List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
+                        (r, c, s) -> board.isCloudedAt(r, c)));
+            for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
+               List<Integer> matches = task.findMatches(36, false, filter);
+               if (!matches.isEmpty()) {
+                  double odds = getOdds(task, comboEffect);
+                  if (matches.size() > 1 || odds < 1.0) {
+                     task.setIsRandom();
+                  }
+                  if (odds >= Math.random()) {
+                     int blockIndex = getRandomInt(matches.size() / 2);
+                     int row = matches.get(blockIndex * 2);
+                     int col = matches.get(blockIndex * 2 + 1);
+                     List<Integer> toErase = Arrays.asList(row, col);
+                     eraseBonus(task, toErase, false);
+                  }
+                  // Break out if we *could* have erased something
+                  break;
                }
             }
          }
@@ -529,24 +536,30 @@ public enum Effect {
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
-            List<Integer> match = task.findMatches(36, false,
- (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s));
-            if (!match.isEmpty()) {
-               double odds = getOdds(task, comboEffect);
-               int numSwapped = (int) getMultiplier(task, comboEffect);
-               if (match.size() / 2 > numSwapped || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, numSwapped);
-                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                  for (int i : randoms) {
-                     int row = match.get(i * 2);
-                     int col = match.get(i * 2 + 1);
-                     toClear.add(row);
-                     toClear.add(col);
+            List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
+                        (r, c, s) -> board.isCloudedAt(r, c)));
+            for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
+               List<Integer> matches = task.findMatches(36, false, filter);
+               if (!matches.isEmpty()) {
+                  double odds = getOdds(task, comboEffect);
+                  int numSwapped = (int) getMultiplier(task, comboEffect);
+                  if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                     task.setIsRandom();
                   }
-                  eraseBonus(task, toClear, false);
+                  if (odds >= Math.random()) {
+                     List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                     List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                     for (int i : randoms) {
+                        int row = matches.get(i * 2);
+                        int col = matches.get(i * 2 + 1);
+                        toClear.add(row);
+                        toClear.add(col);
+                     }
+                     eraseBonus(task, toClear, false);
+                  }
+                  // Break out if we *could* have erased something
+                  break;
                }
             }
          }
@@ -1075,24 +1088,30 @@ public enum Effect {
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
-            List<Integer> match = task.findMatches(36, false,
- (r, c, s) -> board.isFrozenAt(r, c) || isDisruption(s));
-            if (!match.isEmpty()) {
-               double odds = getOdds(task, comboEffect);
-               int numSwapped = (int) getMultiplier(task, comboEffect);
-               if (match.size() / 2 > numSwapped || odds < 1.0) {
-                  task.setIsRandom();
-               }
-               if (odds >= Math.random()) {
-                  List<Integer> randoms = getUniqueRandoms(0, match.size() / 2, numSwapped);
-                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                  for (int i : randoms) {
-                     int row = match.get(i * 2);
-                     int col = match.get(i * 2 + 1);
-                     toClear.add(row);
-                     toClear.add(col);
+            List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
+                        (r, c, s) -> board.isCloudedAt(r, c)));
+            for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
+               List<Integer> matches = task.findMatches(36, false, filter);
+               if (!matches.isEmpty()) {
+                  double odds = getOdds(task, comboEffect);
+                  int numSwapped = (int) getMultiplier(task, comboEffect);
+                  if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                     task.setIsRandom();
                   }
-                  eraseBonus(task, toClear, false);
+                  if (odds >= Math.random()) {
+                     List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                     List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                     for (int i : randoms) {
+                        int row = matches.get(i * 2);
+                        int col = matches.get(i * 2 + 1);
+                        toClear.add(row);
+                        toClear.add(col);
+                     }
+                     eraseBonus(task, toClear, false);
+                  }
+                  // Break out if we *could* have erased something
+                  break;
                }
             }
          }
