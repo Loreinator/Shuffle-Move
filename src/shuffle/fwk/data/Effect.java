@@ -4427,9 +4427,14 @@ public enum Effect {
    public void handleBonusScore(ActivateComboEffect comboEffect, SimulationTask task) {
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
       double basicScore = task.getBasicScoreFor(effectSpecies);
-      double typeModifier = task.getTypeModifier(effectSpecies);
       NumberSpan value = getBonusValue(comboEffect, task);
+      double typeModifier = task.getTypeModifier(effectSpecies);
       NumberSpan bonusScore = getBonusScoreFor(basicScore, value, typeModifier);
+      
+      Effect effect = task.getEffectFor(effectSpecies);
+      NumberSpan effectSpecial = effect.getScoreMultiplier(comboEffect, task);
+      
+      bonusScore = bonusScore.multiplyBy(effectSpecial);
       if (isAttackPowerEffective() && task.getState().getCore().isAttackPowerUp()) {
          bonusScore = bonusScore.multiplyBy(2.0);
       }
@@ -4488,10 +4493,7 @@ public enum Effect {
     * @return
     */
    public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
-      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-      NumberSpan multiplier = task.getSpecialTypeMultiplier(task.getState().getSpeciesType(effectSpecies));
-      multiplier = multiplier.multiplyBy(task.getScoreModifier(comboEffect));
-      return multiplier;
+      return task.getScoreModifier(comboEffect);
    }
    
    /**
@@ -4591,8 +4593,7 @@ public enum Effect {
    }
    
    protected final NumberSpan getMultiplier(ActivateComboEffect comboEffect, SimulationTask task, Number bonus) {
-      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
-      NumberSpan multiplier = task.getSpecialTypeMultiplier(task.getState().getSpeciesType(effectSpecies));
+      NumberSpan multiplier = getScoreMultiplier(comboEffect, task);
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
             multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect)).multiplyBy(multiplier);
@@ -4617,9 +4618,15 @@ public enum Effect {
    
    protected final void ifThenSetSpecial(ActivateComboEffect comboEffect, SimulationTask task, PkmType type,
          Number bonus) {
+      ifThenSetSpecial(comboEffect, task, Arrays.asList(type), bonus);
+   }
+   
+   protected final void ifThenSetSpecial(ActivateComboEffect comboEffect, final SimulationTask task,
+         Collection<PkmType> types, Number bonus) {
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
-            task.setSpecialTypeMultiplier(type, new NumberSpan(1, bonus, getOdds(task, comboEffect)));
+            NumberSpan multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect));
+            task.addScoreModifier((ce, t) -> types.contains(getType(ce, t)) ? multiplier : null);
          }
       }
    }
@@ -4663,5 +4670,10 @@ public enum Effect {
    
    protected boolean isDisruption(Species species) {
       return species.getEffect().isDisruption();
+   }
+   
+   protected PkmType getType(ActivateComboEffect comboEffect, SimulationTask task) {
+      Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+      return task.getState().getSpeciesType(effectSpecies);
    }
 }
