@@ -1718,24 +1718,28 @@ public enum Effect {
          }
          
          /*
-          * Attempt to recognize when there is a L match. This searches for: Same species, bottom
-          * left of match is the same coordinates, and they are different orientations, and the
-          * second combo is a claim (not yet active).
+          * Attempt to recognize when there is a L match. This searches for: Same species, the
+          * intersect of these two combos is composed solely of their ends, and they are different
+          * orientations, and the second combo is a claim (not yet active).
           */
-         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
-         int minCol = limits.get(1);
-         int maxRow = limits.get(2);
          boolean matchFound = false;
          Species thisSpecies = task.getEffectSpecies(comboEffect.getCoords());
-         Collection<ActivateComboEffect> claims = task.getClaimsFor(maxRow, minCol);
-         if (!claims.isEmpty()) {
-            ActivateComboEffect firstClaim = claims.iterator().next();
-            List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
-            int otherMinCol = otherLimits.get(1);
-            int otherMaxRow = otherLimits.get(2);
-            Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
-            matchFound = otherMinCol == minCol && otherMaxRow == maxRow && otherSpecies.equals(thisSpecies)
-                  && (comboEffect.isHorizontal() != firstClaim.isHorizontal());
+         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
+         for (int i = 0; !matchFound && i * 2 + 1 < limits.size(); i++) {
+            int row = limits.get(i * 2);
+            int col = limits.get(i * 2 + 1);
+            Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+            if (!claims.isEmpty()) {
+               ActivateComboEffect firstClaim = claims.iterator().next();
+               List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+               Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+               for (int j = 0; !matchFound && j * 2 + 1 < otherLimits.size(); j++) {
+                  int oRow = limits.get(j * 2);
+                  int oCol = limits.get(j * 2 + 1);
+                  matchFound = oRow == row && oCol == col && otherSpecies.equals(thisSpecies)
+                        && (comboEffect.isHorizontal() != firstClaim.isHorizontal());
+               }
+            }
          }
          return matchFound;
       }
@@ -1787,6 +1791,7 @@ public enum Effect {
          List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
          int minRow = limits.get(0);
          int minCol = limits.get(1);
+         int maxRow = limits.get(2);
          int maxCol = limits.get(3);
          
          boolean matchFound = false;
@@ -1800,26 +1805,28 @@ public enum Effect {
                   ActivateComboEffect firstClaim = claims.iterator().next();
                   List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
                   int otherMinRow = otherLimits.get(0);
+                  int otherMaxRow = otherLimits.get(2);
                   Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
-                  matchFound = otherMinRow == row && otherSpecies.equals(thisSpecies)
+                  matchFound = (otherMinRow == row || otherMaxRow == row) && otherSpecies.equals(thisSpecies)
                         && !firstClaim.isHorizontal();
                }
             }
          } else {
-            // Vertical, so minCol = maxCol. We're looking for the row=MinRow.
+            // Vertical, so minCol = maxCol. We're looking for the row=MinRow or row=MaxRow
             int col = minCol;
-            int row = minRow;
-            
-            Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
-            if (!claims.isEmpty()) {
-               ActivateComboEffect firstClaim = claims.iterator().next();
-               List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
-               int otherMinCol = otherLimits.get(1);
-               int otherMaxCol = otherLimits.get(3);
-               Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
-               matchFound = otherMinCol < col && otherMaxCol > col && otherSpecies.equals(thisSpecies)
-                     && firstClaim.isHorizontal();
+            for (int row : new int[] { minRow, maxRow }) {
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (!claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinCol = otherLimits.get(1);
+                  int otherMaxCol = otherLimits.get(3);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinCol < col && otherMaxCol > col && otherSpecies.equals(thisSpecies)
+                        && firstClaim.isHorizontal();
+               }
             }
+            
          }
          return matchFound;
       }
