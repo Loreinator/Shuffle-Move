@@ -4645,7 +4645,7 @@ public enum Effect {
    }
    
    protected final NumberSpan getMultiplier(ActivateComboEffect comboEffect, SimulationTask task, Number bonus) {
-      NumberSpan multiplier = getScoreMultiplier(comboEffect, task);
+      NumberSpan multiplier = task.getScoreModifier(comboEffect);
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
             multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect)).multiplyBy(multiplier);
