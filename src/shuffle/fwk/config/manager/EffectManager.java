@@ -216,12 +216,15 @@ public class EffectManager extends ConfigManager {
    }
    
    public double getMult(Effect effect, int skillLevel) {
-      if (getMultMap().containsKey(effect)) {
-         int skillIndex = Math.min(Math.max(skillLevel - 1, 0), 4);
-         return getMultMap().get(effect)[skillIndex];
-      } else {
-         return DEFAULT_DOUBLE;
+      double ret = DEFAULT_DOUBLE;
+      if (getMultMap() != null && getMultMap().containsKey(effect)) {
+         double[] values = getMultMap().get(effect);
+         if (values.length > 0) {
+            int skillIndex = Math.min(Math.max(skillLevel - 1, 0), Math.min(4, values.length));
+            ret = values[skillIndex];
+         }
       }
+      return ret;
    }
    
    public double getOdds(Effect effect, int num, int skillLevel) {

@@ -220,7 +220,8 @@ public class SimulationCore extends RecursiveAction {
    }
    
    public int getSkillLevel(Species species) {
-      return speciesSkillLevels.get(species);
+      Integer skillLevel = speciesSkillLevels.get(species);
+      return skillLevel == null ? 1 : skillLevel.intValue();
    }
    
    public boolean isMobileMode() {
