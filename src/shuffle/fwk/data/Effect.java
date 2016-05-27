@@ -37,6 +37,8 @@ import shuffle.fwk.data.simulation.SimulationState;
 import shuffle.fwk.data.simulation.SimulationTask;
 import shuffle.fwk.data.simulation.effects.ActivateComboEffect;
 import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
+import shuffle.fwk.data.simulation.effects.ComboEffect;
+import shuffle.fwk.data.simulation.effects.DelayThawEffect;
 import shuffle.fwk.data.simulation.util.NumberSpan;
 import shuffle.fwk.data.simulation.util.TriFunction;
 
@@ -3443,7 +3445,19 @@ public enum Effect {
          
          List<Integer> toErase = Collections.emptyList();
          if (toMatch != null) {
-            toErase = task.findMatches(1, false, (r, c, s) -> s.equals(toMatch));
+            toErase = task.findMatches(1, true, (r, c, s) -> {
+               boolean ret = toMatch.equals(s);
+               if (ret) {
+                  for (ComboEffect effect : task.getActiveEffectsFor(r, c)) {
+                     // Allow any match that is inactive, or only includes thawing actions.
+                     if (effect != null && !(effect instanceof DelayThawEffect)) {
+                        ret = false;
+                        break;
+                     }
+                  }
+               }
+               return ret;
+            });
          }
          return toErase.isEmpty() ? null : toErase;
       }
@@ -3503,7 +3517,19 @@ public enum Effect {
          
          List<Integer> toErase = Collections.emptyList();
          if (toMatch != null) {
-            toErase = task.findMatches(1, false, (r, c, s) -> s.equals(toMatch));
+            toErase = task.findMatches(1, true, (r, c, s) -> {
+               boolean ret = toMatch.equals(s);
+               if (ret) {
+                  for (ComboEffect effect : task.getActiveEffectsFor(r, c)) {
+                     // Allow any match that is inactive, or only includes thawing actions.
+                     if (effect != null && !(effect instanceof DelayThawEffect)) {
+                        ret = false;
+                        break;
+                     }
+                  }
+               }
+               return ret;
+            });
          }
          return toErase.isEmpty() ? null : toErase;
       }
