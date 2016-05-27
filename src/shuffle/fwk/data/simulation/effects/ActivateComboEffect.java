@@ -21,8 +21,10 @@ package shuffle.fwk.data.simulation.effects;
 import java.util.Collection;
 import java.util.List;
 
+import shuffle.fwk.data.Board;
 import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
+import shuffle.fwk.data.simulation.SimulationState;
 import shuffle.fwk.data.simulation.SimulationTask;
 
 public class ActivateComboEffect extends ComboEffect {
@@ -32,13 +34,17 @@ public class ActivateComboEffect extends ComboEffect {
     */
    private Integer numClearedOnActivation = null;
    
+   private boolean[] shouldPersist;
+   
    public ActivateComboEffect(ActivateComboEffect activateComboEffect) {
       super(activateComboEffect);
       numClearedOnActivation = activateComboEffect.numClearedOnActivation;
+      shouldPersist = new boolean[Board.NUM_CELLS];
    }
    
    public ActivateComboEffect(List<Integer> combo, boolean isPersistentEffect) {
       super(combo, isPersistentEffect);
+      shouldPersist = new boolean[Board.NUM_CELLS];
    }
    
    protected final void setNumClearedFrom(SimulationTask task) {
@@ -54,6 +60,7 @@ public class ActivateComboEffect extends ComboEffect {
    @Override
    public final void doEffect(SimulationTask task) {
       setNumClearedFrom(task);
+      setPersistence(task);
       Species s = task.getEffectSpecies(getCoords());
       Effect effect = task.getEffectFor(s);
       if (isClaimedIn(task)) { // only happens on the very FIRST activation
@@ -74,6 +81,40 @@ public class ActivateComboEffect extends ComboEffect {
       } else {
          effect.handleCombo(this, task);
       }
+   }
+   
+   private void setPersistence(SimulationTask task) {
+      List<Integer> coords = super.getCoords();
+      SimulationState state = task.getState();
+      Board b = state.getBoard();
+      for (int i = 0; i * 2 + 1 < coords.size(); i++) {
+         int row = coords.get(i * 2);
+         int col = coords.get(i * 2 + 1);
+         boolean isFrozen = b.isFrozenAt(row, col);
+         boolean isClaimed = task.isClaimed(row, col);
+         shouldPersist[getPosition(row, col)] = isFrozen || isClaimed;
+         if (isFrozen) {
+            b.setFrozenAt(row, col, false);
+            state.addDisruptionCleared(1);
+         }
+      }
+   }
+   
+   public boolean isPersistent(int row, int col) {
+      int pos = getPosition(row, col);
+      if (pos >= 0 && pos < Board.NUM_CELLS) {
+         return shouldPersist[getPosition(row, col)];
+      }
+      return false;
+   }
+   
+   /**
+    * @param row
+    * @param col
+    * @return
+    */
+   private int getPosition(int row, int col) {
+      return col + row * 6 - 7;
    }
    
    private boolean isClaimedIn(SimulationTask task) {

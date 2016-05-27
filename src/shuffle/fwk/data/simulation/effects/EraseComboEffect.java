@@ -79,6 +79,19 @@ public class EraseComboEffect extends ComboEffect {
          }
       }
    }
+   
+   public void inheritPersistenceFrom(ActivateComboEffect effect) {
+      List<Integer> coords = super.getCoords();
+      for (int i = 0; i * 2 + 1 < coords.size(); i++) {
+         int row = coords.get(i * 2);
+         int col = coords.get(i * 2 + 1);
+         boolean shouldPersist = effect.isPersistent(row, col);
+         int pos = getPosition(row, col);
+         if (pos >= 0 && pos < Board.NUM_CELLS) {
+            shouldErase[pos] = shouldErase[pos] && !shouldPersist;
+         }
+      }
+   }
 
    /**
     * @param row
