@@ -444,7 +444,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       registerAbstractButton(menu, () -> Locale.getDefault().getDisplayName());
       
       ConfigManager preferencesManager = getUser().getPreferencesManager();
-      String available = preferencesManager.getStringValue(KEY_AVAILABLE_LOCALES, "de en fi fr it ja ko sp zh");
+      String available = preferencesManager.getStringValue(KEY_AVAILABLE_LOCALES, "de en fi fr it ja ko sp zh pt");
       List<Locale> locales = Arrays.asList(available.split("\\s+")).stream().map(s -> Locale.forLanguageTag(s))
             .collect(Collectors.toList());
       
