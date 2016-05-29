@@ -580,7 +580,7 @@ public class ShuffleModel
       } else {
          followSP084defaults = true;
          if (getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
-            setRemainingMoves(getCurrentStage().getMoves() + SP_084_MOVE_OVERRIDE);
+            moves = getCurrentStage().getMoves() + SP_084_MOVE_OVERRIDE;
             setGradingMode(getGradingModeManager().getGradingModeValue(SP_084_GRADING_MODE, getCurrentGradingMode()));
          }
       }
