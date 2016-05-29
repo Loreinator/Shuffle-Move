@@ -577,6 +577,12 @@ public class ShuffleModel
       int moves = getCurrentStage().getMoves();
       if (isSurvivalMode()) {
          moves = DEFAULT_SURVIVAL_MOVES;
+      } else {
+         followSP084defaults = true;
+         if (getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+            setRemainingMoves(getCurrentStage().getMoves() + SP_084_MOVE_OVERRIDE);
+            setGradingMode(getGradingModeManager().getGradingModeValue(SP_084_GRADING_MODE, getCurrentGradingMode()));
+         }
       }
       changed |= setRemainingMoves(moves);
       if (changed) {
