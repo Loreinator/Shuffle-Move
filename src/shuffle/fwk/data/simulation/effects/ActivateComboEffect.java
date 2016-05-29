@@ -60,7 +60,6 @@ public class ActivateComboEffect extends ComboEffect {
    @Override
    public final void doEffect(SimulationTask task) {
       setNumClearedFrom(task);
-      setPersistence(task);
       Species s = task.getEffectSpecies(getCoords());
       Effect effect = task.getEffectFor(s);
       if (isClaimedIn(task)) { // only happens on the very FIRST activation
@@ -79,6 +78,7 @@ public class ActivateComboEffect extends ComboEffect {
          task.removeActive(this);
          task.unfreezeAt(getCoords());
       } else {
+         setPersistence(task);
          effect.handleCombo(this, task);
       }
    }

@@ -634,7 +634,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    }
    
    private int getKeyForCoords(int row, int col) {
-      return Board.NUM_COLS * row + col - 1;
+      return Board.NUM_COLS * (row - 1) + (col - 1);
    }
    
    public boolean isActive(int row, int col) {
@@ -1103,6 +1103,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       
       EraseComboEffect erasureEffect = new EraseComboEffect(coords);
       erasureEffect.setForceErase(comboEffect instanceof ActivateMegaComboEffect);
+      scheduleEffect(erasureEffect, effect.getErasureDelay());
       erasureEffect.inheritPersistenceFrom(comboEffect);
       
       EraseComboEffect woodShatter = getWoodShatterEffect(erasureEffect);
@@ -1110,7 +1111,6 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          scheduleEffect(woodShatter, Effect.WOOD.getErasureDelay());
       }
       
-      scheduleEffect(erasureEffect, effect.getErasureDelay());
       
       if (logFiner) {
          logFinerWithId("Number of total blocks cleared is now: %s", getState().getBlocksCleared());

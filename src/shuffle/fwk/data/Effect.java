@@ -591,8 +591,8 @@ public enum Effect {
                int blockIndex = getRandomInt(matches.size() / 2);
                int row = matches.get(blockIndex * 2);
                int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toErase = Arrays.asList(row, col);
-               WOOD.eraseBonus(task, toErase, true);
+               final List<Integer> toErase = Arrays.asList(row, col);
+               task.addFinishedAction((ce, t) -> Effect.WOOD.eraseBonus(t, toErase, true));
             }
          }
       }
@@ -627,8 +627,8 @@ public enum Effect {
                int blockIndex = getRandomInt(matches.size() / 2);
                int row = matches.get(blockIndex * 2);
                int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toClear = Arrays.asList(row, col);
-               handleClearCloud(toClear, task);
+               final List<Integer> toClear = Arrays.asList(row, col);
+               task.addFinishedAction((ce, t) -> Effect.CLOUD_CLEAR.handleClearCloud(toClear, task));
             }
          }
       }
@@ -661,8 +661,8 @@ public enum Effect {
                int blockIndex = getRandomInt(matches.size() / 2);
                int row = matches.get(blockIndex * 2);
                int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toErase = Arrays.asList(row, col);
-               eraseBonus(task, toErase, false);
+               final List<Integer> toErase = Arrays.asList(row, col);
+               task.addFinishedAction((ce, t) -> Effect.BLOCK_SMASH.eraseBonus(t, toErase, false));
             }
          }
       }
@@ -699,8 +699,8 @@ public enum Effect {
                   int blockIndex = getRandomInt(matches.size() / 2);
                   int row = matches.get(blockIndex * 2);
                   int col = matches.get(blockIndex * 2 + 1);
-                  List<Integer> toErase = new ArrayList<Integer>(Arrays.asList(row, col));
-                  eraseBonus(task, toErase, true);
+                  final List<Integer> toErase = new ArrayList<Integer>(Arrays.asList(row, col));
+                  task.addFinishedAction((ce, t) -> Effect.EJECT.eraseBonus(t, toErase, false));
                }
             }
          }
@@ -735,7 +735,7 @@ public enum Effect {
                int blockIndex = getRandomInt(matches.size() / 2);
                int row = matches.get(blockIndex * 2);
                int col = matches.get(blockIndex * 2 + 1);
-               task.unfreezeAt(Arrays.asList(row, col));
+               task.addFinishedAction((ce, t) -> t.unfreezeAt(Arrays.asList(row, col)));
             }
          }
       }
