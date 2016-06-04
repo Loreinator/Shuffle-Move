@@ -38,7 +38,7 @@ German Translations: http://reddit.com/u/ArmpitWrestling
 Finnish Translations: https://github.com/Igetin  
 Chinese Translations: http://reddit.com/u/Pingtendo  
 French Translations: http://reddit.com/u/TherkFr  
-Portuguese Translations: [Rafael Dias Gomes](fb.com/rafaeldiasgomesator)
+Portuguese Translations: [Rafael Dias Gomes](fb.com/rafaeldiasgomesator)  
 Species Icons: http://serebii.net  
 
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
