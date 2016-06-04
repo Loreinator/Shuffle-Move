@@ -490,7 +490,7 @@ public enum Effect {
                   Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
                         (r, c, s) -> board.isFrozenAt(r, c)));
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
-               List<Integer> matches = task.findMatches(36, false, filter);
+               List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
                   double odds = getOdds(task, comboEffect);
                   if (matches.size() > 1 || odds < 1.0) {
@@ -500,8 +500,10 @@ public enum Effect {
                      int blockIndex = getRandomInt(matches.size() / 2);
                      int row = matches.get(blockIndex * 2);
                      int col = matches.get(blockIndex * 2 + 1);
-                     List<Integer> toErase = Arrays.asList(row, col);
-                     eraseBonus(task, toErase, false);
+                     if (!task.isActive(row, col)) {
+                        List<Integer> toErase = Arrays.asList(row, col);
+                        eraseBonus(task, toErase, false);
+                     }
                   }
                   // Break out if we *could* have erased something
                   break;
@@ -527,7 +529,7 @@ public enum Effect {
                if (numSwapped <= 0) {
                   break;
                }
-               List<Integer> matches = task.findMatches(36, false, filter);
+               List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
                   double odds = getOdds(task, comboEffect);
                   if (matches.size() / 2 > numSwapped || odds < 1.0) {
@@ -535,13 +537,15 @@ public enum Effect {
                   }
                   List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  numSwapped -= randoms.size();
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     toClear.add(row);
-                     toClear.add(col);
+                     if (!task.isActive(row, col)) {
+                        toClear.add(row);
+                        toClear.add(col);
+                     }
                   }
-                  numSwapped -= toClear.size() / 2;
                   if (odds >= Math.random()) {
                      eraseBonus(task, toClear, false);
                   }
@@ -1081,7 +1085,7 @@ public enum Effect {
                if (numSwapped <= 0) {
                   break;
                }
-               List<Integer> matches = task.findMatches(36, false, filter);
+               List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
                   double odds = getOdds(task, comboEffect);
                   if (matches.size() / 2 > numSwapped || odds < 1.0) {
@@ -1089,13 +1093,15 @@ public enum Effect {
                   }
                   List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  numSwapped -= randoms.size();
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     toClear.add(row);
-                     toClear.add(col);
+                     if (!task.isActive(row, col)) {
+                        toClear.add(row);
+                        toClear.add(col);
+                     }
                   }
-                  numSwapped -= toClear.size() / 2;
                   if (odds >= Math.random()) {
                      eraseBonus(task, toClear, false);
                   }
