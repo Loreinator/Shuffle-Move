@@ -233,8 +233,21 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          }
          List<Integer> metalBlocks = findMatches(Board.NUM_CELLS, true,
                (r, c, s) -> s.getNextMetal().getEffect().equals(Effect.AIR));
-         getState().getBoard().advanceMetalBlocks();
+         Board b = getState().getBoard();
+         // Advance blocks that are not erasing entirely
+         for (int row = 1; row <= Board.NUM_ROWS; row++) {
+            for (int col = 1; col <= Board.NUM_COLS; col++) {
+               Species cur = b.getSpeciesAt(row, col);
+               if (cur.getEffect().equals(Effect.METAL)) {
+                  Species next = Species.getNextMetal(cur);
+                  if (!Effect.AIR.equals(next.getEffect())) {
+                     b.setSpeciesAt(row, col, Species.getNextMetal(cur));
+                  }
+               }
+            }
+         }
          if (metalBlocks.size() > 0) {
+            // and set in an erasure effect for all the blocks that would fully erase this turn.
             EraseComboEffect metalEffect = new EraseComboEffect(metalBlocks);
             metalEffect.setForceErase(true);
             EraseComboEffect woodShatter = getWoodShatterEffect(metalEffect);
