@@ -487,8 +487,8 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
-                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
-                        (r, c, s) -> board.isCloudedAt(r, c)));
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
+                        (r, c, s) -> board.isFrozenAt(r, c)));
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
                List<Integer> matches = task.findMatches(36, false, filter);
                if (!matches.isEmpty()) {
@@ -520,8 +520,8 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
-                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
-                        (r, c, s) -> board.isCloudedAt(r, c)));
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
+                        (r, c, s) -> board.isFrozenAt(r, c)));
             int numSwapped = (int) getMultiplier(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
                if (numSwapped <= 0) {
@@ -1074,8 +1074,8 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
-                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
-                        (r, c, s) -> board.isCloudedAt(r, c)));
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
+                        (r, c, s) -> board.isFrozenAt(r, c)));
             int numSwapped = (int) getMultiplier(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
                if (numSwapped <= 0) {
