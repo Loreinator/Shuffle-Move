@@ -769,7 +769,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       prospecticeCombosSet.remove(effect);
    }
    
-   public void completeComboFor(EraseComboEffect effect, boolean forceErase) {
+   public void completeComboFor(EraseComboEffect effect) {
       if (logFiner) {
          logFinerWithId("Completing combo: %s", effect.toString());
       }
@@ -783,7 +783,10 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             // Handle statistics
             
             // Continue on with replacement
-            if (b.isFrozenAt(row, col) || b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+            if (b.isCloudedAt(row, col) && effect.isForceErase()) {
+               b.setClouded(row, col, false);
+               getState().addDisruptionCleared(1);
+            } else if (b.isFrozenAt(row, col) || b.getSpeciesAt(row, col).getEffect().isDisruption()) {
                getState().addDisruptionCleared(1);
             }
             getState().addBlockCleared(1);

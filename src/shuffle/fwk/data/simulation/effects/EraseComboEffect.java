@@ -55,7 +55,7 @@ public class EraseComboEffect extends ComboEffect {
     */
    @Override
    public void doEffect(SimulationTask task) {
-      task.completeComboFor(this, forceErase);
+      task.completeComboFor(this);
    }
    
    @Override

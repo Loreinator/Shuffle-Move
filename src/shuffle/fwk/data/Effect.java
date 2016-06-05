@@ -502,7 +502,7 @@ public enum Effect {
                      int col = matches.get(blockIndex * 2 + 1);
                      if (!task.isActive(row, col)) {
                         List<Integer> toErase = Arrays.asList(row, col);
-                        eraseBonus(task, toErase, false);
+                        eraseBonus(task, toErase, true);
                      }
                   }
                   // Break out if we *could* have erased something
@@ -547,7 +547,7 @@ public enum Effect {
                      }
                   }
                   if (odds >= Math.random()) {
-                     eraseBonus(task, toClear, false);
+                     eraseBonus(task, toClear, true);
                   }
                }
             }
@@ -1103,7 +1103,7 @@ public enum Effect {
                      }
                   }
                   if (odds >= Math.random()) {
-                     eraseBonus(task, toClear, false);
+                     eraseBonus(task, toClear, true);
                   }
                }
             }
