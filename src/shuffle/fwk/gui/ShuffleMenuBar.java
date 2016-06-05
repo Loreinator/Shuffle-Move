@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +50,6 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
 import shuffle.fwk.GradingMode;
-import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.gui.user.ShuffleMenuUser;
 import shuffle.fwk.i18n.I18nUser;
 import shuffle.fwk.service.BaseServiceManager;
@@ -109,13 +109,13 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_SUBREDDIT_LINK = "menuitem.subreddit";
    private static final String KEY_GUIDE_LINK = "menuitem.guide";
    
-   // config keys
-   public static final String KEY_AVAILABLE_LOCALES = "AVAILABLE_LOCALES";
-   
    // Hard-coded to avoid tampering
    public static final String LATEST_LINK = "https://github.com/Loreinator/Shuffle-Move/releases/latest";
    public static final String SUBREDDIT_LINK = "https://www.reddit.com/r/ShuffleMove/";
    public static final String GUIDE_LINK = "https://docs.google.com/spreadsheets/d/1hF-TquHrYSY4dP8K_LUsd13HXBx9ck_klASiNKrGVck/htmlview#";
+   public static final List<Locale> AVAILABLE_LOCALES = Collections
+         .unmodifiableList(Arrays.asList("de en fi fr it ja ko es zh pt".split("\\s+")).stream()
+               .map(s -> Locale.forLanguageTag(s)).collect(Collectors.toList()));
    
    private ShuffleMenuUser user;
    private JCheckBoxMenuItem autoComputeItem;
@@ -443,12 +443,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       JMenu menu = new JMenu(Locale.getDefault().getDisplayName());
       registerAbstractButton(menu, () -> Locale.getDefault().getDisplayName());
       
-      ConfigManager preferencesManager = getUser().getPreferencesManager();
-      String available = preferencesManager.getStringValue(KEY_AVAILABLE_LOCALES, "de en fi fr it ja ko sp zh");
-      List<Locale> locales = Arrays.asList(available.split("\\s+")).stream().map(s -> Locale.forLanguageTag(s))
-            .collect(Collectors.toList());
-      
-      for (Locale loc : locales) {
+      for (Locale loc : AVAILABLE_LOCALES) {
          MenuAction action = new MenuAction(() -> loc.getDisplayName(), e -> setLocaleTo(loc));
          addMenuAction(menu, action);
       }

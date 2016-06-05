@@ -47,7 +47,6 @@ import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
 import shuffle.fwk.data.simulation.effects.ComboEffect;
 import shuffle.fwk.data.simulation.effects.DelayThawEffect;
 import shuffle.fwk.data.simulation.effects.EraseComboEffect;
-import shuffle.fwk.data.simulation.effects.MakeActiveEffect;
 import shuffle.fwk.data.simulation.util.NumberSpan;
 import shuffle.fwk.data.simulation.util.TriFunction;
 
@@ -234,9 +233,23 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          }
          List<Integer> metalBlocks = findMatches(Board.NUM_CELLS, true,
                (r, c, s) -> s.getNextMetal().getEffect().equals(Effect.AIR));
-         getState().getBoard().advanceMetalBlocks();
+         Board b = getState().getBoard();
+         // Advance blocks that are not erasing entirely
+         for (int row = 1; row <= Board.NUM_ROWS; row++) {
+            for (int col = 1; col <= Board.NUM_COLS; col++) {
+               Species cur = b.getSpeciesAt(row, col);
+               if (cur.getEffect().equals(Effect.METAL)) {
+                  Species next = Species.getNextMetal(cur);
+                  if (!Effect.AIR.equals(next.getEffect())) {
+                     b.setSpeciesAt(row, col, Species.getNextMetal(cur));
+                  }
+               }
+            }
+         }
          if (metalBlocks.size() > 0) {
-            MakeActiveEffect metalEffect = new MakeActiveEffect(metalBlocks);
+            // and set in an erasure effect for all the blocks that would fully erase this turn.
+            EraseComboEffect metalEffect = new EraseComboEffect(metalBlocks);
+            metalEffect.setForceErase(true);
             EraseComboEffect woodShatter = getWoodShatterEffect(metalEffect);
             if (woodShatter != null) {
                scheduleEffect(woodShatter, Effect.WOOD.getErasureDelay());
@@ -634,7 +647,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    }
    
    private int getKeyForCoords(int row, int col) {
-      return Board.NUM_COLS * row + col - 1;
+      return Board.NUM_COLS * (row - 1) + (col - 1);
    }
    
    public boolean isActive(int row, int col) {
@@ -756,7 +769,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       prospecticeCombosSet.remove(effect);
    }
    
-   public void completeComboFor(EraseComboEffect effect, boolean forceErase) {
+   public void completeComboFor(EraseComboEffect effect) {
       if (logFiner) {
          logFinerWithId("Completing combo: %s", effect.toString());
       }
@@ -770,7 +783,10 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             // Handle statistics
             
             // Continue on with replacement
-            if (b.isFrozenAt(row, col) || b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+            if (b.isCloudedAt(row, col) && effect.isForceErase()) {
+               b.setClouded(row, col, false);
+               getState().addDisruptionCleared(1);
+            } else if (b.isFrozenAt(row, col) || b.getSpeciesAt(row, col).getEffect().isDisruption()) {
                getState().addDisruptionCleared(1);
             }
             getState().addBlockCleared(1);
@@ -941,7 +957,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       return state;
    }
    
-   public EraseComboEffect getWoodShatterEffect(ComboEffect comboEffect) {
+   public EraseComboEffect getWoodShatterEffect(EraseComboEffect comboEffect) {
       Set<List<Integer>> woodCoords = new HashSet<List<Integer>>();
       Board b = getState().getBoard();
       int[] nearby = new int[] { 0, -1, 0, 1, 1, 0, -1, 0 };
@@ -950,11 +966,11 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       for (int i = 0; i * 2 + 1 < coords.size(); i++) {
          int myrow = coords.get(i * 2);
          int mycol = coords.get(i * 2 + 1);
-         if (comboEffect instanceof ActivateMegaComboEffect || !b.isFrozenAt(myrow, mycol)) {
+         if (comboEffect.shouldErase(myrow, mycol)) {
             for (int k = 0; k * 2 + 1 < nearby.length; k++) {
                int row = myrow + nearby[k * 2];
                int col = mycol + nearby[k * 2 + 1];
-               if (!isClaimed(row, col) && !isFalling(row, col)) {
+               if (!isClaimed(row, col) && !isFalling(row, col) && !isActive(row, col)) {
                   Species neighbour = b.getSpeciesAt(row, col);
                   if (neighbour.getEffect().equals(Effect.WOOD)) {
                      woodCoords.add(Arrays.asList(row, col));
@@ -1101,14 +1117,16 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       handleMegaIncreases(coords);
       addScore(scoreToAdd);
       
-      EraseComboEffect woodShatter = getWoodShatterEffect(comboEffect);
+      EraseComboEffect erasureEffect = new EraseComboEffect(coords);
+      erasureEffect.setForceErase(comboEffect instanceof ActivateMegaComboEffect);
+      scheduleEffect(erasureEffect, effect.getErasureDelay());
+      erasureEffect.inheritPersistenceFrom(comboEffect);
+      
+      EraseComboEffect woodShatter = getWoodShatterEffect(erasureEffect);
       if (woodShatter != null) {
          scheduleEffect(woodShatter, Effect.WOOD.getErasureDelay());
       }
       
-      EraseComboEffect erasureEffect = new EraseComboEffect(coords);
-      erasureEffect.setForceErase(comboEffect instanceof ActivateMegaComboEffect);
-      scheduleEffect(erasureEffect, effect.getErasureDelay());
       
       if (logFiner) {
          logFinerWithId("Number of total blocks cleared is now: %s", getState().getBlocksCleared());

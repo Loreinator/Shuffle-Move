@@ -37,6 +37,8 @@ import shuffle.fwk.data.simulation.SimulationState;
 import shuffle.fwk.data.simulation.SimulationTask;
 import shuffle.fwk.data.simulation.effects.ActivateComboEffect;
 import shuffle.fwk.data.simulation.effects.ActivateMegaComboEffect;
+import shuffle.fwk.data.simulation.effects.ComboEffect;
+import shuffle.fwk.data.simulation.effects.DelayThawEffect;
 import shuffle.fwk.data.simulation.util.NumberSpan;
 import shuffle.fwk.data.simulation.util.TriFunction;
 
@@ -354,23 +356,23 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (super.canActivate(comboEffect, task)) {
-            /*
-             * Inherit the Brute force multiplier and compound it in the SAME NumberSpan since they
-             * activate together
-             */
-            final double baseMultiplier = getMultiplier(task, comboEffect);
             final double odds = getOdds(task, comboEffect);
+            final PkmType stageType = task.getState().getCore().getStage().getType();
             task.addScoreModifier((ce, t) -> {
-               PkmType stageType = t.getState().getCore().getStage().getType();
                Species effectSpecies = t.getEffectSpecies(ce.getCoords());
                PkmType effectType = t.getState().getSpeciesType(effectSpecies);
-               double netMultiplier = baseMultiplier;
+               double multiplier = 1.0;
                double typeEffectiveness = PkmType.getMultiplier(effectType, stageType);
                if (typeEffectiveness < 2.0 && typeEffectiveness > 0.0) {
-                  // Ensure all combos are treated as super effective
-                  netMultiplier = netMultiplier * (2.0 / typeEffectiveness);
+                  // if the type matches, add on the bonus.
+                  multiplier = multiplier * (2.0 / typeEffectiveness);
                }
-               return new NumberSpan(1, netMultiplier - 1, odds);
+               Effect effect = t.getEffectFor(effectSpecies);
+               if (!effect.isPersistent() && effect.isAttackPowerEffective()) {
+                  // If the effect COULD benefit from the multiplier glitch, apply it.
+                  multiplier *= effect.getMultiplierRatio(t, ce);
+               }
+               return new NumberSpan(1, multiplier - 1, odds);
             });
          }
       }
@@ -392,13 +394,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         if (canActivate(comboEffect, task)) {
-            // Skill level multiplier
-            double multiplier = getMultiplier(task, comboEffect);
-            // Double it to make attacks super effective instead of NVE
-            multiplier = multiplier * 2.0;
-            ifThenSetSpecial(comboEffect, task, PkmType.PSYCHIC, multiplier - 1.0);
-         }
+         ifThenSetSpecial(comboEffect, task, targets, 1.0);
       }
    },
    /**
@@ -409,26 +405,13 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            /*
-             * Inherit the Brute force multiplier and compound it in the SAME NumberSpan since they
-             * activate together
-             */
-            final double odds = getOdds(task, comboEffect);
-            task.addScoreModifier((ce, t) -> {
-               // The base multiplier depends upon the combo being boosted's current ratio of
-               // power-up.
-               Species effectSpecies = t.getEffectSpecies(ce.getCoords());
-               Effect effect = t.getEffectFor(effectSpecies);
-               double netMultiplier = effect.isPersistent() ? 1.0 : effect.getMultiplierRatio(t, ce);
-               // All effects will be made neutral if they are NVE, at least.
-               PkmType stageType = t.getState().getCore().getStage().getType();
-               PkmType effectType = t.getState().getSpeciesType(effectSpecies);
-               if (PkmType.getMultiplier(effectType, stageType) < 1.0) {
-                  // If NVE, make neutral
-                  netMultiplier = netMultiplier * 2.0;
-               }
-               return new NumberSpan(1, netMultiplier - 1, odds);
-            });
+            // Get a list of all NVE types
+            PkmType stageType = task.getState().getCore().getStage().getType();
+            List<PkmType> types = Arrays.asList(PkmType.values()).stream().filter(t -> {
+               double mult = PkmType.getMultiplier(t, stageType);
+               return mult > 0 && mult < 1;
+            }).collect(Collectors.toList());
+            ifThenSetSpecial(comboEffect, task, types, 1.0);
          }
       }
    },
@@ -504,10 +487,10 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
-                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
-                        (r, c, s) -> board.isCloudedAt(r, c)));
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
+                        (r, c, s) -> board.isFrozenAt(r, c)));
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
-               List<Integer> matches = task.findMatches(36, false, filter);
+               List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
                   double odds = getOdds(task, comboEffect);
                   if (matches.size() > 1 || odds < 1.0) {
@@ -517,8 +500,10 @@ public enum Effect {
                      int blockIndex = getRandomInt(matches.size() / 2);
                      int row = matches.get(blockIndex * 2);
                      int col = matches.get(blockIndex * 2 + 1);
-                     List<Integer> toErase = Arrays.asList(row, col);
-                     eraseBonus(task, toErase, false);
+                     if (!task.isActive(row, col)) {
+                        List<Integer> toErase = Arrays.asList(row, col);
+                        eraseBonus(task, toErase, true);
+                     }
                   }
                   // Break out if we *could* have erased something
                   break;
@@ -537,14 +522,14 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
-                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
-                        (r, c, s) -> board.isCloudedAt(r, c)));
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
+                        (r, c, s) -> board.isFrozenAt(r, c)));
             int numSwapped = (int) getMultiplier(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
                if (numSwapped <= 0) {
                   break;
                }
-               List<Integer> matches = task.findMatches(36, false, filter);
+               List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
                   double odds = getOdds(task, comboEffect);
                   if (matches.size() / 2 > numSwapped || odds < 1.0) {
@@ -552,15 +537,17 @@ public enum Effect {
                   }
                   List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  numSwapped -= randoms.size();
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     toClear.add(row);
-                     toClear.add(col);
+                     if (!task.isActive(row, col)) {
+                        toClear.add(row);
+                        toClear.add(col);
+                     }
                   }
-                  numSwapped -= toClear.size() / 2;
                   if (odds >= Math.random()) {
-                     eraseBonus(task, toClear, false);
+                     eraseBonus(task, toClear, true);
                   }
                }
             }
@@ -608,8 +595,8 @@ public enum Effect {
                int blockIndex = getRandomInt(matches.size() / 2);
                int row = matches.get(blockIndex * 2);
                int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toErase = Arrays.asList(row, col);
-               WOOD.eraseBonus(task, toErase, true);
+               final List<Integer> toErase = Arrays.asList(row, col);
+               task.addFinishedAction((ce, t) -> Effect.WOOD.eraseBonus(t, toErase, true));
             }
          }
       }
@@ -644,8 +631,8 @@ public enum Effect {
                int blockIndex = getRandomInt(matches.size() / 2);
                int row = matches.get(blockIndex * 2);
                int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toClear = Arrays.asList(row, col);
-               handleClearCloud(toClear, task);
+               final List<Integer> toClear = Arrays.asList(row, col);
+               task.addFinishedAction((ce, t) -> Effect.CLOUD_CLEAR.handleClearCloud(toClear, task));
             }
          }
       }
@@ -678,8 +665,8 @@ public enum Effect {
                int blockIndex = getRandomInt(matches.size() / 2);
                int row = matches.get(blockIndex * 2);
                int col = matches.get(blockIndex * 2 + 1);
-               List<Integer> toErase = Arrays.asList(row, col);
-               eraseBonus(task, toErase, false);
+               final List<Integer> toErase = Arrays.asList(row, col);
+               task.addFinishedAction((ce, t) -> Effect.BLOCK_SMASH.eraseBonus(t, toErase, false));
             }
          }
       }
@@ -716,8 +703,8 @@ public enum Effect {
                   int blockIndex = getRandomInt(matches.size() / 2);
                   int row = matches.get(blockIndex * 2);
                   int col = matches.get(blockIndex * 2 + 1);
-                  List<Integer> toErase = new ArrayList<Integer>(Arrays.asList(row, col));
-                  eraseBonus(task, toErase, true);
+                  final List<Integer> toErase = new ArrayList<Integer>(Arrays.asList(row, col));
+                  task.addFinishedAction((ce, t) -> Effect.EJECT.eraseBonus(t, toErase, false));
                }
             }
          }
@@ -752,7 +739,7 @@ public enum Effect {
                int blockIndex = getRandomInt(matches.size() / 2);
                int row = matches.get(blockIndex * 2);
                int col = matches.get(blockIndex * 2 + 1);
-               task.unfreezeAt(Arrays.asList(row, col));
+               task.addFinishedAction((ce, t) -> t.unfreezeAt(Arrays.asList(row, col)));
             }
          }
       }
@@ -1091,14 +1078,14 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             Board board = task.getState().getBoard();
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
-                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isFrozenAt(r, c),
-                        (r, c, s) -> board.isCloudedAt(r, c)));
+                  Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
+                        (r, c, s) -> board.isFrozenAt(r, c)));
             int numSwapped = (int) getMultiplier(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
                if (numSwapped <= 0) {
                   break;
                }
-               List<Integer> matches = task.findMatches(36, false, filter);
+               List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
                   double odds = getOdds(task, comboEffect);
                   if (matches.size() / 2 > numSwapped || odds < 1.0) {
@@ -1106,15 +1093,17 @@ public enum Effect {
                   }
                   List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
                   List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  numSwapped -= randoms.size();
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     toClear.add(row);
-                     toClear.add(col);
+                     if (!task.isActive(row, col)) {
+                        toClear.add(row);
+                        toClear.add(col);
+                     }
                   }
-                  numSwapped -= toClear.size() / 2;
                   if (odds >= Math.random()) {
-                     eraseBonus(task, toClear, false);
+                     eraseBonus(task, toClear, true);
                   }
                }
             }
@@ -3443,7 +3432,19 @@ public enum Effect {
          
          List<Integer> toErase = Collections.emptyList();
          if (toMatch != null) {
-            toErase = task.findMatches(1, false, (r, c, s) -> s.equals(toMatch));
+            toErase = task.findMatches(1, true, (r, c, s) -> {
+               boolean ret = toMatch.equals(s);
+               if (ret) {
+                  for (ComboEffect effect : task.getActiveEffectsFor(r, c)) {
+                     // Allow any match that is inactive, or only includes thawing actions.
+                     if (effect != null && !(effect instanceof DelayThawEffect)) {
+                        ret = false;
+                        break;
+                     }
+                  }
+               }
+               return ret;
+            });
          }
          return toErase.isEmpty() ? null : toErase;
       }
@@ -3503,7 +3504,19 @@ public enum Effect {
          
          List<Integer> toErase = Collections.emptyList();
          if (toMatch != null) {
-            toErase = task.findMatches(1, false, (r, c, s) -> s.equals(toMatch));
+            toErase = task.findMatches(1, true, (r, c, s) -> {
+               boolean ret = toMatch.equals(s);
+               if (ret) {
+                  for (ComboEffect effect : task.getActiveEffectsFor(r, c)) {
+                     // Allow any match that is inactive, or only includes thawing actions.
+                     if (effect != null && !(effect instanceof DelayThawEffect)) {
+                        ret = false;
+                        break;
+                     }
+                  }
+               }
+               return ret;
+            });
          }
          return toErase.isEmpty() ? null : toErase;
       }
@@ -4673,12 +4686,26 @@ public enum Effect {
       ifThenSetSpecial(comboEffect, task, Arrays.asList(type), bonus);
    }
    
-   protected final void ifThenSetSpecial(ActivateComboEffect comboEffect, final SimulationTask task,
+   protected final void ifThenSetSpecial(ActivateComboEffect comboEffect, SimulationTask task,
          Collection<PkmType> types, Number bonus) {
       if (canActivate(comboEffect, task)) {
          if (bonus.doubleValue() > 0) {
-            NumberSpan multiplier = new NumberSpan(1, bonus, getOdds(task, comboEffect));
-            task.addScoreModifier((ce, t) -> types.contains(getType(ce, t)) ? multiplier : null);
+            final double odds = getOdds(task, comboEffect);
+            task.addScoreModifier((ce, t) -> {
+               Species effectSpecies = t.getEffectSpecies(ce.getCoords());
+               Effect effect = t.getEffectFor(effectSpecies);
+               PkmType effectType = t.getState().getSpeciesType(effectSpecies);
+               double multiplier = 1;
+               if (types.contains(effectType)) {
+                  // if the type matches, add on the bonus.
+                  multiplier += bonus.doubleValue();
+               }
+               if (!effect.isPersistent() && effect.isAttackPowerEffective()) {
+                  // If the effect COULD benefit from the multiplier glitch, apply it.
+                  multiplier *= effect.getMultiplierRatio(t, ce);
+               }
+               return new NumberSpan(1, multiplier - 1, odds);
+            });
          }
       }
    }
