@@ -500,7 +500,12 @@ public enum Effect {
                      int blockIndex = getRandomInt(matches.size() / 2);
                      int row = matches.get(blockIndex * 2);
                      int col = matches.get(blockIndex * 2 + 1);
-                     if (!task.isActive(row, col)) {
+                     if (!isDisruption(board.getSpeciesAt(row, col)) && board.isCloudedAt(row, col)) {
+                        // If clearing clouds
+                        board.setClouded(row, col, false);
+                        task.getState().addDisruptionCleared(1);
+                     } else if (!task.isActive(row, col)) {
+                        // if clearing barrier or coin/rock/block
                         List<Integer> toErase = Arrays.asList(row, col);
                         eraseBonus(task, toErase, true);
                      }
@@ -541,7 +546,12 @@ public enum Effect {
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     if (!task.isActive(row, col)) {
+                     if (!isDisruption(board.getSpeciesAt(row, col)) && board.isCloudedAt(row, col)) {
+                        // If clearing clouds
+                        board.setClouded(row, col, false);
+                        task.getState().addDisruptionCleared(1);
+                     } else if (!task.isActive(row, col)) {
+                        // if clearing barrier or coin/rock/block
                         toClear.add(row);
                         toClear.add(col);
                      }
@@ -1097,7 +1107,12 @@ public enum Effect {
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     if (!task.isActive(row, col)) {
+                     if (!isDisruption(board.getSpeciesAt(row, col)) && board.isCloudedAt(row, col)) {
+                        // If clearing clouds
+                        board.setClouded(row, col, false);
+                        task.getState().addDisruptionCleared(1);
+                     } else if (!task.isActive(row, col)) {
+                        // if clearing barrier or coin/rock/block
                         toClear.add(row);
                         toClear.add(col);
                      }
