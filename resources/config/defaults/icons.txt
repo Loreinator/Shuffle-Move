@@ -129,9 +129,9 @@ RESOURCE Magmar img/icons/126.png
 RESOURCE Pinsir img/icons/127.png
 RESOURCE Tauros img/icons/128.png
 RESOURCE Magikarp img/icons/129.png
-RESOURCE Magikarp_s img/icons/129_s.png
+RESOURCE Magikarp_s img/icons/129-s.png
 RESOURCE Gyarados img/icons/130.png
-RESOURCE Gyarados_s img/icons/130_s.png
+RESOURCE Gyarados_s img/icons/130-s.png
 RESOURCE Lapras img/icons/131.png
 RESOURCE Ditto img/icons/132.png
 RESOURCE Eevee img/icons/133.png
