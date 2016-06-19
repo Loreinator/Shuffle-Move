@@ -21,6 +21,7 @@ package shuffle.fwk.gui.user;
 import java.util.List;
 
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
+import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
@@ -59,5 +60,13 @@ public interface PaintsIndicatorUser extends IndicatorUser<Object>, PreferencesM
    boolean getAttackPowerUp();
    
    void setAttackPowerUp(boolean enabled);
+   
+   Status getStatus();
+   
+   int getStatusDuration();
+   
+   boolean setStatus(Status status);
+   
+   boolean setStatusDuration(int duration);
    
 }

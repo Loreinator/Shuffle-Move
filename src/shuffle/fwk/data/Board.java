@@ -36,11 +36,44 @@ public class Board {
    private final boolean[][] frozen = new boolean[NUM_ROWS][NUM_COLS];
    private final boolean[][] clouded = new boolean[NUM_ROWS][NUM_COLS];
    private int megaProgress;
+   private Status status;
+   /**
+    * The number of turns required for the non-none status to revert to none.
+    */
+   private int statusDuration;
+   
+   public enum Status {
+      NONE(1.0, "board.status.none"),
+      DELAY(1.0, "board.status.delay"),
+      BURN(1.5, "board.status.burn"),
+      SLEEP(1.2, "board.status.sleep"),
+      PARALYZE(1.0, "board.status.paralyze"),
+      FEAR(1.5, "board.status.fear"),
+      FROZEN(1.2, "board.status.frozen");
+      
+      private final double mult;
+      private final String key;
+      
+      private Status(double multiplier, String i18nKey) {
+         mult = multiplier;
+         key = i18nKey;
+      }
+      
+      public double getMultiplier() {
+         return mult;
+      }
+      
+      public String getKey() {
+         return key;
+      }
+   }
    private String toString = null;
    
    public Board() {
       clear();
       megaProgress = 0;
+      status = Status.NONE;
+      statusDuration = 0;
    }
    
    public Board(Board b) {
@@ -52,6 +85,33 @@ public class Board {
          }
       }
       megaProgress = b.getMegaProgress();
+      status = b.getStatus();
+      statusDuration = b.getStatusDuration();
+   }
+   
+   public int getStatusDuration() {
+      return statusDuration;
+   }
+   
+   public boolean decreaseStatusDuration(int decreaseBy) {
+      boolean changed = setStatusDuration(statusDuration - decreaseBy);
+      if (changed && getStatusDuration() == 0) {
+         status = Status.NONE;
+      }
+      return changed;
+   }
+   
+   public boolean setStatusDuration(int newDuration) {
+      newDuration = Math.max(0, newDuration);
+      if (newDuration != statusDuration) {
+         statusDuration = newDuration;
+         if (toString != null) {
+            toString = null;
+         }
+         return true;
+      } else {
+         return false;
+      }
    }
    
    public int getMegaProgress() {
@@ -73,6 +133,18 @@ public class Board {
       } else {
          return false;
       }
+   }
+   
+   public Status getStatus() {
+      return status;
+   }
+   
+   public boolean setStatus(Status s) {
+      if (s == null || s.equals(status)) {
+         return false;
+      }
+      status = s;
+      return true;
    }
    
    /**
@@ -227,6 +299,9 @@ public class Board {
    public String toString() {
       if (toString == null) {
          StringBuilder sb = new StringBuilder();
+         sb.append("Mega_Progress:" + Integer.toString(this.megaProgress) + "\n");
+         sb.append("Status:" + status.toString() + "\n");
+         sb.append("Status_Duration:" + Integer.toString(this.statusDuration) + "\n");
          int maxlen = 0;
          for (Species[] row : species) {
             for (Species s : row) {

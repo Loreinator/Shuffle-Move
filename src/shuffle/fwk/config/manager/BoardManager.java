@@ -33,6 +33,7 @@ import shuffle.fwk.config.EntryType;
 import shuffle.fwk.config.loader.BoardConfigLoader;
 import shuffle.fwk.config.writer.PreferencesWriter;
 import shuffle.fwk.data.Board;
+import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.Stage;
 
@@ -153,6 +154,20 @@ public class BoardManager {
             curBoard.setMegaProgress(0);
          }
       }
+      for (String status : boardLoader.getConfiguredStatus()) {
+         try {
+            curBoard.setStatus(Status.valueOf(status));
+         } catch (IllegalArgumentException | NullPointerException e) {
+            curBoard.setStatus(Status.NONE);
+         }
+      }
+      for (String duration : boardLoader.getConfiguredStatusDuration()) {
+         try {
+            curBoard.setStatusDuration(Integer.parseInt(duration));
+         } catch (NullPointerException | NumberFormatException nfe) {
+            curBoard.setStatusDuration(0);
+         }
+      }
       String after = curBoard.toString();
       return !before.equals(after);
    }
@@ -170,6 +185,10 @@ public class BoardManager {
       data.put(BoardConfigLoader.STAGE, Arrays.asList(getCurrentStage().getName()));
       // The progress data
       data.put(BoardConfigLoader.KEY_MEGA_PROGRESS, Arrays.asList(String.valueOf(getBoard().getMegaProgress())));
+      // The status
+      data.put(BoardConfigLoader.KEY_STATUS, Arrays.asList(String.valueOf(getBoard().getStatus())));
+      // The status duration
+      data.put(BoardConfigLoader.KEY_STATUS_DURATION, Arrays.asList(String.valueOf(getBoard().getStatusDuration())));
       // The row data
       for (int i = 1; i <= 6; i++) {
          String rowKey = BoardConfigLoader.getRowKey(i);

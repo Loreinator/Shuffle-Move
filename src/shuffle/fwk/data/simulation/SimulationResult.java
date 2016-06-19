@@ -58,6 +58,7 @@ public class SimulationResult {
       processUUID = id;
       move = sourceMove;
       board = resultBoard;
+      board.decreaseStatusDuration(1);
       this.startTime = startTime;
       hash = generateHash();
    }

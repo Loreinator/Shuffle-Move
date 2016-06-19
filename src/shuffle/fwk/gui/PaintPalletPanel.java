@@ -56,6 +56,7 @@ import shuffle.fwk.ShuffleModel;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.StageManager;
+import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
 import shuffle.fwk.data.Stage;
@@ -92,6 +93,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private static final String KEY_HP_TOOLTIP = "tooltip.hp";
    private static final String KEY_MOVES_TOOLTIP = "tooltip.moves";
    private static final String KEY_ATTACK_POWERUP_TOOLTIP = "tooltip.attack.power.up";
+   private static final String KEY_STATUS_TOOLTIP = "tooltip.status";
+   private static final String KEY_STATUS_DURATION_TOOLTIP = "tooltip.status.duration";
    
    // config keys
    private static final String KEY_PAINT_SELECT_COLOR = "PAINT_SELECT_COLOR";
@@ -119,6 +122,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private JSpinner scoreField;
    private JLabel healthLabel;
    private JCheckBox enableAttackPowerUpBox;
+   private StatusChooser statusChooser;
+   private JComboBox<Integer> statusDuration;
    
    private ItemListener megaActiveListener;
    private ItemListener megaProgressListener;
@@ -127,6 +132,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
    private ChangeListener scoreListener;
    private ItemListener movesListener;
    private ChangeListener attackPowerListener;
+   private ItemListener statusListener;
+   private ItemListener statusDurationListener;
    private Supplier<Integer> minimumWidthGetter = () -> 0;
    
    private List<SpeciesPaint> prevPaints = Collections.emptyList();
@@ -207,6 +214,15 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       enableAttackPowerUpBox.setSelected(getUser().getAttackPowerUp());
       enableAttackPowerUpBox.setToolTipText(getString(KEY_ATTACK_POWERUP_TOOLTIP));
       optionPanel.add(enableAttackPowerUpBox);
+      
+      statusChooser = new StatusChooser();
+      statusChooser.setSelectedStatus(getUser().getStatus());
+      statusChooser.setToolTipText(getString(KEY_STATUS_TOOLTIP));
+      optionPanel.add(statusChooser);
+      
+      statusDuration = new JComboBox<Integer>();
+      statusDuration.setToolTipText(getString(KEY_STATUS_DURATION_TOOLTIP));
+      optionPanel.add(statusDuration);
       
       GridBagConstraints c = new GridBagConstraints();
       c.weightx = 0.0;
@@ -296,6 +312,24 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
             }
          };
       }
+      if (statusListener == null) {
+         statusListener = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               Status status = statusChooser.getSelectedStatus();
+               getUser().setStatus(status);
+            }
+         };
+      }
+      if (statusDurationListener == null) {
+         statusDurationListener = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               Integer duration = statusDuration.getItemAt(statusDuration.getSelectedIndex());
+               getUser().setStatusDuration(duration == null ? 0 : duration.intValue());
+            }
+         };
+      }
       if (specialSpeciesListener == null) {
          specialSpeciesListener = new ItemListener() {
             @Override
@@ -372,6 +406,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       scoreField.addChangeListener(scoreListener);
       movesLeft.addItemListener(movesListener);
       enableAttackPowerUpBox.addChangeListener(attackPowerListener);
+      statusChooser.addItemListener(statusListener);
+      statusDuration.addItemListener(statusDurationListener);
    }
    
    private char getNextBindingFor(String name, Team team) {
@@ -388,6 +424,8 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       scoreField.removeChangeListener(scoreListener);
       movesLeft.removeItemListener(movesListener);
       enableAttackPowerUpBox.removeChangeListener(attackPowerListener);
+      statusChooser.removeItemListener(statusListener);
+      statusDuration.removeItemListener(statusDurationListener);
    }
    
    /**
@@ -506,12 +544,20 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
       String hpTT = getString(KEY_HP_TOOLTIP);
       String movesTT = getString(KEY_MOVES_TOOLTIP);
       String atkTT = getString(KEY_ATTACK_POWERUP_TOOLTIP);
+      String statusTT = getString(KEY_STATUS_TOOLTIP);
+      String statusDurationTT = getString(KEY_STATUS_DURATION_TOOLTIP);
       
       if (!megaCheckTT.equals(megaActive.getToolTipText())) {
          megaActive.setToolTipText(megaCheckTT);
       }
       if (!megaProgressTT.equals(megaProgress.getToolTipText())) {
          megaProgress.setToolTipText(megaProgressTT);
+      }
+      if (!statusTT.equals(statusChooser.getToolTipText())) {
+         statusChooser.setToolTipText(statusTT);
+      }
+      if (!statusDurationTT.equals(statusDuration.getToolTipText())) {
+         statusDuration.setToolTipText(statusDurationTT);
       }
       if (!frozenTT.equals(frozenBox.getToolTipText())) {
          frozenBox.setToolTipText(frozenTT);
@@ -569,6 +615,13 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          megaProgress.setEnabled(true);
          megaActive.setEnabled(true);
       }
+      
+      statusChooser.setSelectedStatus(getUser().getStatus());
+      statusDuration.removeAllItems();
+      for (int i = 0; i <= currentStage.getMoves() + 5; i++) {
+         statusDuration.addItem(i);
+      }
+      statusDuration.setSelectedItem(getUser().getStatusDuration());
       
       boolean hasWood = curTeam.getNames().contains(Species.WOOD.getName());
       boolean hasMetal = curTeam.getNames().contains(Species.METAL.getName());

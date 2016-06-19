@@ -76,6 +76,7 @@ import shuffle.fwk.config.provider.SpeciesManagerProvider;
 import shuffle.fwk.config.provider.StageManagerProvider;
 import shuffle.fwk.config.provider.TeamManagerProvider;
 import shuffle.fwk.data.Board;
+import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
@@ -881,6 +882,14 @@ public class ShuffleModel
       return pool;
    }
    
+   public int getStatusDuration() {
+      return getBoard().getStatusDuration();
+   }
+   
+   public Status getStatus() {
+      return getBoard().getStatus();
+   }
+   
    public int getMegaProgress() {
       return getBoard().getMegaProgress();
    }
@@ -1498,6 +1507,32 @@ public class ShuffleModel
             currentStage = StageManager.SURVIVAL;
          }
          changed &= getTeamManager().setTeamForStage(team, currentStage);
+      }
+      return changed;
+   }
+   
+   /**
+    * @param status
+    * @return
+    */
+   public boolean setStatus(Status status) {
+      Board b = getBoard();
+      boolean changed = b.setStatus(status);
+      if (changed) {
+         getBoardManager().setBoard(b);
+      }
+      return changed;
+   }
+   
+   /**
+    * @param duration
+    * @return
+    */
+   public boolean setStatusDuration(int duration) {
+      Board b = getBoard();
+      boolean changed = b.setStatusDuration(duration);
+      if (changed) {
+         getBoardManager().setBoard(b);
       }
       return changed;
    }
