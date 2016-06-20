@@ -58,7 +58,9 @@ public class SimulationResult {
       processUUID = id;
       move = sourceMove;
       board = resultBoard;
-      board.decreaseStatusDuration(1);
+      if (move != null && move.size() >= 4) {
+         board.decreaseStatusDuration(1);
+      }
       this.startTime = startTime;
       hash = generateHash();
    }
