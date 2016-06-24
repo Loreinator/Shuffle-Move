@@ -32,6 +32,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.simulation.SimulationCore;
 import shuffle.fwk.data.simulation.SimulationState;
 import shuffle.fwk.data.simulation.SimulationTask;
@@ -326,7 +327,7 @@ public enum Effect {
     * Sometimes increases damage and leaves opponent paralyzed.
     */
    QUAKE {
-      // TODO when status is implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -334,12 +335,20 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
+      // Will deterministically set the multiplier
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      // Will RANDOMLY set it to paralyzed
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
       }
    },
    /**
@@ -827,7 +836,7 @@ public enum Effect {
     */
    MIND_ZAP {
       // TODO when disruption timers are implemented
-   
+      
    },
    /**
     * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
@@ -842,12 +851,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, getBonus(task, comboEffect));
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.BURN, 3);
       }
    },
    /**
@@ -855,6 +865,7 @@ public enum Effect {
     */
    SPOOKIFY {
       // TODO when disruption timers are implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.BUG, PkmType.DARK, PkmType.DRAGON,
             PkmType.FIGHTING, PkmType.GRASS, PkmType.GROUND, PkmType.ICE, PkmType.POISON, PkmType.ROCK, PkmType.STEEL);
@@ -862,12 +873,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, getBonus(task, comboEffect));
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.FEAR, 3);
       }
    },
    /**
@@ -875,6 +887,7 @@ public enum Effect {
     */
    FREEZE {
       // TODO when disruption timers are implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.ELECTRIC, PkmType.FAIRY, PkmType.FIGHTING,
             PkmType.FIRE, PkmType.GHOST, PkmType.ICE, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -882,12 +895,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.ICE, getBonus(task, comboEffect));
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.FROZEN, 3);
       }
    },
    /**
@@ -895,6 +909,7 @@ public enum Effect {
     */
    SLEEP_CHARM {
       // TODO when disruption timers are implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DARK, PkmType.DRAGON, PkmType.FIGHTING,
             PkmType.GHOST, PkmType.GRASS, PkmType.ICE, PkmType.ROCK, PkmType.STEEL);
@@ -902,14 +917,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         for (PkmType type : PkmType.values()) {
-            ifThenSetSpecial(comboEffect, task, type, getBonus(task, comboEffect));
-         }
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.SLEEP, 3);
       }
    },
    /**
@@ -917,6 +931,7 @@ public enum Effect {
     */
    PARALYZE {
       // TODO when disruption timers are implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -924,7 +939,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
       }
    },
    /**
@@ -1567,7 +1588,7 @@ public enum Effect {
     * Leaves the foe Paralyzed
     */
    SHOCK_ATTACK {
-      // TODO when status is implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -1575,9 +1596,14 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
+      }
    },
    /**
     * Attacks can occasionally deal greater damage than usual.
@@ -1926,19 +1952,44 @@ public enum Effect {
     * Boosts damage done by combos if the foe is paralyzed.
     */
    PARALYSIS_COMBO {
-      // TODO when status conditions are implemented
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && Status.PARALYZE.equals(task.getState().getBoard().getStatus());
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, Arrays.asList(PkmType.values()), getBonus(task, comboEffect));
+      }
    },
    /**
     * Boosts damage done by combos if the foe is asleep.
     */
    SLEEP_COMBO {
-      // TODO when status conditions are implemented
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && Status.SLEEP.equals(task.getState().getBoard().getStatus());
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, Arrays.asList(PkmType.values()), getBonus(task, comboEffect));
+      }
    },
    /**
     * Boosts damage done by combos if the foe has any status condition.
     */
    RELENTLESS {
-      // TODO when status conditions are implemented
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && !task.getState().getBoard().getStatus().isNone();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, Arrays.asList(PkmType.values()), getBonus(task, comboEffect));
+      }
    },
    /**
     * Increases damage done by Poison types in the combo.
@@ -2099,11 +2150,26 @@ public enum Effect {
     * Leaves the foe paralyzed for a longer period of time.
     */
    DRAGON_SHRIEK {
-      // TODO when status conditions are implemented
+      
+      // TODO refine & verify, this is a guess from PARALYZE's Immunities
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
+            PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
+      }
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.BURN, 5);
       }
    },
    /**
@@ -4721,6 +4787,21 @@ public enum Effect {
                }
                return new NumberSpan(1, multiplier - 1, odds);
             });
+         }
+      }
+   }
+   
+   protected final void ifThenSetStatus(ActivateComboEffect comboEffect, SimulationTask task, Status status,
+         int turns) {
+      Board b = task.getState().getBoard();
+      if (canActivate(comboEffect, task) && status != null && b.getStatus().isNone()) {
+         double odds = getOdds(task, comboEffect);
+         if (odds > 0) {
+            task.setIsRandom();
+            if (odds >= Math.random()) {
+               b.setStatus(status);
+               b.setStatusDuration(turns > 0 ? turns : 1);
+            }
          }
       }
    }

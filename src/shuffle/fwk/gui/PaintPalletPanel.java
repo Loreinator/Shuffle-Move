@@ -56,6 +56,7 @@ import shuffle.fwk.ShuffleModel;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.StageManager;
+import shuffle.fwk.data.Board;
 import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
@@ -616,9 +617,11 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
          megaActive.setEnabled(true);
       }
       
-      statusChooser.setSelectedStatus(getUser().getStatus());
+      Board.Status status = getUser().getStatus();
+      statusChooser.setSelectedStatus(status);
       statusDuration.removeAllItems();
-      for (int i = 0; i <= currentStage.getMoves() + 5; i++) {
+      int durationMax = status.isNone() ? 0 : currentStage.getMoves() + 5;
+      for (int i = 0; i <= durationMax; i++) {
          statusDuration.addItem(i);
       }
       statusDuration.setSelectedItem(getUser().getStatusDuration());

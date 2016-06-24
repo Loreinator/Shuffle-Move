@@ -18,6 +18,8 @@
 
 package shuffle.fwk.data;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -45,26 +47,40 @@ public class Board {
    public enum Status {
       NONE(1.0, "board.status.none"),
       DELAY(1.0, "board.status.delay"),
-      BURN(1.5, "board.status.burn"),
-      SLEEP(1.2, "board.status.sleep"),
+      BURN(1.5, "board.status.burn", PkmType.FIRE),
+      SLEEP(1.2, "board.status.sleep", PkmType.values()),
       PARALYZE(1.0, "board.status.paralyze"),
-      FEAR(1.5, "board.status.fear"),
-      FROZEN(1.2, "board.status.frozen");
+      FEAR(1.5, "board.status.fear", PkmType.GHOST),
+      FROZEN(1.2, "board.status.frozen", PkmType.ICE);
       
       private final double mult;
       private final String key;
+      private final Collection<PkmType> boostedTypes;
       
-      private Status(double multiplier, String i18nKey) {
+      private Status(double multiplier, String i18nKey, PkmType... types) {
          mult = multiplier;
          key = i18nKey;
+         boostedTypes = Arrays.asList(types);
       }
       
-      public double getMultiplier() {
+      public double getBoostMultiplier() {
          return mult;
+      }
+      
+      public boolean boostsType(PkmType type) {
+         return boostedTypes.contains(type);
       }
       
       public String getKey() {
          return key;
+      }
+      
+      public boolean isNone() {
+         return NONE.equals(this);
+      }
+      
+      public Number getMultiplier(PkmType type) {
+         return boostsType(type) ? getBoostMultiplier() : 1;
       }
    }
    private String toString = null;
@@ -144,6 +160,9 @@ public class Board {
          return false;
       }
       status = s;
+      if (Status.NONE.equals(s)) {
+         statusDuration = 0;
+      }
       return true;
    }
    

@@ -34,6 +34,7 @@ import java.util.TreeSet;
 import java.util.concurrent.RecursiveTask;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -107,6 +108,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          
    private SimulationState state;
    
+   private Consumer<SimulationState> finalAction = null;
+   
    public SimulationTask(SimulationCore simulationCore) {
       this(simulationCore, null, new SimulationFeeder());
    }
@@ -136,7 +139,9 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             }
          }
       }
-      return compoundMultiplier;
+      PkmType type = getState().getSpeciesType(getEffectSpecies(comboEffect.getCoords()));
+      Board.Status boardStatus = getState().getBoard().getStatus();
+      return compoundMultiplier.multiplyBy(boardStatus.getMultiplier(type));
    }
    
    public void addScoreModifier(BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier) {
@@ -256,8 +261,16 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             }
             scheduleEffect(metalEffect, Effect.getDefaultErasureDelay());
          }
+         // Before the first combo, decrement the status counter by 1 if it is not none.
+         if (!b.getStatus().isNone()) {
+            b.decreaseStatusDuration(1);
+         }
          doCombo(firstCombo);
          doGravity();
+         // After the first combo, if the status counter is 0, set it to none.
+         if (b.getStatusDuration() == 0) {
+            b.setStatus(Board.Status.NONE);
+         }
       }
    }
    
@@ -295,6 +308,9 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
                scoreModifiers.clear();
             }
             simCounter++; // Loop protection
+         }
+         if (finalAction != null) {
+            finalAction.accept(getState());
          }
          return getState();
       } catch (Exception e) {
