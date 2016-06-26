@@ -1128,11 +1128,11 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          logFinerWithId("Adding main score of %s for combo %s", scoreToAdd, comboEffect);
       }
       removeActive(comboEffect);
-      List<Integer> coords = comboEffect.getCoords();
       
-      handleMegaIncreases(coords);
+      handleMegaIncreases(comboEffect);
       addScore(scoreToAdd);
       
+      List<Integer> coords = comboEffect.getCoords();
       EraseComboEffect erasureEffect = new EraseComboEffect(coords);
       erasureEffect.setForceErase(comboEffect instanceof ActivateMegaComboEffect);
       scheduleEffect(erasureEffect, effect.getErasureDelay());
@@ -1152,19 +1152,13 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    /**
     * @param coords
     */
-   protected void handleMegaIncreases(List<Integer> coords) {
+   protected void handleMegaIncreases(ActivateComboEffect comboEffect) {
+      List<Integer> coords = comboEffect.getCoords();
       if (getState().getCore().isMegaAllowed()) {
          Species effectSpecies = getEffectSpecies(coords);
          Species megaSlot = getState().getCore().getMegaSlot();
          if (megaSlot != null && megaSlot.equals(effectSpecies)) {
-            int megaIncrease = 0;
-            for (int i = 0; i * 2 + 1 < coords.size(); i += 1) {
-               int row = coords.get(i * 2);
-               int col = coords.get(i * 2 + 1);
-               if (!getState().getBoard().isFrozenAt(row, col)) {
-                  megaIncrease += 1;
-               }
-            }
+            int megaIncrease = comboEffect.getNumMegaBoost();
             getState().increaseMegaProgress(megaIncrease);
             if (logFiner) {
                logFinerWithId("Mega progress is now %s of %s", getState().getMegaProgress(),
