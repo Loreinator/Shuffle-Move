@@ -28,7 +28,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -314,13 +313,24 @@ public enum Effect {
    VITALITY_DRAIN {
       
       @Override
-      protected boolean isAttackPowerEffective() {
-         return false;
-      }
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
       }
    },
    /**
@@ -1671,13 +1681,24 @@ public enum Effect {
    POISONOUS_MIST {
       
       @Override
-      protected boolean isAttackPowerEffective() {
-         return false;
-      }
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
       }
    },
    /**
@@ -1686,13 +1707,24 @@ public enum Effect {
    DOWNPOUR {
       
       @Override
-      protected boolean isAttackPowerEffective() {
-         return false;
-      }
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
       }
    },
    /**
@@ -4787,17 +4819,12 @@ public enum Effect {
       return multiplier;
    }
    
-   protected final void ifThenAddScore(ActivateComboEffect comboEffect, SimulationTask task,
-         Supplier<Number> supplier) {
-      if (canActivate(comboEffect, task)) {
-         Number value = supplier.get();
-         if (value.doubleValue() > 0) {
-            NumberSpan score = new NumberSpan(0, value, getOdds(task, comboEffect));
-            if (isAttackPowerEffective() && task.getState().getCore().isAttackPowerUp()) {
-               score = score.multiplyBy(2.0);
-            }
-            task.addScore(score);
-         }
+   protected final int getRemainingHealthScoreBoost(SimulationTask task, double factor) {
+      if (factor <= 0) {
+         return 0;
+      } else {
+         int remainingHealth = task.getState().getCore().getRemainingHealth();
+         return (int) (remainingHealth * factor);
       }
    }
    
@@ -4889,5 +4916,18 @@ public enum Effect {
    protected PkmType getType(ActivateComboEffect comboEffect, SimulationTask task) {
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
       return task.getState().getSpeciesType(effectSpecies);
+   }
+   
+   /**
+    * Modifies the almost-final score. This is after attack power up, and all other effects have
+    * been accounted for.
+    * 
+    * @param comboEffect
+    * @param task
+    * @param score
+    * @return The final-final score.
+    */
+   public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+      return score;
    }
 }

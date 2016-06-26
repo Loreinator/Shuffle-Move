@@ -1040,7 +1040,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       if (getState().getCore().isAttackPowerUp()) {
          finalScore = finalScore.multiplyBy(2.0);
       }
-      return finalScore;
+      return effect.modifyScoreRange(comboEffect, this, finalScore);
    }
    
    /**
