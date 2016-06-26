@@ -43,6 +43,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -1184,8 +1185,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       return megaFilter.isSelected();
    }
    
-   private PkmType getType() {
-      return typeChooser.getSelectedType();
+   private Function<PkmType, Boolean> getTypeFilter(PkmType stageType) {
+      return typeChooser.getCurrentFilter(stageType);
    }
    
    private String getContainsString() {
@@ -1221,6 +1222,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       prevTeam = getCurrentTeam();
       curStage = stage;
       updateTeamPanel();
+      updateRosterPanel();
    }
    
    /**
@@ -1228,11 +1230,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
     */
    private List<Predicate<Species>> getCurrentFilters(boolean ignoreLevel) {
       List<Predicate<Species>> filters = getBasicFilters();
-      PkmType type = getType();
-      if (type != null) {
-         filters.add(
-species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType()).equals(type));
-      }
+      Function<PkmType, Boolean> typeFilter = getTypeFilter(getCurrentStage().getType());
+      filters.add(species -> typeFilter.apply(megaFilter.isSelected() ? species.getMegaType() : species.getType()));
       if (!ignoreLevel) {
          Integer curLevelFilter = getLevel();
          int minLevel = curLevelFilter != null ? curLevelFilter : 0;

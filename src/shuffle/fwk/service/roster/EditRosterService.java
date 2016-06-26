@@ -40,6 +40,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -72,6 +73,7 @@ import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.PkmType;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
+import shuffle.fwk.data.Stage;
 import shuffle.fwk.gui.EffectChooser;
 import shuffle.fwk.gui.MultiListener;
 import shuffle.fwk.gui.PressOrClickMouseAdapter;
@@ -719,9 +721,13 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private boolean getTeamFilter() {
       return teamFilter.isSelected();
    }
-
-   private PkmType getType() {
-      return typeChooser.getSelectedType();
+   
+   private Stage getCurrentStage() {
+      return getUser().getCurrentStage();
+   }
+   
+   private Function<PkmType, Boolean> getTypeFilter(PkmType stageType) {
+      return typeChooser.getCurrentFilter(stageType);
    }
    
    private String getContainsString() {
@@ -742,11 +748,8 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
     */
    private List<Predicate<Species>> getCurrentFilters(boolean ignoreLevel) {
       List<Predicate<Species>> filters = getBasicFilters();
-      PkmType type = getType();
-      if (type != null) {
-         filters.add(
-species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType()).equals(type));
-      }
+      Function<PkmType, Boolean> typeFilter = getTypeFilter(getCurrentStage().getType());
+      filters.add(species -> typeFilter.apply(megaFilter.isSelected() ? species.getMegaType() : species.getType()));
       if (!ignoreLevel) {
          Integer curLevelFilter = getLevel();
          int minLevel = curLevelFilter != null ? curLevelFilter : 0;
