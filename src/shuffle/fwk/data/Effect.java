@@ -519,8 +519,8 @@ public enum Effect {
                            List<Integer> toErase = Arrays.asList(row, col);
                            eraseBonus(task, toErase, true);
                         } else {
-                           board.setFrozenAt(row, col, false);
-                           task.getState().addDisruptionCleared(1);
+                           List<Integer> toUnfreeze = Arrays.asList(row, col);
+                           task.unfreezeAt(toUnfreeze);
                         }
                      }
                   }
@@ -570,8 +570,8 @@ public enum Effect {
                            toClear.add(row);
                            toClear.add(col);
                         } else {
-                           board.setFrozenAt(row, col, false);
-                           task.getState().addDisruptionCleared(1);
+                           List<Integer> toUnfreeze = Arrays.asList(row, col);
+                           task.unfreezeAt(toUnfreeze);
                         }
                      }
                   }
@@ -1148,8 +1148,8 @@ public enum Effect {
                            toClear.add(row);
                            toClear.add(col);
                         } else {
-                           board.setFrozenAt(row, col, false);
-                           task.getState().addDisruptionCleared(1);
+                           List<Integer> toUnfreeze = Arrays.asList(row, col);
+                           task.unfreezeAt(toUnfreeze);
                         }
                      }
                   }
