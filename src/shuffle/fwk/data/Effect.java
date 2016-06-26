@@ -543,40 +543,52 @@ public enum Effect {
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
                   Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
                         (r, c, s) -> board.isFrozenAt(r, c)));
-            int numSwapped = (int) getMultiplier(task, comboEffect);
+            int numIcons = (int) getMultiplier(task, comboEffect);
+            List<Integer> toErase = new ArrayList<Integer>();
+            List<Integer> toUncloud = new ArrayList<Integer>();
+            List<Integer> toUnfreeze = new ArrayList<Integer>();
+            double odds = getOdds(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
-               if (numSwapped <= 0) {
+               if (numIcons <= 0) {
                   break;
                }
                List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
-                  double odds = getOdds(task, comboEffect);
-                  if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  if (odds > 0 && matches.size() / 2 > numIcons) {
                      task.setIsRandom();
                   }
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
-                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                  numSwapped -= randoms.size();
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numIcons);
+                  // List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  numIcons -= randoms.size();
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     if (!isDisruption(board.getSpeciesAt(row, col)) && board.isCloudedAt(row, col)) {
-                        // If clearing clouds
-                        board.setClouded(row, col, false);
-                        task.getState().addDisruptionCleared(1);
-                     } else if (!task.isActive(row, col)) {
-                        if (isDisruption(board.getSpeciesAt(row, col))) {
-                           // if clearing barrier or coin/rock/block
-                           toClear.add(row);
-                           toClear.add(col);
-                        } else {
-                           List<Integer> toUnfreeze = Arrays.asList(row, col);
-                           task.unfreezeAt(toUnfreeze);
-                        }
+                     if (isDisruption(board.getSpeciesAt(row, col))) {
+                        toErase.add(row);
+                        toErase.add(col);
+                     } else if (board.isCloudedAt(row, col)) {
+                        toUncloud.add(row);
+                        toUncloud.add(col);
+                     } else if (board.isFrozenAt(row, col)) {
+                        toUnfreeze.add(row);
+                        toUnfreeze.add(col);
                      }
                   }
-                  if (!toClear.isEmpty() && odds >= Math.random()) {
-                     eraseBonus(task, toClear, true);
+               }
+            }
+            if (!toErase.isEmpty() || !toUncloud.isEmpty() || !toUnfreeze.isEmpty()) {
+               if (odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  if (!toErase.isEmpty()) {
+                     eraseBonus(task, toErase, true);
+                  }
+                  if (!toUncloud.isEmpty()) {
+                     task.uncloudAt(toUncloud);
+                  }
+                  if (!toUnfreeze.isEmpty()) {
+                     task.unfreezeAt(toUnfreeze);
                   }
                }
             }
@@ -1121,40 +1133,52 @@ public enum Effect {
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
                   Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
                         (r, c, s) -> board.isFrozenAt(r, c)));
-            int numSwapped = (int) getMultiplier(task, comboEffect);
+            int numIcons = (int) getMultiplier(task, comboEffect);
+            List<Integer> toErase = new ArrayList<Integer>();
+            List<Integer> toUncloud = new ArrayList<Integer>();
+            List<Integer> toUnfreeze = new ArrayList<Integer>();
+            double odds = getOdds(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
-               if (numSwapped <= 0) {
+               if (numIcons <= 0) {
                   break;
                }
                List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
-                  double odds = getOdds(task, comboEffect);
-                  if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  if (odds > 0 && matches.size() / 2 > numIcons) {
                      task.setIsRandom();
                   }
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
-                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                  numSwapped -= randoms.size();
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numIcons);
+                  // List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  numIcons -= randoms.size();
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     if (!isDisruption(board.getSpeciesAt(row, col)) && board.isCloudedAt(row, col)) {
-                        // If clearing clouds
-                        board.setClouded(row, col, false);
-                        task.getState().addDisruptionCleared(1);
-                     } else if (!task.isActive(row, col)) {
-                        if (isDisruption(board.getSpeciesAt(row, col))) {
-                           // if clearing barrier or coin/rock/block
-                           toClear.add(row);
-                           toClear.add(col);
-                        } else {
-                           List<Integer> toUnfreeze = Arrays.asList(row, col);
-                           task.unfreezeAt(toUnfreeze);
-                        }
+                     if (isDisruption(board.getSpeciesAt(row, col))) {
+                        toErase.add(row);
+                        toErase.add(col);
+                     } else if (board.isCloudedAt(row, col)) {
+                        toUncloud.add(row);
+                        toUncloud.add(col);
+                     } else if (board.isFrozenAt(row, col)) {
+                        toUnfreeze.add(row);
+                        toUnfreeze.add(col);
                      }
                   }
-                  if (!toClear.isEmpty() && odds >= Math.random()) {
-                     eraseBonus(task, toClear, true);
+               }
+            }
+            if (!toErase.isEmpty() || !toUncloud.isEmpty() || !toUnfreeze.isEmpty()) {
+               if (odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  if (!toErase.isEmpty()) {
+                     eraseBonus(task, toErase, true);
+                  }
+                  if (!toUncloud.isEmpty()) {
+                     task.uncloudAt(toUncloud);
+                  }
+                  if (!toUnfreeze.isEmpty()) {
+                     task.unfreezeAt(toUnfreeze);
                   }
                }
             }

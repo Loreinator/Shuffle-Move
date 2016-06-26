@@ -1288,6 +1288,21 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
    }
    
+   public void uncloudAt(List<Integer> coords) {
+      if (coords == null || coords.size() < 2) {
+         return;
+      }
+      Board b = getState().getBoard();
+      for (int i = 0; i * 2 + 1 < coords.size(); i++) {
+         int row = coords.get(i * 2);
+         int col = coords.get(i * 2 + 1);
+         if (b.isCloudedAt(row, col)) {
+            getState().addDisruptionCleared(1);
+         }
+         b.setClouded(row, col, false);
+      }
+   }
+   
    /**
     * 
     */
