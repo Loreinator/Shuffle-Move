@@ -514,9 +514,14 @@ public enum Effect {
                         board.setClouded(row, col, false);
                         task.getState().addDisruptionCleared(1);
                      } else if (!task.isActive(row, col)) {
-                        // if clearing barrier or coin/rock/block
-                        List<Integer> toErase = Arrays.asList(row, col);
-                        eraseBonus(task, toErase, true);
+                        if (isDisruption(board.getSpeciesAt(row, col))) {
+                           // if clearing barrier or coin/rock/block
+                           List<Integer> toErase = Arrays.asList(row, col);
+                           eraseBonus(task, toErase, true);
+                        } else {
+                           board.setFrozenAt(row, col, false);
+                           task.getState().addDisruptionCleared(1);
+                        }
                      }
                   }
                   // Break out if we *could* have erased something
@@ -560,12 +565,17 @@ public enum Effect {
                         board.setClouded(row, col, false);
                         task.getState().addDisruptionCleared(1);
                      } else if (!task.isActive(row, col)) {
-                        // if clearing barrier or coin/rock/block
-                        toClear.add(row);
-                        toClear.add(col);
+                        if (isDisruption(board.getSpeciesAt(row, col))) {
+                           // if clearing barrier or coin/rock/block
+                           toClear.add(row);
+                           toClear.add(col);
+                        } else {
+                           board.setFrozenAt(row, col, false);
+                           task.getState().addDisruptionCleared(1);
+                        }
                      }
                   }
-                  if (odds >= Math.random()) {
+                  if (!toClear.isEmpty() && odds >= Math.random()) {
                      eraseBonus(task, toClear, true);
                   }
                }
@@ -1133,12 +1143,17 @@ public enum Effect {
                         board.setClouded(row, col, false);
                         task.getState().addDisruptionCleared(1);
                      } else if (!task.isActive(row, col)) {
-                        // if clearing barrier or coin/rock/block
-                        toClear.add(row);
-                        toClear.add(col);
+                        if (isDisruption(board.getSpeciesAt(row, col))) {
+                           // if clearing barrier or coin/rock/block
+                           toClear.add(row);
+                           toClear.add(col);
+                        } else {
+                           board.setFrozenAt(row, col, false);
+                           task.getState().addDisruptionCleared(1);
+                        }
                      }
                   }
-                  if (odds >= Math.random()) {
+                  if (!toClear.isEmpty() && odds >= Math.random()) {
                      eraseBonus(task, toClear, true);
                   }
                }
