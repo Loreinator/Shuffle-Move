@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -632,13 +633,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(WOOD)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
                if (matches.size() > 2) {
                   task.setIsRandom();
@@ -701,14 +702,14 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(METAL)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          boolean canActivate = canActivate(comboEffect, task);
          if (canActivate) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
             if (matches.size() > 2) {
                task.setIsRandom();
             }
@@ -1203,13 +1204,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(WOOD)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1237,13 +1238,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(WOOD)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1344,13 +1345,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(METAL)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1382,13 +1383,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(METAL)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -2309,7 +2310,7 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                if (matches.size() / 2 > 1 || odds < 1.0) {
@@ -2334,7 +2335,7 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                if (matches.size() / 2 > 1 || odds < 1.0) {
@@ -2573,7 +2574,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -2610,7 +2611,7 @@ public enum Effect {
       
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -2777,7 +2778,7 @@ public enum Effect {
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
          return task.filterPlanBy(getNextPlan(comboEffect), false,
-               (r, c, s) -> (!s.getEffect().equals(AIR) && !task.isFalling(r, c)));
+               (r, c, s) -> (s.isFreezable() && !task.isFalling(r, c)));
       }
       
       @Override
@@ -2826,7 +2827,7 @@ public enum Effect {
       
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -3486,7 +3487,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         List<Integer> toErase = task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(METAL));
+         List<Integer> toErase = task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
          return toErase.isEmpty() ? null : toErase;
       }
       
@@ -3525,7 +3526,7 @@ public enum Effect {
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
          List<Integer> toErase = task.findMatches(1, false,
-               (r, c, s) -> s.getEffect().equals(WOOD) || s.getEffect().equals(METAL));
+               (r, c, s) -> task.getEffectFor(s).equals(WOOD) || task.getEffectFor(s).equals(METAL));
          return toErase.isEmpty() ? null : toErase;
       }
       
@@ -3832,7 +3833,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -3893,7 +3894,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -3955,7 +3956,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (task.getEffectFor(s).equals(AIR)));
       }
       
       @Override
@@ -4131,7 +4132,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -4334,6 +4335,8 @@ public enum Effect {
       }
    };
    
+   protected static TreeSet<String> stringValues = null;
+   
    /**
     * Gets an effect which matches the given name. If there is none, then {@link #NONE} is returned.
     * 
@@ -4347,6 +4350,32 @@ public enum Effect {
          }
       }
       return NONE;
+   }
+   
+   /**
+    * Gets the effects which match the given names. If there are none, then {@link #NONE} is
+    * returned.
+    * 
+    * @param effects
+    * @return A List of Effect, non-null and non-empty, containing no nulls.
+    */
+   public static List<Effect> getEffects(String effects) {
+      if (stringValues == null) {
+         stringValues = new TreeSet<String>();
+         for (Effect e : values()) {
+            stringValues.add(e.toString());
+         }
+      }
+      List<Effect> ret = new ArrayList<Effect>();
+      for (String token : effects.split(",")) {
+         if (!token.isEmpty() && stringValues.contains(token)) {
+            ret.add(valueOf(token));
+         }
+      }
+      if (ret.isEmpty()) {
+         ret.add(NONE);
+      }
+      return ret;
    }
    
    /**
@@ -4408,8 +4437,7 @@ public enum Effect {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             Species cur = board.getSpeciesAt(row, col);
             if (!contained.contains(cur) && !state.getSpeciesType(cur).equals(type)
-                  && (includeActive || !task.isActive(row, col))
-                  && cur.getEffect().canLevel()) {
+                  && (includeActive || !task.isActive(row, col)) && !cur.isAir()) {
                contained.add(cur);
                options.add(cur);
             }
@@ -4910,7 +4938,7 @@ public enum Effect {
    }
    
    protected boolean isDisruption(Species species) {
-      return species.getEffect().isDisruption();
+      return species.getDefaultEffect().isDisruption();
    }
    
    protected PkmType getType(ActivateComboEffect comboEffect, SimulationTask task) {

@@ -28,6 +28,7 @@ import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.ConfigParser;
 import shuffle.fwk.config.EntryType;
 import shuffle.fwk.config.interpreter.RosterConfigInterpreter;
+import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 
 /**
@@ -38,6 +39,7 @@ public class RosterManager extends ConfigManager {
    
    private static final String SPEEDUP_FORMAT = "SPEEDUP_%s";
    private static final String SKILL_FORMAT = "SKILL_%s";
+   private static final String CHOSEN_EFFECT = "EFFECT_%s";
    
    public RosterManager(List<String> loadPaths, List<String> writePaths, ConfigFactory factory) {
       super(loadPaths, writePaths, factory);
@@ -159,6 +161,46 @@ public class RosterManager extends ConfigManager {
     */
    private static boolean isLegacyFile(String filePath) {
       return filePath.endsWith("roster.txt");
+   }
+   
+   /**
+    * @param species
+    * @return
+    */
+   public Effect getActiveEffect(Species species) {
+      String activeEffect = getStringValue(getActiveEffectKey(species));
+      Effect ret = species.getDefaultEffect();
+      if (activeEffect != null && species.hasEffect(activeEffect)) {
+         ret = Effect.valueOf(activeEffect);
+      }
+      return ret;
+   }
+   
+   /**
+    * Sets the "active" effect for the given species to the given effect. If effect is null it will
+    * un-set the effect. This will cause no change if the species is null, or if the effect is
+    * non-null and is not configured for the species. Also, if the effect given is the default
+    * effect, it will be treated as null.
+    * 
+    * @param species
+    * @param effect
+    * @return true if anything changed, false if otherwise
+    */
+   public boolean setActiveEffect(Species species, Effect effect) {
+      if (species == null || effect != null && !species.getEffects().contains(effect)) {
+         return false;
+      }
+      String key = getActiveEffectKey(species);
+      String value = effect == null || species.getDefaultEffect().equals(effect) ? null : effect.toString();
+      return setEntry(EntryType.STRING, key, value);
+   }
+   
+   /**
+    * @param species
+    * @return
+    */
+   private String getActiveEffectKey(Species species) {
+      return String.format(CHOSEN_EFFECT, species.getName());
    }
    
 }

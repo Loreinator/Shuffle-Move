@@ -98,7 +98,7 @@ public class ShuffleView implements ImageManagerProvider {
                   ret = ret + 'f';
                }
             } else {
-               if (s.getEffect().equals(Effect.AIR)) {
+               if (s.getEffect(getUser().getRosterManager()).equals(Effect.AIR)) {
                   ret = "?";
                }
             }

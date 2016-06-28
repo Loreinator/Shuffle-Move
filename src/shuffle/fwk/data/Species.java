@@ -21,10 +21,14 @@ package shuffle.fwk.data;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.i18n.I18nUser;
 
 /**
@@ -71,7 +75,8 @@ public class Species implements Comparable<Species>, I18nUser {
    private final String name;
    private final int attack;
    private final PkmType type;
-   private final Effect effect;
+   private final List<Effect> effects;
+   private final TreeSet<String> effectStrings;
    private final String megaName;
    private final Effect megaEffect;
    private final PkmType megaType;
@@ -82,7 +87,8 @@ public class Species implements Comparable<Species>, I18nUser {
    private final int[] levelBonus;
    
    public Species(Species other) {
-      this(other.name, other.number, other.attack, other.type, other.effect, other.megaName, other.megaEffect);
+      this(other.name, other.number, other.attack, other.type, other.effects, other.megaName, other.megaEffect,
+            other.megaType);
    }
    
    public Species(String name, int attack, PkmType type, Effect effect) {
@@ -95,14 +101,14 @@ public class Species implements Comparable<Species>, I18nUser {
    
    public Species(String name, Integer number, int attack, PkmType type, Effect effect, String megaName,
          Effect megaEffect) {
-      this(name, number, attack, type, effect, megaName, megaEffect, type);
+      this(name, number, attack, type, Arrays.asList(effect), megaName, megaEffect, type);
    }
    
-   public Species(String name, Integer number, int attack, PkmType type, Effect effect, String megaName,
+   public Species(String name, Integer number, int attack, PkmType type, List<Effect> effects, String megaName,
          Effect megaEffect, PkmType megaType) {
-      if (name == null || type == null || effect == null) {
+      if (name == null || type == null || effects == null || effects.isEmpty()) {
          throw new NullPointerException(String.format(
-               "Cannot specify a null Species name (%s), type (%s), or effect (%s).", name, type, effect));
+"Cannot specify a null Species name (%s), type (%s), or effects (%s).", name, type, effects));
       }
       this.number = number == null ? -1 : Math.max(0, number.intValue());
       this.name = name;
@@ -131,7 +137,8 @@ public class Species implements Comparable<Species>, I18nUser {
          this.levelBonus = LEVEL_BONUS[i];
       }
       this.type = type;
-      this.effect = effect;
+      this.effects = effects;
+      this.effectStrings = new TreeSet<String>(effects.stream().map(e -> e.toString()).collect(Collectors.toSet()));
       this.megaName = megaName == null || megaName.trim().isEmpty() ? null : megaName.trim();
       this.megaEffect = megaEffect == null ? Effect.NONE : megaEffect;
       this.megaType = megaType == null ? type : (megaType == PkmType.NONE ? type : megaType);
@@ -176,8 +183,40 @@ public class Species implements Comparable<Species>, I18nUser {
       return type;
    }
    
-   public Effect getEffect() {
-      return effect;
+   // public Effect getEffect() {
+   // return getEffect(null);
+   // }
+   
+   public List<Effect> getEffects() {
+      return Collections.unmodifiableList(effects);
+   }
+   
+   public String getEffectsString() {
+      StringBuilder sb = new StringBuilder();
+      Iterator<String> itr = effectStrings.iterator();
+      while (itr.hasNext()) {
+         sb.append(itr.next());
+         if (itr.hasNext()) {
+            sb.append(",");
+         }
+      }
+      return sb.toString();
+   }
+   
+   public boolean hasEffect(String effectName) {
+      return effectStrings.contains(effectName);
+   }
+   
+   public Effect getDefaultEffect() {
+      return effects.get(0);
+   }
+   
+   public Effect getEffect(RosterManager manager) {
+      Effect ret = getDefaultEffect();
+      if (manager != null) {
+         ret = manager.getActiveEffect(this);
+      }
+      return ret;
    }
    
    public String getMegaName() {
@@ -192,13 +231,17 @@ public class Species implements Comparable<Species>, I18nUser {
       return megaType;
    }
    
+   public boolean isAir() {
+      return equals(AIR);
+   }
+   
    public boolean isFreezable() {
-      return !getEffect().equals(Effect.AIR);
+      return !isAir() && !equals(FREEZE);
    }
    
    private String getString() {
-      String s = String.format("%s %s %d %s %s", getName(), String.valueOf(number), getBaseAttack(), getType()
-            .toString(), getEffect().toString());
+      String s = String.format("%s %s %d %s %s", getName(), String.valueOf(number), getBaseAttack(),
+            getType().toString(), getEffectsString());
       if (getMegaName() != null) {
          s = s + String.format(" %s %s", getMegaName(), getMegaEffect().toString());
          if (getMegaType() != getType()) {

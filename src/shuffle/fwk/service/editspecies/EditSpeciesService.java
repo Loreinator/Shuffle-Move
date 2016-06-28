@@ -122,7 +122,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
    private JTextField nameField = null;
    private JComboBox<Integer> attackComboBox = null;
    private TypeChooser typeChooser = null;
-   private EffectChooser effectChooser = null;
+   private JTextField effectChooser = null;
    private JTextField megaNameField = null;
    private EffectChooser megaEffectChooser = null;
    private JButton megaIconButton = null;
@@ -207,7 +207,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       nameField.getDocument().addDocumentListener(listener);
       attackComboBox.addItemListener(listener);
       typeChooser.addItemListener(listener);
-      effectChooser.addItemListener(listener);
+      effectChooser.getDocument().addDocumentListener(listener);
       megaNameField.getDocument().addDocumentListener(listener);
       megaEffectChooser.addItemListener(listener);
    }
@@ -216,7 +216,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       nameField.getDocument().removeDocumentListener(listener);
       attackComboBox.removeItemListener(listener);
       typeChooser.removeItemListener(listener);
-      effectChooser.removeItemListener(listener);
+      effectChooser.getDocument().removeDocumentListener(listener);
       megaNameField.getDocument().removeDocumentListener(listener);
       megaEffectChooser.removeItemListener(listener);
    }
@@ -327,7 +327,16 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       firstRow.add(effectLabel, c);
       
       c.gridx++;
-      effectChooser = new EffectChooser(false, EffectChooser.DefaultEntry.NONE);
+      effectChooser = new JTextField() {
+         private static final long serialVersionUID = 4307859998652595854L;
+         
+         @Override
+         public Dimension getMinimumSize() {
+            Dimension d = super.getMinimumSize();
+            d.width = Math.max(50, d.width);
+            return d;
+         }
+      };
       effectChooser.setToolTipText(getString(KEY_EFFECT_TOOLTIP));
       firstRow.add(effectChooser, c);
       
@@ -588,16 +597,17 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       PkmType type = typeChooser.getSelectedType();
       int attackIndex = attackComboBox.getSelectedIndex();
       Integer attack = attackComboBox.getItemAt(attackIndex);
-      Effect mainEffect = effectChooser.getSelectedEffect();
+      String effectsString = effectChooser.getText();
       String megaName = megaNameField.getText();
-      if (name != null && !name.isEmpty() && type != null && attack != null && attack >= 0 && mainEffect != null) {
+      if (name != null && !name.isEmpty() && type != null && attack != null && attack >= 0 && effectsString != null
+            && !effectsString.isEmpty()) {
          // basic data is valid.
          setSpeciesButton.setEnabled(true);
       } else {
          // basic data fails.
          setSpeciesButton.setEnabled(false);
       }
-      boolean allowModification = mainEffect != null && mainEffect.canLevel();
+      boolean allowModification = effectsString != null && !effectsString.isEmpty();
       nameField.setEnabled(selectedSpecies == null);
       attackComboBox.setEnabled(allowModification);
       typeChooser.setEnabled(allowModification);
@@ -612,7 +622,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       String name;
       PkmType type;
       Integer attack;
-      Effect mainEffect;
+      String effectsString;
       String megaName;
       Effect megaEffect;
       if (species == null) {
@@ -621,14 +631,14 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
          ConfigManager manager = getUser().getPreferencesManager();
          int attackStart = manager.getIntegerValue("ATTACK_CHOSER_START", 30);
          attack = attackStart;
-         mainEffect = Effect.NONE;
+         effectsString = Effect.NONE.toString();
          megaName = null;
          megaEffect = Effect.NONE;
       } else {
          name = species.getName();
          type = species.getType();
          attack = species.getBaseAttack();
-         mainEffect = species.getEffect();
+         effectsString = species.getEffectsString();
          megaName = species.getMegaName();
          megaEffect = species.getMegaEffect();
       }
@@ -639,7 +649,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
          attackComboBox.insertItemAt(attack, 0);
       }
       attackComboBox.setSelectedItem(attack);
-      effectChooser.setSelectedEffect(mainEffect);
+      effectChooser.setText(effectsString);
       if (megaName != null) {
          megaName = megaName.trim().replaceAll("_", " ");
       }
@@ -658,15 +668,17 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
       int number = selectedSpecies == null ? speciesData.getNextNumber() : selectedSpecies.getNumber();
       PkmType type = typeChooser.getSelectedType();
       Integer attack = attackComboBox.getItemAt(attackComboBox.getSelectedIndex());
-      Effect mainEffect = effectChooser.getSelectedEffect();
+      String effectsString = effectChooser.getText();
       String megaName = megaNameField.getText();
       Effect megaEffect = megaEffectChooser.getSelectedEffect();
-      if (name != null && !name.isEmpty() && type != null && attack != null && attack >= 0 && mainEffect != null) {
+      if (name != null && !name.isEmpty() && type != null && attack != null && attack >= 0 && effectsString != null
+            && !effectsString.isEmpty()) {
          // todo transfer index
          if (megaName != null) {
             megaName = megaName.trim().replaceAll("\\s+", "_");
          }
-         Species toSet = new Species(name, number, attack, type, mainEffect, megaName, megaEffect);
+         Species toSet = new Species(name, number, attack, type, Effect.getEffects(effectsString), megaName, megaEffect,
+               null);
          String prevName = selectedSpecies == null ? null : selectedSpecies.getName();
          String prevMegaName = selectedSpecies == null ? null : selectedSpecies.getMegaName();
          boolean removeOld = false;

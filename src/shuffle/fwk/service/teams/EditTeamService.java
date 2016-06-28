@@ -769,7 +769,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
          int attack = selectedSpecies.getAttack(thisLevel);
          PkmType type = megaFilter.isSelected() ? selectedSpecies.getMegaType() : selectedSpecies.getType();
          String typeNice = WordUtils.capitalizeFully(type.toString());
-         Effect effect = selectedSpecies.getEffect();
+         Effect effect = selectedSpecies.getEffect(getUser().getRosterManager());
          String effectNice = EffectChooser.convertToBox(effect.toString());
          textToUse = getString(KEY_SELECTED, name, attack, typeNice, effectNice);
       }
@@ -919,7 +919,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
             updateTeamPanel();
          }
       });
-      removeButton.setEnabled(s.getEffect().isPickable() && !s.getType().equals(PkmType.NONE));
+      removeButton
+            .setEnabled(s.getEffect(getUser().getRosterManager()).isPickable() && !s.getType().equals(PkmType.NONE));
       ret.add(removeButton, c);
       
       c.gridx += 1;
@@ -1244,7 +1245,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       }
       Effect effect = getEffect();
       if (effect != null) {
-         filters.add(species -> species.getEffect().equals(effect));
+         filters.add(species -> species.getEffect(getUser().getRosterManager()).equals(effect));
       }
       if (getMegaFilter()) {
          filters.add(species -> species.getMegaName() != null && !species.getMegaName().isEmpty());
@@ -1257,7 +1258,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
     */
    private List<Predicate<Species>> getBasicFilters() {
       List<Predicate<Species>> filters = new ArrayList<Predicate<Species>>();
-      filters.add(species -> species.getEffect().canLevel());
+      filters.add(species -> species.getEffect(getUser().getRosterManager()).canLevel());
       return filters;
    }
    

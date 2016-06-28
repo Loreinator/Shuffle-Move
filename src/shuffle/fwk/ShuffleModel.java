@@ -425,7 +425,7 @@ public class ShuffleModel
       Species cur = getBoardManager().getBoard().getSpeciesAt(row, col);
       // If the paint and the current species are both Metal, and we're either not in express or
       // Express metal advancement is enabled, THEN you can set this to the next metal block.
-      if (paint != null && paint.equals(Species.METAL) && cur.getEffect().equals(Effect.METAL)) {
+      if (paint != null && paint.equals(Species.METAL) && cur.getEffect(getRosterManager()).equals(Effect.METAL)) {
          if (isExpressMetalAdvanceEnabled() || !getCurrentMode().equals(EntryMode.EXPRESS)) {
             paint = Species.getNextMetal(cur);
          } else {
@@ -804,7 +804,7 @@ public class ShuffleModel
    private SpeciesPaint getSpeciesPaint(Species s) {
       boolean isFreeze = Species.FREEZE.equals(s);
       boolean isPaintMode = EntryMode.PAINT.equals(getCurrentMode());
-      boolean isFrozen = !s.getEffect().equals(Effect.AIR)
+      boolean isFrozen = !s.getEffect(getRosterManager()).equals(Effect.AIR)
             && (isFreeze && !frozen || isPaintMode && !isFreeze && frozen);
       boolean isMega = isMegaActive(s.getName());
       return new SpeciesPaint(s, isFrozen, isMega);

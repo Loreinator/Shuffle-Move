@@ -208,11 +208,6 @@ public class Board {
       return changed;
    }
    
-   public boolean canMove(int row, int column) {
-      return row >= 1 && row <= NUM_ROWS && column >= 1 && column <= NUM_COLS && !frozen[row - 1][column - 1]
-            && !species[row - 1][column - 1].getEffect().equals(Effect.AIR);
-   }
-   
    public boolean isCloudedAt(int row, int column) {
       if (row < 1 || row > NUM_ROWS || column < 1 || column > NUM_COLS) {
          return false;
@@ -277,7 +272,7 @@ public class Board {
       if (row < 1 || row > NUM_ROWS || column < 1 || column > NUM_COLS) {
          return true;
       }
-      return species[row - 1][column - 1].getEffect().equals(Effect.AIR);
+      return species[row - 1][column - 1].getDefaultEffect().equals(Effect.AIR);
    }
    
    /**
@@ -380,19 +375,6 @@ public class Board {
    @Override
    public boolean equals(Object o) {
       return o instanceof Board && o != null && o.toString().equals(toString());
-   }
-   
-   public boolean advanceMetalBlocks() {
-      boolean changed = false;
-      for (int row = 1; row <= NUM_ROWS; row++) {
-         for (int col = 1; col <= NUM_COLS; col++) {
-            Species cur = getSpeciesAt(row, col);
-            if (cur.getEffect().equals(Effect.METAL)) {
-               changed |= setSpeciesAt(row, col, Species.getNextMetal(cur));
-            }
-         }
-      }
-      return changed;
    }
 
 }

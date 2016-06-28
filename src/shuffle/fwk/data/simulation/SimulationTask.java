@@ -237,15 +237,15 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
                   + getEffectSpecies(firstCombo.getCoords()));
          }
          List<Integer> metalBlocks = findMatches(Board.NUM_CELLS, true,
-               (r, c, s) -> s.getNextMetal().getEffect().equals(Effect.AIR));
+ (r, c, s) -> s.getNextMetal().isAir());
          Board b = getState().getBoard();
          // Advance blocks that are not erasing entirely
          for (int row = 1; row <= Board.NUM_ROWS; row++) {
             for (int col = 1; col <= Board.NUM_COLS; col++) {
                Species cur = b.getSpeciesAt(row, col);
-               if (cur.getEffect().equals(Effect.METAL)) {
+               if (getEffectFor(cur).equals(Effect.METAL)) {
                   Species next = Species.getNextMetal(cur);
-                  if (!Effect.AIR.equals(next.getEffect())) {
+                  if (!next.isAir()) {
                      b.setSpeciesAt(row, col, Species.getNextMetal(cur));
                   }
                }
@@ -545,7 +545,9 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     * @return
     */
    private boolean canMove(int row, int col) {
-      return !isActive(row, col) && !isClaimed(row, col) && getState().getBoard().canMove(row, col);
+      Board b = getState().getBoard();
+      return !isActive(row, col) && !isClaimed(row, col) && !b.isFrozenAt(row, col)
+            && b.getSpeciesAt(row, col).isFreezable();
    }
    
    private void doComboCheck() {
@@ -636,7 +638,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private boolean isPickable(int row, int col) {
       Board board = getState().getBoard();
       Species cur = board.getSpeciesAt(row, col);
-      return cur.getEffect().isPickable();
+      return getEffectFor(cur).isPickable();
    }
    
    public boolean isFalling(int row, int col) {
@@ -802,7 +804,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             if (b.isCloudedAt(row, col) && effect.isForceErase()) {
                b.setClouded(row, col, false);
                getState().addDisruptionCleared(1);
-            } else if (b.isFrozenAt(row, col) || b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+            } else if (b.isFrozenAt(row, col) || getEffectFor(b.getSpeciesAt(row, col)).isDisruption()) {
                getState().addDisruptionCleared(1);
             }
             getState().addBlockCleared(1);
@@ -988,7 +990,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
                int col = mycol + nearby[k * 2 + 1];
                if (!isClaimed(row, col) && !isFalling(row, col) && !isActive(row, col)) {
                   Species neighbour = b.getSpeciesAt(row, col);
-                  if (neighbour.getEffect().equals(Effect.WOOD)) {
+                  if (getEffectFor(neighbour).equals(Effect.WOOD)) {
                      woodCoords.add(Arrays.asList(row, col));
                   }
                }
@@ -1171,7 +1173,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    public Species getEffectSpecies(List<Integer> coords) {
       Board b = getState().getBoard();
       Species s = Species.AIR;
-      for (int i = 0; !s.getEffect().isPickable() && i * 2 + 1 < coords.size(); i++) {
+      for (int i = 0; !getEffectFor(s).isPickable() && i * 2 + 1 < coords.size(); i++) {
          int row = coords.get(i * 2);
          int col = coords.get(i * 2 + 1);
          s = b.getSpeciesAt(row, col);
@@ -1231,7 +1233,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    }
    
    public Effect getEffectFor(Species s) {
-      Effect effect = s.getEffect();
+      Effect effect = getState().getCore().getEffectFor(s);
       Effect megaEffect = s.getMegaEffect();
       if (s.getMegaName() != null // Has a mega name
             && !megaEffect.equals(Effect.NONE) // Mega effect is well defined
