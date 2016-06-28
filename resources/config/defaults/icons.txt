@@ -492,6 +492,7 @@ RESOURCE Palkia img/icons/484.png
 RESOURCE Heatran img/icons/485.png
 RESOURCE Regigigas img/icons/486.png
 RESOURCE Giratina img/icons/487.png
+RESOURCE Giratina_o img/icons/487_o.png
 RESOURCE Cresselia img/icons/488.png
 RESOURCE Phione img/icons/489.png
 RESOURCE Manaphy img/icons/490.png

@@ -1,0 +1,13 @@
+STAGE SP_477
+ROW_1 Magikarp_s,Magikarp_s,Wood,Coin,Magikarp_s,Magikarp_s
+FROW_1 false,false,false,false,false,false
+ROW_2 Magikarp_s,Magikarp_s,Wood,Coin,Magikarp_s,Magikarp_s
+FROW_2 false,false,false,false,false,false
+ROW_3 Coin,Coin,Magikarp_s,Magikarp_s,Wood,Wood
+FROW_3 false,false,true,true,false,false
+ROW_4 Wood,Wood,Magikarp_s,Magikarp_s,Coin,Coin
+FROW_4 false,false,true,true,false,false
+ROW_5 Magikarp_s,Magikarp_s,Coin,Wood,Magikarp_s,Magikarp_s
+FROW_5 false,false,false,false,false,false
+ROW_6 Magikarp_s,Magikarp_s,Coin,Wood,Magikarp_s,Magikarp_s
+FROW_6 false,false,false,false,false,false
