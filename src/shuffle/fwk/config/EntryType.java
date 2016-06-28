@@ -176,11 +176,11 @@ public enum EntryType {
          int number = Integer.parseInt(m.group(1));
          int attack = Integer.parseInt(m.group(2));
          PkmType type = PkmType.getType(m.group(3));
-         Effect effect = Effect.getEffect(m.group(4));
+         List<Effect> effects = Effect.getEffects(m.group(4));
          String megaName = m.group(5);
          Effect megaEffect = Effect.getEffect(m.group(6));
          PkmType megaType = PkmType.getType(m.group(7));
-         Species ret = new Species(name, number, attack, type, effect, megaName, megaEffect, megaType);
+         Species ret = new Species(name, number, attack, type, effects, megaName, megaEffect, megaType);
          return ret;
       }
       
@@ -195,8 +195,8 @@ public enum EntryType {
          int number = species.getNumber();
          int attack = species.getBaseAttack();
          PkmType type = species.getType();
-         Effect effect = species.getEffect();
-         String ret = String.format("%d %d %s %s", number, attack, type, effect);
+         String effectsString = species.getEffectsString();
+         String ret = String.format("%d %d %s %s", number, attack, type, effectsString);
          
          String megaName = species.getMegaName();
          Effect megaEffect = species.getMegaEffect();

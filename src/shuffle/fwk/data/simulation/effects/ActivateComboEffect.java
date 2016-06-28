@@ -33,6 +33,7 @@ public class ActivateComboEffect extends ComboEffect {
     * The number of combos activated before this one in the current chain.
     */
    private Integer numClearedOnActivation = null;
+   private int numMegaBoost = 0;
    
    private boolean[] shouldPersist;
    
@@ -96,8 +97,14 @@ public class ActivateComboEffect extends ComboEffect {
          if (isFrozen) {
             b.setFrozenAt(row, col, false);
             state.addDisruptionCleared(1);
+         } else {
+            numMegaBoost += 1;
          }
       }
+   }
+   
+   public int getNumMegaBoost() {
+      return numMegaBoost;
    }
    
    public boolean isPersistent(int row, int col) {

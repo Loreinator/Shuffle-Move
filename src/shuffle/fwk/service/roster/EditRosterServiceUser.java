@@ -28,13 +28,14 @@ import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
 import shuffle.fwk.config.provider.SpeciesManagerProvider;
 import shuffle.fwk.data.Species;
+import shuffle.fwk.gui.user.StageIndicatorUser;
 
 /**
  * @author Andrew Meyers
  *
  */
 public interface EditRosterServiceUser extends ImageManagerProvider, RosterManagerProvider, SpeciesManagerProvider,
-      PreferencesManagerProvider, EffectManagerProvider {
+      PreferencesManagerProvider, EffectManagerProvider, StageIndicatorUser {
    
    void loadFromRosterManager(RosterManager manager);
    

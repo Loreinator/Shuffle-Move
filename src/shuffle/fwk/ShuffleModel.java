@@ -76,6 +76,7 @@ import shuffle.fwk.config.provider.SpeciesManagerProvider;
 import shuffle.fwk.config.provider.StageManagerProvider;
 import shuffle.fwk.config.provider.TeamManagerProvider;
 import shuffle.fwk.data.Board;
+import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
@@ -424,7 +425,7 @@ public class ShuffleModel
       Species cur = getBoardManager().getBoard().getSpeciesAt(row, col);
       // If the paint and the current species are both Metal, and we're either not in express or
       // Express metal advancement is enabled, THEN you can set this to the next metal block.
-      if (paint != null && paint.equals(Species.METAL) && cur.getEffect().equals(Effect.METAL)) {
+      if (paint != null && paint.equals(Species.METAL) && cur.getEffect(getRosterManager()).equals(Effect.METAL)) {
          if (isExpressMetalAdvanceEnabled() || !getCurrentMode().equals(EntryMode.EXPRESS)) {
             paint = Species.getNextMetal(cur);
          } else {
@@ -803,7 +804,7 @@ public class ShuffleModel
    private SpeciesPaint getSpeciesPaint(Species s) {
       boolean isFreeze = Species.FREEZE.equals(s);
       boolean isPaintMode = EntryMode.PAINT.equals(getCurrentMode());
-      boolean isFrozen = !s.getEffect().equals(Effect.AIR)
+      boolean isFrozen = !s.getEffect(getRosterManager()).equals(Effect.AIR)
             && (isFreeze && !frozen || isPaintMode && !isFreeze && frozen);
       boolean isMega = isMegaActive(s.getName());
       return new SpeciesPaint(s, isFrozen, isMega);
@@ -879,6 +880,14 @@ public class ShuffleModel
                }
             }, null, false);
       return pool;
+   }
+   
+   public int getStatusDuration() {
+      return getBoard().getStatusDuration();
+   }
+   
+   public Status getStatus() {
+      return getBoard().getStatus();
    }
    
    public int getMegaProgress() {
@@ -1498,6 +1507,32 @@ public class ShuffleModel
             currentStage = StageManager.SURVIVAL;
          }
          changed &= getTeamManager().setTeamForStage(team, currentStage);
+      }
+      return changed;
+   }
+   
+   /**
+    * @param status
+    * @return
+    */
+   public boolean setStatus(Status status) {
+      Board b = getBoard();
+      boolean changed = b.setStatus(status);
+      if (changed) {
+         getBoardManager().setBoard(b);
+      }
+      return changed;
+   }
+   
+   /**
+    * @param duration
+    * @return
+    */
+   public boolean setStatusDuration(int duration) {
+      Board b = getBoard();
+      boolean changed = b.setStatusDuration(duration);
+      if (changed) {
+         getBoardManager().setBoard(b);
       }
       return changed;
    }

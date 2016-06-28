@@ -43,6 +43,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -768,7 +769,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
          int attack = selectedSpecies.getAttack(thisLevel);
          PkmType type = megaFilter.isSelected() ? selectedSpecies.getMegaType() : selectedSpecies.getType();
          String typeNice = WordUtils.capitalizeFully(type.toString());
-         Effect effect = selectedSpecies.getEffect();
+         Effect effect = selectedSpecies.getEffect(getUser().getRosterManager());
          String effectNice = EffectChooser.convertToBox(effect.toString());
          textToUse = getString(KEY_SELECTED, name, attack, typeNice, effectNice);
       }
@@ -918,7 +919,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
             updateTeamPanel();
          }
       });
-      removeButton.setEnabled(s.getEffect().isPickable() && !s.getType().equals(PkmType.NONE));
+      removeButton
+            .setEnabled(s.getEffect(getUser().getRosterManager()).isPickable() && !s.getType().equals(PkmType.NONE));
       ret.add(removeButton, c);
       
       c.gridx += 1;
@@ -1184,8 +1186,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       return megaFilter.isSelected();
    }
    
-   private PkmType getType() {
-      return typeChooser.getSelectedType();
+   private Function<PkmType, Boolean> getTypeFilter(PkmType stageType) {
+      return typeChooser.getCurrentFilter(stageType);
    }
    
    private String getContainsString() {
@@ -1221,6 +1223,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       prevTeam = getCurrentTeam();
       curStage = stage;
       updateTeamPanel();
+      updateRosterPanel();
    }
    
    /**
@@ -1228,11 +1231,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
     */
    private List<Predicate<Species>> getCurrentFilters(boolean ignoreLevel) {
       List<Predicate<Species>> filters = getBasicFilters();
-      PkmType type = getType();
-      if (type != null) {
-         filters.add(
-species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType()).equals(type));
-      }
+      Function<PkmType, Boolean> typeFilter = getTypeFilter(getCurrentStage().getType());
+      filters.add(species -> typeFilter.apply(megaFilter.isSelected() ? species.getMegaType() : species.getType()));
       if (!ignoreLevel) {
          Integer curLevelFilter = getLevel();
          int minLevel = curLevelFilter != null ? curLevelFilter : 0;
@@ -1245,7 +1245,7 @@ species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType())
       }
       Effect effect = getEffect();
       if (effect != null) {
-         filters.add(species -> species.getEffect().equals(effect));
+         filters.add(species -> species.getEffect(getUser().getRosterManager()).equals(effect));
       }
       if (getMegaFilter()) {
          filters.add(species -> species.getMegaName() != null && !species.getMegaName().isEmpty());
@@ -1258,7 +1258,7 @@ species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType())
     */
    private List<Predicate<Species>> getBasicFilters() {
       List<Predicate<Species>> filters = new ArrayList<Predicate<Species>>();
-      filters.add(species -> species.getEffect().canLevel());
+      filters.add(species -> species.getEffect(getUser().getRosterManager()).canLevel());
       return filters;
    }
    

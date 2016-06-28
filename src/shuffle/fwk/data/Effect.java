@@ -26,12 +26,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.simulation.SimulationCore;
 import shuffle.fwk.data.simulation.SimulationState;
 import shuffle.fwk.data.simulation.SimulationTask;
@@ -313,20 +314,31 @@ public enum Effect {
    VITALITY_DRAIN {
       
       @Override
-      protected boolean isAttackPowerEffective() {
-         return false;
-      }
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
       }
    },
    /**
     * Sometimes increases damage and leaves opponent paralyzed.
     */
    QUAKE {
-      // TODO when status is implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -334,12 +346,20 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
+      // Will deterministically set the multiplier
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      // Will RANDOMLY set it to paralyzed
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
       }
    },
    /**
@@ -505,9 +525,14 @@ public enum Effect {
                         board.setClouded(row, col, false);
                         task.getState().addDisruptionCleared(1);
                      } else if (!task.isActive(row, col)) {
-                        // if clearing barrier or coin/rock/block
-                        List<Integer> toErase = Arrays.asList(row, col);
-                        eraseBonus(task, toErase, true);
+                        if (isDisruption(board.getSpeciesAt(row, col))) {
+                           // if clearing barrier or coin/rock/block
+                           List<Integer> toErase = Arrays.asList(row, col);
+                           eraseBonus(task, toErase, true);
+                        } else {
+                           List<Integer> toUnfreeze = Arrays.asList(row, col);
+                           task.unfreezeAt(toUnfreeze);
+                        }
                      }
                   }
                   // Break out if we *could* have erased something
@@ -529,35 +554,52 @@ public enum Effect {
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
                   Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
                         (r, c, s) -> board.isFrozenAt(r, c)));
-            int numSwapped = (int) getMultiplier(task, comboEffect);
+            int numIcons = (int) getMultiplier(task, comboEffect);
+            List<Integer> toErase = new ArrayList<Integer>();
+            List<Integer> toUncloud = new ArrayList<Integer>();
+            List<Integer> toUnfreeze = new ArrayList<Integer>();
+            double odds = getOdds(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
-               if (numSwapped <= 0) {
+               if (numIcons <= 0) {
                   break;
                }
                List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
-                  double odds = getOdds(task, comboEffect);
-                  if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  if (odds > 0 && matches.size() / 2 > numIcons) {
                      task.setIsRandom();
                   }
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
-                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                  numSwapped -= randoms.size();
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numIcons);
+                  // List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  numIcons -= randoms.size();
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     if (!isDisruption(board.getSpeciesAt(row, col)) && board.isCloudedAt(row, col)) {
-                        // If clearing clouds
-                        board.setClouded(row, col, false);
-                        task.getState().addDisruptionCleared(1);
-                     } else if (!task.isActive(row, col)) {
-                        // if clearing barrier or coin/rock/block
-                        toClear.add(row);
-                        toClear.add(col);
+                     if (isDisruption(board.getSpeciesAt(row, col))) {
+                        toErase.add(row);
+                        toErase.add(col);
+                     } else if (board.isCloudedAt(row, col)) {
+                        toUncloud.add(row);
+                        toUncloud.add(col);
+                     } else if (board.isFrozenAt(row, col)) {
+                        toUnfreeze.add(row);
+                        toUnfreeze.add(col);
                      }
                   }
-                  if (odds >= Math.random()) {
-                     eraseBonus(task, toClear, true);
+               }
+            }
+            if (!toErase.isEmpty() || !toUncloud.isEmpty() || !toUnfreeze.isEmpty()) {
+               if (odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  if (!toErase.isEmpty()) {
+                     eraseBonus(task, toErase, true);
+                  }
+                  if (!toUncloud.isEmpty()) {
+                     task.uncloudAt(toUncloud);
+                  }
+                  if (!toUnfreeze.isEmpty()) {
+                     task.unfreezeAt(toUnfreeze);
                   }
                }
             }
@@ -591,13 +633,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(WOOD)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
                if (matches.size() > 2) {
                   task.setIsRandom();
@@ -660,14 +702,14 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(METAL)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          boolean canActivate = canActivate(comboEffect, task);
          if (canActivate) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
             if (matches.size() > 2) {
                task.setIsRandom();
             }
@@ -827,7 +869,7 @@ public enum Effect {
     */
    MIND_ZAP {
       // TODO when disruption timers are implemented
-   
+      
    },
    /**
     * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
@@ -842,12 +884,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.FIRE, getBonus(task, comboEffect));
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.BURN, 3);
       }
    },
    /**
@@ -855,6 +898,7 @@ public enum Effect {
     */
    SPOOKIFY {
       // TODO when disruption timers are implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.BUG, PkmType.DARK, PkmType.DRAGON,
             PkmType.FIGHTING, PkmType.GRASS, PkmType.GROUND, PkmType.ICE, PkmType.POISON, PkmType.ROCK, PkmType.STEEL);
@@ -862,12 +906,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, getBonus(task, comboEffect));
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.FEAR, 3);
       }
    },
    /**
@@ -875,6 +920,7 @@ public enum Effect {
     */
    FREEZE {
       // TODO when disruption timers are implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.ELECTRIC, PkmType.FAIRY, PkmType.FIGHTING,
             PkmType.FIRE, PkmType.GHOST, PkmType.ICE, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -882,12 +928,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetSpecial(comboEffect, task, PkmType.ICE, getBonus(task, comboEffect));
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.FROZEN, 3);
       }
    },
    /**
@@ -895,6 +942,7 @@ public enum Effect {
     */
    SLEEP_CHARM {
       // TODO when disruption timers are implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DARK, PkmType.DRAGON, PkmType.FIGHTING,
             PkmType.GHOST, PkmType.GRASS, PkmType.ICE, PkmType.ROCK, PkmType.STEEL);
@@ -902,14 +950,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
       
       @Override
-      protected void handleEffectFinished(ActivateComboEffect comboEffect, SimulationTask task) {
-         for (PkmType type : PkmType.values()) {
-            ifThenSetSpecial(comboEffect, task, type, getBonus(task, comboEffect));
-         }
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.SLEEP, 3);
       }
    },
    /**
@@ -917,6 +964,7 @@ public enum Effect {
     */
    PARALYZE {
       // TODO when disruption timers are implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -924,7 +972,13 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
       }
    },
    /**
@@ -1090,35 +1144,52 @@ public enum Effect {
             List<TriFunction<Integer, Integer, Species, Boolean>> filters = new ArrayList<TriFunction<Integer, Integer, Species, Boolean>>(
                   Arrays.asList((r, c, s) -> isDisruption(s), (r, c, s) -> board.isCloudedAt(r, c),
                         (r, c, s) -> board.isFrozenAt(r, c)));
-            int numSwapped = (int) getMultiplier(task, comboEffect);
+            int numIcons = (int) getMultiplier(task, comboEffect);
+            List<Integer> toErase = new ArrayList<Integer>();
+            List<Integer> toUncloud = new ArrayList<Integer>();
+            List<Integer> toUnfreeze = new ArrayList<Integer>();
+            double odds = getOdds(task, comboEffect);
             for (TriFunction<Integer, Integer, Species, Boolean> filter : filters) {
-               if (numSwapped <= 0) {
+               if (numIcons <= 0) {
                   break;
                }
                List<Integer> matches = task.findMatches(36, true, filter);
                if (!matches.isEmpty()) {
-                  double odds = getOdds(task, comboEffect);
-                  if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  if (odds > 0 && matches.size() / 2 > numIcons) {
                      task.setIsRandom();
                   }
-                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
-                  List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
-                  numSwapped -= randoms.size();
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numIcons);
+                  // List<Integer> toClear = new ArrayList<Integer>(randoms.size() * 2);
+                  numIcons -= randoms.size();
                   for (int i : randoms) {
                      int row = matches.get(i * 2);
                      int col = matches.get(i * 2 + 1);
-                     if (!isDisruption(board.getSpeciesAt(row, col)) && board.isCloudedAt(row, col)) {
-                        // If clearing clouds
-                        board.setClouded(row, col, false);
-                        task.getState().addDisruptionCleared(1);
-                     } else if (!task.isActive(row, col)) {
-                        // if clearing barrier or coin/rock/block
-                        toClear.add(row);
-                        toClear.add(col);
+                     if (isDisruption(board.getSpeciesAt(row, col))) {
+                        toErase.add(row);
+                        toErase.add(col);
+                     } else if (board.isCloudedAt(row, col)) {
+                        toUncloud.add(row);
+                        toUncloud.add(col);
+                     } else if (board.isFrozenAt(row, col)) {
+                        toUnfreeze.add(row);
+                        toUnfreeze.add(col);
                      }
                   }
-                  if (odds >= Math.random()) {
-                     eraseBonus(task, toClear, true);
+               }
+            }
+            if (!toErase.isEmpty() || !toUncloud.isEmpty() || !toUnfreeze.isEmpty()) {
+               if (odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  if (!toErase.isEmpty()) {
+                     eraseBonus(task, toErase, true);
+                  }
+                  if (!toUncloud.isEmpty()) {
+                     task.uncloudAt(toUncloud);
+                  }
+                  if (!toUnfreeze.isEmpty()) {
+                     task.unfreezeAt(toUnfreeze);
                   }
                }
             }
@@ -1133,13 +1204,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(WOOD)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1167,13 +1238,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(WOOD)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1274,13 +1345,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(METAL)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1312,13 +1383,13 @@ public enum Effect {
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(METAL)).isEmpty();
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL)).isEmpty();
       }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                int numSwapped = (int) getMultiplier(task, comboEffect);
@@ -1567,7 +1638,7 @@ public enum Effect {
     * Leaves the foe Paralyzed
     */
    SHOCK_ATTACK {
-      // TODO when status is implemented
+      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -1575,9 +1646,14 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType());
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
       }
-   
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
+      }
    },
    /**
     * Attacks can occasionally deal greater damage than usual.
@@ -1606,13 +1682,24 @@ public enum Effect {
    POISONOUS_MIST {
       
       @Override
-      protected boolean isAttackPowerEffective() {
-         return false;
-      }
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
       }
    },
    /**
@@ -1621,13 +1708,24 @@ public enum Effect {
    DOWNPOUR {
       
       @Override
-      protected boolean isAttackPowerEffective() {
-         return false;
-      }
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenAddScore(comboEffect, task, () -> ((int) (0.1 * task.getState().getCore().getRemainingHealth())));
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
       }
    },
    /**
@@ -1926,19 +2024,44 @@ public enum Effect {
     * Boosts damage done by combos if the foe is paralyzed.
     */
    PARALYSIS_COMBO {
-      // TODO when status conditions are implemented
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && Status.PARALYZE.equals(task.getState().getBoard().getStatus());
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, Arrays.asList(PkmType.values()), getBonus(task, comboEffect));
+      }
    },
    /**
     * Boosts damage done by combos if the foe is asleep.
     */
    SLEEP_COMBO {
-      // TODO when status conditions are implemented
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && Status.SLEEP.equals(task.getState().getBoard().getStatus());
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, Arrays.asList(PkmType.values()), getBonus(task, comboEffect));
+      }
    },
    /**
     * Boosts damage done by combos if the foe has any status condition.
     */
    RELENTLESS {
-      // TODO when status conditions are implemented
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && !task.getState().getBoard().getStatus().isNone();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, Arrays.asList(PkmType.values()), getBonus(task, comboEffect));
+      }
    },
    /**
     * Increases damage done by Poison types in the combo.
@@ -2099,11 +2222,26 @@ public enum Effect {
     * Leaves the foe paralyzed for a longer period of time.
     */
    DRAGON_SHRIEK {
-      // TODO when status conditions are implemented
+      
+      // TODO refine & verify, this is a guess from PARALYZE's Immunities
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
+            PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
+               && task.getState().getBoard().getStatus().isNone();
+      }
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.BURN, 5);
       }
    },
    /**
@@ -2172,7 +2310,7 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(WOOD));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                if (matches.size() / 2 > 1 || odds < 1.0) {
@@ -2197,7 +2335,7 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.getEffect().equals(METAL));
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
                if (matches.size() / 2 > 1 || odds < 1.0) {
@@ -2436,7 +2574,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -2473,7 +2611,7 @@ public enum Effect {
       
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -2640,7 +2778,7 @@ public enum Effect {
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
          return task.filterPlanBy(getNextPlan(comboEffect), false,
-               (r, c, s) -> (!s.getEffect().equals(AIR) && !task.isFalling(r, c)));
+               (r, c, s) -> (s.isFreezable() && !task.isFalling(r, c)));
       }
       
       @Override
@@ -2689,7 +2827,7 @@ public enum Effect {
       
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -3349,7 +3487,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         List<Integer> toErase = task.findMatches(1, false, (r, c, s) -> s.getEffect().equals(METAL));
+         List<Integer> toErase = task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
          return toErase.isEmpty() ? null : toErase;
       }
       
@@ -3388,7 +3526,7 @@ public enum Effect {
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
          List<Integer> toErase = task.findMatches(1, false,
-               (r, c, s) -> s.getEffect().equals(WOOD) || s.getEffect().equals(METAL));
+               (r, c, s) -> task.getEffectFor(s).equals(WOOD) || task.getEffectFor(s).equals(METAL));
          return toErase.isEmpty() ? null : toErase;
       }
       
@@ -3695,7 +3833,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -3756,7 +3894,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -3818,7 +3956,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (task.getEffectFor(s).equals(AIR)));
       }
       
       @Override
@@ -3994,7 +4132,7 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (!s.getEffect().equals(AIR)));
+         return task.filterPlanBy(getNextPlan(comboEffect), false, (r, c, s) -> (s.isFreezable()));
       }
       
       @Override
@@ -4197,6 +4335,8 @@ public enum Effect {
       }
    };
    
+   protected static TreeSet<String> stringValues = null;
+   
    /**
     * Gets an effect which matches the given name. If there is none, then {@link #NONE} is returned.
     * 
@@ -4210,6 +4350,32 @@ public enum Effect {
          }
       }
       return NONE;
+   }
+   
+   /**
+    * Gets the effects which match the given names. If there are none, then {@link #NONE} is
+    * returned.
+    * 
+    * @param effects
+    * @return A List of Effect, non-null and non-empty, containing no nulls.
+    */
+   public static List<Effect> getEffects(String effects) {
+      if (stringValues == null) {
+         stringValues = new TreeSet<String>();
+         for (Effect e : values()) {
+            stringValues.add(e.toString());
+         }
+      }
+      List<Effect> ret = new ArrayList<Effect>();
+      for (String token : effects.split(",")) {
+         if (!token.isEmpty() && stringValues.contains(token)) {
+            ret.add(valueOf(token));
+         }
+      }
+      if (ret.isEmpty()) {
+         ret.add(NONE);
+      }
+      return ret;
    }
    
    /**
@@ -4271,8 +4437,7 @@ public enum Effect {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             Species cur = board.getSpeciesAt(row, col);
             if (!contained.contains(cur) && !state.getSpeciesType(cur).equals(type)
-                  && (includeActive || !task.isActive(row, col))
-                  && cur.getEffect().canLevel()) {
+                  && (includeActive || !task.isActive(row, col)) && !cur.isAir()) {
                contained.add(cur);
                options.add(cur);
             }
@@ -4682,17 +4847,12 @@ public enum Effect {
       return multiplier;
    }
    
-   protected final void ifThenAddScore(ActivateComboEffect comboEffect, SimulationTask task,
-         Supplier<Number> supplier) {
-      if (canActivate(comboEffect, task)) {
-         Number value = supplier.get();
-         if (value.doubleValue() > 0) {
-            NumberSpan score = new NumberSpan(0, value, getOdds(task, comboEffect));
-            if (isAttackPowerEffective() && task.getState().getCore().isAttackPowerUp()) {
-               score = score.multiplyBy(2.0);
-            }
-            task.addScore(score);
-         }
+   protected final int getRemainingHealthScoreBoost(SimulationTask task, double factor) {
+      if (factor <= 0) {
+         return 0;
+      } else {
+         int remainingHealth = task.getState().getCore().getRemainingHealth();
+         return (int) (remainingHealth * factor);
       }
    }
    
@@ -4721,6 +4881,21 @@ public enum Effect {
                }
                return new NumberSpan(1, multiplier - 1, odds);
             });
+         }
+      }
+   }
+   
+   protected final void ifThenSetStatus(ActivateComboEffect comboEffect, SimulationTask task, Status status,
+         int turns) {
+      Board b = task.getState().getBoard();
+      if (canActivate(comboEffect, task) && status != null && b.getStatus().isNone()) {
+         double odds = getOdds(task, comboEffect);
+         if (odds > 0) {
+            task.setIsRandom();
+            if (odds >= Math.random()) {
+               b.setStatus(status);
+               b.setStatusDuration(turns > 0 ? turns : 1);
+            }
          }
       }
    }
@@ -4763,11 +4938,24 @@ public enum Effect {
    }
    
    protected boolean isDisruption(Species species) {
-      return species.getEffect().isDisruption();
+      return species.getDefaultEffect().isDisruption();
    }
    
    protected PkmType getType(ActivateComboEffect comboEffect, SimulationTask task) {
       Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
       return task.getState().getSpeciesType(effectSpecies);
+   }
+   
+   /**
+    * Modifies the almost-final score. This is after attack power up, and all other effects have
+    * been accounted for.
+    * 
+    * @param comboEffect
+    * @param task
+    * @param score
+    * @return The final-final score.
+    */
+   public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+      return score;
    }
 }

@@ -22,6 +22,7 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -39,19 +40,21 @@ public class TypeChooser extends JComboBox<String> implements I18nUser {
    private static final long serialVersionUID = -4886287658334768490L;
    // i18n keys
    private static final String KEY_NO_FILTER = "typechooser.nofilter";
+   private static final String KEY_SUPER_EFFECTIVE = "typechooser.super.effective";
    
    private boolean shouldRebuild = false;
-   private final boolean includeNoFilter;
+   private final boolean isFilter;
+   private String currentSEString = null;
    
-   public TypeChooser(boolean includeNoFilter) {
+   public TypeChooser(boolean isFilter) {
       super();
-      this.includeNoFilter = includeNoFilter;
+      this.isFilter = isFilter;
       setup();
    }
    
    private void setup() {
       refill();
-      if (includeNoFilter) {
+      if (isFilter) {
          setSelectedItem(getString(KEY_NO_FILTER));
       } else if (getItemCount() > 0) {
          setSelectedIndex(0);
@@ -60,8 +63,10 @@ public class TypeChooser extends JComboBox<String> implements I18nUser {
    
    private void refill() {
       removeAllItems();
-      if (includeNoFilter) {
+      if (isFilter) {
          addItem(getString(KEY_NO_FILTER));
+         currentSEString = getString(KEY_SUPER_EFFECTIVE);
+         addItem(currentSEString);
       }
       List<String> types = new ArrayList<String>();
       for (PkmType t : PkmType.values()) {
@@ -97,12 +102,26 @@ public class TypeChooser extends JComboBox<String> implements I18nUser {
       PkmType ret = null;
       int selectedIndex = getSelectedIndex();
       if (selectedIndex >= 0) {
-         String itemAt = getItemAt(selectedIndex);
-         if (PkmType.hasType(itemAt.toUpperCase())) {
-            ret = PkmType.getType(itemAt);
+         String selectedItem = getItemAt(selectedIndex);
+         if (PkmType.hasType(selectedItem.toUpperCase())) {
+            ret = PkmType.getType(selectedItem);
          }
       }
       return ret;
    }
    
+   public Function<PkmType, Boolean> getCurrentFilter(PkmType stageType) {
+      Function<PkmType, Boolean> ret = t -> true;
+      int selectedIndex = getSelectedIndex();
+      if (selectedIndex >= 0) {
+         String selectedItem = getItemAt(selectedIndex);
+         if (currentSEString != null && currentSEString.equals(selectedItem)) {
+            ret = t -> (PkmType.getMultiplier(t, stageType) > 1);
+         } else if (PkmType.hasType(selectedItem.toUpperCase())) {
+            final PkmType matchingType = PkmType.getType(selectedItem);
+            ret = t -> (matchingType.equals(t));
+         }
+      }
+      return ret;
+   }
 }

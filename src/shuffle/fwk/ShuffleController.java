@@ -54,6 +54,7 @@ import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
 import shuffle.fwk.config.manager.TeamManager;
+import shuffle.fwk.data.Board.Status;
 import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
@@ -1306,6 +1307,52 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    @Override
    public Team getCurrentTeam() {
       return getModel().getCurrentTeam();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#getStatus()
+    */
+   @Override
+   public Status getStatus() {
+      return getModel().getStatus();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#getStatusDuration()
+    */
+   @Override
+   public int getStatusDuration() {
+      return getModel().getStatusDuration();
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setStatus(shuffle.fwk.data.Board.Status)
+    */
+   @Override
+   public boolean setStatus(Status status) {
+      boolean changed = getModel().setStatus(status);
+      if (changed) {
+         getModel().setDataChanged();
+         repaint();
+      }
+      return changed;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.PaintsIndicatorUser#setStatusDuration(int)
+    */
+   @Override
+   public boolean setStatusDuration(int duration) {
+      boolean changed = getModel().setStatusDuration(duration);
+      if (changed) {
+         getModel().setDataChanged();
+         repaint();
+      }
+      return changed;
    }
    
 }

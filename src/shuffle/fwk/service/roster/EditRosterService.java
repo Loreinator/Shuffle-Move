@@ -40,6 +40,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -72,6 +73,7 @@ import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.PkmType;
 import shuffle.fwk.data.Species;
 import shuffle.fwk.data.SpeciesPaint;
+import shuffle.fwk.data.Stage;
 import shuffle.fwk.gui.EffectChooser;
 import shuffle.fwk.gui.MultiListener;
 import shuffle.fwk.gui.PressOrClickMouseAdapter;
@@ -112,6 +114,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private static final String KEY_SKILL_BOOSTER_TOOLTIP = "tooltip.skill";
    private static final String KEY_EFFECT_FILTER_TOOLTIP = "tooltip.effectfilter";
    private static final String KEY_POKEMON_LEVEL_TOOLTIP = "tooltip.specieslevel";
+   private static final String KEY_ACTIVE_EFFECT = "tooltip.active.effect";
    private static final String KEY_OK_TOOLTIP = "tooltip.ok";
    private static final String KEY_APPLY_TOOLTIP = "tooltip.apply";
    private static final String KEY_CANCEL_TOOLTIP = "tooltip.cancel";
@@ -140,8 +143,10 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private JDialog d = null;
    private JComboBox<Integer> speedups = null;
    private JComboBox<Integer> skillLevels = null;
+   private EffectChooser activeEffect = null;
    private ItemListener speedupsListener = null;
    private ItemListener skillLevelsListener = null;
+   private ItemListener activeEffectListener = null;
    private JCheckBox teamFilter = null;
    private Supplier<Dimension> getMinUpperPanel = null;
    
@@ -378,6 +383,15 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       c.anchor = GridBagConstraints.LINE_END;
       c.weightx = 0.0;
       c.gridx++;
+      activeEffect = new EffectChooser(false, EffectChooser.DefaultEntry.SPECIES);
+      JPanel activeEffectPanel = new JPanel(new BorderLayout());
+      activeEffectPanel.add(activeEffect, BorderLayout.WEST);
+      activeEffect.setToolTipText(getString(KEY_ACTIVE_EFFECT));
+      ret.add(activeEffectPanel, c);
+      
+      c.anchor = GridBagConstraints.LINE_END;
+      c.weightx = 0.0;
+      c.gridx++;
       JPanel skillPanel = new JPanel(new BorderLayout());
       ImageIcon skillBoosterIcon = getUser().getImageManager().getImageFor(KEY_SKILL_BOOSTER);
       JLabel skillBoosterLabel = new JLabel(skillBoosterIcon);
@@ -590,7 +604,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
          int attack = selectedSpecies.getAttack(thisLevel);
          PkmType type = megaFilter.isSelected() ? selectedSpecies.getMegaType() : selectedSpecies.getType();
          String typeNice = WordUtils.capitalizeFully(type.toString());
-         Effect effect = selectedSpecies.getEffect();
+         Effect effect = selectedSpecies.getEffect(myData);
          String effectNice = EffectChooser.convertToBox(effect.toString());
          textToUse = getString(KEY_SELECTED, name, attack, typeNice, effectNice);
       }
@@ -619,6 +633,16 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
          skillLevels.setSelectedItem(skillLevel);
       }
       addSkillLevelListener();
+      removeActiveEffectListener();
+      if (selectedSpecies != null && selectedSpecies.getEffects().size() > 1) {
+         activeEffect.setEnabled(true);
+         activeEffect.setSpecies(selectedSpecies);
+         activeEffect.setSelectedEffect(selectedSpecies.getEffect(myData));
+      } else {
+         activeEffect.removeAllItems();
+         activeEffect.setEnabled(false);
+      }
+      addActiveEffectListener();
    }
    
    /**
@@ -664,6 +688,24 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    
    private void removeSkillLevelListener() {
       skillLevels.removeItemListener(skillLevelsListener);
+   }
+   
+   private void addActiveEffectListener() {
+      if (activeEffectListener == null) {
+         activeEffectListener = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               Effect selectedEffect = activeEffect.getSelectedEffect();
+               myData.setActiveEffect(selectedSpecies, selectedEffect);
+               rebuildSelectedLabel();
+            }
+         };
+      }
+      activeEffect.addItemListener(activeEffectListener);
+   }
+   
+   private void removeActiveEffectListener() {
+      activeEffect.removeItemListener(activeEffectListener);
    }
    
    private void setBorderFor(JPanel c, boolean doBorder) {
@@ -719,9 +761,13 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
    private boolean getTeamFilter() {
       return teamFilter.isSelected();
    }
-
-   private PkmType getType() {
-      return typeChooser.getSelectedType();
+   
+   private Stage getCurrentStage() {
+      return getUser().getCurrentStage();
+   }
+   
+   private Function<PkmType, Boolean> getTypeFilter(PkmType stageType) {
+      return typeChooser.getCurrentFilter(stageType);
    }
    
    private String getContainsString() {
@@ -742,11 +788,8 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
     */
    private List<Predicate<Species>> getCurrentFilters(boolean ignoreLevel) {
       List<Predicate<Species>> filters = getBasicFilters();
-      PkmType type = getType();
-      if (type != null) {
-         filters.add(
-species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType()).equals(type));
-      }
+      Function<PkmType, Boolean> typeFilter = getTypeFilter(getCurrentStage().getType());
+      filters.add(species -> typeFilter.apply(megaFilter.isSelected() ? species.getMegaType() : species.getType()));
       if (!ignoreLevel) {
          Integer curLevelFilter = getLevel();
          int minLevel = curLevelFilter != null ? curLevelFilter : 0;
@@ -758,7 +801,7 @@ species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType())
       }
       Effect effect = getEffect();
       if (effect != null) {
-         filters.add(species -> species.getEffect().equals(effect));
+         filters.add(species -> species.getEffect(myData).equals(effect));
       }
       if (getMegaFilter()) {
          filters.add(species -> species.getMegaName() != null && !species.getMegaName().isEmpty());
@@ -774,7 +817,7 @@ species -> (megaFilter.isSelected() ? species.getMegaType() : species.getType())
     */
    private List<Predicate<Species>> getBasicFilters() {
       List<Predicate<Species>> filters = new ArrayList<Predicate<Species>>();
-      filters.add(species -> species.getEffect().canLevel());
+      filters.add(species -> species.getEffect(myData).canLevel());
       return filters;
    }
    

@@ -29,6 +29,7 @@ import javax.swing.JComboBox;
 import org.apache.commons.lang3.text.WordUtils;
 
 import shuffle.fwk.data.Effect;
+import shuffle.fwk.data.Species;
 import shuffle.fwk.i18n.I18nUser;
 
 /**
@@ -43,6 +44,7 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
    private boolean shouldRebuild = false;
    private boolean megaEffects;
    private final DefaultEntry defaultEntry;
+   private Species curSpecies = null;
    
    public static enum DefaultEntry {
       /**
@@ -56,7 +58,10 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
       /**
        * Indicates that NO entry should be used.
        */
-      EMPTY;
+      EMPTY, /**
+              * Indicates that this will only display the possible effects for a given species.
+              */
+      SPECIES;
    };
 
    public EffectChooser() {
@@ -94,16 +99,36 @@ public class EffectChooser extends JComboBox<String> implements I18nUser {
       if (defaultEntry.equals(DefaultEntry.NO_FILTER)) {
          addItem(getString(KEY_NO_FILTER));
       }
-      List<String> effects = new ArrayList<String>();
-      for (Effect t : Effect.values()) {
-         if (t.canLevel() && (megaEffects == t.isPersistent() || t.equals(Effect.NONE))) {
-            effects.add(convertToBox(t.toString()));
+      if (defaultEntry.equals(DefaultEntry.SPECIES)) {
+         if (curSpecies != null) {
+            List<String> effects = new ArrayList<String>();
+            for (Effect t : curSpecies.getEffects()) {
+               if (t.canLevel() && (!t.isPersistent() || t.equals(Effect.NONE))) {
+                  effects.add(convertToBox(t.toString()));
+               }
+            }
+            Collections.sort(effects, Collator.getInstance());
+            for (String item : effects) {
+               addItem(item);
+            }
+         }
+      } else {
+         List<String> effects = new ArrayList<String>();
+         for (Effect t : Effect.values()) {
+            if (t.canLevel() && (megaEffects == t.isPersistent() || t.equals(Effect.NONE))) {
+               effects.add(convertToBox(t.toString()));
+            }
+         }
+         Collections.sort(effects, Collator.getInstance());
+         for (String item : effects) {
+            addItem(item);
          }
       }
-      Collections.sort(effects, Collator.getInstance());
-      for (String item : effects) {
-         addItem(item);
-      }
+   }
+   
+   public void setSpecies(Species s) {
+      curSpecies = s;
+      refill();
    }
    
    public void setSelectedEffect(Effect effect) {

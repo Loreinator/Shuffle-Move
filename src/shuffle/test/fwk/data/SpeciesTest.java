@@ -227,7 +227,7 @@ public class SpeciesTest {
    @Test
    public final void testGetEffect() {
       for (Effect ce : Effect.values()) {
-         assertEquals(ce, new Species("name", 42, PkmType.BUG, ce).getEffect());
+         assertEquals(ce, new Species("name", 42, PkmType.BUG, ce).getDefaultEffect());
       }
    }
    
@@ -252,7 +252,7 @@ public class SpeciesTest {
       for (Effect ce : Effect.values()) {
          for (PkmType t : PkmType.values()) {
             Species s = new Species("name", 40, t, ce);
-            assertTrue(s.isFreezable() || s.getEffect().equals(Effect.AIR));
+            assertTrue(s.isFreezable() || s.getDefaultEffect().equals(Effect.AIR));
          }
       }
    }
@@ -310,7 +310,7 @@ public class SpeciesTest {
    public final void testGetLocalizedName() {
       Collection<Species> allSpecies = new ShuffleController().getSpeciesManager().getAllSpecies();
       for (Species s : allSpecies) {
-         if (s.getEffect().canLevel()) {
+         if (s.getDefaultEffect().canLevel()) {
             System.out.println(s.getLocalizedName(false));
          }
       }

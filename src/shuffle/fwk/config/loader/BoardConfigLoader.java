@@ -38,6 +38,8 @@ public class BoardConfigLoader extends DataLoader<String> {
    public static final String CROW_KEY_FORMAT = "CROW_%d";
    public static final String ROW_KEY_FORMAT = "ROW_%d";
    public static final String KEY_MEGA_PROGRESS = "MEGA_PROGRESS";
+   public static final String KEY_STATUS = "STATUS";
+   public static final String KEY_STATUS_DURATION = "STATUS_DURATION";
    private Interpreter<String> inter = null;
    
    public BoardConfigLoader(List<String> resources, List<String> files) {
@@ -69,6 +71,22 @@ public class BoardConfigLoader extends DataLoader<String> {
       List<String> ret = new ArrayList<String>();
       if (getMap().containsKey(KEY_MEGA_PROGRESS)) {
          ret.addAll(getValues(KEY_MEGA_PROGRESS));
+      }
+      return ret;
+   }
+   
+   public List<String> getConfiguredStatus() {
+      List<String> ret = new ArrayList<String>();
+      if (getMap().containsKey(KEY_STATUS)) {
+         ret.addAll(getValues(KEY_STATUS));
+      }
+      return ret;
+   }
+   
+   public List<String> getConfiguredStatusDuration() {
+      List<String> ret = new ArrayList<String>();
+      if (getMap().containsKey(KEY_STATUS_DURATION)) {
+         ret.addAll(getValues(KEY_STATUS_DURATION));
       }
       return ret;
    }

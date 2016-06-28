@@ -34,6 +34,7 @@ import java.util.TreeSet;
 import java.util.concurrent.RecursiveTask;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -107,6 +108,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          
    private SimulationState state;
    
+   private Consumer<SimulationState> finalAction = null;
+   
    public SimulationTask(SimulationCore simulationCore) {
       this(simulationCore, null, new SimulationFeeder());
    }
@@ -136,7 +139,9 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             }
          }
       }
-      return compoundMultiplier;
+      PkmType type = getState().getSpeciesType(getEffectSpecies(comboEffect.getCoords()));
+      Board.Status boardStatus = getState().getBoard().getStatus();
+      return compoundMultiplier.multiplyBy(boardStatus.getMultiplier(type));
    }
    
    public void addScoreModifier(BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier) {
@@ -232,15 +237,15 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
                   + getEffectSpecies(firstCombo.getCoords()));
          }
          List<Integer> metalBlocks = findMatches(Board.NUM_CELLS, true,
-               (r, c, s) -> s.getNextMetal().getEffect().equals(Effect.AIR));
+ (r, c, s) -> s.getNextMetal().isAir());
          Board b = getState().getBoard();
          // Advance blocks that are not erasing entirely
          for (int row = 1; row <= Board.NUM_ROWS; row++) {
             for (int col = 1; col <= Board.NUM_COLS; col++) {
                Species cur = b.getSpeciesAt(row, col);
-               if (cur.getEffect().equals(Effect.METAL)) {
+               if (getEffectFor(cur).equals(Effect.METAL)) {
                   Species next = Species.getNextMetal(cur);
-                  if (!Effect.AIR.equals(next.getEffect())) {
+                  if (!next.isAir()) {
                      b.setSpeciesAt(row, col, Species.getNextMetal(cur));
                   }
                }
@@ -256,8 +261,16 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             }
             scheduleEffect(metalEffect, Effect.getDefaultErasureDelay());
          }
+         // Before the first combo, decrement the status counter by 1 if it is not none.
+         if (!b.getStatus().isNone()) {
+            b.decreaseStatusDuration(1);
+         }
          doCombo(firstCombo);
          doGravity();
+         // After the first combo, if the status counter is 0, set it to none.
+         if (b.getStatusDuration() == 0) {
+            b.setStatus(Board.Status.NONE);
+         }
       }
    }
    
@@ -295,6 +308,9 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
                scoreModifiers.clear();
             }
             simCounter++; // Loop protection
+         }
+         if (finalAction != null) {
+            finalAction.accept(getState());
          }
          return getState();
       } catch (Exception e) {
@@ -529,7 +545,9 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     * @return
     */
    private boolean canMove(int row, int col) {
-      return !isActive(row, col) && !isClaimed(row, col) && getState().getBoard().canMove(row, col);
+      Board b = getState().getBoard();
+      return !isActive(row, col) && !isClaimed(row, col) && !b.isFrozenAt(row, col)
+            && b.getSpeciesAt(row, col).isFreezable();
    }
    
    private void doComboCheck() {
@@ -620,7 +638,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    private boolean isPickable(int row, int col) {
       Board board = getState().getBoard();
       Species cur = board.getSpeciesAt(row, col);
-      return cur.getEffect().isPickable();
+      return getEffectFor(cur).isPickable();
    }
    
    public boolean isFalling(int row, int col) {
@@ -786,7 +804,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             if (b.isCloudedAt(row, col) && effect.isForceErase()) {
                b.setClouded(row, col, false);
                getState().addDisruptionCleared(1);
-            } else if (b.isFrozenAt(row, col) || b.getSpeciesAt(row, col).getEffect().isDisruption()) {
+            } else if (b.isFrozenAt(row, col) || getEffectFor(b.getSpeciesAt(row, col)).isDisruption()) {
                getState().addDisruptionCleared(1);
             }
             getState().addBlockCleared(1);
@@ -972,7 +990,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
                int col = mycol + nearby[k * 2 + 1];
                if (!isClaimed(row, col) && !isFalling(row, col) && !isActive(row, col)) {
                   Species neighbour = b.getSpeciesAt(row, col);
-                  if (neighbour.getEffect().equals(Effect.WOOD)) {
+                  if (getEffectFor(neighbour).equals(Effect.WOOD)) {
                      woodCoords.add(Arrays.asList(row, col));
                   }
                }
@@ -1024,7 +1042,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       if (getState().getCore().isAttackPowerUp()) {
          finalScore = finalScore.multiplyBy(2.0);
       }
-      return finalScore;
+      return effect.modifyScoreRange(comboEffect, this, finalScore);
    }
    
    /**
@@ -1112,11 +1130,11 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          logFinerWithId("Adding main score of %s for combo %s", scoreToAdd, comboEffect);
       }
       removeActive(comboEffect);
-      List<Integer> coords = comboEffect.getCoords();
       
-      handleMegaIncreases(coords);
+      handleMegaIncreases(comboEffect);
       addScore(scoreToAdd);
       
+      List<Integer> coords = comboEffect.getCoords();
       EraseComboEffect erasureEffect = new EraseComboEffect(coords);
       erasureEffect.setForceErase(comboEffect instanceof ActivateMegaComboEffect);
       scheduleEffect(erasureEffect, effect.getErasureDelay());
@@ -1136,19 +1154,13 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    /**
     * @param coords
     */
-   protected void handleMegaIncreases(List<Integer> coords) {
+   protected void handleMegaIncreases(ActivateComboEffect comboEffect) {
+      List<Integer> coords = comboEffect.getCoords();
       if (getState().getCore().isMegaAllowed()) {
          Species effectSpecies = getEffectSpecies(coords);
          Species megaSlot = getState().getCore().getMegaSlot();
          if (megaSlot != null && megaSlot.equals(effectSpecies)) {
-            int megaIncrease = 0;
-            for (int i = 0; i * 2 + 1 < coords.size(); i += 1) {
-               int row = coords.get(i * 2);
-               int col = coords.get(i * 2 + 1);
-               if (!getState().getBoard().isFrozenAt(row, col)) {
-                  megaIncrease += 1;
-               }
-            }
+            int megaIncrease = comboEffect.getNumMegaBoost();
             getState().increaseMegaProgress(megaIncrease);
             if (logFiner) {
                logFinerWithId("Mega progress is now %s of %s", getState().getMegaProgress(),
@@ -1161,7 +1173,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    public Species getEffectSpecies(List<Integer> coords) {
       Board b = getState().getBoard();
       Species s = Species.AIR;
-      for (int i = 0; !s.getEffect().isPickable() && i * 2 + 1 < coords.size(); i++) {
+      for (int i = 0; !getEffectFor(s).isPickable() && i * 2 + 1 < coords.size(); i++) {
          int row = coords.get(i * 2);
          int col = coords.get(i * 2 + 1);
          s = b.getSpeciesAt(row, col);
@@ -1221,7 +1233,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    }
    
    public Effect getEffectFor(Species s) {
-      Effect effect = s.getEffect();
+      Effect effect = getState().getCore().getEffectFor(s);
       Effect megaEffect = s.getMegaEffect();
       if (s.getMegaName() != null // Has a mega name
             && !megaEffect.equals(Effect.NONE) // Mega effect is well defined
@@ -1269,6 +1281,21 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          b.setFrozenAt(row, col, false);
          removeClaimsFor(row, col);
          scheduleEffect(new DelayThawEffect(Arrays.asList(row, col)), Effect.getDefaultErasureDelay() + THAW_DELAY);
+      }
+   }
+   
+   public void uncloudAt(List<Integer> coords) {
+      if (coords == null || coords.size() < 2) {
+         return;
+      }
+      Board b = getState().getBoard();
+      for (int i = 0; i * 2 + 1 < coords.size(); i++) {
+         int row = coords.get(i * 2);
+         int col = coords.get(i * 2 + 1);
+         if (b.isCloudedAt(row, col)) {
+            getState().addDisruptionCleared(1);
+         }
+         b.setClouded(row, col, false);
       }
    }
    

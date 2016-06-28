@@ -18,6 +18,8 @@
 
 package shuffle.fwk.data;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -36,11 +38,58 @@ public class Board {
    private final boolean[][] frozen = new boolean[NUM_ROWS][NUM_COLS];
    private final boolean[][] clouded = new boolean[NUM_ROWS][NUM_COLS];
    private int megaProgress;
+   private Status status;
+   /**
+    * The number of turns required for the non-none status to revert to none.
+    */
+   private int statusDuration;
+   
+   public enum Status {
+      NONE(1.0, "board.status.none"),
+      DELAY(1.0, "board.status.delay"),
+      BURN(1.5, "board.status.burn", PkmType.FIRE),
+      SLEEP(1.2, "board.status.sleep", PkmType.values()),
+      PARALYZE(1.0, "board.status.paralyze"),
+      FEAR(1.5, "board.status.fear", PkmType.GHOST),
+      FROZEN(1.2, "board.status.frozen", PkmType.ICE);
+      
+      private final double mult;
+      private final String key;
+      private final Collection<PkmType> boostedTypes;
+      
+      private Status(double multiplier, String i18nKey, PkmType... types) {
+         mult = multiplier;
+         key = i18nKey;
+         boostedTypes = Arrays.asList(types);
+      }
+      
+      public double getBoostMultiplier() {
+         return mult;
+      }
+      
+      public boolean boostsType(PkmType type) {
+         return boostedTypes.contains(type);
+      }
+      
+      public String getKey() {
+         return key;
+      }
+      
+      public boolean isNone() {
+         return NONE.equals(this);
+      }
+      
+      public Number getMultiplier(PkmType type) {
+         return boostsType(type) ? getBoostMultiplier() : 1;
+      }
+   }
    private String toString = null;
    
    public Board() {
       clear();
       megaProgress = 0;
+      status = Status.NONE;
+      statusDuration = 0;
    }
    
    public Board(Board b) {
@@ -52,6 +101,33 @@ public class Board {
          }
       }
       megaProgress = b.getMegaProgress();
+      status = b.getStatus();
+      statusDuration = b.getStatusDuration();
+   }
+   
+   public int getStatusDuration() {
+      return statusDuration;
+   }
+   
+   public boolean decreaseStatusDuration(int decreaseBy) {
+      boolean changed = setStatusDuration(statusDuration - decreaseBy);
+      if (changed && getStatusDuration() == 0) {
+         status = Status.NONE;
+      }
+      return changed;
+   }
+   
+   public boolean setStatusDuration(int newDuration) {
+      newDuration = Math.max(0, newDuration);
+      if (newDuration != statusDuration) {
+         statusDuration = newDuration;
+         if (toString != null) {
+            toString = null;
+         }
+         return true;
+      } else {
+         return false;
+      }
    }
    
    public int getMegaProgress() {
@@ -73,6 +149,21 @@ public class Board {
       } else {
          return false;
       }
+   }
+   
+   public Status getStatus() {
+      return status;
+   }
+   
+   public boolean setStatus(Status s) {
+      if (s == null || s.equals(status)) {
+         return false;
+      }
+      status = s;
+      if (Status.NONE.equals(s)) {
+         statusDuration = 0;
+      }
+      return true;
    }
    
    /**
@@ -115,11 +206,6 @@ public class Board {
          toString = null;
       }
       return changed;
-   }
-   
-   public boolean canMove(int row, int column) {
-      return row >= 1 && row <= NUM_ROWS && column >= 1 && column <= NUM_COLS && !frozen[row - 1][column - 1]
-            && !species[row - 1][column - 1].getEffect().equals(Effect.AIR);
    }
    
    public boolean isCloudedAt(int row, int column) {
@@ -186,7 +272,7 @@ public class Board {
       if (row < 1 || row > NUM_ROWS || column < 1 || column > NUM_COLS) {
          return true;
       }
-      return species[row - 1][column - 1].getEffect().equals(Effect.AIR);
+      return species[row - 1][column - 1].getDefaultEffect().equals(Effect.AIR);
    }
    
    /**
@@ -227,6 +313,9 @@ public class Board {
    public String toString() {
       if (toString == null) {
          StringBuilder sb = new StringBuilder();
+         sb.append("Mega_Progress:" + Integer.toString(this.megaProgress) + "\n");
+         sb.append("Status:" + status.toString() + "\n");
+         sb.append("Status_Duration:" + Integer.toString(this.statusDuration) + "\n");
          int maxlen = 0;
          for (Species[] row : species) {
             for (Species s : row) {
@@ -286,19 +375,6 @@ public class Board {
    @Override
    public boolean equals(Object o) {
       return o instanceof Board && o != null && o.toString().equals(toString());
-   }
-   
-   public boolean advanceMetalBlocks() {
-      boolean changed = false;
-      for (int row = 1; row <= NUM_ROWS; row++) {
-         for (int col = 1; col <= NUM_COLS; col++) {
-            Species cur = getSpeciesAt(row, col);
-            if (cur.getEffect().equals(Effect.METAL)) {
-               changed |= setSpeciesAt(row, col, Species.getNextMetal(cur));
-            }
-         }
-      }
-      return changed;
    }
 
 }
