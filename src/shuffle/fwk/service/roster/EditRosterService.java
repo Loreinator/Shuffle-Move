@@ -381,7 +381,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       ret.add(teamFilterPanel, c);
       
       c.anchor = GridBagConstraints.LINE_END;
-      c.weightx = 1.0;
+      c.weightx = 0.0;
       c.gridx++;
       activeEffect = new EffectChooser(false, EffectChooser.DefaultEntry.SPECIES);
       JPanel activeEffectPanel = new JPanel(new BorderLayout());
@@ -634,8 +634,14 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       }
       addSkillLevelListener();
       removeActiveEffectListener();
-      activeEffect.setSpecies(selectedSpecies);
-      activeEffect.setSelectedEffect(selectedSpecies == null ? null : selectedSpecies.getEffect(myData));
+      if (selectedSpecies != null && selectedSpecies.getEffects().size() > 1) {
+         activeEffect.setEnabled(true);
+         activeEffect.setSpecies(selectedSpecies);
+         activeEffect.setSelectedEffect(selectedSpecies.getEffect(myData));
+      } else {
+         activeEffect.removeAllItems();
+         activeEffect.setEnabled(false);
+      }
       addActiveEffectListener();
    }
    
