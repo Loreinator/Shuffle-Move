@@ -2589,6 +2589,47 @@ public enum Effect {
       
    },
    /**
+    * Ampharos clone.
+    */
+   GYARADOS {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return AMPHAROS.getEffectRepeatDelay();
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return AMPHAROS.handlePlans(comboEffect, task);
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return AMPHAROS.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return AMPHAROS.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return AMPHAROS.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+      
+   },
+   /**
     * Same as {@link #BLASTOISE}
     */
    ALTARIA {
@@ -3384,6 +3425,37 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
+    * Gengar clone.
+    */
+   GYARADOS_S {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return GENGAR.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return GENGAR.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return GENGAR.getBonusScoreFor(basicScore, value, typeModifier);
       }
       
    },
