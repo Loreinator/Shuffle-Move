@@ -211,6 +211,12 @@ public enum Effect {
    DANCING_DRAGONS {
       
       @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && !task
+               .findMatches(1, true, (r, c, s) -> PkmType.DRAGON.equals(task.getState().getSpeciesType(s))).isEmpty();
+      }
+      
+      @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          ifThenSetSpecial(comboEffect, task, PkmType.DRAGON, getBonus(task, comboEffect));
       }
@@ -240,6 +246,13 @@ public enum Effect {
     * Increases damage of Dark-type moves in a combo.
     */
    SINISTER_POWER {
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+ && !task
+               .findMatches(1, true, (r, c, s) -> PkmType.DARK.equals(task.getState().getSpeciesType(s))).isEmpty();
+      }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
