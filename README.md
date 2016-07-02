@@ -46,6 +46,8 @@ This program is licensed under GNU General Public License Version 3. Please read
 ##Changelog
 * **v0.3.62 - 2016-0**
 	- Implemented Mega Gyarados & Mega Gyarados (Shiny)
+	- Translation updates
+	- Bug fixes
 * **v0.3.61 - 2016-06-28**
 	- Bug fixes for several effects and mechanics
 	- Added status effects
