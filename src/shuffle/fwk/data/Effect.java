@@ -3813,7 +3813,9 @@ public enum Effect {
          List<Species> base = super.getSpeciesOfTypeFrom(type, board, dontMatch, task);
          Set<Species> set = new HashSet<Species>(base);
          for (Species s : task.getState().getCore().getSupportSpecies()) {
-            set.add(s);
+            if (!s.equals(dontMatch) && task.getState().getSpeciesType(s).equals(type)) {
+               set.add(s);
+            }
          }
          return new ArrayList<Species>(set);
       }
