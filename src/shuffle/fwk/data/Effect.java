@@ -904,20 +904,11 @@ public enum Effect {
       
    },
    /**
-    * Can delay your opponent's disruptions for a turn.
+    * Can reset your opponent's disruption counter to maximum
     */
    MIND_ZAP {
       // TODO when disruption timers are implemented
       
-      @Override
-      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.canStatusActivate();
-      }
-      
-      @Override
-      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
-      }
    },
    /**
     * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
