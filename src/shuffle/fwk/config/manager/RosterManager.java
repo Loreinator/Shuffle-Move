@@ -38,7 +38,8 @@ import shuffle.fwk.data.Species;
 public class RosterManager extends ConfigManager {
    
    private static final String SPEEDUP_FORMAT = "SPEEDUP_%s";
-   private static final String SKILL_FORMAT = "SKILL_%s";
+   private static final String SKILL_FORMAT_LEGACY = "SKILL_%s";
+   private static final String SKILL_FORMAT = "SKILL_%s_%s";
    private static final String CHOSEN_EFFECT = "EFFECT_%s";
    
    public RosterManager(List<String> loadPaths, List<String> writePaths, ConfigFactory factory) {
@@ -66,18 +67,18 @@ public class RosterManager extends ConfigManager {
    }
    
    public Integer getSkillLevelForSpecies(Species species) {
-      return getSkillLevelForSpecies(species.getName());
-   }
-   
-   public Integer getSkillLevelForSpecies(String speciesName) {
-      return getIntegerValue(getSkillKey(speciesName), 1);
+      Integer ret = getIntegerValue(getSkillKey(species));
+      if (ret == null) {
+         ret = getIntegerValue(getSkillKeyLegacy(species));
+         if (ret != null) {
+            setSkillLevelForSpecies(species, ret.intValue());
+            removeEntry(EntryType.INTEGER, getSkillKeyLegacy(species));
+         }
+      }
+      return ret == null ? 1 : ret;
    }
    
    public boolean setSkillLevelForSpecies(Species species, int level) {
-      return setSkillLevelForSpecies(species.getName(), level);
-   }
-   
-   public boolean setSkillLevelForSpecies(String species, int level) {
       boolean changed;
       level = Math.max(Math.min(level, 5), 1);
       if (level == 1) {
@@ -88,8 +89,12 @@ public class RosterManager extends ConfigManager {
       return changed;
    }
    
-   private String getSkillKey(String speciesName) {
-      return String.format(SKILL_FORMAT, speciesName);
+   private String getSkillKey(Species species) {
+      return String.format(SKILL_FORMAT, species.getName(), getActiveEffect(species).toString());
+   }
+   
+   private String getSkillKeyLegacy(Species species) {
+      return String.format(SKILL_FORMAT_LEGACY, species.getName());
    }
    
    public Integer getMegaThresholdFor(Species species, EffectManager effectManager) {
