@@ -3808,6 +3808,16 @@ public enum Effect {
          return value.multiplyBy(basicScore * 0.2 * typeModifier);
       }
       
+      @Override
+      public List<Species> getSpeciesOfTypeFrom(PkmType type, Board board, Species dontMatch, SimulationTask task) {
+         List<Species> base = super.getSpeciesOfTypeFrom(type, board, dontMatch, task);
+         Set<Species> set = new HashSet<Species>(base);
+         for (Species s : task.getState().getCore().getSupportSpecies()) {
+            set.add(s);
+         }
+         return new ArrayList<Species>(set);
+      }
+      
    },
    /**
     * Replaces Pokemon with the same type as Swampert (max 3) but NOT itself, with Swampert.
