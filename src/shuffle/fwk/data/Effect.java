@@ -849,6 +849,15 @@ public enum Effect {
     */
    CHILL {
       // TODO when disruption timers are implemented
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+      }
    },
    /**
     * Can delay your opponent's disruptions for a turn.
@@ -859,6 +868,16 @@ public enum Effect {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
       }
       
    },
@@ -873,6 +892,16 @@ public enum Effect {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
       
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+      }
+      
    },
    /**
     * Can delay your opponent's disruptions for a turn.
@@ -880,6 +909,15 @@ public enum Effect {
    MIND_ZAP {
       // TODO when disruption timers are implemented
       
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+      }
    },
    /**
     * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
@@ -2156,12 +2194,32 @@ public enum Effect {
     */
    WHIRLPOOL {
       // TODO when disruption timers are implemented
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+      }
    },
    /**
     * Can delay your opponent's disruptions for two turns.
     */
    CONSTRICT {
       // TODO when disruption timers are implemented
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
+      }
    },
    /**
     * Attacks do more damage when there are no more moves left.
