@@ -3649,8 +3649,8 @@ public enum Effect {
        */
       @Override
       public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
-         List<Integer> toErase = task.findMatches(1, false,
-               (r, c, s) -> task.getEffectFor(s).equals(WOOD) || task.getEffectFor(s).equals(METAL));
+         List<Integer> toErase = task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD)
+               || task.getEffectFor(s).equals(METAL) || task.getEffectFor(s).equals(COIN));
          return toErase.isEmpty() ? null : toErase;
       }
       
