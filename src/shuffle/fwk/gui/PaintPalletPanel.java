@@ -319,6 +319,10 @@ public class PaintPalletPanel extends JPanel implements I18nUser {
             public void itemStateChanged(ItemEvent e) {
                Status status = statusChooser.getSelectedStatus();
                getUser().setStatus(status);
+               if (Status.DELAY.equals(status)) {
+                  int newDuration = (getCurrentStage().getMoves() + 1) / 2;
+                  getUser().setStatusDuration(newDuration);
+               }
             }
          };
       }
