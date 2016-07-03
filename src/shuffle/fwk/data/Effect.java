@@ -249,8 +249,7 @@ public enum Effect {
       
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task)
- && !task
+         return super.canActivate(comboEffect, task) && !task
                .findMatches(1, true, (r, c, s) -> PkmType.DARK.equals(task.getState().getSpeciesType(s))).isEmpty();
       }
       
@@ -309,8 +308,7 @@ public enum Effect {
       public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
          NumberSpan ret = new NumberSpan();
          if (canActivate(comboEffect, task)) {
-            int num = task.findMatches(36, false, (r, c, s) -> isDisruption(s))
-                  .size() / 2;
+            int num = task.findMatches(36, false, (r, c, s) -> isDisruption(s)).size() / 2;
             ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
          }
          return ret;
@@ -359,8 +357,7 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
-               && task.getState().getBoard().getStatus().isNone();
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
       }
       
       // Will deterministically set the multiplier
@@ -863,7 +860,7 @@ public enum Effect {
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
-   
+      
    },
    /**
     * Occasionally disrupts your opponent's disruptions.
@@ -875,7 +872,7 @@ public enum Effect {
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
-   
+      
    },
    /**
     * Can delay your opponent's disruptions for a turn.
@@ -897,8 +894,7 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
-               && task.getState().getBoard().getStatus().isNone();
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
       }
       
       @Override
@@ -919,8 +915,7 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
-               && task.getState().getBoard().getStatus().isNone();
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
       }
       
       @Override
@@ -941,8 +936,7 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
-               && task.getState().getBoard().getStatus().isNone();
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
       }
       
       @Override
@@ -963,8 +957,7 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
-               && task.getState().getBoard().getStatus().isNone();
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
       }
       
       @Override
@@ -985,8 +978,7 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
-               && task.getState().getBoard().getStatus().isNone();
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
       }
       
       @Override
@@ -1311,7 +1303,7 @@ public enum Effect {
             }
          }
       }
-   
+      
    },
    /**
     * Clears 5 clouds within 1 space.
@@ -1347,7 +1339,7 @@ public enum Effect {
             }
          }
       }
-   
+      
    },
    /**
     * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurrence is "Sometimes" and the
@@ -1659,8 +1651,7 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
-               && task.getState().getBoard().getStatus().isNone();
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
       }
       
       @Override
@@ -2068,7 +2059,7 @@ public enum Effect {
       
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && !task.getState().getBoard().getStatus().isNone();
+         return super.canActivate(comboEffect, task) && !task.canStatusActivate();
       }
       
       @Override
@@ -2161,7 +2152,7 @@ public enum Effect {
       }
    },
    /**
-    * Can delay your opponent's disruptions for a turn. 
+    * Can delay your opponent's disruptions for a turn.
     */
    WHIRLPOOL {
       // TODO when disruption timers are implemented
@@ -2243,8 +2234,7 @@ public enum Effect {
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
          return super.canActivate(comboEffect, task)
-               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType())
-               && task.getState().getBoard().getStatus().isNone();
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
       }
       
       @Override

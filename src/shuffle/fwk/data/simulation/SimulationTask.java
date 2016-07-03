@@ -1305,4 +1305,8 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
    public void setIsRandom() {
       getState().setIsRandom();
    }
+   
+   public boolean canStatusActivate() {
+      return getState().getBoard().getStatus().isNone();
+   }
 }
