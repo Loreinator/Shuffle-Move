@@ -35,7 +35,7 @@ public class EraseComboEffect extends ComboEffect {
    private boolean[] shouldErase;
    
    public EraseComboEffect(List<Integer> combo) {
-      super(combo, false);
+      super(combo);
       shouldErase = new boolean[Board.NUM_CELLS];
    }
    

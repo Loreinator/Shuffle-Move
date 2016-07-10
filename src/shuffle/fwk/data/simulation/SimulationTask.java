@@ -843,7 +843,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
       Species effectSpecies = getEffectSpecies(coords);
       Effect effect = getEffectFor(effectSpecies);
-      ActivateComboEffect activateEffect = new ActivateComboEffect(coords, effect.isPersistent());
+      ActivateComboEffect activateEffect = new ActivateComboEffect(coords, effect);
       
       boolean horizontal = activateEffect.isHorizontal();
       Collection<ActivateComboEffect> toMerge = new HashSet<ActivateComboEffect>();
@@ -867,7 +867,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          
          List<Integer> limits = getLimits(collectiveCoords);
          List<Integer> finalCoords = getComboForLimits(limits);
-         activateEffect = new ActivateComboEffect(finalCoords, effect.isPersistent());
+         activateEffect = new ActivateComboEffect(finalCoords, effect);
       }
       if (logFiner) {
          logFinerWithId("Claiming for combo: %s", activateEffect);

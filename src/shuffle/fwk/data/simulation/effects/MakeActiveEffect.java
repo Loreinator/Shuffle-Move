@@ -38,7 +38,7 @@ public class MakeActiveEffect extends ComboEffect {
     *           The blocks to keep active
     */
    public MakeActiveEffect(List<Integer> metalBlocks) {
-      super(metalBlocks, false);
+      super(metalBlocks);
    }
    
    /*

@@ -43,8 +43,8 @@ public class ActivateComboEffect extends ComboEffect {
       shouldPersist = new boolean[Board.NUM_CELLS];
    }
    
-   public ActivateComboEffect(List<Integer> combo, boolean isPersistentEffect) {
-      super(combo, isPersistentEffect);
+   public ActivateComboEffect(List<Integer> combo, Effect effect) {
+      super(combo, effect.isPersistent(), Effect.COIN.equals(effect));
       shouldPersist = new boolean[Board.NUM_CELLS];
    }
    
