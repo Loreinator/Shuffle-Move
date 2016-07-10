@@ -212,8 +212,11 @@ public enum Effect {
       
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && !task
-               .findMatches(1, true, (r, c, s) -> PkmType.DRAGON.equals(task.getState().getSpeciesType(s))).isEmpty();
+         SimulationState state = task.getState();
+         return super.canActivate(comboEffect, task)
+               && (!task.findMatches(1, true, (r, c, s) -> PkmType.DRAGON.equals(state.getSpeciesType(s))).isEmpty()
+                     || task.getState().getCore().getSupportSpecies().stream().map(s -> state.getSpeciesType(s))
+                           .anyMatch(t -> PkmType.DRAGON.equals(t)));
       }
       
       @Override
@@ -249,8 +252,11 @@ public enum Effect {
       
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && !task
-               .findMatches(1, true, (r, c, s) -> PkmType.DARK.equals(task.getState().getSpeciesType(s))).isEmpty();
+         SimulationState state = task.getState();
+         return super.canActivate(comboEffect, task)
+               && (!task.findMatches(1, true, (r, c, s) -> PkmType.DARK.equals(state.getSpeciesType(s))).isEmpty()
+                     || task.getState().getCore().getSupportSpecies().stream().map(s -> state.getSpeciesType(s))
+                           .anyMatch(t -> PkmType.DARK.equals(t)));
       }
       
       @Override
