@@ -1,0 +1,13 @@
+STAGE SP_017W
+ROW_1 Raichu_w,Metal,Wood,Metal,Metal,Metal
+FROW_1 false,false,false,false,false,false
+ROW_2 Raichu,Metal,Raichu,Metal,Metal,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Raichu_w,Metal,Wood,Metal,Metal,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Raichu,Metal,Raichu,Metal,Metal,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Raichu_w,Metal,Wood,Metal,Metal,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Raichu_w,Metal,Raichu,Metal,Metal,Metal
+FROW_6 false,false,false,false,false,false
