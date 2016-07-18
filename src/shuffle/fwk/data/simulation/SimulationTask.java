@@ -262,11 +262,13 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
             scheduleEffect(metalEffect, Effect.getDefaultErasureDelay());
          }
          // Before the first combo, decrement the status counter by 1 if it is not none.
-         if (!b.getStatus().isNone()) {
-            b.decreaseStatusDuration(1);
-         }
+         boolean wasMega = getState().isMegaActive();
          doCombo(firstCombo);
          doGravity();
+         if (!b.getStatus().isNone() && (getState().isMegaActive() == wasMega)) {
+            // afflicted by status, and mega state unchanged, decrease by one.
+            b.decreaseStatusDuration(1);
+         }
          // After the first combo, if the status counter is 0, set it to none.
          if (b.getStatusDuration() == 0) {
             b.setStatus(Board.Status.NONE);
@@ -841,7 +843,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
       }
       Species effectSpecies = getEffectSpecies(coords);
       Effect effect = getEffectFor(effectSpecies);
-      ActivateComboEffect activateEffect = new ActivateComboEffect(coords, effect.isPersistent());
+      ActivateComboEffect activateEffect = new ActivateComboEffect(coords, effect);
       
       boolean horizontal = activateEffect.isHorizontal();
       Collection<ActivateComboEffect> toMerge = new HashSet<ActivateComboEffect>();
@@ -865,7 +867,7 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
          
          List<Integer> limits = getLimits(collectiveCoords);
          List<Integer> finalCoords = getComboForLimits(limits);
-         activateEffect = new ActivateComboEffect(finalCoords, effect.isPersistent());
+         activateEffect = new ActivateComboEffect(finalCoords, effect);
       }
       if (logFiner) {
          logFinerWithId("Claiming for combo: %s", activateEffect);
@@ -1304,5 +1306,9 @@ public class SimulationTask extends RecursiveTask<SimulationState> {
     */
    public void setIsRandom() {
       getState().setIsRandom();
+   }
+   
+   public boolean canStatusActivate() {
+      return getState().getBoard().getStatus().isNone();
    }
 }

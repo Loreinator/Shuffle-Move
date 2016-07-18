@@ -25,7 +25,9 @@ RESOURCE Ekans img/icons/023.png
 RESOURCE Arbok img/icons/024.png
 RESOURCE Pikachu img/icons/025.png
 RESOURCE Pikachu_a img/icons/025-a.png
+RESOURCE Pikachu_w img/icons/025-w.png
 RESOURCE Raichu img/icons/026.png
+RESOURCE Raichu img/icons/026-w.png
 RESOURCE Sandshrew img/icons/027.png
 RESOURCE Sandslash img/icons/028.png
 RESOURCE Nidoran-f img/icons/029.png
@@ -736,6 +738,7 @@ RESOURCE Zygarde-10 img/icons/718-10.png
 RESOURCE Zygarde-50 img/icons/718.png
 RESOURCE Zygarde-c img/icons/718-c.png
 RESOURCE Diancie img/icons/719.png
+RESOURCE Hoopa img/icons/720.png
 RESOURCE Mega_Venusaur img/icons/003-m.png
 RESOURCE Mega_Charizard_x img/icons/006-m.png
 RESOURCE Mega_Charizard_y img/icons/006-my.png
@@ -748,6 +751,7 @@ RESOURCE Mega_Gengar img/icons/094-m.png
 RESOURCE Mega_Kangaskhan img/icons/115-m.png
 RESOURCE Mega_Pinsir img/icons/127-m.png
 RESOURCE Mega_Gyarados img/icons/130-m.png
+RESOURCE Mega_Gyarados_s img/icons/130-ms.png
 RESOURCE Mega_Aerodactyl img/icons/142-m.png
 RESOURCE Mega_Mewtwo_y img/icons/150-m.png
 RESOURCE Mega_Mewtwo_x img/icons/150-mx.png

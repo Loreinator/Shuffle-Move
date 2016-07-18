@@ -586,6 +586,8 @@ public class ShuffleModel
          }
       }
       changed |= setRemainingMoves(moves);
+      changed |= setStatus(Status.NONE);
+      changed |= setStatusDuration(0);
       if (changed) {
          setCursorTo(1, 1);
       }

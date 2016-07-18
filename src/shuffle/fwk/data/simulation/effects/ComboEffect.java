@@ -40,7 +40,11 @@ public abstract class ComboEffect implements SimulationEffect {
       isHorizontal = effect.isHorizontal;
    }
    
-   public ComboEffect(List<Integer> combo, boolean isPersistentEffect) {
+   public ComboEffect(List<Integer> combo) {
+      this(combo, false, false);
+   }
+   
+   public ComboEffect(List<Integer> combo, boolean isPersistentEffect, boolean isCoin) {
       toCombo = combo;
       int minRow = combo.get(0);
       int minCol = combo.get(1);
@@ -66,7 +70,7 @@ public abstract class ComboEffect implements SimulationEffect {
       // Horizontal matches are next
       priority += isHorizontal ? 0 : 1000;
       // Mega effect next, mega activate later than non-mega
-      priority += (isPersistentEffect ? 1 : 0) * 100;
+      priority += (isCoin ? 2 : (isPersistentEffect ? 1 : 0)) * 100;
       // Finally, the grid position of their upper left corner.
       if (isHorizontal) {
          priority += minCol - 1 + 6 * (minRow - 1);
