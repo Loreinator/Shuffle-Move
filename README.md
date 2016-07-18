@@ -44,10 +44,11 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.62 - 2016-0**
+* **v0.3.62 - 2016-07-17**
 	- Implemented Mega Gyarados & Mega Gyarados (Shiny)
 	- Translation updates
 	- Bug fixes
+	- Updates for July 12th
 * **v0.3.61 - 2016-06-28**
 	- Bug fixes for several effects and mechanics
 	- Added status effects
