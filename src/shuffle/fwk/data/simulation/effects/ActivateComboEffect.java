@@ -66,6 +66,9 @@ public class ActivateComboEffect extends ComboEffect {
       if (isClaimedIn(task)) { // only happens on the very FIRST activation
          task.removeClaim(this);
          task.addActiveFor(this);
+         if (!isAllFrozen(task)) {
+            task.getState().addCombosCleared(1);
+         }
          if (effect.isPersistent()) { // If the effect is active, then it needs to remove colliding
                                       // effects
             // For example: mega gengar will not combo in a plus pattern, ever. As soon as the combo
@@ -78,7 +81,7 @@ public class ActivateComboEffect extends ComboEffect {
          task.removeActive(this);
          task.unfreezeAt(getCoords());
       } else {
-         task.getState().addCombosCleared(1);
+         // Activates many times for persistent effects
          setPersistence(task);
          effect.handleCombo(this, task);
       }
