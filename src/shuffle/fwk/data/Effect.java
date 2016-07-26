@@ -4334,6 +4334,13 @@ public enum Effect {
       
    },
    /**
+    * Erases Pokemon and disruptions around three spots you tap.
+    */
+   TYRANITAR {
+
+
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
