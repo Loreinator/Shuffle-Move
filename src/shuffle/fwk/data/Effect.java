@@ -4579,7 +4579,7 @@ public enum Effect {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             Species cur = board.getSpeciesAt(row, col);
             if (!contained.contains(cur) && !state.getSpeciesType(cur).equals(type)
-                  && (includeActive || !task.isActive(row, col)) && !cur.isAir()) {
+                  && (includeActive || !task.isActive(row, col)) && task.getEffectFor(cur).canLevel()) {
                contained.add(cur);
                options.add(cur);
             }
