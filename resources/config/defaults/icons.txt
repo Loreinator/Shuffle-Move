@@ -739,6 +739,7 @@ RESOURCE Zygarde-50 img/icons/718.png
 RESOURCE Zygarde-c img/icons/718-c.png
 RESOURCE Diancie img/icons/719.png
 RESOURCE Hoopa img/icons/720.png
+RESOURCE Hoopa_u img/icons/720-u.png
 RESOURCE Mega_Venusaur img/icons/003-m.png
 RESOURCE Mega_Charizard_x img/icons/006-m.png
 RESOURCE Mega_Charizard_y img/icons/006-my.png
