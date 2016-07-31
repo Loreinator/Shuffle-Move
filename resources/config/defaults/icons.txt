@@ -27,7 +27,7 @@ RESOURCE Pikachu img/icons/025.png
 RESOURCE Pikachu_a img/icons/025-a.png
 RESOURCE Pikachu_w img/icons/025-w.png
 RESOURCE Raichu img/icons/026.png
-RESOURCE Raichu img/icons/026-w.png
+RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Sandshrew img/icons/027.png
 RESOURCE Sandslash img/icons/028.png
 RESOURCE Nidoran-f img/icons/029.png
@@ -739,6 +739,7 @@ RESOURCE Zygarde-50 img/icons/718.png
 RESOURCE Zygarde-c img/icons/718-c.png
 RESOURCE Diancie img/icons/719.png
 RESOURCE Hoopa img/icons/720.png
+RESOURCE Hoopa_u img/icons/720-u.png
 RESOURCE Mega_Venusaur img/icons/003-m.png
 RESOURCE Mega_Charizard_x img/icons/006-m.png
 RESOURCE Mega_Charizard_y img/icons/006-my.png

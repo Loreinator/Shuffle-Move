@@ -4334,6 +4334,13 @@ public enum Effect {
       
    },
    /**
+    * Erases Pokemon and disruptions around three spots you tap.
+    */
+   TYRANITAR {
+
+
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
@@ -4579,7 +4586,7 @@ public enum Effect {
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             Species cur = board.getSpeciesAt(row, col);
             if (!contained.contains(cur) && !state.getSpeciesType(cur).equals(type)
-                  && (includeActive || !task.isActive(row, col)) && !cur.isAir()) {
+                  && (includeActive || !task.isActive(row, col)) && task.getEffectFor(cur).canLevel()) {
                contained.add(cur);
                options.add(cur);
             }
