@@ -1,0 +1,13 @@
+STAGE 432
+ROW_1 Metal,Slakoth,Metal,Metal,Vigoroth,Metal
+FROW_1 false,true,false,false,true,false
+ROW_2 Slakoth,Vigoroth,Slakoth,Vigoroth,Slakoth,Vigoroth
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Slakoth,Wood,Wood,Vigoroth,Wood
+FROW_3 false,true,false,false,true,false
+ROW_4 Slakoth,Vigoroth,Slakoth,Vigoroth,Slakoth,Vigoroth
+FROW_4 false,false,false,false,false,false
+ROW_5 Vigoroth,Slakoth,Vigoroth,Slakoth,Vigoroth,Slakoth
+FROW_5 false,false,false,false,false,false
+ROW_6 Slakoth,Vigoroth,Slakoth,Vigoroth,Slakoth,Vigoroth
+FROW_6 false,false,false,false,false,false

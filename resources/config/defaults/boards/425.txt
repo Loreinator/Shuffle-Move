@@ -1,0 +1,13 @@
+STAGE 425
+ROW_1 Wood,Pachirisu,Pachirisu,Wood,Poliwag,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Poliwag,Wobbuffet,Wobbuffet,Pachirisu,Wobbuffet,Poliwag
+FROW_2 false,false,false,false,false,false
+ROW_3 Poliwag,Carvanha,Poliwag,Wobbuffet,Wobbuffet,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Carvanha,Poliwag,Wobbuffet,Pachirisu,Poliwag
+FROW_4 false,false,false,false,false,false
+ROW_5 Poliwag,Wood,Pachirisu,Pachirisu,Wood,Poliwag
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Carvanha,Wobbuffet,Wood,Wobbuffet,Wobbuffet
+FROW_6 false,false,false,false,false,false

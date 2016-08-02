@@ -1,0 +1,13 @@
+STAGE 442
+ROW_1 Shinx,Shinx,Voltorb,Shinx,Mareep,Shinx
+FROW_1 false,false,false,false,false,false
+ROW_2 Mareep,Mareep,Voltorb,Voltorb,Mareep,Voltorb
+FROW_2 false,false,false,false,false,false
+ROW_3 Shinx,Shinx,Mareep,Shinx,Voltorb,Shinx
+FROW_3 false,false,false,false,false,false
+ROW_4 Voltorb,Voltorb,Mareep,Mareep,Voltorb,Mareep
+FROW_4 false,false,true,false,false,false
+ROW_5 Shinx,Shinx,Voltorb,Shinx,Mareep,Shinx
+FROW_5 false,false,false,false,false,false
+ROW_6 Shinx,Shinx,Voltorb,Shinx,Mareep,Shinx
+FROW_6 false,false,false,false,false,false
