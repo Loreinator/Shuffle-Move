@@ -1,0 +1,13 @@
+STAGE 431
+ROW_1 Wood,Wood,Meowstic,Meowstic_f,Wood,Wood
+FROW_1 false,false,true,true,false,false
+ROW_2 Meowstic,Meowstic,Meowstic_f,Meowstic,Meowstic_f,Meowstic_f
+FROW_2 true,true,false,false,true,true
+ROW_3 Wood,Wood,Meowstic,Meowstic_f,Wood,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Meowstic,Meowstic,Wood,Wood,Meowstic_f,Meowstic_f
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Meowstic,Meowstic,Meowstic_f,Meowstic_f,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Meowstic,Wood,Meowstic,Meowstic_f,Wood,Meowstic_f
+FROW_6 false,false,false,false,false,false

@@ -1,0 +1,13 @@
+STAGE 423
+ROW_1 Metal,Umbreon,Umbreon,Air,Air,Metal
+FROW_1 true,true,true,false,false,true
+ROW_2 Air,Air,Air,Air,Air,Umbreon
+FROW_2 false,false,false,false,false,true
+ROW_3 Air,Air,Air,Air,Air,Umbreon
+FROW_3 false,false,false,false,false,true
+ROW_4 Umbreon,Air,Air,Air,Air,Air
+FROW_4 true,false,false,false,false,false
+ROW_5 Umbreon,Air,Air,Air,Air,Air
+FROW_5 true,false,false,false,false,false
+ROW_6 Metal,Air,Air,Umbreon,Umbreon,Metal
+FROW_6 true,false,false,true,true,true
