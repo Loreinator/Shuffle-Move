@@ -5017,16 +5017,11 @@ public enum Effect {
             final double odds = getOdds(task, comboEffect);
             task.addScoreModifier((ce, t) -> {
                Species effectSpecies = t.getEffectSpecies(ce.getCoords());
-               Effect effect = t.getEffectFor(effectSpecies);
                PkmType effectType = t.getState().getSpeciesType(effectSpecies);
                double multiplier = 1;
                if (types.contains(effectType)) {
                   // if the type matches, add on the bonus.
                   multiplier += bonus.doubleValue();
-               }
-               if (!effect.isPersistent() && effect.isAttackPowerEffective()) {
-                  // If the effect COULD benefit from the multiplier glitch, apply it.
-                  multiplier *= effect.getMultiplierRatio(t, ce);
                }
                return new NumberSpan(1, multiplier - 1, odds);
             });
