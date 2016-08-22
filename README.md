@@ -45,7 +45,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ##Changelog
 * **v0.3.67 - 2016-08-17**
-	- Default boards for Tyranitar and Mega Garchomp
+	- Default boards for Typhlosion and Mega Garchomp
 * **v0.3.66 - 2016-08-11**
 	- Updates for August 9th
 	- Combo Score glitch disabled
