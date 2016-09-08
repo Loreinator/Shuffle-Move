@@ -4341,6 +4341,13 @@ public enum Effect {
 
    },
    /**
+    * Aerodactyl clone
+    */
+   ALAKAZAM {
+
+
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
