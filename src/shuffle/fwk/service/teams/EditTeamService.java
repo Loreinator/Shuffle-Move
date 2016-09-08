@@ -323,7 +323,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       c.weightx = 0.0;
       JPanel levelPanel = new JPanel();
       levelPanel.add(new JLabel(getString(KEY_LEVEL)));
-      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 10, 1);
+      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, Species.MAX_LEVEL, 1);
       levelSpinner = new JSpinner(snm);
       levelPanel.add(levelSpinner);
       levelPanel.setToolTipText(getString(KEY_LEVEL_TOOLTIP));
