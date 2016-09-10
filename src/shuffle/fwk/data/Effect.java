@@ -4341,6 +4341,42 @@ public enum Effect {
 
    },
    /**
+    * Aerodactyl clone
+    */
+   ALAKAZAM {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return AERODACTYL.isAttackPowerEffective();
+      }
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return AERODACTYL.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 10;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return AERODACTYL.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {

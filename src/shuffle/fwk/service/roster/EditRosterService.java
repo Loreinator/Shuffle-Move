@@ -266,7 +266,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       c.weightx = 0.0;
       JPanel levelPanel = new JPanel();
       levelPanel.add(new JLabel(getString(KEY_LEVEL)));
-      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, 15, 1);
+      SpinnerNumberModel snm = new SpinnerNumberModel(0, 0, Species.MAX_LEVEL, 1);
       levelSpinner = new JSpinner(snm);
       levelPanel.add(levelSpinner);
       levelPanel.setToolTipText(getString(KEY_LEVEL_TOOLTIP));
@@ -559,7 +559,7 @@ public class EditRosterService extends BaseService<EditRosterServiceUser> implem
       jLabel.addMouseListener(ma);
       ret.add(jLabel, c);
       JComboBox<Integer> level = new JComboBox<Integer>();
-      for (int i = 0; i <= 15; i++) {
+      for (int i = 0; i <= Species.MAX_LEVEL; i++) {
          level.addItem(i);
       }
       Integer thisLevel = getLevelFor(s);

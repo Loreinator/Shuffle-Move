@@ -26,6 +26,7 @@ RESOURCE Arbok img/icons/024.png
 RESOURCE Pikachu img/icons/025.png
 RESOURCE Pikachu_a img/icons/025-a.png
 RESOURCE Pikachu_w img/icons/025-w.png
+RESOURCE Pikachu_ha img/icons/025-ha.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Sandshrew img/icons/027.png
