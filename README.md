@@ -44,7 +44,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.70 - 2016-09-**
+* **v0.3.70 - 2016-09-10**
 	- Updates for September 6th
 	- Max level increased to 20
 * **v0.3.69 - 2016-09-02**
