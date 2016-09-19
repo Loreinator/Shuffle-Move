@@ -15,36 +15,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package shuffle.fwk.config.provider;
 
-package shuffle.fwk.gui.user;
-
-import shuffle.fwk.EntryMode;
-import shuffle.fwk.EntryModeUser;
-import shuffle.fwk.config.provider.PreferencesManagerProvider;
-import shuffle.fwk.data.SpeciesPaint;
-import shuffle.fwk.data.simulation.SimulationResult;
+import shuffle.fwk.config.manager.EntryModeManager;
 
 /**
  * @author Andrew Meyers
  *
  */
-public interface GridPanelUser extends IndicatorUser<Object>, EntryModeUser, PreferencesManagerProvider {
-   
-   /**
-    * @return
-    */
-   EntryMode getCurrentEntryMode();
-   
-   /**
-    * @return
-    */
-   SimulationResult getSelectedResult();
-   
-   /**
-    * @param integer
-    * @param integer2
-    * @return
-    */
-   SpeciesPaint getPaintAt(Integer integer, Integer integer2);
-   
+public interface EntryModeManagerProvider {
+   EntryModeManager getEntryModeManager();
 }

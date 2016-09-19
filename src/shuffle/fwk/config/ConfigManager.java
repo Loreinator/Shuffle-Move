@@ -575,6 +575,19 @@ public class ConfigManager {
       return getValues(EntryType.GRADING_MODE, GradingMode.class);
    }
    
+   // Entry Mode
+   public EntryMode getEntryModeValue(String key) {
+      return getValue(EntryType.ENTRY_MODE, key, EntryMode.class);
+   }
+   
+   public EntryMode getEntryModeValue(String key, EntryMode def) {
+      return getValue(EntryType.ENTRY_MODE, key, EntryMode.class, def);
+   }
+   
+   public List<EntryMode> getEntryModeValues() {
+      return getValues(EntryType.ENTRY_MODE, EntryMode.class);
+   }
+   
    // Font
    public Font getFontValue(String key) {
       return getValue(EntryType.FONT, key, Font.class);

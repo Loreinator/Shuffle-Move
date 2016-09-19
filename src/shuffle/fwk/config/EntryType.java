@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import shuffle.fwk.EntryMode;
 import shuffle.fwk.GradingMode;
 import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.PkmType;
@@ -453,6 +454,33 @@ public enum EntryType {
          return GradingMode.class;
       }
       
+   },
+   ENTRY_MODE {
+      
+      @Override
+      public EntryMode parseValue(String key, String value) throws Exception {
+         Matcher m = ENTRY_PATTERN.matcher(value);
+         m.find();
+         String description = m.group(1);
+         EntryMode ret = null;
+         if (description.equals(EntryMode.PAINT.getI18nKey())) {
+            ret = EntryMode.PAINT;
+         } else if (description.equals(EntryMode.EXPRESS.getI18nKey())) {
+            ret = EntryMode.EXPRESS;
+         }
+         return ret;
+      }
+      
+      @Override
+      public String getDataString(Object obj) throws Exception {
+         EntryMode mode = (EntryMode) obj;
+         return String.format("%s", mode.getI18nKey());
+      }
+      
+      @Override
+      public Class<EntryMode> getDataClass() {
+         return EntryMode.class;
+      }
    };
    
    private static final Pattern COLOR_PATTERN = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)(?:\\s+(\\d+))?\\s*$");
@@ -470,6 +498,7 @@ public enum EntryType {
    private static final Pattern FONT_PATTERN = Pattern
          .compile("^\\s*(\\S+)\\s+([^,\\s]+(?:,[^,\\s]+)?)\\s+(\\d+)\\s*$");
    private static final Pattern GRADING_PATTERN = Pattern.compile("^\\s*(\\S+)\\s+(\\S+)\\s*$");
+   private static final Pattern ENTRY_PATTERN = Pattern.compile("^\\s*(\\S+)\\s*$");
    
    /**
     * Parses the given string into the value for this entry type. Exceptions will be thrown if the
