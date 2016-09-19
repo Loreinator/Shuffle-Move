@@ -33,12 +33,12 @@ public interface ModeIndicatorUser extends EntryModeUser, PreferencesManagerProv
    /**
     * @param mode
     */
-   void setCurMode(EntryMode mode);
+   void setCurrentEntryMode(EntryMode mode);
    
    /**
     * @return
     */
-   EntryMode getCurrentMode();
+   EntryMode getCurrentEntryMode();
    
    Font scaleFont(Font givenFont);
    

@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import shuffle.fwk.config.manager.EffectManager;
+import shuffle.fwk.config.manager.EntryModeManager;
 import shuffle.fwk.config.manager.GradingModeManager;
 import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
@@ -58,6 +59,7 @@ public class ConfigFactory {
    private static final String KEY_RESOURCE_EFFECT = "EFFECTS";
    private static final String KEY_RESOURCE_EFFECT_MOBILE = "EFFECTS_MOBILE";
    private static final String KEY_RESOURCE_GRADING_MODES = "GRADING_MODES";
+   private static final String KEY_RESOURCE_ENTRY_MODE = "ENTRY_MODE";
    private static final String KEY_FILE_PREFERENCES = "PREFERENCES";
    private static final String KEY_FILE_SPECIES = "SPECIES";
    private static final String KEY_FILE_STAGES = "STAGES";
@@ -66,6 +68,7 @@ public class ConfigFactory {
    private static final String KEY_FILE_TEAMS = "TEAM";
    private static final String KEY_FILE_ROSTER = "ROSTER";
    private static final String KEY_FILE_GRADING_MODES = "GRADING_MODES";
+   private static final String KEY_FILE_ENTRY_MODE = "ENTRY_MODE";
    
    private static final String KEY_MOBILE_MODE = "MOBILE_MODE";
    
@@ -244,6 +247,10 @@ public class ConfigFactory {
    
    public GradingModeManager getGradingModeManager() {
       return getManager(KEY_RESOURCE_GRADING_MODES, KEY_FILE_GRADING_MODES, GradingModeManager.class);
+   }
+   
+   public EntryModeManager getEntryModeManager() {
+      return getManager(KEY_RESOURCE_ENTRY_MODE, KEY_FILE_ENTRY_MODE, EntryModeManager.class);
    }
    
    public EffectManager getEffectManager() {

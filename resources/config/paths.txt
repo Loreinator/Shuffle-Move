@@ -10,6 +10,7 @@ RESOURCE UPDATE_FILE docs/update.html
 RESOURCE EFFECTS config/defaults/effects.txt
 RESOURCE EFFECTS_MOBILE config/defaults/effects_mobile.txt
 RESOURCE GRADING_MODES config/defaults/gradingModes.txt
+RESOURCE ENTRY_MODE config/defaults/entryMode.txt
 FILE PREFERENCES config/preferences.txt
 FILE SPECIES config/species.txt
 FILE STAGES config/stages.txt
@@ -19,5 +20,6 @@ FILE TEAM config/teamsData.txt
 FILE ROSTER config/rosterData.txt
 FILE BOARD config/boards/board.txt
 FILE GRADING_MODES config/gradingModes.txt
+FILE ENTRY_MODE config/entryMode.txt
 STRING TYPE_PATH_FORMAT img/types/%s.png
 STRING DEFAULT_BOARD_STAGE_CONFIG config/defaults/boards/%s.txt

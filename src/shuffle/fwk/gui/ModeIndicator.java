@@ -102,7 +102,7 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
       modeLabel.setFont(labelFont);
       modeLabel.setForeground(getModeSelectColor());
       add(modeLabel, c);
-      oldMode = getUser().getCurrentMode();
+      oldMode = getUser().getCurrentEntryMode();
       for (EntryMode mode : EntryMode.values()) {
          JLabel label = new JLabel(getString(mode.getI18nKey()));
          label.setFont(modeFont);
@@ -120,7 +120,7 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
             
             @Override
             public void focusGained(FocusEvent e) {
-               user.setCurMode(mode);
+               user.setCurrentEntryMode(mode);
             }
          });
          add(label, c);
@@ -163,7 +163,7 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
    }
    
    public boolean updateMode() {
-      EntryMode newMode = getUser().getCurrentMode();
+      EntryMode newMode = getUser().getCurrentEntryMode();
       boolean changed = newMode != null && !newMode.equals(oldMode);
       for (EntryMode mode : EntryMode.values()) {
          if (modeMap.containsKey(mode)) {
@@ -206,13 +206,13 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
          modeMap.get(mode).addMouseListener(new PressOrClickMouseAdapter() {
             @Override
             protected void onLeft(MouseEvent e) {
-               getUser().setCurMode(mode);
+               getUser().setCurrentEntryMode(mode);
                updateFocus();
             }
             
             @Override
             protected void onRight(MouseEvent e) {
-               getUser().setCurMode(mode);
+               getUser().setCurrentEntryMode(mode);
                updateFocus();
             }
             
@@ -298,7 +298,7 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
     */
    @Override
    public void updateFocus() {
-      updateFocus(getUser().getCurrentMode());
+      updateFocus(getUser().getCurrentEntryMode());
    }
    
 }

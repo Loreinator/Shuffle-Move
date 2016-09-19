@@ -49,6 +49,7 @@ import shuffle.fwk.config.ConfigFactory;
 import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.manager.BoardManager;
 import shuffle.fwk.config.manager.EffectManager;
+import shuffle.fwk.config.manager.EntryModeManager;
 import shuffle.fwk.config.manager.GradingModeManager;
 import shuffle.fwk.config.manager.ImageManager;
 import shuffle.fwk.config.manager.RosterManager;
@@ -485,7 +486,7 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       if (getModel().doSelectedMove()) {
          LOG.info(getString(KEY_DO_MOVE));
          if (getModel().isSwapToPaint()) {
-            getModel().setCurrentMode(EntryMode.PAINT);
+            getModel().setCurrentEntryMode(EntryMode.PAINT);
          }
          getModel().setCursorTo(1, 1);
          repaint();
@@ -529,8 +530,8 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    
    @Override
    public void changeMode() {
-      EntryMode next = getModel().getCurrentMode().getNextMode();
-      if (getModel().setCurrentMode(next)) {
+      EntryMode next = getModel().getCurrentEntryMode().getNextMode();
+      if (getModel().setCurrentEntryMode(next)) {
          repaint();
       }
    }
@@ -586,8 +587,8 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    }
    
    @Override
-   public void setCurMode(EntryMode mode) {
-      if (getModel().setCurrentMode(mode)) {
+   public void setCurrentEntryMode(EntryMode mode) {
+      if (getModel().setCurrentEntryMode(mode)) {
          repaint();
       }
    }
@@ -893,13 +894,14 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
       return getModel().getBoardManager();
    }
    
-   /*
-    * (non-Javadoc)
-    * @see shuffle.fwk.gui.user.ModeIndicatorUser#getCurrentMode()
-    */
    @Override
-   public EntryMode getCurrentMode() {
-      return getModel().getCurrentMode();
+   public EntryModeManager getEntryModeManager() {
+      return getModel().getEntryModeManager();
+   }
+   
+   @Override
+   public EntryMode getCurrentEntryMode() {
+      return getEntryModeManager().getCurrentEntryMode();
    }
    
    /*

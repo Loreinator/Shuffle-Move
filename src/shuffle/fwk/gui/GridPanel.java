@@ -175,7 +175,7 @@ public class GridPanel extends JPanel {
             });
             indicator.addMouseListener(new PressOrClickMouseAdapter() {
                private void handlePress(boolean erase) {
-                  EntryMode currentMode = getUser().getCurrentMode();
+                  EntryMode currentMode = getUser().getCurrentEntryMode();
                   currentMode.handleGridEvent(getUser(), row, col, erase);
                }
                
@@ -277,7 +277,7 @@ public class GridPanel extends JPanel {
          }
       }
       
-      EntryMode curMode = getUser().getCurrentMode();
+      EntryMode curMode = getUser().getCurrentEntryMode();
       if (!curMode.equals(mode)) {
          mode = curMode;
          Color gridOutlineColor = preferencesManager.getColorFor(mode);
