@@ -43,7 +43,7 @@ public class EntryModeManager extends ConfigManager {
    
    @Override
    protected boolean shouldUpdate() {
-      return true;
+      return false;
    }
    
    public EntryMode getCurrentEntryMode() {

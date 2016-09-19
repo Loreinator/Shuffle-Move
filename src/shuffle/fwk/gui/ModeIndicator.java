@@ -260,7 +260,7 @@ public class ModeIndicator extends JPanel implements FocusRequester, I18nUser {
          
          @Override
          public Component getDefaultComponent(Container aContainer) {
-            return modeMap.get(EntryMode.values()[0]);
+            return modeMap.get(getUser().getCurrentEntryMode());
          }
          
          @Override
