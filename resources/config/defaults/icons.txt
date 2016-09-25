@@ -556,7 +556,9 @@ RESOURCE Venipede img/icons/543.png
 RESOURCE Whirlipede img/icons/544.png
 RESOURCE Scolipede img/icons/545.png
 RESOURCE Cottonee img/icons/546.png
+RESOURCE Cottonee_w img/icons/546-w.png
 RESOURCE Whimsicott img/icons/547.png
+RESOURCE Whimsicott_w img/icons/547-w.png
 RESOURCE Petilil img/icons/548.png
 RESOURCE Lilligant img/icons/549.png
 RESOURCE Basculin img/icons/550.png
