@@ -1,0 +1,13 @@
+STAGE 457
+ROW_1 Chingling,Chingling,Wood,Nincada,Nincada,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Wood,Nincada,Wood,Wood,Nincada
+FROW_2 false,false,false,false,false,false
+ROW_3 Nincada,Nincada,Wood,Fearow,Fearow,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Wood,Wood,Wood,Fearow
+FROW_4 false,false,false,false,false,false
+ROW_5 Nincada,Nincada,Chingling,Nincada,Nincada,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Chingling,Chingling,Nincada,Chingling,Chingling,Wood
+FROW_6 false,false,false,false,false,false

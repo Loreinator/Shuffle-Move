@@ -4377,6 +4377,13 @@ public enum Effect {
 
    },
    /**
+    * Erases Pokemon and disruptions in a 3x3 square around a single spot you tap.
+    */
+   BEEDRILL {
+
+
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
