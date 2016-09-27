@@ -47,6 +47,8 @@ This program is licensed under GNU General Public License Version 3. Please read
 * **v0.3.72 - 2016-09-**
  	- Entry Mode now persists
 	- Updates for September 20th
+	- Updates for September 27th
+	- New stages have health set to 1 (details not yet available)
 * **v0.3.71 - 2016-09-15**
 	- Default board for Mega Alakazam
 * **v0.3.70 - 2016-09-10**
