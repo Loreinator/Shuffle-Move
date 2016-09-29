@@ -1,0 +1,13 @@
+STAGE SP_425M
+ROW_1 Mewtwo,Air,Air,Metal,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Mewtwo,Air,Air,Metal,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Mewtwo,Air,Air,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Air,Air,Slowbro,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Metal,Air,Air,Slowbro,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Metal,Air,Air,Slowbro
+FROW_6 false,false,false,false,false,false

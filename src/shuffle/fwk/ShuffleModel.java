@@ -62,6 +62,7 @@ import shuffle.fwk.config.ConfigManager;
 import shuffle.fwk.config.EntryType;
 import shuffle.fwk.config.manager.BoardManager;
 import shuffle.fwk.config.manager.EffectManager;
+import shuffle.fwk.config.manager.EntryModeManager;
 import shuffle.fwk.config.manager.GradingModeManager;
 import shuffle.fwk.config.manager.RosterManager;
 import shuffle.fwk.config.manager.SpeciesManager;
@@ -69,6 +70,7 @@ import shuffle.fwk.config.manager.StageManager;
 import shuffle.fwk.config.manager.TeamManager;
 import shuffle.fwk.config.provider.BoardManagerProvider;
 import shuffle.fwk.config.provider.EffectManagerProvider;
+import shuffle.fwk.config.provider.EntryModeManagerProvider;
 import shuffle.fwk.config.provider.GradingModeManagerProvider;
 import shuffle.fwk.config.provider.PreferencesManagerProvider;
 import shuffle.fwk.config.provider.RosterManagerProvider;
@@ -98,7 +100,8 @@ import shuffle.fwk.update.UpdateCheck;
  */
 public class ShuffleModel
       implements BoardManagerProvider, PreferencesManagerProvider, RosterManagerProvider, SpeciesManagerProvider,
-      StageManagerProvider, TeamManagerProvider, EffectManagerProvider, GradingModeManagerProvider, I18nUser {
+      StageManagerProvider, TeamManagerProvider, EffectManagerProvider, GradingModeManagerProvider, EntryModeManagerProvider,
+      I18nUser {
    /** The logger for this model. */
    private static final Logger LOG = Logger.getLogger(ShuffleModel.class.getName());
    /** The controller for this model. */
@@ -156,8 +159,6 @@ public class ShuffleModel
    private BoardManager boardManager = null;
    
    // Interface controls
-   /** Current mode of entry in the interface. */
-   private EntryMode curMode = EntryMode.PAINT;
    /** Current species to be painted. */
    private Species curSpecies = Species.AIR;
    /** Current frozen state of the paint. */
@@ -343,6 +344,14 @@ public class ShuffleModel
       return getConfigFactory().getGradingModeManager();
    }
    
+   /**
+    * Gets the Entry Mode Manager.
+    */
+   @Override
+   public EntryModeManager getEntryModeManager() {
+      return getConfigFactory().getEntryModeManager();
+   }
+   
    // BOARD MANAGER METHODS
    /**
     * Loads the board manager and all loaders or managers it depends on, from configuration.
@@ -426,7 +435,7 @@ public class ShuffleModel
       // If the paint and the current species are both Metal, and we're either not in express or
       // Express metal advancement is enabled, THEN you can set this to the next metal block.
       if (paint != null && paint.equals(Species.METAL) && cur.getEffect(getRosterManager()).equals(Effect.METAL)) {
-         if (isExpressMetalAdvanceEnabled() || !getCurrentMode().equals(EntryMode.EXPRESS)) {
+         if (isExpressMetalAdvanceEnabled() || !getCurrentEntryMode().equals(EntryMode.EXPRESS)) {
             paint = Species.getNextMetal(cur);
          } else {
             paint = cur;
@@ -610,8 +619,8 @@ public class ShuffleModel
     * 
     * @return
     */
-   public EntryMode getCurrentMode() {
-      return curMode;
+   public EntryMode getCurrentEntryMode() {
+      return getEntryModeManager().getCurrentEntryMode();
    }
    
    /**
@@ -622,10 +631,10 @@ public class ShuffleModel
     *           The mode to set.
     * @return True if the mode changed. False if otherwise.
     */
-   protected boolean setCurrentMode(EntryMode em) {
-      boolean changing = em != null && !em.equals(curMode);
+   protected boolean setCurrentEntryMode(EntryMode em) {
+      boolean changing = em != null && !em.equals(getCurrentEntryMode());
       if (changing) {
-         curMode = em;
+         getEntryModeManager().setCurrentEntryMode(em);
       }
       return changing;
    }
@@ -805,7 +814,7 @@ public class ShuffleModel
    
    private SpeciesPaint getSpeciesPaint(Species s) {
       boolean isFreeze = Species.FREEZE.equals(s);
-      boolean isPaintMode = EntryMode.PAINT.equals(getCurrentMode());
+      boolean isPaintMode = EntryMode.PAINT.equals(getCurrentEntryMode());
       boolean isFrozen = !s.getEffect(getRosterManager()).equals(Effect.AIR)
             && (isFreeze && !frozen || isPaintMode && !isFreeze && frozen);
       boolean isMega = isMegaActive(s.getName());

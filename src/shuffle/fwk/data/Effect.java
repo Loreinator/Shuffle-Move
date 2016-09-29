@@ -4337,7 +4337,10 @@ public enum Effect {
     * Erases Pokemon and disruptions around three spots you tap.
     */
    TYRANITAR {
-
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
 
    },
    /**
@@ -4373,6 +4376,16 @@ public enum Effect {
       @Override
       public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
          return AERODACTYL.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+
+   },
+   /**
+    * Erases Pokemon and disruptions in a 3x3 square around a single spot you tap.
+    */
+   BEEDRILL {
+      @Override
+      public boolean isPersistent() {
+         return true;
       }
 
    },
