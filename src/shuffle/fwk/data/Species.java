@@ -18,13 +18,13 @@
 
 package shuffle.fwk.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -77,7 +77,7 @@ public class Species implements Comparable<Species>, I18nUser {
    private final int attack;
    private final PkmType type;
    private final List<Effect> effects;
-   private final TreeSet<String> effectStrings;
+   private final List<String> effectStrings;
    private final String megaName;
    private final Effect megaEffect;
    private final PkmType megaType;
@@ -139,7 +139,7 @@ public class Species implements Comparable<Species>, I18nUser {
       }
       this.type = type;
       this.effects = effects;
-      this.effectStrings = new TreeSet<String>(effects.stream().map(e -> e.toString()).collect(Collectors.toSet()));
+      this.effectStrings = new ArrayList<String>(effects.stream().map(e -> e.toString()).collect(Collectors.toList()));
       this.megaName = megaName == null || megaName.trim().isEmpty() ? null : megaName.trim();
       this.megaEffect = megaEffect == null ? Effect.NONE : megaEffect;
       this.megaType = megaType == null ? type : (megaType == PkmType.NONE ? type : megaType);
