@@ -4390,6 +4390,16 @@ public enum Effect {
 
    },
    /**
+    * Erases pokemon in a < shape (a rotated version of M-Glalie V-shape)
+    */
+   PIDGEOT {
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
