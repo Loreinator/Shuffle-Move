@@ -1,0 +1,13 @@
+STAGE SP_20W
+ROW1 Air,Air,Metal,Metal,Air,Air
+FROW1 false,false,false,false,false,false
+ROW2 Air,Metal,Togekiss_w,Togekiss_w,Metal,Air
+FROW2 false,false,false,false,false,false
+ROW3 Metal,Air,Metal,Metal,Air,Metal
+FROW3 false,false,false,false,false,false
+ROW4 Air,Air,Togekiss_w,Togekiss_w,Air,Air
+FROW4 false,false,false,false,false,false
+ROW5 Air,Air,Air,Air,Air,Air
+FROW5 false,false,false,false,false,false
+ROW6 Air,Air,Air,Air,Air,Air
+FROW6 false,false,false,false,false,false
