@@ -1,4 +1,4 @@
-#Shuffle Move v0.3.73
+#Shuffle Move v0.3.74
 
 A program to identify and display the best next move for the game Pokémon Shuffle. I do not own any part of Pokémon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
 
@@ -44,6 +44,9 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
+* **v0.3.74 - 2016-10-08**
+	- Updates for October 4th
+	- Corrected Metagross Attack Power
 * **v0.3.73 - 2016-10-01**
 	- Added Winking Cottonee and Whimsicott
 	- Fixed the problem with effects ordering for skill swappers
