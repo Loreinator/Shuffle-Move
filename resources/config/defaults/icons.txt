@@ -1,11 +1,14 @@
 RESOURCE Bulbasaur img/icons/001.png
+RESOURCE Bulbasaur_w img/icons/001-w.png
 RESOURCE Ivysaur img/icons/002.png
 RESOURCE Venusaur img/icons/003.png
 RESOURCE Charmander img/icons/004.png
+RESOURCE Charmander_w img/icons/004-w.png
 RESOURCE Charmeleon img/icons/005.png
 RESOURCE Charizard img/icons/006.png
 RESOURCE Charizard_x img/icons/006.png
 RESOURCE Squirtle img/icons/007.png
+RESOURCE Squirtle_w img/icons/007-w.png
 RESOURCE Wartortle img/icons/008.png
 RESOURCE Blastoise img/icons/009.png
 RESOURCE Caterpie img/icons/010.png
@@ -38,10 +41,12 @@ RESOURCE Nidoran-m img/icons/032.png
 RESOURCE Nidorino img/icons/033.png
 RESOURCE Nidoking img/icons/034.png
 RESOURCE Clefairy img/icons/035.png
+RESOURCE Clefairy_w img/icons/035-w.png
 RESOURCE Clefable img/icons/036.png
 RESOURCE Vulpix img/icons/037.png
 RESOURCE Ninetales img/icons/038.png
 RESOURCE Jigglypuff img/icons/039.png
+RESOURCE Jigglypuff_w img/icons/039-w.png
 RESOURCE Wigglytuff img/icons/040.png
 RESOURCE Zubat img/icons/041.png
 RESOURCE Golbat img/icons/042.png
@@ -476,6 +481,7 @@ RESOURCE Tangrowth img/icons/465.png
 RESOURCE Electivire img/icons/466.png
 RESOURCE Magmortar img/icons/467.png
 RESOURCE Togekiss img/icons/468.png
+RESOURCE Togekiss_w img/icons/468-w.png
 RESOURCE Yanmega img/icons/469.png
 RESOURCE Leafeon img/icons/470.png
 RESOURCE Glaceon img/icons/471.png

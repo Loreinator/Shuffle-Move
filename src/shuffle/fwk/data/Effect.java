@@ -4390,6 +4390,53 @@ public enum Effect {
 
    },
    /**
+    * Erases pokemon in a < shape (a rotated version of M-Glalie V-shape)
+    */
+   PIDGEOT {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            for (int step = 1; step <= 6; step++) {
+               int offset = (step - 1) / 2;
+               int upper = 1 + offset;
+               int lower = 6 - offset;
+               effect.addPlannedOptions(Arrays.asList(upper, 7 - step, lower, 7 - step));
+            }
+            return effect;
+         }
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return SABLEYE.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return SABLEYE.getEffectRepeatDelay();
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return SABLEYE.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
