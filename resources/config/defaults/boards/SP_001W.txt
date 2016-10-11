@@ -1,0 +1,13 @@
+STAGE SP_001W
+ROW_1 Metal,Air,Air,Air,Air,Bulbasaur
+FROW_1 false,false,false,false,false,false
+ROW_2 Bulbasaur_w,Air,Air,Air,Air,Bulbasaur
+FROW_2 false,false,false,false,false,false
+ROW_3 Metal,Air,Air,Air,Air,Bulbasaur_w
+FROW_3 false,false,false,false,false,false
+ROW_4 Bulbasaur,Air,Air,Air,Air,Bulbasaur_w
+FROW_4 false,false,false,false,false,false
+ROW_5 Bulbasaur,Air,Air,Air,Air,Bulbasaur
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Air,Air,Air,Air,Bulbasaur_w
+FROW_6 false,false,false,false,false,false
