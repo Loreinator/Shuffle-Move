@@ -4390,7 +4390,7 @@ public enum Effect {
 
    },
    /**
-    * Erases pokemon in a < shape (a rotated version of M-Glalie V-shape)
+    * Erases pokemon in a > shape (a rotated counter-clockwise version of M-Glalie V-shape)
     */
    PIDGEOT {
       
@@ -4409,7 +4409,7 @@ public enum Effect {
                int offset = (step - 1) / 2;
                int upper = 1 + offset;
                int lower = 6 - offset;
-               effect.addPlannedOptions(Arrays.asList(upper, 7 - step, lower, 7 - step));
+               effect.addPlannedOptions(Arrays.asList(upper, step, lower, step));
             }
             return effect;
          }
