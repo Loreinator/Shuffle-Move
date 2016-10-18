@@ -103,6 +103,7 @@ RESOURCE Cloyster img/icons/091.png
 RESOURCE Gastly img/icons/092.png
 RESOURCE Haunter img/icons/093.png
 RESOURCE Gengar img/icons/094.png
+RESOURCE Gengar_s img/icons/094-s.png
 RESOURCE Onix img/icons/095.png
 RESOURCE Drowzee img/icons/096.png
 RESOURCE Hypno img/icons/097.png
