@@ -4437,6 +4437,66 @@ public enum Effect {
 
    },
    /**
+    * Hoenn trio clone
+    */
+   SABLEYE_C {      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return BLAZIKEN.handlePlans(comboEffect, task);
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return BLAZIKEN.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public void handleExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks) {
+         BLAZIKEN.handleExtraBlocks(comboEffect, task, extraBlocks);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return BLAZIKEN.getValueLimit();
+      }
+      
+   },
+   /**
+    * Hoenn trio clone
+    */
+   GENGAR_S {      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return BLAZIKEN.handlePlans(comboEffect, task);
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return BLAZIKEN.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public void handleExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task, List<Integer> extraBlocks) {
+         BLAZIKEN.handleExtraBlocks(comboEffect, task, extraBlocks);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return BLAZIKEN.getValueLimit();
+      }
+      
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
