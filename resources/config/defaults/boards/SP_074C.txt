@@ -1,0 +1,13 @@
+STAGE SP_074C
+ROW_1 Sableye,Sableye_c,Sableye,Sableye_c,Sableye,Sableye_c
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Sableye,Sableye_c,Sableye,Sableye_c,Sableye,Sableye_c
+FROW_6 false,false,false,false,false,false
