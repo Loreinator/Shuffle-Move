@@ -44,7 +44,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.76 - 2016-10-**
+* **v0.3.76 - 2016-10-23**
 	- Updates for October 18th
 * **v0.3.75 - 2016-10-15**
 	- Default Boards added for SP_001W, SP_007W, SP_012M, SP_338T, SP_411W
