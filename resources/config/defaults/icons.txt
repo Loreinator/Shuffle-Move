@@ -31,6 +31,7 @@ RESOURCE Pikachu_a img/icons/025-a.png
 RESOURCE Pikachu_w img/icons/025-w.png
 RESOURCE Pikachu_ha img/icons/025-ha.png
 RESOURCE Pikachu_c img/icons/025-c.png
+RESOURCE Pikachu_s img/icons/025-s.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Sandshrew img/icons/027.png
@@ -267,12 +268,15 @@ RESOURCE Lugia img/icons/249.png
 RESOURCE Ho-oh img/icons/250.png
 RESOURCE Celebi img/icons/251.png
 RESOURCE Treecko img/icons/252.png
+RESOURCE Treecko_w img/icons/252-w.png
 RESOURCE Grovyle img/icons/253.png
 RESOURCE Sceptile img/icons/254.png
 RESOURCE Torchic img/icons/255.png
+RESOURCE Torchic_w img/icons/255-w.png
 RESOURCE Combusken img/icons/256.png
 RESOURCE Blaziken img/icons/257.png
 RESOURCE Mudkip img/icons/258.png
+RESOURCE Mudkip_w img/icons/258-w.png
 RESOURCE Marshtomp img/icons/259.png
 RESOURCE Swampert img/icons/260.png
 RESOURCE Poochyena img/icons/261.png
@@ -367,6 +371,7 @@ RESOURCE Armaldo img/icons/348.png
 RESOURCE Feebas img/icons/349.png
 RESOURCE Milotic img/icons/350.png
 RESOURCE Castform img/icons/351.png
+RESOURCE Castform_w img/icons/351-w.png
 RESOURCE Kecleon img/icons/352.png
 RESOURCE Shuppet img/icons/353.png
 RESOURCE Banette img/icons/354.png

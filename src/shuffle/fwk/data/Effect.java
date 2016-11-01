@@ -4497,6 +4497,50 @@ public enum Effect {
       
    },
    /**
+    * Charizard X clone. Erases tiles in a X shape.
+    */
+   METAGROSS {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            effect.addPlannedOptions(Arrays.asList(3, 3, 3, 4, 4, 3, 4, 4));
+            effect.addPlannedOptions(Arrays.asList(2, 2, 2, 5, 5, 2, 5, 5));
+            effect.addPlannedOptions(Arrays.asList(1, 1, 1, 6, 6, 1, 6, 6));
+            return effect;
+         }
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return SABLEYE.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return 9;
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 12;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
