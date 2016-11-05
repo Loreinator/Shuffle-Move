@@ -1,0 +1,13 @@
+STAGE SP_092W
+ROW_1 Wood,Torchic,Torchic_w,Torchic,Wood,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Torchic,Torchic,Wood,Torchic,Torchic,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Torchic,Wood,Torchic_w,Wood,Torchic,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Torchic,Wood,Wood,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Torchic,Wood,Torchic_w,Wood,Torchic,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Torchic,Torchic,Torchic_w,Torchic,Torchic,Wood
+FROW_6 false,false,false,false,false,false

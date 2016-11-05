@@ -1,0 +1,13 @@
+STAGE SP_644
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Sunkern,Air,Sunkern,Air,Sunkern,Air
+FROW_3 true,false,true,false,true,false
+ROW_4 Air,Sunkern,Air,Sunkern,Air,Sunkern
+FROW_4 false,true,false,true,false,false
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Sunkern,Sunkern,Air,Sunkern,Air
+FROW_6 false,false,false,false,false,false
