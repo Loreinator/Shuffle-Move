@@ -221,7 +221,7 @@ public class ConfigLoader {
                try {
                   entry = ConfigEntry.getEntryFor(type, key, value);
                } catch (Exception e) {
-                  LOG.log(Level.FINE,
+                  LOG.log(Level.WARNING,
                         String.format("Cannot parse config entry, key: %s type: %s value: %s ", key, type, value), e);
                }
                if (entry != null) {
