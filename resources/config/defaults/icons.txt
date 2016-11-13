@@ -680,7 +680,7 @@ RESOURCE Kyurem img/icons/646.png
 RESOURCE Kyurem-w img/icons/646-w.png
 RESOURCE Keldeo img/icons/647.png
 RESOURCE Keldeo_r img/icons/647-r.png
-RESOURCE Meloette img/icons/648.png
+RESOURCE Meloetta img/icons/648.png
 RESOURCE Genesect img/icons/649.png
 RESOURCE Chespin img/icons/650.png
 RESOURCE Quilladin img/icons/651.png
