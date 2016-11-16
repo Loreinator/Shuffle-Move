@@ -27,7 +27,7 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import shuffle.fwk.ShuffleController;
+import shuffle.fwk.config.ConfigFactory;
 import shuffle.fwk.data.Effect;
 import shuffle.fwk.data.PkmType;
 import shuffle.fwk.data.Species;
@@ -331,7 +331,7 @@ public class SpeciesTest {
     */
    @Test
    public final void testGetLocalizedName() {
-      Collection<Species> allSpecies = new ShuffleController().getSpeciesManager().getAllSpecies();
+      Collection<Species> allSpecies = new ConfigFactory().getSpeciesManager().getAllSpecies();
       for (Species s : allSpecies) {
          if (s.getDefaultEffect().canLevel()) {
             System.out.println(s.getLocalizedName(false));
