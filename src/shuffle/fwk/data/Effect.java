@@ -3593,6 +3593,10 @@ public enum Effect {
          return 10;
       }
       
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(100 * typeModifier);
+      }
    },
    /**
     * Erases blocks (max 10), increasing by 1/6 for each additional block, same chosen order and
@@ -4334,9 +4338,19 @@ public enum Effect {
       
    },
    /**
-    * Erases Pokemon and disruptions around three spots you tap.
+    * Erases Pokemon and disruptions around three spots you tap (in a + shape).
     */
    TYRANITAR {
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+
+   },
+   /**
+    * Erases Pokemon and disruptions around two spots you tap (in a + shape).
+    */
+   CAMERUPT {
       @Override
       public boolean isPersistent() {
          return true;
@@ -4380,7 +4394,7 @@ public enum Effect {
 
    },
    /**
-    * Erases Pokemon and disruptions in a 3x3 square around a single spot you tap.
+    * Erases Pokemon and disruptions around a single spot you tap (in a 3x3 shape).
     */
    BEEDRILL {
       @Override
