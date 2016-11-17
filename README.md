@@ -1,4 +1,4 @@
-#Shuffle Move v0.3.80
+#Shuffle Move v0.3.81
 
 A program to identify and display the best next move for the game Pokémon Shuffle. I do not own any part of Pokémon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
 
@@ -44,6 +44,8 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
+* **v0.3.81 - 2016-11-16**
+	- Updates for November 16th
 * **v0.3.80 - 2016-11-13**
 	- Fixed Castform (Winking)
 * **v0.3.79 - 2016-11-12**

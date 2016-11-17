@@ -80,15 +80,15 @@
 			<classpath refid="Shuffle Move.classpath" />
 		</java>
 	</target>
-	<target name="ShuffleTest">
+	<target depends="cleanAndBuild" name="ShuffleTest">
 		<mkdir dir="${junit.output.dir}" />
 		<junit fork="yes" printsummary="withOutAndErr">
 			<formatter type="xml" />
-			<test name="shuffle.fwk.ShuffleTest" todir="${junit.output.dir}" />
+			<test name="shuffle.test.TestAll" todir="${junit.output.dir}" />
 			<classpath refid="Shuffle Move.classpath" />
 		</junit>
 	</target>
-	<target name="junitreport">
+	<target depends="ShuffleTest" name="junitreport">
 		<junitreport todir="${junit.output.dir}">
 			<fileset dir="${junit.output.dir}">
 				<include name="TEST-*.xml" />

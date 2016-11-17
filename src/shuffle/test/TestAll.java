@@ -21,6 +21,7 @@ package shuffle.test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import shuffle.test.fwk.config.manager.DataIntegrityTest;
 import shuffle.test.fwk.data.BoardTest;
 import shuffle.test.fwk.data.PkmTypeTest;
 import shuffle.test.fwk.data.SpeciesTest;
@@ -28,7 +29,7 @@ import shuffle.test.fwk.data.simulation.SimulationTaskTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ // Make sure this includes all test classes
-BoardTest.class, PkmTypeTest.class, SpeciesTest.class, SimulationTaskTest.class })
+      BoardTest.class, PkmTypeTest.class, SpeciesTest.class, SimulationTaskTest.class, DataIntegrityTest.class })
 public class TestAll {
    
 }
