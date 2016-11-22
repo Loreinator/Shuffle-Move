@@ -46,6 +46,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 ##Changelog
 * **v0.3.82 - 2016-11-**
 	- Implemented Grid Printing (Ctrl-P)
+	- Updates for November 22nd
 * **v0.3.81 - 2016-11-16**
 	- Updates for November 16th
 * **v0.3.80 - 2016-11-13**
