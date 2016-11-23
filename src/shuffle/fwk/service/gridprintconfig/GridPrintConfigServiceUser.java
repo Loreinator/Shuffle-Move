@@ -15,37 +15,27 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package shuffle.fwk.service.gridprintconfig;
 
-package shuffle.fwk.gui.user;
-
-import shuffle.fwk.EntryMode;
-import shuffle.fwk.EntryModeUser;
-import shuffle.fwk.config.provider.PreferencesManagerProvider;
-import shuffle.fwk.data.SpeciesPaint;
-import shuffle.fwk.data.simulation.SimulationResult;
+import shuffle.fwk.gui.user.GridPanelUser;
 
 /**
  * @author Andrew Meyers
  *
  */
-public interface GridPanelUser
-      extends IndicatorUser<Object>, EntryModeUser, StageIndicatorUser, PreferencesManagerProvider {
+public interface GridPrintConfigServiceUser extends GridPanelUser {
    
-   /**
-    * @return
-    */
-   EntryMode getCurrentEntryMode();
+   void setGridPrintGridEnabled(boolean enable);
    
-   /**
-    * @return
-    */
-   SimulationResult getSelectedResult();
+   void setGridPrintMoveEnabled(boolean enable);
    
-   /**
-    * @param integer
-    * @param integer2
-    * @return
-    */
-   SpeciesPaint getPaintAt(Integer integer, Integer integer2);
+   void setGridPrintCursorEnabled(boolean enable);
    
+   boolean isGridPrintMoveEnabled();
+   
+   boolean isGridPrintCursorEnabled();
+   
+   boolean isGridPrintGridEnabled();
+   
+   void printGrid();
 }

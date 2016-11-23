@@ -315,4 +315,11 @@ public class ImageManager extends ConfigManager implements I18nUser {
       return img;
    }
    
+   public int getIconWidth() {
+      return iconWidth;
+   }
+   
+   public int getIconHeight() {
+      return iconHeight;
+   }
 }

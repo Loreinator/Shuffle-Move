@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import shuffle.fwk.service.bugreport.BugReportServiceUser;
 import shuffle.fwk.service.editspecies.EditSpeciesServiceUser;
+import shuffle.fwk.service.gridprintconfig.GridPrintConfigServiceUser;
 import shuffle.fwk.service.migration.MigrateServiceUser;
 import shuffle.fwk.service.movechooser.MoveChooserServiceUser;
 import shuffle.fwk.service.movepreferences.MovePreferencesServiceUser;
@@ -36,7 +37,7 @@ import shuffle.fwk.service.update.UpdateServiceUser;
  */
 public interface ShuffleMenuUser extends EditRosterServiceUser, MovePreferencesServiceUser, TextDisplayServiceUser,
       BugReportServiceUser, UpdateServiceUser, EditTeamServiceUser, EditSpeciesServiceUser, GradingModeUser,
-      MigrateServiceUser, MoveChooserServiceUser {
+      MigrateServiceUser, MoveChooserServiceUser, GridPrintConfigServiceUser {
    
    /**
 	 * 
@@ -96,6 +97,7 @@ public interface ShuffleMenuUser extends EditRosterServiceUser, MovePreferencesS
    /**
 	 * 
 	 */
+   @Override
    void changeMode();
    
    /**

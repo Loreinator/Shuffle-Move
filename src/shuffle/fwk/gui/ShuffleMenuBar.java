@@ -56,6 +56,7 @@ import shuffle.fwk.service.BaseServiceManager;
 import shuffle.fwk.service.about.AboutService;
 import shuffle.fwk.service.bugreport.BugReportService;
 import shuffle.fwk.service.editspecies.EditSpeciesService;
+import shuffle.fwk.service.gridprintconfig.GridPrintConfigService;
 import shuffle.fwk.service.help.HelpService;
 import shuffle.fwk.service.migration.MigrateService;
 import shuffle.fwk.service.movechooser.MoveChooserService;
@@ -86,6 +87,8 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_TEAM = "menuitem.team";
    private static final String KEY_TOGGLE_MEGA = "menuitem.togglemega";
    private static final String KEY_GRID = "menuitem.grid";
+   private static final String KEY_GRID_PRINT = "menuitem.grid.print";
+   private static final String KEY_GRID_PRINT_CONFIG = "menuitem.grid.print.config";
    private static final String KEY_CLEAR = "menuitem.clear";
    private static final String KEY_FILL = "menuitem.fill";
    private static final String KEY_LOAD_DEFAULT = "menuitem.loaddefault";
@@ -292,6 +295,16 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       
       MenuAction saveAction = new MenuAction(() -> getString(KEY_SAVE), e -> getUser().saveGrid());
       addMenuAction(menu, saveAction);
+      
+      menu.addSeparator();
+      
+      MenuAction printAction = new MenuAction(() -> getString(KEY_GRID_PRINT), e -> getUser().printGrid());
+      printAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+      addMenuAction(menu, printAction);
+      
+      MenuAction printConfigAction = new MenuAction(() -> getString(KEY_GRID_PRINT_CONFIG),
+            e -> BaseServiceManager.launchServiceByClass(GridPrintConfigService.class, getUser(), getOwner()));
+      addMenuAction(menu, printConfigAction);
       
       menu.addSeparator();
       

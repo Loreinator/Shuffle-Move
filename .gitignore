@@ -7,3 +7,5 @@
 /javadoc/
 
 src/shuffle/fwk/ShuffleVersion.java
+/output/
+/junit/

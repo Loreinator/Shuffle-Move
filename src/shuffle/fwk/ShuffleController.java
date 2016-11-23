@@ -47,6 +47,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import shuffle.fwk.config.ConfigFactory;
 import shuffle.fwk.config.ConfigManager;
+import shuffle.fwk.config.EntryType;
 import shuffle.fwk.config.manager.BoardManager;
 import shuffle.fwk.config.manager.EffectManager;
 import shuffle.fwk.config.manager.EntryModeManager;
@@ -64,6 +65,7 @@ import shuffle.fwk.data.Team;
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.data.simulation.SimulationTask;
 import shuffle.fwk.data.simulation.SimulationUser;
+import shuffle.fwk.gui.GridPanel;
 import shuffle.fwk.gui.ShuffleFrame;
 import shuffle.fwk.gui.user.ShuffleFrameUser;
 import shuffle.fwk.i18n.I18nUser;
@@ -1355,6 +1357,72 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
          repaint();
       }
       return changed;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#printGrid()
+    */
+   @Override
+   public void printGrid() {
+      GridPanel.printGrid(this);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#setGridPrintGridEnabled(boolean)
+    */
+   @Override
+   public void setGridPrintGridEnabled(boolean enable) {
+      getPreferencesManager().setEntry(EntryType.BOOLEAN, GridPanel.KEY_PRINT_INCLUDE_GRID, enable);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#setGridPrintMoveEnabled(boolean)
+    */
+   @Override
+   public void setGridPrintMoveEnabled(boolean enable) {
+      getPreferencesManager().setEntry(EntryType.BOOLEAN, GridPanel.KEY_PRINT_INCLUDE_MOVE, enable);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#setGridPrintCursorEnabled(boolean)
+    */
+   @Override
+   public void setGridPrintCursorEnabled(boolean enable) {
+      getPreferencesManager().setEntry(EntryType.BOOLEAN, GridPanel.KEY_PRINT_INCLUDE_CURSOR, enable);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.GridPanelUser#isGridPrintMoveEnabled()
+    */
+   @Override
+   public boolean isGridPrintMoveEnabled() {
+      return getPreferencesManager().getBooleanValue(GridPanel.KEY_PRINT_INCLUDE_MOVE,
+            GridPanel.DEFAULT_PRINT_INCLUDE_MOVE);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.GridPanelUser#isGridPrintCursorEnabled()
+    */
+   @Override
+   public boolean isGridPrintCursorEnabled() {
+      return getPreferencesManager().getBooleanValue(GridPanel.KEY_PRINT_INCLUDE_CURSOR,
+            GridPanel.DEFAULT_PRINT_INCLUDE_CURSOR);
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.GridPanelUser#isGridPrintGridEnabled()
+    */
+   @Override
+   public boolean isGridPrintGridEnabled() {
+      return getPreferencesManager().getBooleanValue(GridPanel.KEY_PRINT_INCLUDE_GRID,
+            GridPanel.DEFAULT_PRINT_INCLUDE_GRID);
    }
    
 }
