@@ -44,7 +44,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.84 - 2016-12-**
+* **v0.3.84 - 2016-12-11**
 	- Updates for December 8th
 * **v0.3.83 - 2016-11-30**
 	- Added Archeops Default Board
