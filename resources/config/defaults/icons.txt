@@ -32,7 +32,7 @@ RESOURCE Pikachu_w img/icons/025-w.png
 RESOURCE Pikachu_ha img/icons/025-ha.png
 RESOURCE Pikachu_c img/icons/025-c.png
 RESOURCE Pikachu_s img/icons/025-s.png
-RESOURCE Pikachu_h img/icons/025.png
+RESOURCE Pikachu_h img/icons/025-holiday.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Sandshrew img/icons/027.png
@@ -242,7 +242,7 @@ RESOURCE Corsola img/icons/222.png
 RESOURCE Remoraid img/icons/223.png
 RESOURCE Octillery img/icons/224.png
 RESOURCE Delibird img/icons/225.png
-RESOURCE Delibird_h img/icons/225.png
+RESOURCE Delibird_h img/icons/225-h.png
 RESOURCE Mantine img/icons/226.png
 RESOURCE Skarmory img/icons/227.png
 RESOURCE Houndour img/icons/228.png
@@ -482,7 +482,7 @@ RESOURCE Finneon img/icons/456.png
 RESOURCE Lumineon img/icons/457.png
 RESOURCE Mantyke img/icons/458.png
 RESOURCE Snover img/icons/459.png
-RESOURCE Snover_h img/icons/459.png
+RESOURCE Snover_h img/icons/459-h.png
 RESOURCE Abomasnow img/icons/460.png
 RESOURCE Weavile img/icons/461.png
 RESOURCE Magnezone img/icons/462.png
@@ -611,7 +611,7 @@ RESOURCE Reuniclus img/icons/579.png
 RESOURCE Ducklett img/icons/580.png
 RESOURCE Swanna img/icons/581.png
 RESOURCE Vanillite img/icons/582.png
-RESOURCE Vanillite_h img/icons/582.png
+RESOURCE Vanillite_h img/icons/582-h.png
 RESOURCE Vanillish img/icons/583.png
 RESOURCE Vanilluxe img/icons/584.png
 RESOURCE Deerling img/icons/585.png
@@ -645,7 +645,7 @@ RESOURCE Axew img/icons/610.png
 RESOURCE Fraxure img/icons/611.png
 RESOURCE Haxorus img/icons/612.png
 RESOURCE Cubchoo img/icons/613.png
-RESOURCE Cubchoo_h img/icons/613.png
+RESOURCE Cubchoo_h img/icons/613-h.png
 RESOURCE Beartic img/icons/614.png
 RESOURCE Cryogonal img/icons/615.png
 RESOURCE Shelmet img/icons/616.png
@@ -683,7 +683,7 @@ RESOURCE Landorus img/icons/645.png
 RESOURCE Landorus_t img/icons/645-t.png
 RESOURCE Kyurem img/icons/646.png
 RESOURCE Kyurem-w img/icons/646-w.png
-RESOURCE Kyurem-b img/icons/646.png
+RESOURCE Kyurem-b img/icons/646-b.png
 RESOURCE Keldeo img/icons/647.png
 RESOURCE Keldeo_r img/icons/647-r.png
 RESOURCE Meloetta img/icons/648.png
