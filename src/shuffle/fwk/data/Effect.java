@@ -4554,6 +4554,42 @@ public enum Effect {
       }
       
    },
+    /**
+    * Same as {@link #MEWTWO}.
+    */
+   SALAMENCE {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return MEWTWO.handlePlans(comboEffect, task);
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return MEWTWO.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return MEWTWO.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return MEWTWO.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+      
+   },
    /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */

@@ -1,0 +1,13 @@
+STAGE 524
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Metal,Metal,Shroomish,Shroomish,Metal,Metal
+FROW_2 true,true,false,false,true,true
+ROW_3 Shroomish,Paras,Paras,Wood,Foongus,Paras
+FROW_3 false,false,false,false,false,false
+ROW_4 Shroomish,Foongus,Foongus,Wood,Wood,Shroomish
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Metal,Shroomish,Shroomish,Metal,Metal,
+FROW_5 true,true,true,true,true,true
+ROW_6 Metal,Metal,Shroomish,Shroomish,Metal,Metal,
+FROW_6 true,true,true,true,true,true

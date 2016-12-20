@@ -708,6 +708,7 @@ RESOURCE Spewpa img/icons/665.png
 RESOURCE Vivillon img/icons/666.png
 RESOURCE Litleo img/icons/667.png
 RESOURCE Pyroar img/icons/668.png
+RESOURCE Pyroar_f img/icons/668-f.png
 RESOURCE Flabébé img/icons/669.png
 RESOURCE Floette img/icons/670.png
 RESOURCE Florges img/icons/671.png

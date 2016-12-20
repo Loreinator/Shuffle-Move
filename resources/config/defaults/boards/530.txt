@@ -1,0 +1,13 @@
+STAGE 530
+ROW_1 Air,Metal,Air,Air,Metal,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Air,Air,Air,Air,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Metal,Air,Metal,Metal,Air,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Air,Air,Air,Air,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Metal,Air,Air,Metal,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Metal,Air,Air,Metal,Air
+FROW_6 false,false,false,false,false,false
