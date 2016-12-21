@@ -1,0 +1,13 @@
+STAGE 506
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Metal,Cleffa,Spritzee,Togepi,Azurill,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Metal,Togepi,Cleffa,Swirlix,Wood,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Cleffa,Spritzee,Spritzee,Azurill,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Swirlix,Azurill,Swirlix,Spritzee,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Metal,Togepi,Metal,Metal,Metal
+FROW_6 false,false,false,false,false,false

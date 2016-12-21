@@ -1,0 +1,13 @@
+STAGE 517
+ROW_1 Metal,Air,Air,Air,Metal,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Metal,Air,Metal,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Swoobat,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Metal,Air,Air,Air,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Metal,Air,Metal,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Swoobat,Air,Air
+FROW_6 false,false,false,false,false,false

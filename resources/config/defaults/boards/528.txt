@@ -1,0 +1,13 @@
+STAGE 528
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Karrablast,Air,Air,Shelmet,Air
+FROW_2 false,true,false,false,true,false
+ROW_3 Air,Karrablast,Air,Air,Shelmet,Air
+FROW_3 false,true,false,false,true,false
+ROW_4 Karrablast,Air,Karrablast,Shelmet,Air,Shelmet
+FROW_4 true,false,true,true,false,true
+ROW_5 Air,Karrablast,Air,Air,Shelmet,Air
+FROW_5 false,true,false,false,true,false
+ROW_6 Air,Karrablast,Air,Air,Shelmet,Air
+FROW_6 false,true,false,false,true,false

@@ -1,0 +1,13 @@
+STAGE 508
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Wood,Wood,Wood,Wood,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Air,Air,Air,Air,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Purrloin,Air,Air,Air,Air,Purrloin
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Purrloin,Air,Air,Purrloin,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Purrloin,Air,Air,Air,Air,Purrloin
+FROW_6 false,false,false,false,false,false
