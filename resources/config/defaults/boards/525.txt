@@ -1,0 +1,13 @@
+STAGE 525
+ROW_1 Air,Metal,Air,Air,Metal,Pyroar
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Metal,Air,Air,Pyroar,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Pyroar,Air,Air,Air,Air,Pyroar
+FROW_3 false,false,false,false,false,false
+ROW_4 Pyroar,Air,Air,Air,Air,Pyroar
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Pyroar,Air,Air,Metal,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Pyroar,Metal,Air,Air,Metal,Air
+FROW_6 false,false,false,false,false,false

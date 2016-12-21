@@ -1,0 +1,13 @@
+STAGE 502
+ROW_1 Air,Air,Carbink,Carbink,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Carbink,Carbink,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Carbink,Air,Air,Carbink,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Carbink,Air,Air,Carbink,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Carbink,Carbink,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Carbink,Carbink,Air,Air
+FROW_6 false,false,false,false,false,false

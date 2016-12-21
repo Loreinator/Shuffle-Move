@@ -1,0 +1,13 @@
+STAGE 507
+ROW_1 Lileep,Air,Air,Air,Air,Lileep
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Lileep,Air,Air,Lileep,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Metal,Metal,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Metal,Metal,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Lileep,Air,Air,Lileep,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Lileep,Air,Air,Air,Air,Lileep
+FROW_6 false,false,false,false,false,false
