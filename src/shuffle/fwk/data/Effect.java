@@ -3566,7 +3566,7 @@ public enum Effect {
       
    },
    /**
-    * Erases frozen blocks (max 10), increasing by 1/6 for each additional block, same chosen order
+    * Erases frozen tiles (max 10), increasing by 1/6 for each additional block, same chosen order
     * and timing as for Gengar.
     */
    DIANCIE {
@@ -4589,6 +4589,36 @@ public enum Effect {
          return MEWTWO.getBonusScoreFor(basicScore, value, typeModifier);
       }
       
+   },
+   /**
+    * Same as {@link #DIANCIE}.
+    */
+   HOUNDOOM {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return DIANCIE.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return DIANCIE.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return DIANCIE.getBonusScoreFor(basicScore, value, typeModifier);
+      }
    },
    /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
