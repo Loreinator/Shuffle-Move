@@ -167,9 +167,11 @@ RESOURCE Mewtwo img/icons/150.png
 RESOURCE Mewtwo_x img/icons/150.png
 RESOURCE Mew img/icons/151.png
 RESOURCE Chikorita img/icons/152.png
+RESOURCE Chikorita_w img/icons/152-w.png
 RESOURCE Bayleef img/icons/153.png
 RESOURCE Meganium img/icons/154.png
 RESOURCE Cyndaquil img/icons/155.png
+RESOURCE Cyndaquil_w img/icons/155-w.png
 RESOURCE Quilava img/icons/156.png
 RESOURCE Typhlosion img/icons/157.png
 RESOURCE Totodile img/icons/158.png
