@@ -175,6 +175,7 @@ RESOURCE Cyndaquil_w img/icons/155-w.png
 RESOURCE Quilava img/icons/156.png
 RESOURCE Typhlosion img/icons/157.png
 RESOURCE Totodile img/icons/158.png
+RESOURCE Totodile img/icons/158-w.png
 RESOURCE Croconaw img/icons/159.png
 RESOURCE Feraligatr img/icons/160.png
 RESOURCE Sentret img/icons/161.png
@@ -386,7 +387,9 @@ RESOURCE Chimecho img/icons/358.png
 RESOURCE Absol img/icons/359.png
 RESOURCE Wynaut img/icons/360.png
 RESOURCE Snorunt img/icons/361.png
+RESOURCE Snorunt_w img/icons/361-w.png
 RESOURCE Glalie img/icons/362.png
+RESOURCE Glalie_w img/icons/362-w.png
 RESOURCE Spheal img/icons/363.png
 RESOURCE Sealeo img/icons/364.png
 RESOURCE Walrein img/icons/365.png
@@ -808,6 +811,7 @@ RESOURCE Mega_Altaria img/icons/334-m.png
 RESOURCE Mega_Banette img/icons/354-m.png
 RESOURCE Mega_Absol img/icons/359-m.png
 RESOURCE Mega_Glalie img/icons/362-m.png
+RESOURCE Mega_Glalie_w img/icons/362-wm.png
 RESOURCE Mega_Salamence img/icons/373-m.png
 RESOURCE Mega_Metagross img/icons/376-m.png
 RESOURCE Mega_Latias img/icons/380-m.png
