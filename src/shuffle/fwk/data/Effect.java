@@ -4621,6 +4621,42 @@ public enum Effect {
       }
    },
    /**
+    * Same as {@link #STEELIX}.
+    */
+   GLALIE_W {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return STEELIX.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return STEELIX.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return STEELIX.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+      
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
