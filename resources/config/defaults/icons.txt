@@ -175,7 +175,7 @@ RESOURCE Cyndaquil_w img/icons/155-w.png
 RESOURCE Quilava img/icons/156.png
 RESOURCE Typhlosion img/icons/157.png
 RESOURCE Totodile img/icons/158.png
-RESOURCE Totodile img/icons/158-w.png
+RESOURCE Totodile_w img/icons/158-w.png
 RESOURCE Croconaw img/icons/159.png
 RESOURCE Feraligatr img/icons/160.png
 RESOURCE Sentret img/icons/161.png
