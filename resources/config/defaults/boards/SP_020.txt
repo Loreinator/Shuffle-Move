@@ -1,4 +1,4 @@
-STAGE SP_20W
+STAGE SP_20
 ROW1 Air,Air,Metal,Metal,Air,Air
 FROW1 false,false,false,false,false,false
 ROW2 Air,Metal,Togekiss_w,Togekiss_w,Metal,Air
