@@ -33,6 +33,7 @@ RESOURCE Pikachu_ha img/icons/025-ha.png
 RESOURCE Pikachu_c img/icons/025-c.png
 RESOURCE Pikachu_s img/icons/025-s.png
 RESOURCE Pikachu_h img/icons/025-holiday.png
+RESOURCE Pikachu_e img/icons/025-v.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Sandshrew img/icons/027.png
@@ -51,6 +52,7 @@ RESOURCE Ninetales img/icons/038.png
 RESOURCE Jigglypuff img/icons/039.png
 RESOURCE Jigglypuff_w img/icons/039-w.png
 RESOURCE Wigglytuff img/icons/040.png
+RESOURCE Wigglytuff_w imf/icons/040-w.png
 RESOURCE Zubat img/icons/041.png
 RESOURCE Golbat img/icons/042.png
 RESOURCE Oddish img/icons/043.png
@@ -194,6 +196,7 @@ RESOURCE Cleffa img/icons/173.png
 RESOURCE Igglybuff img/icons/174.png
 RESOURCE Togepi img/icons/175.png
 RESOURCE Togetic img/icons/176.png
+RESOURCE Togetic_w img/icons/176-w.png
 RESOURCE Natu img/icons/177.png
 RESOURCE Xatu img/icons/178.png
 RESOURCE Mareep img/icons/179.png
@@ -563,6 +566,7 @@ RESOURCE Swoobat img/icons/528.png
 RESOURCE Drilbur img/icons/529.png
 RESOURCE Excadrill img/icons/530.png
 RESOURCE Audino img/icons/531.png
+RESOURCE Audino_w img/icons/531-w.png
 RESOURCE Timburr img/icons/532.png
 RESOURCE Gurdurr img/icons/533.png
 RESOURCE Conkeldurr img/icons/534.png
@@ -730,7 +734,9 @@ RESOURCE Aegislash img/icons/681.png
 RESOURCE Spritzee img/icons/682.png
 RESOURCE Aromatisse img/icons/683.png
 RESOURCE Swirlix img/icons/684.png
+RESOURCE Swirlix_w img/icons/684-w.png
 RESOURCE Slurpuff img/icons/685.png
+RESOURCE Slurpuff_w img/icons/685-w.png
 RESOURCE Inkay img/icons/686.png
 RESOURCE Malamar img/icons/687.png
 RESOURCE Binacle img/icons/688.png
@@ -749,6 +755,7 @@ RESOURCE Sylveon img/icons/700.png
 RESOURCE Hawlucha img/icons/701.png
 RESOURCE Dedenne img/icons/702.png
 RESOURCE Carbink img/icons/703.png
+RESOURCE Carbink_w img/icons/703-w.png
 RESOURCE Goomy img/icons/704.png
 RESOURCE Sliggoo img/icons/705.png
 RESOURCE Goodra img/icons/706.png
@@ -828,6 +835,7 @@ RESOURCE Rotom_m img/icons/479-m.png
 RESOURCE Rotom_s img/icons/479-s.png
 RESOURCE Rotom_w img/icons/479-w.png
 RESOURCE Mega_Audino img/icons/531-m.png
+RESOURCE Mega_Audino_w img/icons/531-m.png
 RESOURCE Meowstic_f img/icons/678-f.png
 RESOURCE Mega_Diancie img/icons/719-m.png
 RESOURCE Air img/icons/air.png
