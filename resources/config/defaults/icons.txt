@@ -52,7 +52,7 @@ RESOURCE Ninetales img/icons/038.png
 RESOURCE Jigglypuff img/icons/039.png
 RESOURCE Jigglypuff_w img/icons/039-w.png
 RESOURCE Wigglytuff img/icons/040.png
-RESOURCE Wigglytuff_w imf/icons/040-w.png
+RESOURCE Wigglytuff_w img/icons/040-w.png
 RESOURCE Zubat img/icons/041.png
 RESOURCE Golbat img/icons/042.png
 RESOURCE Oddish img/icons/043.png
