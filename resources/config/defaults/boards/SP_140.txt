@@ -1,0 +1,13 @@
+STAGE SP_140
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Carbink_w,Metal,Carbink_w,Carbink_w,Metal,Carbink_w
+FROW_2 false,false,false,false,false,false
+ROW_3 Carbink_w,Air,Carbink_w,Carbink_w,Air,Carbink_w
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Carbink_w,Metal,Carbink_w,Carbink_w,Metal,Carbink_w
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Carbink_w,Carbink_w,Air,Air
+FROW_6 false,false,false,false,false,false
