@@ -1,0 +1,13 @@
+STAGE SP_683
+ROW_1 Wood,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Air,Air,Metal,Metal,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Air,Air,Metal,Whiscash,Metal
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Air,Air,Metal,Metal,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Air,Air,Whiscash,Metal,Whiscash
+FROW_6 false,false,false,false,false,false

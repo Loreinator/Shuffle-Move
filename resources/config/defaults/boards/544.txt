@@ -1,0 +1,13 @@
+STAGE 544
+ROW_1 Air,Air,Cubchoo,Cubchoo,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Cubchoo,Cubchoo,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Cubchoo,Cubchoo,Wood,Wood,Cubchoo,Cubchoo
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Cubchoo,Cubchoo,Air,Air
+FROW_4 false,false,true,true,false,false
+ROW_5 Glaceon,Air,Froslass,Wood,Cubchoo,Cubchoo
+FROW_5 false,false,false,false,false,false
+ROW_6 Froslass,Froslass,Cubchoo,Cubchoo,Glaceon,Glaceon
+FROW_6 false,false,false,false,false,false

@@ -34,6 +34,7 @@ RESOURCE Pikachu_c img/icons/025-c.png
 RESOURCE Pikachu_s img/icons/025-s.png
 RESOURCE Pikachu_h img/icons/025-holiday.png
 RESOURCE Pikachu_e img/icons/025-v.png
+RESOURCE Pikachu_sm img/icons/025-sm.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Sandshrew img/icons/027.png
@@ -415,6 +416,7 @@ RESOURCE Latios img/icons/381.png
 RESOURCE Kyogre img/icons/382.png
 RESOURCE Groudon img/icons/383.png
 RESOURCE Rayquaza img/icons/384.png
+RESOURCE Rayquaza_s img/icons/384-s.png
 RESOURCE Jirachi img/icons/385.png
 RESOURCE Deoxys img/icons/386.png
 RESOURCE Turtwig img/icons/387.png
@@ -779,6 +781,7 @@ RESOURCE Zygarde-c img/icons/718-c.png
 RESOURCE Diancie img/icons/719.png
 RESOURCE Hoopa img/icons/720.png
 RESOURCE Hoopa_u img/icons/720-u.png
+RESOURCE Volcanion img/icons/721.png
 RESOURCE Mega_Venusaur img/icons/003-m.png
 RESOURCE Mega_Charizard_x img/icons/006-m.png
 RESOURCE Mega_Charizard_y img/icons/006-my.png
@@ -824,6 +827,7 @@ RESOURCE Mega_Metagross img/icons/376-m.png
 RESOURCE Mega_Latias img/icons/380-m.png
 RESOURCE Mega_Latios img/icons/381-m.png
 RESOURCE Mega_Rayquaza img/icons/384-m.png
+RESOURCE Mega_Rayquaza_s img/icons/384-ms.png
 RESOURCE Mega_Lopunny img/icons/428-m.png
 RESOURCE Mega_Garchomp img/icons/445-m.png
 RESOURCE Mega_Lucario img/icons/448-m.png

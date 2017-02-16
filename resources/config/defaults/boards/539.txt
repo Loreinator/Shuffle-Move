@@ -1,0 +1,13 @@
+STAGE 539
+ROW_1 Wood,Lampent,Lampent,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Lampent,Lampent,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Lampent,Wood,Wood,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Lampent,Lampent,Air,Air,Lampent
+FROW_4 false,false,false,false,false,false
+ROW_5 Lampent,Wood,Lampent,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Lampent,Lampent,Wood,Air,Air,Air
+FROW_6 false,false,false,false,false,false
