@@ -4693,6 +4693,28 @@ public enum Effect {
       
    },
    /**
+    * Erases Pokemon and disruptions around two spots you tap (in a + shape).
+    * (M-Camerupt clone)
+    */
+   RAYQUAZA_S {
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+
+   },
+   /**
+    * Erases Pokemon and disruptions around three spots you tap (in a + shape).
+    * (M-Tyranitar clone)
+    */
+   AGGRON {
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {

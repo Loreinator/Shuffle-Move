@@ -1,0 +1,13 @@
+STAGE SP_681
+ROW_1 Air,Wood,Air,Air,Air,Air
+FROW_1 false,true,false,false,false,false
+ROW_2 Wood,Air,Air,Air,Wood,Air
+FROW_2 true,false,false,false,true,false
+ROW_3 Air,Air,Wood,Wood,Air,Wood
+FROW_3 false,false,true,true,false,true
+ROW_4 Wood,Air,Wood,Wood,Air,Air
+FROW_4 true,false,true,true,false,false
+ROW_5 Air,Wood,Air,Air,Air,Wood
+FROW_5 false,true,false,false,false,true
+ROW_6 Air,Air,Air,Air,Wood,Air
+FROW_6 false,false,false,false,true,false
