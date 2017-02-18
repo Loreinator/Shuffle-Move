@@ -44,8 +44,8 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.93 - 2017-02-**
-	- 
+* **v0.3.93 - 2017-02-18**
+	- Added Mega for Aggron
 * **v0.3.92 - 2017-02-15**
 	- Updates for February 14th
 * **v0.3.91 - 2017-01-31**
