@@ -1,0 +1,13 @@
+STAGE SP_659
+ROW_1 Wood,Wood,Wood,Wood,Lileep,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Cradily,Wood,Cradily,Cradily,Wood,Cradily
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Wood,Cradily,Cradily,Wood,Cradily
+FROW_3 false,false,false,false,false,false
+ROW_4 Cradily,Wood,Wood,Lileep,Cradily,Lileep
+FROW_4 false,false,false,false,false,false
+ROW_5 Cradily,Wood,Cradily,Cradily,Wood,Cradily
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Wood,Cradily,Cradily,Wood,Cradily
+FROW_6 false,false,false,false,false,false

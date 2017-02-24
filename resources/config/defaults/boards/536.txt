@@ -1,0 +1,13 @@
+STAGE 536
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Sylveon,Wood,Wood,Sylveon,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Sylveon,Air,Sylveon,Sylveon,Air,Sylveon
+FROW_5 false,false,false,false,false,false
+ROW_6 Sylveon,Air,Sylveon,Sylveon,Air,Sylveon
+FROW_6 false,false,false,false,false,false
