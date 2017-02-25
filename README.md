@@ -45,7 +45,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ##Changelog
 * **v0.3.95 - 2017-0**
-	-
+	- Fixed L500 escalation health parsing
 * **v0.3.94 - 2017-02-24**
 	- Updates for February 21st
 * **v0.3.93 - 2017-02-18**
