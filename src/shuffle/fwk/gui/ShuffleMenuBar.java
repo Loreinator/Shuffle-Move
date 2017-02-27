@@ -90,6 +90,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_GRID_PRINT = "menuitem.grid.print";
    private static final String KEY_GRID_PRINT_CONFIG = "menuitem.grid.print.config";
    private static final String KEY_CLEAR = "menuitem.clear";
+   private static final String KEY_DELETE_SPECIES = "menuitem.delete.species";
    private static final String KEY_FILL = "menuitem.fill";
    private static final String KEY_LOAD_DEFAULT = "menuitem.loaddefault";
    private static final String KEY_CHANGE_MODE = "menuitem.changemode";
@@ -280,6 +281,12 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       MenuAction clearAction = new MenuAction(() -> getString(KEY_CLEAR), e -> getUser().clearGrid());
       clearAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.CTRL_MASK));
       addMenuAction(menu, clearAction);
+      
+      MenuAction deleteSpeciesAction = new MenuAction(() -> getString(KEY_DELETE_SPECIES),
+            e -> getUser().clearSelectedTiles());
+      deleteSpeciesAction.putValue(Action.ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+      addMenuAction(menu, deleteSpeciesAction);
       
       MenuAction fillAction = new MenuAction(() -> getString(KEY_FILL), e -> getUser().fillGrid());
       fillAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));

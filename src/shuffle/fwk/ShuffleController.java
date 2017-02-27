@@ -1241,6 +1241,18 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
    
    /*
     * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#clearSelectedTiles()
+    */
+   @Override
+   public void clearSelectedTiles() {
+      if (getModel().clearSelectedTiles()) {
+         getModel().setDataChanged();
+         repaint();
+      }
+   }
+   
+   /*
+    * (non-Javadoc)
     * @see shuffle.fwk.service.saveprompt.SavePromptServiceUser#shouldPromptSave()
     */
    @Override
