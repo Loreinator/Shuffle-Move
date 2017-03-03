@@ -1,0 +1,13 @@
+STAGE SP_275
+ROW_1 Air,Air,Coin,Coin,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Coin,Air,Air,Coin,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Coin,Air,Air,Coin,Air,Coin
+FROW_3 false,false,false,false,false,false
+ROW_4 Coin,Air,Coin,Air,Air,Coin
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Coin,Air,Air,Coin,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Coin,Coin,Air,Air
+FROW_6 false,false,false,false,false,false

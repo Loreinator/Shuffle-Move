@@ -122,4 +122,10 @@ public interface ShuffleMenuUser extends EditRosterServiceUser, MovePreferencesS
     */
    void fillGrid();
    
+   /**
+    * Clears all tiles in the Grid that match the currently selected paint. Has no effect if the
+    * selected paint is air or null.
+    */
+   void clearSelectedTiles();
+   
 }

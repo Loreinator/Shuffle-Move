@@ -1445,7 +1445,7 @@ public class ShuffleModel
    }
    
    /**
-    * @return
+    * Fills the grid with the currently selected species paint, for every empty tile.
     */
    public boolean fillGrid() {
       boolean changed = false;
@@ -1455,6 +1455,31 @@ public class ShuffleModel
          for (int col = 1; col <= Board.NUM_COLS; col++) {
             if (paint.getSpecies().equals(Species.FREEZE) || curBoard.getSpeciesAt(row, col).equals(Species.AIR)) {
                changed |= paintAt(row, col, paint);
+            }
+         }
+      }
+      return changed;
+   }
+   
+   /**
+    * Clears all tiles in the Grid that match the currently selected paint. Has no effect if the
+    * selected paint is air or null.
+    */
+   public boolean clearSelectedTiles() {
+      boolean changed = false;
+      SpeciesPaint paint = getCurrentSpeciesPaint();
+      Species species = paint.getSpecies();
+      Board curBoard = getBoard();
+      if (paint.getSpecies().equals(Species.FREEZE)) {
+         // If we are to clear all with a "freeze" paint, then that means we do the opposite of what
+         // Freeze wants us to do.
+         boolean toBeFrozen = !paint.isFrozen();
+         changed |= curBoard.setAllFrozen(toBeFrozen);
+      }
+      for (int row = 1; row <= Board.NUM_ROWS; row++) {
+         for (int col = 1; col <= Board.NUM_COLS; col++) {
+            if (curBoard.getSpeciesAt(row, col).equals(species)) {
+               changed |= paintAt(row, col, Species.AIR, false);
             }
          }
       }
