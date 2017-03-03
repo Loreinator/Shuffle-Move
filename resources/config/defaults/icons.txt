@@ -526,6 +526,7 @@ RESOURCE Giratina_o img/icons/487_o.png
 RESOURCE Cresselia img/icons/488.png
 RESOURCE Phione img/icons/489.png
 RESOURCE Manaphy img/icons/490.png
+RESOURCE Manaphy_w img/icons/490-w.png
 RESOURCE Darkrai img/icons/491.png
 RESOURCE Shaymin img/icons/492.png
 RESOURCE Shaymin_s img/icons/492-s.png
