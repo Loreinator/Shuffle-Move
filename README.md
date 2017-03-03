@@ -44,9 +44,10 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.95 - 2017-0**
+* **v0.3.95 - 2017-03-02**
 	- Fixed L500 escalation health parsing
 	- Added "Delete Species" function (Ctrl-D) which removes all species in the grid that match your currently selected paint.
+	- Updates for February 28th
 * **v0.3.94 - 2017-02-24**
 	- Updates for February 21st
 * **v0.3.93 - 2017-02-18**
