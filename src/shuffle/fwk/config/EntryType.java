@@ -174,7 +174,7 @@ public enum EntryType {
             throw new IllegalArgumentException("Value is not a species." + value);
          }
          String name = key;
-         int number = Integer.parseInt(m.group(1));
+         double number = Double.parseDouble(m.group(1));
          int attack = Integer.parseInt(m.group(2));
          PkmType type = PkmType.getType(m.group(3));
          List<Effect> effects = Effect.getEffects(m.group(4));
@@ -193,11 +193,11 @@ public enum EntryType {
       @Override
       public String getDataString(Object obj) throws Exception {
          Species species = (Species) obj;
-         int number = species.getNumber();
+         double number = species.getNumber();
          int attack = species.getBaseAttack();
          PkmType type = species.getType();
          String effectsString = species.getEffectsString();
-         String ret = String.format("%d %d %s %s", number, attack, type, effectsString);
+         String ret = String.format("%s %d %s %s", number, attack, type, effectsString);
          
          String megaName = species.getMegaName();
          Effect megaEffect = species.getMegaEffect();
@@ -485,7 +485,8 @@ public enum EntryType {
    
    private static final Pattern COLOR_PATTERN = Pattern.compile("^\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)(?:\\s+(\\d+))?\\s*$");
    private static final Pattern SPECIES_PATTERN = Pattern
-         .compile("^\\s*(-?\\d+)\\s+(\\d{1,3})\\s+(\\S+)\\s+(\\S+)(?:\\s+(\\S+)\\s+(\\S+)(?:\\s+(\\S+))?)?\\s*$");
+.compile(
+         "^\\s*(-?\\d+(?:\\.(?:\\d+))?)\\s+(\\d{1,3})\\s+(\\S+)\\s+(\\S+)(?:\\s+(\\S+)\\s+(\\S+)(?:\\s+(\\S+))?)?\\s*$");
    // __________________numberId ______attack______type ____effect __(o) MegaName MegaEffect
    // (o)MegaType
    private static final Pattern STAGE_PATTERN = Pattern

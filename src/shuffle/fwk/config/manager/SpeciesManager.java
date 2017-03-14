@@ -62,7 +62,7 @@ public class SpeciesManager extends ConfigManager {
    public boolean loadFromConfig() {
       boolean changed = super.loadFromConfig();
       changed |= setDefaultSpecies();
-      Map<Integer, List<Species>> dexToSpecies = new HashMap<Integer, List<Species>>();
+      Map<Double, List<Species>> dexToSpecies = new HashMap<Double, List<Species>>();
       for (Species s : getSpeciesValues()) {
          if (dexToSpecies.containsKey(s.getNumber())) {
             dexToSpecies.get(s.getNumber()).add(s);
@@ -71,7 +71,7 @@ public class SpeciesManager extends ConfigManager {
          }
       }
       ImageManager im = getFactory().getImageManager();
-      for (Integer dex : dexToSpecies.keySet()) {
+      for (Double dex : dexToSpecies.keySet()) {
          List<Species> list = dexToSpecies.get(dex);
          if (list.size() > 1) {
             Species keep = list.get(0);
@@ -174,14 +174,14 @@ public class SpeciesManager extends ConfigManager {
             } else if (o1 == o2) {
                return 0;
             } else {
-               return Integer.compare(o1.getNumber(), o2.getNumber());
+               return Double.compare(o1.getNumber(), o2.getNumber());
             }
          }
       };
    }
    
-   public int getNextNumber() {
-      int nextNumber = 0;
+   public double getNextNumber() {
+      double nextNumber = 0;
       for (Species s : getAllSpecies()) {
          nextNumber = Math.max(nextNumber, s.getNumber() + 10);
       }

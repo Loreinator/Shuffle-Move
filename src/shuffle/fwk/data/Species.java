@@ -81,7 +81,7 @@ public class Species implements Comparable<Species>, I18nUser {
    private final String megaName;
    private final Effect megaEffect;
    private final PkmType megaType;
-   private final int number;
+   private final Double number;
    private final String toString;
    private final Integer ID;
    private final int hash;
@@ -100,18 +100,28 @@ public class Species implements Comparable<Species>, I18nUser {
       this(name, null, attack, type, effect, megaName, megaEffect);
    }
    
-   public Species(String name, Integer number, int attack, PkmType type, Effect effect, String megaName,
+   public Species(String name, Double number, int attack, PkmType type, Effect effect, String megaName,
          Effect megaEffect) {
       this(name, number, attack, type, Arrays.asList(effect), megaName, megaEffect, type);
    }
    
-   public Species(String name, Integer number, int attack, PkmType type, List<Effect> effects, String megaName,
+   public Species(String name, int number, int attack, PkmType type, Effect effect, String megaName,
+         Effect megaEffect) {
+      this(name, (double) number, attack, type, Arrays.asList(effect), megaName, megaEffect, type);
+   }
+   
+   public Species(String name, int number, int attack, PkmType type, List<Effect> effects, String megaName,
+         Effect megaEffect, PkmType megaType) {
+      this(name, (double) number, attack, type, effects, megaName, megaEffect, megaType);
+   }
+   
+   public Species(String name, Double number, int attack, PkmType type, List<Effect> effects, String megaName,
          Effect megaEffect, PkmType megaType) {
       if (name == null || type == null || effects == null || effects.isEmpty()) {
          throw new NullPointerException(String.format(
 "Cannot specify a null Species name (%s), type (%s), or effects (%s).", name, type, effects));
       }
-      this.number = number == null ? -1 : Math.max(0, number.intValue());
+      this.number = number == null ? -1 : Math.max(0.0, number.doubleValue());
       this.name = name;
       if (attack < 0) {
          this.attack = 0;
@@ -157,7 +167,7 @@ public class Species implements Comparable<Species>, I18nUser {
       return ret;
    }
 
-   public int getNumber() {
+   public double getNumber() {
       return number;
    }
    
@@ -303,7 +313,7 @@ public class Species implements Comparable<Species>, I18nUser {
     */
    @Override
    public int compareTo(Species o) {
-      return o == null ? 1 : Integer.compare(number, o.number);
+      return o == null ? 1 : Double.compare(number, o.number);
    }
    
    public Species getNextMetal() {
