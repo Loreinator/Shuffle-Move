@@ -52,12 +52,12 @@ public class SpeciesTest {
     */
    @Test
    public final void testSpeciesStringIntPkmTypeComboEffect() {
-      assertEquals("name -1 42 BUG NONE", new Species("name", 42, PkmType.BUG, Effect.NONE).toString());
-      assertEquals("name -1 42 ICE GLALIE", new Species("name", 42, PkmType.ICE, Effect.GLALIE).toString());
-      assertEquals("name -1 42 STEEL AIR", new Species("name", 42, PkmType.STEEL, Effect.AIR).toString());
-      assertEquals("name -1 88 STEEL AIR", new Species("name", 88, PkmType.STEEL, Effect.AIR).toString());
-      assertEquals("other -1 88 STEEL AIR", new Species("other", 88, PkmType.STEEL, Effect.AIR).toString());
-      assertEquals("OTHER -1 88 STEEL AIR", new Species("OTHER", 88, PkmType.STEEL, Effect.AIR).toString());
+      assertEquals("name -1.0 42 BUG NONE", new Species("name", 42, PkmType.BUG, Effect.NONE).toString());
+      assertEquals("name -1.0 42 ICE GLALIE", new Species("name", 42, PkmType.ICE, Effect.GLALIE).toString());
+      assertEquals("name -1.0 42 STEEL AIR", new Species("name", 42, PkmType.STEEL, Effect.AIR).toString());
+      assertEquals("name -1.0 88 STEEL AIR", new Species("name", 88, PkmType.STEEL, Effect.AIR).toString());
+      assertEquals("other -1.0 88 STEEL AIR", new Species("other", 88, PkmType.STEEL, Effect.AIR).toString());
+      assertEquals("OTHER -1.0 88 STEEL AIR", new Species("OTHER", 88, PkmType.STEEL, Effect.AIR).toString());
    }
    
    /**
@@ -67,17 +67,22 @@ public class SpeciesTest {
     */
    @Test
    public final void testSpeciesStringIntPkmTypeComboEffectStringComboEffect() {
-      assertEquals("name -1 42 BUG NONE",
+      assertEquals("name -1.0 42 BUG NONE",
             new Species("name", null, 42, PkmType.BUG, Effect.NONE, null, null).toString());
-      assertEquals("name -1 42 ICE GLALIE rep NONE", new Species("name", null, 42, PkmType.ICE, Effect.GLALIE, "rep",
+      assertEquals("name -1.0 42 ICE GLALIE rep NONE",
+            new Species("name", null, 42, PkmType.ICE, Effect.GLALIE, "rep",
             null).toString());
-      assertEquals("name -1 42 STEEL AIR rep NONE", new Species("name", null, 42, PkmType.STEEL, Effect.AIR, "rep",
+      assertEquals("name -1.0 42 STEEL AIR rep NONE",
+            new Species("name", null, 42, PkmType.STEEL, Effect.AIR, "rep",
             null).toString());
-      assertEquals("name -1 88 STEEL AIR REP NONE", new Species("name", null, 88, PkmType.STEEL, Effect.AIR, "REP",
+      assertEquals("name -1.0 88 STEEL AIR REP NONE",
+            new Species("name", null, 88, PkmType.STEEL, Effect.AIR, "REP",
             null).toString());
-      assertEquals("other -1 88 STEEL AIR rep NONE", new Species("other", null, 88, PkmType.STEEL, Effect.AIR, "rep",
+      assertEquals("other -1.0 88 STEEL AIR rep NONE",
+            new Species("other", null, 88, PkmType.STEEL, Effect.AIR, "rep",
             null).toString());
-      assertEquals("OTHER -1 88 STEEL AIR rep NONE", new Species("OTHER", null, 88, PkmType.STEEL, Effect.AIR, "rep",
+      assertEquals("OTHER -1.0 88 STEEL AIR rep NONE",
+            new Species("OTHER", null, 88, PkmType.STEEL, Effect.AIR, "rep",
             null).toString());
    }
    
@@ -295,7 +300,7 @@ public class SpeciesTest {
       }
    }
    
-   private String properString(String name, int number, int baseAttack, PkmType t, Effect ce) {
+   private String properString(String name, double number, int baseAttack, PkmType t, Effect ce) {
       int atk;
       if (baseAttack < 0) {
          atk = 0;
@@ -304,7 +309,7 @@ public class SpeciesTest {
       } else {
          atk = baseAttack;
       }
-      return String.format("%s %d %d %s %s", name, number, atk, t.toString(), ce.toString());
+      return String.format("%s %s %d %s %s", name, number, atk, t.toString(), ce.toString());
    }
    
    /**

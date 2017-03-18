@@ -665,7 +665,7 @@ public class EditSpeciesService extends BaseService<EditSpeciesServiceUser> impl
    
    private void applySelectedSpecies() {
       String name = nameField.getText();
-      int number = selectedSpecies == null ? speciesData.getNextNumber() : selectedSpecies.getNumber();
+      double number = selectedSpecies == null ? speciesData.getNextNumber() : selectedSpecies.getNumber();
       PkmType type = typeChooser.getSelectedType();
       Integer attack = attackComboBox.getItemAt(attackComboBox.getSelectedIndex());
       String effectsString = effectChooser.getText();
