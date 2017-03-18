@@ -37,6 +37,8 @@ RESOURCE Pikachu_e img/icons/025-v.png
 RESOURCE Pikachu_sm img/icons/025-sm.png
 RESOURCE Pikachu_ho img/icons/025-hooh.png
 RESOURCE Pikachu_lu img/icons/025-lugia.png
+RESOURCE Pikachu_kb=img/icons/025.png
+RESOURCE Pikachu_kg=img/icons/025.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Sandshrew img/icons/027.png
