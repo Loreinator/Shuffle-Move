@@ -230,6 +230,7 @@ RESOURCE Unown img/icons/201.png
 RESOURCE Unown-26 img/icons/201-26.png
 RESOURCE Unown-27 img/icons/201-27.png
 RESOURCE Wobbuffet img/icons/202.png
+RESOURCE Wobbuffet_f img/icons/202-f.png
 RESOURCE Girafarig img/icons/203.png
 RESOURCE Pineco img/icons/204.png
 RESOURCE Forretress img/icons/205.png
@@ -703,6 +704,7 @@ RESOURCE Kyurem-b img/icons/646-b.png
 RESOURCE Keldeo img/icons/647.png
 RESOURCE Keldeo_r img/icons/647-r.png
 RESOURCE Meloetta img/icons/648.png
+RESOURCE Meloetta_p img/icons/648-p.png
 RESOURCE Genesect img/icons/649.png
 RESOURCE Chespin img/icons/650.png
 RESOURCE Quilladin img/icons/651.png
