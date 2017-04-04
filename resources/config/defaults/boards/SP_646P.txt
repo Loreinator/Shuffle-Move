@@ -1,0 +1,13 @@
+STAGE SP_646P
+ROW_1 Wood,Wood,Wood,Meloetta_p,Wood,Wood
+FROW_1 true,true,true,false,true,true
+ROW_2 Air,Wood,Meloetta_p,Meloetta_p,Wood,Air
+FROW_2 false,true,false,false,true,false
+ROW_3 Air,Wood,Air,Wood,Wood,Air
+FROW_3 false,true,false,false,true,false
+ROW_4 Air,Wood,Meloetta_p,Meloetta_p,Wood,Air
+FROW_4 false,true,false,false,true,false
+ROW_5 Air,Wood,Meloetta_p,Meloetta_p,Wood,Air
+FROW_5 false,true,false,false,true,false
+ROW_6 Air,Meloetta_p,Wood,Wood,Air,Air
+FROW_6 false,false,true,true,false,false
