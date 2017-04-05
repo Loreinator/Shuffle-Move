@@ -1,4 +1,4 @@
-#Shuffle Move v0.3.99
+#Shuffle Move v0.3.100
 
 A program to identify and display the best next move for the game Pokémon Shuffle. I do not own any part of Pokémon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
 
