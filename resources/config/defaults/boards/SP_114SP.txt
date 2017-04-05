@@ -1,4 +1,4 @@
-STAGE SP_114S
+STAGE SP_114SP
 ROW_1 Air,Air,Air,Air,Air,Air
 FROW_1 false,false,false,false,false,false
 ROW_2 Air,Air,Air,Air,Air,Air
@@ -7,7 +7,7 @@ ROW_3 Metal,Air,Air,Air,Air,Metal
 FROW_3 false,false,false,false,false,false
 ROW_4 Metal,Metal,Air,Air,Metal,Metal
 FROW_4 false,false,false,false,false,false
-ROW_5 Gengar_s,Metal,Gengar_s,Metal,Gengar_s,Metal
+ROW_5 Gengar_sp,Metal,Gengar_sp,Metal,Gengar_sp,Metal
 FROW_5 false,false,false,false,false,false
-ROW_6 Metal,Gengar_s,Metal,Gengar_s,Metal,Gengar_s
+ROW_6 Metal,Gengar_sp,Metal,Gengar_sp,Metal,Gengar_sp
 FROW_6 false,false,false,false,false,false

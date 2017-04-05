@@ -136,6 +136,21 @@ public enum Effect {
       }
    },
    /**
+    * Does more damage the more times in a row it is triggered. <br>
+    * non stop+, first activation: 2 <br>
+    * non stop+, second activation: 4 <br>
+    * non stop+, third activation: 6 <br>
+    * non stop+, fourth activation: 8 <br>
+    * non stop+, fifth or higher activation: 10 <br>
+    */
+   NON_STOP_P {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Damage may randomly be increased or decreased.
     */
    RISK_TAKER {
@@ -481,6 +496,36 @@ public enum Effect {
     * Occasionally erases two extra matching Species elsewhere.
     */
    QUIRKY_P {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> s.equals(effectSpecies));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  eraseBonus(task, toErase, true);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Occasionally erases five extra matching Species elsewhere.
+    */
+   QUIRKY_P_P {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -1059,6 +1104,16 @@ public enum Effect {
     * Attacks sometimes deal greater damage than usual.
     */
    HYPER_PUNCH {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Same as {@link Effect#POWER_OF_4} except the skill level boost is weaker
+    */
+   4_UP {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -1705,6 +1760,16 @@ public enum Effect {
       }
    },
    /**
+    * Attacks can occasionally deal greater damage than usual.
+    */
+   UNITY_POWER {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Increases damage done by any flying types in a combo. 2.0x multiplier
     */
    SKY_BLAST {
@@ -1786,7 +1851,7 @@ public enum Effect {
    /**
     * Making a +-shaped match deals more damage than usual.
     */
-   _P_BOOST {
+   CROSS_ATTACK {
       
       @Override
       public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -2127,6 +2192,15 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          ifThenSetSpecial(comboEffect, task, PkmType.GROUND, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Increases damage done by Water types in the combo.
+    */
+   BIG_WAVE {
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.WATER, getBonus(task, comboEffect));
       }
    },
    /**
@@ -4483,7 +4557,7 @@ public enum Effect {
    /**
     * Hoenn trio clone
     */
-   GENGAR_S {      
+   GENGAR_SP {      
       @Override
       public boolean isPersistent() {
          return true;
