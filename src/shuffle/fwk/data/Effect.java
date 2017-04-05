@@ -1113,7 +1113,7 @@ public enum Effect {
    /**
     * Same as {@link Effect#POWER_OF_4} except the skill level boost is weaker
     */
-   4_UP {
+   _4_UP {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
