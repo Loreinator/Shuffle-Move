@@ -3646,6 +3646,11 @@ public enum Effect {
    DIANCIE {
       
       @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
+      @Override
       public boolean isPersistent() {
          return true;
       }
