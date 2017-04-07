@@ -4675,6 +4675,11 @@ public enum Effect {
    HOUNDOOM {
       
       @Override
+      protected boolean isAttackPowerEffective() {
+         return DIANCIE.isAttackPowerEffective();
+      }
+      
+      @Override
       public boolean isPersistent() {
          return true;
       }
