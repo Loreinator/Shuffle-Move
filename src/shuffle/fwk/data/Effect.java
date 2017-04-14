@@ -370,7 +370,6 @@ public enum Effect {
     * Sometimes increases damage and leaves opponent paralyzed.
     */
    QUAKE {
-      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -987,7 +986,6 @@ public enum Effect {
     */
    SPOOKIFY {
       // TODO when disruption timers are implemented
-      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.BUG, PkmType.DARK, PkmType.DRAGON,
             PkmType.FIGHTING, PkmType.GRASS, PkmType.GROUND, PkmType.ICE, PkmType.POISON, PkmType.ROCK, PkmType.STEEL);
@@ -1008,7 +1006,6 @@ public enum Effect {
     */
    FREEZE {
       // TODO when disruption timers are implemented
-      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.ELECTRIC, PkmType.FAIRY, PkmType.FIGHTING,
             PkmType.FIRE, PkmType.GHOST, PkmType.ICE, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -1029,7 +1026,6 @@ public enum Effect {
     */
    SLEEP_CHARM {
       // TODO when disruption timers are implemented
-      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DARK, PkmType.DRAGON, PkmType.FIGHTING,
             PkmType.GHOST, PkmType.GRASS, PkmType.ICE, PkmType.ROCK, PkmType.STEEL);
@@ -1050,7 +1046,6 @@ public enum Effect {
     */
    PARALYZE {
       // TODO when disruption timers are implemented
-      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -1733,7 +1728,6 @@ public enum Effect {
     * Leaves the foe Paralyzed
     */
    SHOCK_ATTACK {
-      // TODO when status conditions are implemented
       
       private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
             PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
@@ -2238,7 +2232,20 @@ public enum Effect {
     * Leaves the foe poisoned
     */
    POISON {
-      // TODO more data needed
+      // TODO when disruption timers are implemented
+      
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.GHOST, PkmType.GROUND, PkmType.POISON, PkmType.ROCK,             PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.POISON, 7);
+      }
    },
    /**
     * Does more damage the more times in a row it is triggered.
@@ -3646,6 +3653,11 @@ public enum Effect {
    DIANCIE {
       
       @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
+      @Override
       public boolean isPersistent() {
          return true;
       }
@@ -4668,6 +4680,11 @@ public enum Effect {
     * Same as {@link #DIANCIE}.
     */
    HOUNDOOM {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return DIANCIE.isAttackPowerEffective();
+      }
       
       @Override
       public boolean isPersistent() {

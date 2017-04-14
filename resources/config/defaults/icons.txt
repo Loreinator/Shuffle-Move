@@ -724,6 +724,7 @@ RESOURCE Talonflame img/icons/663.png
 RESOURCE Scatterbug img/icons/664.png
 RESOURCE Spewpa img/icons/665.png
 RESOURCE Vivillon img/icons/666.png
+RESOURCE Vivillon_pb img/icons/666-pb.png
 RESOURCE Litleo img/icons/667.png
 RESOURCE Pyroar img/icons/668.png
 RESOURCE Pyroar_f img/icons/668-f.png
