@@ -51,7 +51,8 @@ public class Board {
       SLEEP(1.2, "board.status.sleep", PkmType.values()),
       PARALYZE(1.0, "board.status.paralyze"),
       FEAR(1.5, "board.status.fear", PkmType.GHOST),
-      FROZEN(1.2, "board.status.frozen", PkmType.ICE);
+      FROZEN(1.2, "board.status.frozen", PkmType.ICE),
+      POISON(1.5, "board.status.poison", PkmType.POISON);
       
       private final double mult;
       private final String key;
