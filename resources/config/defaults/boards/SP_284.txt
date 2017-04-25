@@ -1,0 +1,13 @@
+STAGE SP_284
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Vivillon_pb,Vivillon_pb,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Rock,Vivillon_pb,Rock,Vivillon_pb,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Vivillon_pb,Rock,Rock,Vivillon_pb,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Vivillon_pb,Rock,Vivillon_pb,Rock,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Vivillon_pb,Vivillon_pb,Air,Air
+FROW_6 false,false,false,false,false,false

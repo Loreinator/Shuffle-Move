@@ -1,0 +1,13 @@
+STAGE 554
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Shellos,Shellos_e,Shellos,Metal,Metal,Metal
+FROW_2 false,false,false,true,true,true
+ROW_3 Shellos,Metal,Metal,Shellos,Metal,Shellos
+FROW_3 false,true,true,false,true,false
+ROW_4 Shellos_e,Metal,Shellos,Shellos_e,Shellos,Shellos_e
+FROW_4 false,true,false,true,false,false
+ROW_5 Shellos,Metal,Metal,Shellos,Metal,Shellos
+FROW_5 false,true,true,false,true,false
+ROW_6 Shellos,Shellos_e,Shellos,Metal,Metal,Metal
+FROW_6 false,false,false,true,true,true

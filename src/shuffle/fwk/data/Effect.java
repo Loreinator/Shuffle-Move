@@ -279,6 +279,16 @@ public enum Effect {
       }
    },
    /**
+    * Increases damage of Ghost-type moves in a Combo.
+    */
+   PHANTOM_COMBO {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Increases damage of Dark-type moves in a combo.
     */
    SINISTER_POWER {
@@ -334,6 +344,34 @@ public enum Effect {
     * The more disruptions on the board, the greater the damage.
     */
    COUNTERATTACK {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
+         NumberSpan ret = new NumberSpan();
+         if (canActivate(comboEffect, task)) {
+            int num = task.findMatches(36, false, (r, c, s) -> isDisruption(s)).size() / 2;
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
+         }
+         return ret;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(typeModifier);
+      }
+   },
+   /**
+    * The more disruptions on the board, the greater the damage.
+    */
+   COUNTERATTACK_P {
       
       @Override
       protected boolean isAttackPowerEffective() {
@@ -979,6 +1017,13 @@ public enum Effect {
       
    },
    /**
+    * Can reset your opponent's disruption counter to maximum
+    */
+   CALM_DOWN {
+      // TODO when disruption timers are implemented
+      
+   },
+   /**
     * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
     * 50%.
     */
@@ -1020,6 +1065,35 @@ public enum Effect {
       }
    },
    /**
+    * Leaves the foe spooked, for more turns. It cannot activate on a match of 3.
+    */
+   SPOOKIFY_P {
+      // TODO when disruption timers are implemented
+      
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.BUG, PkmType.DARK, PkmType.DRAGON,
+            PkmType.FIGHTING, PkmType.GRASS, PkmType.GROUND, PkmType.ICE, PkmType.POISON, PkmType.ROCK, PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.FEAR, 7);
+      }
+
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+	if (e.getNumBlocks() == 3) {
+ 		return 0;
+ 	} else {
+		return super.getOdds(task, e);
+	}
+      }
+   },
+   /**
     * Has a chance of freezing an opponent.
     */
    FREEZE {
@@ -1040,7 +1114,36 @@ public enum Effect {
       }
    },
    /**
-    * Inflicts the opponent with sleep for three turns, preventing it from using its distortion.
+    * Has a chance of freezing an opponent, for more turns. It cannot activate on a match of 3.
+    */
+   FREEZE_P {
+      // TODO when disruption timers are implemented
+      
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.ELECTRIC, PkmType.FAIRY, PkmType.FIGHTING,
+            PkmType.FIRE, PkmType.GHOST, PkmType.ICE, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.FROZEN, 7);
+      }
+
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+	if (e.getNumBlocks() == 3) {
+ 		return 0;
+ 	} else {
+		return super.getOdds(task, e);
+	}
+      }
+   },
+   /**
+    * Inflicts the opponent with sleep for three turns, preventing it from using its disruption.
     */
    SLEEP_CHARM {
       // TODO when disruption timers are implemented
@@ -1057,6 +1160,26 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          ifThenSetStatus(comboEffect, task, Status.SLEEP, 3);
+      }
+   },
+   /**
+    * Inflicts the opponent with sleep for 2 turns, preventing it from using its disruption.
+    */
+   NAP_TIME {
+      // TODO when disruption timers are implemented
+      
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DARK, PkmType.DRAGON, PkmType.FIGHTING,
+            PkmType.GHOST, PkmType.GRASS, PkmType.ICE, PkmType.ROCK, PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.SLEEP, 2);
       }
    },
    /**
@@ -2545,6 +2668,117 @@ public enum Effect {
          List<Species> otherSpecies = new ArrayList<Species>(task.getState().getCore().getSupportSpecies());
          otherSpecies.remove(task.getEffectSpecies(comboEffect.getCoords()));
          return otherSpecies;
+      }
+   },
+   /**
+    * Attacks do more damage when you make a match of 3.
+    */
+   THREE_FORCE {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+    /**
+    * Removes 2 blocks and deals extra damage.
+    */
+   BLOCK_SHOT {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         boolean canActivate = canActivate(comboEffect, task);
+         if (canActivate) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
+            if (matches.size() > 2) {
+               task.setIsRandom();
+            }
+            if (!matches.isEmpty() && doesActivate(comboEffect, task)) {
+               int blockIndex = getRandomInt(matches.size() / 2);
+               int row = matches.get(blockIndex * 2);
+               int col = matches.get(blockIndex * 2 + 1);
+               final List<Integer> toErase = Arrays.asList(row, col);
+               task.addFinishedAction((ce, t) -> Effect.BLOCK_SMASH.eraseBonus(t, toErase, false));
+            }
+         }
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Removes 2 barriers and deals extra damage.
+    */
+   BARRIER_SHOT {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         Board board = task.getState().getBoard();
+         return super.canActivate(comboEffect, task)
+               && !task.findMatches(1, false, (r, c, s) -> board.isFrozenAt(r, c)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c));
+            if (!matches.isEmpty()) {
+               if (matches.size() / 2 > 1) {
+                  task.setIsRandom();
+               }
+               int blockIndex = getRandomInt(matches.size() / 2);
+               int row = matches.get(blockIndex * 2);
+               int col = matches.get(blockIndex * 2 + 1);
+               task.addFinishedAction((ce, t) -> t.unfreezeAt(Arrays.asList(row, col)));
+            }
+         }
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+   },
+   /**
+    * Removes 2 rocks (wood) and deals extra damage.
+    */
+   ROCK_BREAK {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
+            if (!matches.isEmpty()) {
+               if (matches.size() > 2) {
+                  task.setIsRandom();
+               }
+               int blockIndex = getRandomInt(matches.size() / 2);
+               int row = matches.get(blockIndex * 2);
+               int col = matches.get(blockIndex * 2 + 1);
+               final List<Integer> toErase = Arrays.asList(row, col);
+               task.addFinishedAction((ce, t) -> Effect.WOOD.eraseBonus(t, toErase, true));
+            }
+         }
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
    /**
@@ -4822,6 +5056,47 @@ public enum Effect {
          return true;
       }
 
+   },
+   /**
+    * Same as {@link #MANECTRIC}.
+    */
+   GALLADE {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return MANECTRIC.getEffectRepeatDelay();
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         return MANECTRIC.handlePlans(comboEffect, task);
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return MANECTRIC.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return MANECTRIC.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return MANECTRIC.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+      
    },
    /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.

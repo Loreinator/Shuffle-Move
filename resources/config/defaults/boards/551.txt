@@ -1,0 +1,13 @@
+STAGE 551
+ROW_1 Wood,Wood,Air,Air,Wood,Wood
+FROW_1 true,true,false,false,true,true
+ROW_2 Wood,Wood,Air,Air,Wood,Wood
+FROW_2 true,true,false,false,true,true
+ROW_3 Wood,Air,Air,Air,Air,Wood
+FROW_3 true,false,false,false,false,true
+ROW_4 Wood,Air,Air,Air,Air,Wood
+FROW_4 true,false,false,false,false,true
+ROW_5 Wood,Wood,Air,Air,Wood,Wood
+FROW_5 true,true,false,false,true,true
+ROW_6 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_6 true,true,true,true,true,true
