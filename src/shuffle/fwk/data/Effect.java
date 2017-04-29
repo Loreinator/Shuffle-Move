@@ -93,6 +93,7 @@ public enum Effect {
       }
       
       @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
          if (e.getNumBlocks() == 4) {
             return super.getOdds(task, e);
          } else {
