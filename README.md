@@ -44,8 +44,9 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.102 - 2017-04-**
+* **v0.3.102 - 2017-05-**
 	- Fixed Vivillon_pb name
+	- Alolan update
 * **v0.3.101 - 2017-04-14**
 	- Added Poison status
 	- Updates for April 11th
