@@ -2751,7 +2751,7 @@ public enum Effect {
    /**
     * Removes 2 rocks (wood) and deals extra damage.
     */
-   ROCK_BREAK {
+   ROCK_SHOT {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
