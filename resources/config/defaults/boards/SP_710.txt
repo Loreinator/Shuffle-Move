@@ -1,0 +1,13 @@
+STAGE SP_710
+ROW_1 Metal,Tepig,Metal,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Tepig,Chimchar,Tepig,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Chimchar,Torchic,Chimchar,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Torchic,Cyndaquil,Torchic,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Cyndaquil,Charmander,Cyndaquil,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Charmander,Wood,Charmander,Air,Air,Air
+FROW_6 false,false,false,false,false,false
