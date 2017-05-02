@@ -103,11 +103,11 @@ RESOURCE Victreebel img/icons/071.png
 RESOURCE Tentacool img/icons/072.png
 RESOURCE Tentacruel img/icons/073.png
 RESOURCE Geodude img/icons/074.png
-RESOURCE Geodude img/icons/074-a.png
+RESOURCE Geodude_a img/icons/074-a.png
 RESOURCE Graveler img/icons/075.png
-RESOURCE Graveler img/icons/075-a.png
+RESOURCE Graveler_a img/icons/075-a.png
 RESOURCE Golem img/icons/076.png
-RESOURCE Golem img/icons/076-a.png
+RESOURCE Golem_a img/icons/076-a.png
 RESOURCE Ponyta img/icons/077.png
 RESOURCE Rapidash img/icons/078.png
 RESOURCE Slowpoke img/icons/079.png
@@ -120,7 +120,7 @@ RESOURCE Dodrio img/icons/085.png
 RESOURCE Seel img/icons/086.png
 RESOURCE Dewgong img/icons/087.png
 RESOURCE Grimer img/icons/088.png
-RESOURCE Grimer img/icons/088-a.png
+RESOURCE Grimer_a img/icons/088-a.png
 RESOURCE Muk img/icons/089.png
 RESOURCE Muk_a img/icons/089-a.png
 RESOURCE Shellder img/icons/090.png
@@ -478,7 +478,9 @@ RESOURCE Floatzel img/icons/419.png
 RESOURCE Cherubi img/icons/420.png
 RESOURCE Cherrim img/icons/421.png
 RESOURCE Shellos img/icons/422.png
+RESOURCE Shellos_e img/icons/422-e.png
 RESOURCE Gastrodon img/icons/423.png
+RESOURCE Gastrodon_e img/icons/423-e.png
 RESOURCE Ambipom img/icons/424.png
 RESOURCE Drifloon img/icons/425.png
 RESOURCE Drifblim img/icons/426.png
