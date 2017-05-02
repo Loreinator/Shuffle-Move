@@ -21,7 +21,7 @@ RESOURCE Pidgey img/icons/016.png
 RESOURCE Pidgeotto img/icons/017.png
 RESOURCE Pidgeot img/icons/018.png
 RESOURCE Rattata img/icons/019.png
-REOURCES Rattata_a img/icons/019-a.png
+RESOURCE Rattata_a img/icons/019-a.png
 RESOURCE Raticate img/icons/020.png
 RESOURCE Raticate_a img/icons/020-a.png
 RESOURCE Spearow img/icons/021.png
