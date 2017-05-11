@@ -1,0 +1,13 @@
+STAGE SP_724
+ROW_1 Wood,Air,Wood,Air,Wood,Air
+FROW_1 true,false,true,false,true,false
+ROW_2 Wood,Air,Wood,Air,Wood,Air
+FROW_2 true,false,true,false,true,false
+ROW_3 Wood,Air,Wood,Air,Wood,Air
+FROW_3 true,false,true,false,true,false
+ROW_4 Air,Wood,Air,Wood,Air,Wood
+FROW_4 false,true,false,true,false,true
+ROW_5 Air,Wood,Air,Wood,Air,Wood
+FROW_5 false,true,false,true,false,true
+ROW_6 Air,Wood,Air,Wood,Air,Wood
+FROW_6 false,true,false,true,false,true

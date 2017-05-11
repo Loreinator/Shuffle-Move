@@ -1,0 +1,13 @@
+STAGE SP_722
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Wood,Air,Air,Metal,Metal
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Wood,Air,Air,Metal,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false

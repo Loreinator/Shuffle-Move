@@ -117,7 +117,7 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 4;
       }
       
       @Override
@@ -205,7 +205,7 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 4;
       }
       
       @Override
@@ -220,7 +220,7 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 4;
       }
       
       @Override
