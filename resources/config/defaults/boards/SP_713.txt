@@ -1,0 +1,13 @@
+STAGE SP_713
+ROW_1 Popplio,Popplio,Air,Popplio,Popplio,Metal
+FROW_1 false,false,false,false,false,false
+ROW_2 Squirtle,Wartortle,Mudkip,Piplup,Oshawott,Froakie
+FROW_2 false,false,false,false,false,false
+ROW_3 Squirtle,Wartortle,Mudkip,Piplup,Oshawott,Froakie
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Wood,Wood,Wood,Wood,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Squirtle,Wartortle,Mudkip,Piplup,Oshawott,Froakie
+FROW_5 false,false,false,false,false,false
+ROW_6 Squirtle,Wartortle,Mudkip,Piplup,Oshawott,Froakie
+FROW_6 false,false,false,false,false,false
