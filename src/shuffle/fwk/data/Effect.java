@@ -117,7 +117,7 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 4;
       }
       
       @Override
@@ -205,7 +205,7 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 4;
       }
       
       @Override
@@ -220,7 +220,7 @@ public enum Effect {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
-         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 3;
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 4;
       }
       
       @Override
@@ -2695,15 +2695,22 @@ public enum Effect {
          boolean canActivate = canActivate(comboEffect, task);
          if (canActivate) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
-            if (matches.size() > 2) {
-               task.setIsRandom();
-            }
-            if (!matches.isEmpty() && doesActivate(comboEffect, task)) {
-               int blockIndex = getRandomInt(matches.size() / 2);
-               int row = matches.get(blockIndex * 2);
-               int col = matches.get(blockIndex * 2 + 1);
-               final List<Integer> toErase = Arrays.asList(row, col);
-               task.addFinishedAction((ce, t) -> Effect.BLOCK_SMASH.eraseBonus(t, toErase, false));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = 2;
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  final List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  task.addFinishedAction((ce, t) -> Effect.BLOCK_SMASH.eraseBonus(t, toErase, false));
+               }
             }
          }
       }
@@ -2731,13 +2738,21 @@ public enum Effect {
             Board board = task.getState().getBoard();
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isFrozenAt(r, c));
             if (!matches.isEmpty()) {
-               if (matches.size() / 2 > 1) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = 2;
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
-               int blockIndex = getRandomInt(matches.size() / 2);
-               int row = matches.get(blockIndex * 2);
-               int col = matches.get(blockIndex * 2 + 1);
-               task.addFinishedAction((ce, t) -> t.unfreezeAt(Arrays.asList(row, col)));
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  final List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  task.addFinishedAction((ce, t) -> t.unfreezeAt(toErase));
+               }
             }
          }
       }
@@ -2764,14 +2779,21 @@ public enum Effect {
          if (canActivate(comboEffect, task)) {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(WOOD));
             if (!matches.isEmpty()) {
-               if (matches.size() > 2) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = 2;
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
-               int blockIndex = getRandomInt(matches.size() / 2);
-               int row = matches.get(blockIndex * 2);
-               int col = matches.get(blockIndex * 2 + 1);
-               final List<Integer> toErase = Arrays.asList(row, col);
-               task.addFinishedAction((ce, t) -> Effect.WOOD.eraseBonus(t, toErase, true));
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  final List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  task.addFinishedAction((ce, t) -> Effect.WOOD.eraseBonus(t, toErase, true));
+               }
             }
          }
       }
