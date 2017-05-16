@@ -1,0 +1,13 @@
+STAGE SP_716U
+ROW_1 Oricorio_pa,Metal,Metal,Air,Oricorio_pa,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Oricorio_pa,Air,Air,Metal,Metal,Oricorio_pa
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Air,Air,Air,Air,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Oricorio_pa,Air,Air,Air,Air,Oricorio_pa
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Metal,Metal,Air,Air,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Oricorio_pa,Air,Oricorio_pa,Metal,Metal,Oricorio_pa
+FROW_6 false,false,false,false,false,false
