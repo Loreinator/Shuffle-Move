@@ -2988,7 +2988,7 @@ public enum Effect {
                      int col = matches.get(i * 2 + 1);
                      toErase.addAll(Arrays.asList(row, col));
                   }
-                  task.addFinishedAction((ce, t) -> Effect.eraseBonus(t, toErase, true));
+                  task.addFinishedAction((ce, t) -> eraseBonus(t, toErase, true));
                }
             }
          }
