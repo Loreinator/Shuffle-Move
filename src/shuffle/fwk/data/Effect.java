@@ -102,6 +102,24 @@ public enum Effect {
       }
    },
    /**
+    * Same as {@link Effect#SUPER_TACKLE}.
+    */
+   SUPER_VOICE {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+         if (e.getNumBlocks() == 4) {
+            return super.getOdds(task, e);
+         } else {
+            return 0;
+         }
+      }
+   },
+   /**
     * Attacks do more damage when you make a match of 5.
     */
    POWER_OF_5 {
@@ -286,6 +304,26 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          ifThenSetSpecial(comboEffect, task, PkmType.GHOST, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Increases damage of Rock-type moves in a Combo.
+    */
+   ROCK_COMBO {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.ROCK, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Increases damage of Bug-type moves in a Combo.
+    */
+   BUG_COMBO {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.BUG, getBonus(task, comboEffect));
       }
    },
    /**
@@ -2100,6 +2138,122 @@ public enum Effect {
       
    },
    /**
+    * Same as {@link Effect#CROSS_ATTACK} but more powerful and it may fail.
+    */
+   CROSS_ATTACK_P {
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (!super.canActivate(comboEffect, task)) {
+            return false;
+         }
+         
+         /*
+          * Attempt to recognize when there is a + match. This searches for: Same species, neither
+          * ends for either combo lies in their intersection, and they are different orientations,
+          * and the second combo is a claim (not yet active).
+          */
+         List<Integer> limits = SimulationTask.getLimits(comboEffect.getCoords());
+         int minRow = limits.get(0);
+         int minCol = limits.get(1);
+         int maxRow = limits.get(2);
+         int maxCol = limits.get(3);
+         
+         boolean matchFound = false;
+         Species thisSpecies = task.getEffectSpecies(comboEffect.getCoords());
+         if (comboEffect.isHorizontal()) {
+            // Horizontal, so minRow = maxRow. We're looking for something > minCol and < maxCol.
+            int row = minRow;
+            for (int col = minCol + 1; !matchFound && col < maxCol; col++) {
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (!claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinRow = otherLimits.get(0);
+                  int otherMaxRow = otherLimits.get(2);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinRow < row && otherMaxRow > row && otherSpecies.equals(thisSpecies)
+                        && !firstClaim.isHorizontal();
+               }
+            }
+            // The 3DS glitch that allows sideways T matches, except if the column is 1 or 6.
+            if (!matchFound && !task.getState().getCore().isMobileMode()) {
+               // Trying with the |- matches, except for column 1
+               int col = minCol;
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (col != 1 && !claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinRow = otherLimits.get(0);
+                  int otherMaxRow = otherLimits.get(2);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinRow < row && otherMaxRow > row && otherSpecies.equals(thisSpecies)
+                        && !firstClaim.isHorizontal();
+               }
+               // Try with the -| matches now, but exclude column 6.
+               if (!matchFound) {
+                  col = maxCol;
+                  claims = task.getClaimsFor(row, col);
+                  if (col < 6 && !claims.isEmpty()) {
+                     ActivateComboEffect firstClaim = claims.iterator().next();
+                     List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                     int otherMinRow = otherLimits.get(0);
+                     int otherMaxRow = otherLimits.get(2);
+                     Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                     matchFound = otherMinRow < row && otherMaxRow > row && otherSpecies.equals(thisSpecies)
+                           && !firstClaim.isHorizontal();
+                  }
+               }
+            }
+         } else {
+            // Vertical, so minCol = maxCol. We're looking for something > minRow and < maxRow.
+            int col = minCol;
+            for (int row = minRow + 1; !matchFound && row < maxRow; row++) {
+               Collection<ActivateComboEffect> claims = task.getClaimsFor(row, col);
+               if (!claims.isEmpty()) {
+                  ActivateComboEffect firstClaim = claims.iterator().next();
+                  List<Integer> otherLimits = SimulationTask.getLimits(firstClaim.getCoords());
+                  int otherMinCol = otherLimits.get(1);
+                  int otherMaxCol = otherLimits.get(3);
+                  Species otherSpecies = task.getEffectSpecies(firstClaim.getCoords());
+                  matchFound = otherMinCol < col && otherMaxCol > col && otherSpecies.equals(thisSpecies)
+                        && firstClaim.isHorizontal();
+               }
+            }
+         }
+         return matchFound;
+      }
+      
+      @Override
+      public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            /*
+             * The way this works: Step 1) Create the Bifunction to modifiy the scores for any
+             * effect activated that are NOT peristent (i.e. are not mega). Step 2) create an action
+             * that will remove this modifier when needed. Step 3) create an action that will add
+             * that action to the actions to execute. Step 4) Add the modifier in, and that second
+             * action. The second action will be removed from the list of finished actions, then
+             * activated to add the first action to the queue.
+             */
+            double bonus = getBonus(task, comboEffect);
+            double odds = getOdds(task, comboEffect);
+            final NumberSpan multiplier = new NumberSpan(1, bonus, odds);
+            final NumberSpan one = new NumberSpan(1);
+            final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier = (ce,
+                  t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : multiplier);
+            final BiConsumer<ActivateComboEffect, SimulationTask> removeModifierAction = (ce, t) -> {
+               t.removeScoreModifier(modifier);
+            };
+            BiConsumer<ActivateComboEffect, SimulationTask> doAfter = (ce, t) -> {
+               t.addFinishedAction(removeModifierAction);
+            };
+            task.addScoreModifier(modifier);
+            task.addFinishedAction(doAfter);
+         }
+      }
+      
+   },
+   /**
     * Making an L-Shapped match deals more damage than usual.
     */
    L_BOOST {
@@ -2801,6 +2955,43 @@ public enum Effect {
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Removes 2 non-support pokemon and deals extra damage.
+    */
+   SHOT_OUT {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+         return super.canActivate(comboEffect, task)
+               && !task.findMatches(1, false, (r, c, s) -> nonSupports.contains(s)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = 2;
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  task.addFinishedAction((ce, t) -> Effect.eraseBonus(t, toErase, true));
+               }
+            }
+         }
       }
    },
    /**
