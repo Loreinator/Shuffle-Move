@@ -1,0 +1,13 @@
+STAGE SP_707
+ROW_1 Rowlet,Rowlet,Air,Rowlet,Rowlet,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Treecko,Air,Air,Chespin,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Treecko,Chikorita,Treecko,Chespin,Snivy,Chespin
+FROW_4 false,false,false,false,false,false
+ROW_5 Chikorita,Bulbasaur,Chikorita,Snivy,Turtwig,Snivy
+FROW_5 false,false,false,false,false,false
+ROW_6 Bulbasaur,Wood,Bulbasaur,Turtwig,Wood,Turtwig
+FROW_6 false,false,false,false,false,false
