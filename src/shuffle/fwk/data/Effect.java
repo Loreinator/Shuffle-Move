@@ -120,6 +120,42 @@ public enum Effect {
       }
    },
    /**
+    * Same as {@link Effect#SUPER_TACKLE}.
+    */
+   SUPER_ARROW {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+         if (e.getNumBlocks() == 4) {
+            return super.getOdds(task, e);
+         } else {
+            return 0;
+         }
+      }
+   },
+   /**
+    * Attacks do more damage when you make a match of 4. Skill Level increases odds of activation.
+    */
+   FULL_POWER {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+         if (e.getNumBlocks() == 4) {
+            return super.getOdds(task, e);
+         } else {
+            return 0;
+         }
+      }
+   },
+   /**
     * Attacks do more damage when you make a match of 5.
     */
    POWER_OF_5 {
@@ -324,6 +360,26 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          ifThenSetSpecial(comboEffect, task, PkmType.BUG, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Increases damage of Grass-type moves in a Combo.
+    */
+   LEAF_COMBO {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.GRASS, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Increases damage of Steel-type moves in a Combo.
+    */
+   METAL_COMBO {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.STEEL, getBonus(task, comboEffect));
       }
    },
    /**
@@ -1029,6 +1085,28 @@ public enum Effect {
     * Occasionally disrupts your opponent's disruptions.
     */
    FLAP {
+      // TODO when disruption timers are implemented
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+      }
+      
+   },
+   /**
+    * Can delay your opponent's disruptions for a turn, deals additional damage
+    */
+   CRUSHING_STEP {
       // TODO when disruption timers are implemented
       
       @Override
@@ -2961,6 +3039,43 @@ public enum Effect {
     * Removes 2 non-support pokemon and deals extra damage.
     */
    SHOT_OUT {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+         return super.canActivate(comboEffect, task)
+               && !task.findMatches(1, false, (r, c, s) -> nonSupports.contains(s)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = 2;
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  task.addFinishedAction((ce, t) -> eraseBonus(t, toErase, true));
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Occasionally erases two extra matching Species elsewhere.
+    */
+   BLINDSIDE {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
