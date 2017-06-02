@@ -195,6 +195,21 @@ public enum Effect {
    },
    /**
     * Does more damage the more times in a row it is triggered. <br>
+    * hitting/damage streak, first activation: 1.5 <br>
+    * hitting/damage streak, second activation: 2.25 (1.5^2) <br>
+    * hitting/damage streak, third activation: 3.375 (1.5^3) <br>
+    * hitting/damage streak, fourth or higher activation: 7.59 (1.5^5)
+    * [may need further testing]
+    */
+   HITTING_STREAK_P {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Does more damage the more times in a row it is triggered. <br>
     * hitting/damage streak, first activation: 1.2 <br>
     * hitting/damage streak, second activation: 1.44 (1.2^2) <br>
     * hitting/damage streak, third activation: 1.728 (1.2^3) <br>
@@ -283,9 +298,33 @@ public enum Effect {
       }
    },
    /**
+    * Attacks do even more damage when things are looking desperate.
+    */
+   HYPER_BOLT {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.getState().getCore().getRemainingMoves() < 4;
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Increases damage done by any Fire types in a combo.
     */
    PYRE {
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         SimulationState state = task.getState();
+         return super.canActivate(comboEffect, task)
+               && (!task.findMatches(1, true, (r, c, s) -> PkmType.FIRE.equals(state.getSpeciesType(s))).isEmpty()
+                     || task.getState().getCore().getSupportSpecies().stream().map(s -> state.getSpeciesType(s))
+                           .anyMatch(t -> PkmType.FIRE.equals(t)));
+      }
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
@@ -1107,6 +1146,28 @@ public enum Effect {
     * Can delay your opponent's disruptions for a turn, deals additional damage
     */
    CRUSHING_STEP {
+      // TODO when disruption timers are implemented
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+      }
+      
+   },
+  /**
+    * Can delay your opponent's disruptions for a turn, deals additional damage
+    */
+   DAUNT {
       // TODO when disruption timers are implemented
       
       @Override
@@ -1997,7 +2058,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 5);
       }
    },
    /**
@@ -2041,6 +2102,32 @@ public enum Effect {
          NumberSpan ret = score;
          if (canActivate(comboEffect, task)) {
             double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
+      }
+   },
+   /**
+    * Does more damage when the opponent has more HP left.
+    */
+   ABSORB {
+      
+      @Override
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.05);
             double odds = getOdds(task, comboEffect);
             if (odds >= 1.0) {
                // completely override the normal score
@@ -2753,7 +2840,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.BURN, 5);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 6);
       }
    },
    /**
@@ -3113,6 +3200,33 @@ public enum Effect {
             }
          }
       }
+   },
+   /**
+    * Leaves the foe paralyzed and deals bonus damage.
+    * [Needs testing for exact info]
+    */
+   LIGHTNING {
+      // TODO when disruption timers are implemented
+      
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
+            PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
+      }
+
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+	return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+
    },
    /**
     * Same as {@link KANGASKHAN} but the mega threshold is slightly lower.

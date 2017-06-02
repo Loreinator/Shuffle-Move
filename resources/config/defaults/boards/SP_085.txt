@@ -1,0 +1,13 @@
+STAGE SP_085
+ROW_1 Persian_a,Metal,Persian_a,Metal,Persian_a,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Metal,Persian_a,Wood,Persian_a,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Persian_a,Wood,Persian_a,Air,Persian_a,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Persian_a,Air,Persian_a,Wood,Persian_a
+FROW_4 false,false,false,false,false,false
+ROW_5 Persian_a,Air,Persian_a,Wood,Persian_a,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Persian_a,Metal,Persian_a,Metal,Persian_a
+FROW_6 false,false,false,false,false,false

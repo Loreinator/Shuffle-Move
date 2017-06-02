@@ -1,0 +1,13 @@
+STAGE 585
+ROW_1 Wood,Air,Air,Air,Air,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Timburr,Air,Air,Air,Air,Gurdurr
+FROW_2 false,false,false,false,false,false
+ROW_3 Timburr,Air,Air,Air,Air,Gurdurr
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Air,Air,Air,Air,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Gurdurr,Timburr,Gurdurr,Gurdurr,Timburr,Timburr
+FROW_5 false,false,false,false,false,false
+ROW_6 Timburr,Air,Air,Air,Air,Gurdurr
+FROW_6 false,false,false,false,false,false
