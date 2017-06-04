@@ -3071,6 +3071,11 @@ public enum Effect {
             }
          }
       }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
    },
    /**
     * Occasionally erases two extra matching Species elsewhere.
