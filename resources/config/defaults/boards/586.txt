@@ -1,0 +1,13 @@
+STAGE 586
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Pancham,Metal,Spinda,Spinda,Wood,Spinda
+FROW_2 false,true,false,true,false,true
+ROW_3 Pancham,Metal,Wood,Wood,Spinda,Spinda
+FROW_3 false,true,true,false,false,false
+ROW_4 Spinda,Spinda,Wood,Spinda,Spinda,Pancham
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Metal,Metal,Wood,Metal,Metal
+FROW_5 true,true,true,false,true,true
+ROW_6 Metal,Metal,Metal,Spinda,Metal,Metal
+FROW_6 true,true,true,false,true,true

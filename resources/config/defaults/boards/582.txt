@@ -1,0 +1,13 @@
+STAGE 582
+ROW_1 Wood,Wood,Remoraid,Remoraid,Wood,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Wood,Remoraid,Remoraid,Wood,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Remoraid,Remoraid,Wood,Wood,Remoraid,Remoraid
+FROW_3 false,false,false,false,false,false
+ROW_4 Remoraid,Remoraid,Wood,Wood,Remoraid,Remoraid
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Remoraid,Remoraid,Wood,Wood,Remoraid,Remoraid
+FROW_6 false,false,false,false,false,false
