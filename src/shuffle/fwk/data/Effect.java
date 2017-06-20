@@ -2674,8 +2674,8 @@ public enum Effect {
             Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
             int num = task
                   .findMatches(36, true,
-                        (r, c, s) -> (s.equals(
-                              effectSpecies)
+                        (r, c, s) -> (s.getType().equals(
+                              effectSpecies.getType())
                         && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
                   .size() / 2;
             ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
