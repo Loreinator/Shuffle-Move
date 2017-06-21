@@ -1,0 +1,13 @@
+STAGE SP_016M
+ROW_1 Pikachu_m,Pikachu_m,Pichu,Pikachu_m,Pikachu_m,Pichu
+FROW_1 false,false,false,false,false,false
+ROW_2 Pichu,Pichu,Pikachu,Pikachu,Pichu,Pichu
+FROW_2 false,false,false,false,false,false
+ROW_3 Pichu,Pichu,Pikachu,Pikachu,Pichu,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Pikachu_m,Pikachu_m,Wood,Wood,Wood,Pikachu_m
+FROW_4 false,false,false,false,false,false
+ROW_5 Pichu,Pichu,Pikachu,Pikachu,Pichu,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Pichu,Pichu,Pikachu,Pikachu,Pichu,Pichu
+FROW_6 false,false,false,false,false,false
