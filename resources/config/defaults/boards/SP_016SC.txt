@@ -1,0 +1,13 @@
+STAGE SP_016SC
+ROW_1 Wood,Wood,Wood,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Chimchar,Turtwig,Piplup,Metal,Metal,Metal
+FROW_2 true,true,true,true,true,true
+ROW_3 Turtwig,Chimchar,Turtwig,Metal,Metal,Metal
+FROW_3 false,false,false,true,true,true
+ROW_4 Piplup,Piplup,Chimchar,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Wood,Wood,Air,Air,Air
+FROW_5 true,true,true,false,false,false
+ROW_6 Wood,Wood,Wood,Air,Air,Air
+FROW_6 true,true,true,false,false,false
