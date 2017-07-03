@@ -2276,27 +2276,36 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            /*
-             * The way this works: Step 1) Create the Bifunction to modifiy the scores for any
-             * effect activated that are NOT peristent (i.e. are not mega). Step 2) create an action
-             * that will remove this modifier when needed. Step 3) create an action that will add
-             * that action to the actions to execute. Step 4) Add the modifier in, and that second
-             * action. The second action will be removed from the list of finished actions, then
-             * activated to add the first action to the queue.
-             */
+            // Get the bonus for the activating combo
             double bonus = getBonus(task, comboEffect);
+            double weakerBonus = getBonus(task, comboEffect, 1);
+            // The odds for that activation
             double odds = getOdds(task, comboEffect);
+            // create a multiplier for the score
             final NumberSpan multiplier = new NumberSpan(1, bonus, odds);
+            // And a weaker version for the secondary combo
+            final NumberSpan weakerMultiplier = new NumberSpan(1, weakerBonus, odds);
+            // and a backup 'one' in case it mega evolved
             final NumberSpan one = new NumberSpan(1);
+            // This modifies the initial match
             final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier = (ce,
                   t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : multiplier);
-            final BiConsumer<ActivateComboEffect, SimulationTask> removeModifierAction = (ce, t) -> {
-               t.removeScoreModifier(modifier);
+            // This modifies the secondary match
+            final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> weakerModifier = (ce,
+                  t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : weakerMultiplier);
+            // This removes the secondary match's modifier
+            final BiConsumer<ActivateComboEffect, SimulationTask> removeWeakerModifierAction = (ce, t) -> {
+               t.removeScoreModifier(weakerModifier);
             };
+            // And this puts them all together to allow the cascade of modifiers
             BiConsumer<ActivateComboEffect, SimulationTask> doAfter = (ce, t) -> {
-               t.addFinishedAction(removeModifierAction);
+               t.removeScoreModifier(modifier);
+               t.addScoreModifier(weakerModifier);
+               t.addFinishedAction(removeWeakerModifierAction);
             };
+            // Apply the initial modifier
             task.addScoreModifier(modifier);
+            // And queue the cascade of changes
             task.addFinishedAction(doAfter);
          }
       }
@@ -2392,27 +2401,36 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            /*
-             * The way this works: Step 1) Create the Bifunction to modifiy the scores for any
-             * effect activated that are NOT peristent (i.e. are not mega). Step 2) create an action
-             * that will remove this modifier when needed. Step 3) create an action that will add
-             * that action to the actions to execute. Step 4) Add the modifier in, and that second
-             * action. The second action will be removed from the list of finished actions, then
-             * activated to add the first action to the queue.
-             */
+            // Get the bonus for the activating combo
             double bonus = getBonus(task, comboEffect);
+            double weakerBonus = getBonus(task, comboEffect, 1);
+            // The odds for that activation
             double odds = getOdds(task, comboEffect);
+            // create a multiplier for the score
             final NumberSpan multiplier = new NumberSpan(1, bonus, odds);
+            // And a weaker version for the secondary combo
+            final NumberSpan weakerMultiplier = new NumberSpan(1, weakerBonus, odds);
+            // and a backup 'one' in case it mega evolved
             final NumberSpan one = new NumberSpan(1);
+            // This modifies the initial match
             final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier = (ce,
                   t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : multiplier);
-            final BiConsumer<ActivateComboEffect, SimulationTask> removeModifierAction = (ce, t) -> {
-               t.removeScoreModifier(modifier);
+            // This modifies the secondary match
+            final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> weakerModifier = (ce,
+                  t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : weakerMultiplier);
+            // This removes the secondary match's modifier
+            final BiConsumer<ActivateComboEffect, SimulationTask> removeWeakerModifierAction = (ce, t) -> {
+               t.removeScoreModifier(weakerModifier);
             };
+            // And this puts them all together to allow the cascade of modifiers
             BiConsumer<ActivateComboEffect, SimulationTask> doAfter = (ce, t) -> {
-               t.addFinishedAction(removeModifierAction);
+               t.removeScoreModifier(modifier);
+               t.addScoreModifier(weakerModifier);
+               t.addFinishedAction(removeWeakerModifierAction);
             };
+            // Apply the initial modifier
             task.addScoreModifier(modifier);
+            // And queue the cascade of changes
             task.addFinishedAction(doAfter);
          }
       }
@@ -2461,27 +2479,36 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            /*
-             * The way this works: Step 1) Create the Bifunction to modifiy the scores for any
-             * effect activated that are NOT peristent (i.e. are not mega). Step 2) create an action
-             * that will remove this modifier when needed. Step 3) create an action that will add
-             * that action to the actions to execute. Step 4) Add the modifier in, and that second
-             * action. The second action will be removed from the list of finished actions, then
-             * activated to add the first action to the queue.
-             */
+            // Get the bonus for the activating combo
             double bonus = getBonus(task, comboEffect);
+            double weakerBonus = getBonus(task, comboEffect, 1);
+            // The odds for that activation
             double odds = getOdds(task, comboEffect);
+            // create a multiplier for the score
             final NumberSpan multiplier = new NumberSpan(1, bonus, odds);
+            // And a weaker version for the secondary combo
+            final NumberSpan weakerMultiplier = new NumberSpan(1, weakerBonus, odds);
+            // and a backup 'one' in case it mega evolved
             final NumberSpan one = new NumberSpan(1);
+            // This modifies the initial match
             final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier = (ce,
                   t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : multiplier);
-            final BiConsumer<ActivateComboEffect, SimulationTask> removeModifierAction = (ce, t) -> {
-               t.removeScoreModifier(modifier);
+            // This modifies the secondary match
+            final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> weakerModifier = (ce,
+                  t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : weakerMultiplier);
+            // This removes the secondary match's modifier
+            final BiConsumer<ActivateComboEffect, SimulationTask> removeWeakerModifierAction = (ce, t) -> {
+               t.removeScoreModifier(weakerModifier);
             };
+            // And this puts them all together to allow the cascade of modifiers
             BiConsumer<ActivateComboEffect, SimulationTask> doAfter = (ce, t) -> {
-               t.addFinishedAction(removeModifierAction);
+               t.removeScoreModifier(modifier);
+               t.addScoreModifier(weakerModifier);
+               t.addFinishedAction(removeWeakerModifierAction);
             };
+            // Apply the initial modifier
             task.addScoreModifier(modifier);
+            // And queue the cascade of changes
             task.addFinishedAction(doAfter);
          }
       }
@@ -2547,27 +2574,36 @@ public enum Effect {
       @Override
       public void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          if (canActivate(comboEffect, task)) {
-            /*
-             * The way this works: Step 1) Create the Bifunction to modifiy the scores for any
-             * effect activated that are NOT peristent (i.e. are not mega). Step 2) create an action
-             * that will remove this modifier when needed. Step 3) create an action that will add
-             * that action to the actions to execute. Step 4) Add the modifier in, and that second
-             * action. The second action will be removed from the list of finished actions, then
-             * activated to add the first action to the queue.
-             */
+            // Get the bonus for the activating combo
             double bonus = getBonus(task, comboEffect);
+            double weakerBonus = getBonus(task, comboEffect, 1);
+            // The odds for that activation
             double odds = getOdds(task, comboEffect);
+            // create a multiplier for the score
             final NumberSpan multiplier = new NumberSpan(1, bonus, odds);
+            // And a weaker version for the secondary combo
+            final NumberSpan weakerMultiplier = new NumberSpan(1, weakerBonus, odds);
+            // and a backup 'one' in case it mega evolved
             final NumberSpan one = new NumberSpan(1);
+            // This modifies the initial match
             final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> modifier = (ce,
                   t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : multiplier);
-            final BiConsumer<ActivateComboEffect, SimulationTask> removeModifierAction = (ce, t) -> {
-               t.removeScoreModifier(modifier);
+            // This modifies the secondary match
+            final BiFunction<ActivateComboEffect, SimulationTask, NumberSpan> weakerModifier = (ce,
+                  t) -> (t.getEffectFor(t.getEffectSpecies(ce.getCoords())).isPersistent() ? one : weakerMultiplier);
+            // This removes the secondary match's modifier
+            final BiConsumer<ActivateComboEffect, SimulationTask> removeWeakerModifierAction = (ce, t) -> {
+               t.removeScoreModifier(weakerModifier);
             };
+            // And this puts them all together to allow the cascade of modifiers
             BiConsumer<ActivateComboEffect, SimulationTask> doAfter = (ce, t) -> {
-               t.addFinishedAction(removeModifierAction);
+               t.removeScoreModifier(modifier);
+               t.addScoreModifier(weakerModifier);
+               t.addFinishedAction(removeWeakerModifierAction);
             };
+            // Apply the initial modifier
             task.addScoreModifier(modifier);
+            // And queue the cascade of changes
             task.addFinishedAction(doAfter);
          }
       }
@@ -6144,11 +6180,32 @@ public enum Effect {
       return core.getOdds(this, num, skillLevel);
    }
    
-   protected double getMultiplier(SimulationTask task, ActivateComboEffect e) {
+   /**
+    * Gets the multiplier configured for the given combo effect, according to the given simulation
+    * task. Will override the given combo effect's skill level with the provided overrideSkillLevel
+    * if it is a valid skill level (between 1 and 5 inclusive).
+    * 
+    * @param task
+    *           The Simulation task to reference
+    * @param e
+    *           The combo effect to use to identify the skill
+    * @param overrideSkillLevel
+    *           If in the range of [1, 5] inclusive, overrides the skill level of the effect.
+    * @return The multiplier, as a double. 1.0 means no increase or decrease.
+    */
+   protected double getMultiplier(SimulationTask task, ActivateComboEffect e, int overrideSkillLevel) {
       SimulationCore core = task.getState().getCore();
       Species species = task.getEffectSpecies(e.getCoords());
       int skillLevel = core.getSkillLevel(species);
-      return core.getMultiplier(this, skillLevel);
+      if (overrideSkillLevel >= 1 && overrideSkillLevel <= 5) {
+         return core.getMultiplier(this, overrideSkillLevel);
+      } else {
+         return core.getMultiplier(this, skillLevel);
+      }
+   }
+   
+   protected double getMultiplier(SimulationTask task, ActivateComboEffect e) {
+      return getMultiplier(task, e, 0);
    }
    
    protected double getMultiplierRatio(SimulationTask task, ActivateComboEffect e) {
@@ -6166,6 +6223,10 @@ public enum Effect {
    
    protected double getBonus(SimulationTask task, ActivateComboEffect e) {
       return getMultiplier(task, e) - 1.0;
+   }
+   
+   protected double getBonus(SimulationTask task, ActivateComboEffect e, int overrideSkillLevel) {
+      return getMultiplier(task, e, overrideSkillLevel) - 1.0;
    }
    
    /**
