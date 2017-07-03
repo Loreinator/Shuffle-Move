@@ -422,6 +422,16 @@ public enum Effect {
       }
    },
    /**
+    * Increases damage of Psychic-type moves in a Combo.
+    */
+   PSYCHIC_COMBO {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.PSYCHIC, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Increases damage of Dark-type moves in a combo.
     */
    SINISTER_POWER {
@@ -3157,6 +3167,49 @@ public enum Effect {
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
+   },
+   /**
+    * Removes 2 clouds and deals extra damage.
+    */
+   CLOUD_SHOT {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         Board board = task.getState().getBoard();
+         return super.canActivate(comboEffect, task)
+               && !task.findMatches(1, false, (r, c, s) -> board.isCloudedAt(r, c)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> board.isCloudedAt(r, c));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = 2;
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  final List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  task.addFinishedAction((ce, t) -> t.unfreezeAt(toErase));
+               }
+            }
+         }
+      }
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
    },
    /**
     * Removes 2 non-support pokemon and deals extra damage.

@@ -47,6 +47,10 @@ RESOURCE Pikachu_rg img/icons/025-gyaradoss.png
 RESOURCE Pikachu_hc img/icons/025-hoenn.png
 RESOURCE Pikachu_sc img/icons/025-sinnoh.png
 RESOURCE Pikachu_og img/icons/025-original.png
+RESOURCE Pikachu_kc img/icons/025-kalos.png
+RESOURCE Pikachu_uc img/icons/025-unova.png
+RESOURCE Pikachu_r img/icons/025-rayquaza.png
+RESOURCE Pikachu_sr img/icons/025-rayquazas.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Raichu_a img/icons/026-a.png
@@ -448,6 +452,7 @@ RESOURCE Rayquaza img/icons/384.png
 RESOURCE Rayquaza_s img/icons/384-s.png
 RESOURCE Jirachi img/icons/385.png
 RESOURCE Deoxys img/icons/386.png
+RESOURCE Deoxys_a img/icons/386-a.png
 RESOURCE Turtwig img/icons/387.png
 RESOURCE Grotle img/icons/388.png
 RESOURCE Torterra img/icons/389.png

@@ -1,0 +1,13 @@
+STAGE SP_355
+ROW_1 Air,Air,Air,Metal,Air,Air
+FROW_1 false,false,false,true,false,false
+ROW_2 Air,Air,Wood,Deoxys_a,Metal,Air
+FROW_2 false,false,false,false,true,false
+ROW_3 Air,Wood,Deoxys_a,Deoxys_a,Deoxys_a,Metal
+FROW_3 false,false,false,false,false,true
+ROW_4 Air,Wood,Deoxys_a,Deoxys_a,Deoxys_a,Metal
+FROW_4 false,false,false,false,false,true
+ROW_5 Air,Air,Wood,Deoxys_a,Metal,Air
+FROW_5 false,false,false,false,true,false
+ROW_6 Air,Air,Air,Metal,Air,Air
+FROW_6 false,false,false,true,false,false
