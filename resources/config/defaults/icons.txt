@@ -49,6 +49,7 @@ RESOURCE Pikachu_sc img/icons/025-sinnoh.png
 RESOURCE Pikachu_og img/icons/025-original.png
 RESOURCE Pikachu_kc img/icons/025-kalos.png
 RESOURCE Pikachu_uc img/icons/025-unova.png
+RESOURCE Pikachu_ac img/icons/025-alola.png
 RESOURCE Pikachu_r img/icons/025-rayquaza.png
 RESOURCE Pikachu_sr img/icons/025-rayquazas.png
 RESOURCE Raichu img/icons/026.png
@@ -479,7 +480,9 @@ RESOURCE Rampardos img/icons/409.png
 RESOURCE Shieldon img/icons/410.png
 RESOURCE Bastiodon img/icons/411.png
 RESOURCE Burmy img/icons/412.png
+RESOURCE Burmy_t img/icons/412-t.png
 RESOURCE Wormadam img/icons/413.png
+RESOURCE Wormadam_t img/icons/413-t.png
 RESOURCE Mothim img/icons/414.png
 RESOURCE Combee img/icons/415.png
 RESOURCE Vespiquen img/icons/416.png
