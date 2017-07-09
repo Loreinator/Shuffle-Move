@@ -146,7 +146,7 @@ public class ShuffleModel
    private static final String KEY_BUG_REPORT_PROBLEM = "log.error.bugreport.problem";
    private static final String KEY_SELECTING_RESULT = "log.result.selected";
    // Special values for SP_084 Meowth (weekend meowth)
-   private static final String SP_084_STAGE_KEY = "SP_084";
+   private static final Collection<String> SP_084_STAGE_KEYS = new TreeSet<String>(Arrays.asList("SP_084", "SP_084A"));
    private static final int SP_084_MOVE_OVERRIDE = 5;
    private static final String SP_084_GRADING_MODE = "WeekendMeowth";
    private static final String SP_084_LAST_MOVE_GRADING_MODE = GradingModeManager.SCORE_KEY;
@@ -168,6 +168,7 @@ public class ShuffleModel
    // private GradingMode gradeMode = null;
    private Locale prevLocale = null;
    private Stage prevStage = null;
+   private GradingMode prevGradingMode = null;
    
    private boolean resultsCurrent = false;
    private boolean resultsComputing = false;
@@ -522,6 +523,7 @@ public class ShuffleModel
     */
    protected boolean setCurrentStage(Stage stage) {
       Team prevTeam = getCurrentTeam();
+      boolean wasSpecialStage84 = isSpecialStage84(getCurrentStage());
       boolean changed = getBoardManager().setStage(stage);
       if (changed) {
          int prevProgress = getMegaProgress();
@@ -548,12 +550,28 @@ public class ShuffleModel
          
          setCurrentScore(0);
          if (!isSurvivalMode()) {
-            setRemainingMoves(stage.getMoves());
             followSP084defaults = true;
-            if (stage.getName().equals(SP_084_STAGE_KEY)) {
-               setRemainingMoves(stage.getMoves() + SP_084_MOVE_OVERRIDE);
+            // If you weren't SP_084, but you are now
+            if (!wasSpecialStage84 && isSpecialStage84(stage)) {
+               // Recorded to allow a reversion after switching away from SP_084
+               prevGradingMode = getCurrentGradingMode();
                setGradingMode(
                      getGradingModeManager().getGradingModeValue(SP_084_GRADING_MODE, getCurrentGradingMode()));
+               setRemainingMoves(stage.getMoves() + SP_084_MOVE_OVERRIDE);
+               // Or, if you were SP_084, but you aren't any more
+            } else if (wasSpecialStage84 && !isSpecialStage84(stage)) {
+               setRemainingMoves(stage.getMoves());
+               // If we switched back from special stage 84
+               if (prevGradingMode == null) {
+                  // And the previous mode was never recorded, then use a default (score)
+                  setGradingMode(getGradingModeManager().getDefaultGradingMode());
+               } else {
+                  // Otherwise, use the previous mode recorded.
+                  setGradingMode(prevGradingMode);
+                  prevGradingMode = null;
+               }
+            } else {
+               setRemainingMoves(stage.getMoves());
             }
          }
          undoStack.clear();
@@ -569,6 +587,17 @@ public class ShuffleModel
          }
       }
       return changed;
+   }
+   
+   /**
+    * Returns true if the stage has a name and that name is one of the speical stage 84 stage IDs.
+    * 
+    * @param stage
+    * @return
+    */
+   private boolean isSpecialStage84(Stage stage) {
+      return stage != null && stage.getName() != null && SP_084_STAGE_KEYS != null
+            && SP_084_STAGE_KEYS.contains(stage.getName());
    }
    
    /**
@@ -589,7 +618,7 @@ public class ShuffleModel
          moves = DEFAULT_SURVIVAL_MOVES;
       } else {
          followSP084defaults = true;
-         if (getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+         if (isSpecialStage84(getCurrentStage())) {
             moves = getCurrentStage().getMoves() + SP_084_MOVE_OVERRIDE;
             setGradingMode(getGradingModeManager().getGradingModeValue(SP_084_GRADING_MODE, getCurrentGradingMode()));
          }
@@ -973,7 +1002,7 @@ public class ShuffleModel
          redoStack.clear();
          setCurrentScore(newScore);
          setRemainingMoves(newMoves);
-         if (followSP084defaults && getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+         if (followSP084defaults && isSpecialStage84(getCurrentStage())) {
             if (newMoves <= 1) {
                setGradingMode(getGradingModeManager().getGradingModeValue(SP_084_LAST_MOVE_GRADING_MODE,
                      getCurrentGradingMode()));
@@ -1274,7 +1303,7 @@ public class ShuffleModel
       if (mode == null) {
          return false;
       }
-      if (getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+      if (isSpecialStage84(getCurrentStage())) {
          if (getRemainingMoves() <= 1) {
             followSP084defaults = (mode.getKey().equals(SP_084_LAST_MOVE_GRADING_MODE));
          } else {
@@ -1353,9 +1382,9 @@ public class ShuffleModel
       if (isSurvivalMode()) {
          return getPreferencesManager().setEntry(EntryType.INTEGER, KEY_SURVIVAL_MODE_MOVES, moves);
       } else {
-         if (getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+         if (isSpecialStage84(getCurrentStage())) {
             GradingMode curMode = getCurrentGradingMode();
-            if (followSP084defaults && getCurrentStage().getName().equals(SP_084_STAGE_KEY)) {
+            if (followSP084defaults) {
                if (moves <= 1) {
                   setGradingMode(getGradingModeManager().getGradingModeValue(SP_084_LAST_MOVE_GRADING_MODE, curMode));
                } else {
