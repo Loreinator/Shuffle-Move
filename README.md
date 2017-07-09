@@ -44,7 +44,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.109 - 2017-07-**
+* **v0.3.109 - 2017-07-09**
 	- Fixed i18n for French
 	- Fixed Cross Attack+ damage calculation
 	- Updates for June 27th
