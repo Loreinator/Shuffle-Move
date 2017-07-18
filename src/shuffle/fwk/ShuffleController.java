@@ -1437,4 +1437,26 @@ public class ShuffleController extends Observable implements ShuffleViewUser, Sh
             GridPanel.DEFAULT_PRINT_INCLUDE_GRID);
    }
    
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#setWindowSafety(boolean)
+    */
+   @Override
+   public boolean setWindowSafety(boolean enabled) {
+      boolean changed = getModel().setWindowSafety(enabled);
+      if (changed) {
+         repaint();
+      }
+      return changed;
+   }
+   
+   /*
+    * (non-Javadoc)
+    * @see shuffle.fwk.gui.user.ShuffleMenuUser#getWindowSafety()
+    */
+   @Override
+   public boolean getWindowSafety() {
+      return getModel().getWindowSafety();
+   }
+   
 }

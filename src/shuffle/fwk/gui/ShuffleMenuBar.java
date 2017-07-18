@@ -112,6 +112,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private static final String KEY_LATEST_LINK = "menuitem.latest";
    private static final String KEY_SUBREDDIT_LINK = "menuitem.subreddit";
    private static final String KEY_GUIDE_LINK = "menuitem.guide";
+   private static final String KEY_WINDOW_SAFETY = "menuitem.windowsafety";
    
    // Hard-coded to avoid tampering
    public static final String LATEST_LINK = "https://github.com/Loreinator/Shuffle-Move/releases/latest";
@@ -124,6 +125,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    private ShuffleMenuUser user;
    private JCheckBoxMenuItem autoComputeItem;
    private JCheckBoxMenuItem survivalItem;
+   private JCheckBoxMenuItem windowSafetyItem;
    private Map<GradingMode, AbstractButton> modeMap;
    private Frame owner;
    private Map<AbstractButton, Supplier<String>> buttonToi18nKeyMap = null;
@@ -171,6 +173,10 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    
    public void updateSurvival(boolean selected) {
       survivalItem.setSelected(selected);
+   }
+   
+   public void updateWindowSafety(boolean selected) {
+      windowSafetyItem.setSelected(selected);
    }
    
    private void doSetup() {
@@ -418,6 +424,19 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
       
       menu.add(getLanguageSelectionMenu());
       
+      windowSafetyItem = new JCheckBoxMenuItem(getString(KEY_WINDOW_SAFETY));
+      if (getUser().getWindowSafety()) {
+         windowSafetyItem.setSelected(true);
+      }
+      windowSafetyItem.addItemListener(new ItemListener() {
+         @Override
+         public void itemStateChanged(ItemEvent e) {
+            getUser().setWindowSafety(e.getStateChange() == ItemEvent.SELECTED);
+         }
+      });
+      buttonToi18nKeyMap.put(windowSafetyItem, () -> getString(KEY_WINDOW_SAFETY));
+      menu.add(windowSafetyItem);
+      
       menu.addSeparator();
       
       MenuAction reportAction = new MenuAction(() -> getString(KEY_BUG), e -> BaseServiceManager.launchServiceByClass(
@@ -480,6 +499,7 @@ public class ShuffleMenuBar extends JMenuBar implements I18nUser {
    public void updateAll() {
       updateAutoCompute(getUser().isAutoCompute());
       updateSurvival(getUser().isSurvival());
+      updateWindowSafety(getUser().getWindowSafety());
       updateGradingMode(getUser().getCurrentGradingMode());
       Locale defLocale = Locale.getDefault();
       if (prevLocale == null || !prevLocale.equals(defLocale)) {
