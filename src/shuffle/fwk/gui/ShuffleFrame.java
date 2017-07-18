@@ -51,6 +51,7 @@ import shuffle.fwk.gui.user.ShuffleFrameUser;
 import shuffle.fwk.i18n.I18nUser;
 import shuffle.fwk.log.AlertLogHandler;
 import shuffle.fwk.log.AlertReciever;
+import shuffle.fwk.service.BaseService;
 import shuffle.fwk.service.BaseServiceManager;
 import shuffle.fwk.service.help.HelpService;
 import shuffle.fwk.service.movechooser.MoveChooserService;
@@ -198,6 +199,7 @@ public class ShuffleFrame extends JFrame implements I18nUser {
             int y = new Double(p.getY()).intValue();
             preferencesManager.setEntry(EntryType.INTEGER, KEY_LOCATION_X, x);
             preferencesManager.setEntry(EntryType.INTEGER, KEY_LOCATION_Y, y);
+            BaseService.correctPosition(ShuffleFrame.this, x, y, preferencesManager);
          }
       });
       if (manager.getBooleanValue(MoveChooserService.KEY_CHOOSER_AUTOLAUNCH, false)) {

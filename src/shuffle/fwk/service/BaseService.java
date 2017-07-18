@@ -19,6 +19,10 @@
 package shuffle.fwk.service;
 
 import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -27,12 +31,15 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import com.sun.glass.events.KeyEvent;
+
+import shuffle.fwk.config.ConfigManager;
 
 /**
  * The base service implementation, which takes care of creation, maintentance, and disposal.
@@ -43,6 +50,7 @@ public abstract class BaseService<Y extends Object> implements Service<Y> {
    
    protected static final String KEY_POPUP_WIDTH = "POPUP_WIDTH";
    protected static final String KEY_POPUP_HEIGHT = "POPUP_HEIGHT";
+   public static final String KEY_WINDOW_SAFETY_ENABLED = "WINDOW_SAFETY_ENABLED";
    protected static final int DEFAULT_POPUP_WIDTH = 640;
    protected static final int DEFAULT_POPUP_HEIGHT = 400;
    /** The id which is unique across all instances and identifies this service. */
@@ -282,5 +290,65 @@ public abstract class BaseService<Y extends Object> implements Service<Y> {
       } else {
          SwingUtilities.invokeLater(run);
       }
+   }
+   
+   /**
+    * Given a window object, and a proposed x and y position on the screen, perform any necessary
+    * correction to force it to remain on at least one of the available display devices. If the top
+    * right corner of the window is not within any display device, it will be moved to the default
+    * location.
+    * 
+    * @param w
+    *           A Window that is moving, or about to be moved.
+    * @param x
+    *           The relative horizontal position to the display origin
+    * @param y
+    *           The relative vertical position to the display origin
+    */
+   public static void correctPosition(Window w, int x, int y, ConfigManager pm) {
+      boolean isMaximizedEither = false;
+      if (w != null && Frame.class.isInstance(w)) {
+         int state = ((Frame) w).getExtendedState();
+         boolean maximizedHoriz = (state & JFrame.MAXIMIZED_HORIZ) != 0;
+         boolean maximizedVert = (state & JFrame.MAXIMIZED_VERT) != 0;
+         isMaximizedEither = maximizedHoriz || maximizedVert;
+      }
+      
+      if (pm.getBooleanValue(KEY_WINDOW_SAFETY_ENABLED, true) && !isLocationInScreenBounds(x, y)
+            && !isMaximizedEither) {
+         w.setLocationRelativeTo(null);
+      }
+   }
+   
+   public static final boolean isLocationInScreenBounds(int x, int y) {
+      // From:
+      // http://www.java2s.com/Code/Java/Swing-JFC/Verifiesifthegivenpointisvisibleonthescreen.htm
+      
+      // Check if the location is in the bounds of one of the graphics devices.
+      GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      GraphicsDevice[] graphicsDevices = graphicsEnvironment.getScreenDevices();
+      Rectangle graphicsConfigurationBounds = new Rectangle();
+      
+      // Iterate over the graphics devices.
+      for (int j = 0; j < graphicsDevices.length; j++) {
+         
+         // Get the bounds of the device.
+         GraphicsDevice graphicsDevice = graphicsDevices[j];
+         graphicsConfigurationBounds.setRect(graphicsDevice.getDefaultConfiguration().getBounds());
+         
+         // Is the location in this bounds?
+         graphicsConfigurationBounds.setRect(graphicsConfigurationBounds.x, graphicsConfigurationBounds.y,
+               graphicsConfigurationBounds.width, graphicsConfigurationBounds.height);
+         if (graphicsConfigurationBounds.contains(x, y)) {
+            
+            // The location is in this screengraphics.
+            return true;
+            
+         }
+         
+      }
+      
+      // We could not find a device that contains the given point.
+      return false;
    }
 }

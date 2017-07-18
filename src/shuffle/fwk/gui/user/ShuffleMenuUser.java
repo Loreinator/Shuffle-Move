@@ -128,4 +128,14 @@ public interface ShuffleMenuUser extends EditRosterServiceUser, MovePreferencesS
     */
    void clearSelectedTiles();
    
+   /**
+    * Sets the window safety to the given state.
+    */
+   boolean setWindowSafety(boolean enabled);
+   
+   /**
+    * Queries for the window safety state.
+    */
+   boolean getWindowSafety();
+   
 }

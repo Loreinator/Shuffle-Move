@@ -88,6 +88,7 @@ import shuffle.fwk.data.TeamImpl;
 import shuffle.fwk.data.simulation.SimulationCore;
 import shuffle.fwk.data.simulation.SimulationResult;
 import shuffle.fwk.i18n.I18nUser;
+import shuffle.fwk.service.BaseService;
 import shuffle.fwk.update.UpdateCheck;
 
 /**
@@ -1600,5 +1601,20 @@ public class ShuffleModel
          getBoardManager().setBoard(b);
       }
       return changed;
+   }
+   
+   /**
+    * @param enabled
+    * @return
+    */
+   public boolean setWindowSafety(boolean enabled) {
+      return getPreferencesManager().setEntry(EntryType.BOOLEAN, BaseService.KEY_WINDOW_SAFETY_ENABLED, enabled);
+   }
+   
+   /**
+    * @return
+    */
+   public boolean getWindowSafety() {
+      return getPreferencesManager().getBooleanValue(BaseService.KEY_WINDOW_SAFETY_ENABLED, true);
    }
 }

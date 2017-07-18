@@ -1,0 +1,13 @@
+STAGE SP_751
+ROW_1 Air,Venomoth,Wood,Wood,Venomoth,Air
+FROW_1 false,false,true,true,false,false
+ROW_2 Air,Wood,Air,Air,Wood,Air
+FROW_2 false,true,false,false,true,false
+ROW_3 Wood,Air,Air,Air,Air,Wood
+FROW_3 true,false,false,false,false,true
+ROW_4 Wood,Air,Air,Air,Air,Wood
+FROW_4 true,false,false,false,false,true
+ROW_5 Air,Wood,Air,Air,Wood,Air
+FROW_5 false,true,false,false,true,false
+ROW_6 Air,Air,Wood,Wood,Air,Air
+FROW_6 false,false,true,true,false,false

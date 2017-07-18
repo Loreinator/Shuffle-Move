@@ -347,6 +347,7 @@ public class MoveChooserService extends BaseService<ShuffleMenuUser>implements I
             int y = new Double(p.getY()).intValue();
             preferencesManager.setEntry(EntryType.INTEGER, KEY_CHOOSER_X, x);
             preferencesManager.setEntry(EntryType.INTEGER, KEY_CHOOSER_Y, y);
+            correctPosition(d, x, y, preferencesManager);
          }
          
          @Override
