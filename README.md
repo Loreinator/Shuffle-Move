@@ -44,7 +44,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.110 - 20170-07-17**
+* **v0.3.110 - 2017-07-17**
 	- Updates for July 11th
 	- Window offscreen safety added. It can be disabled from the Help menu.
 	- Fixed 4Up configuration
