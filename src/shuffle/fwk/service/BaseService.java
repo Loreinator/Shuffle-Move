@@ -31,6 +31,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -305,7 +306,16 @@ public abstract class BaseService<Y extends Object> implements Service<Y> {
     *           The relative vertical position to the display origin
     */
    public static void correctPosition(Window w, int x, int y, ConfigManager pm) {
-      if (pm.getBooleanValue(KEY_WINDOW_SAFETY_ENABLED, true) && !isLocationInScreenBounds(x, y)) {
+      boolean isMaximizedEither = false;
+      if (w != null && Frame.class.isInstance(w)) {
+         int state = ((Frame) w).getExtendedState();
+         boolean maximizedHoriz = (state & JFrame.MAXIMIZED_HORIZ) != 0;
+         boolean maximizedVert = (state & JFrame.MAXIMIZED_VERT) != 0;
+         isMaximizedEither = maximizedHoriz || maximizedVert;
+      }
+      
+      if (pm.getBooleanValue(KEY_WINDOW_SAFETY_ENABLED, true) && !isLocationInScreenBounds(x, y)
+            && !isMaximizedEither) {
          w.setLocationRelativeTo(null);
       }
    }
