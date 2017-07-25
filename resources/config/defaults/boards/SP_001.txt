@@ -1,0 +1,13 @@
+STAGE SP_001
+ROW_1 Wood,Bulbasaur,Wood,Wood,Bulbasaur,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Bulbasaur,Wood,Wood,Bulbasaur,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Bulbasaur,Wood,Wood,Bulbasaur,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Bulbasaur,Wood,Wood,Bulbasaur,Wood
+FROW_6 false,false,false,false,false,false

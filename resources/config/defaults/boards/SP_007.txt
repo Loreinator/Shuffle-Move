@@ -1,0 +1,13 @@
+STAGE SP_007
+ROW_1 Squirtle,Wood,Squirtle,Squirtle,Wood,Squirtle
+FROW_1 false,false,false,false,false,false
+ROW_2 Squirtle,Wood,Squirtle,Squirtle,Wood,Squirtle
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Squirtle,Wood,Squirtle,Squirtle,Wood,Squirtle
+FROW_4 false,false,false,false,false,false
+ROW_5 Squirtle,Wood,Squirtle,Squirtle,Wood,Squirtle
+FROW_5 false,false,false,false,false,false
+ROW_6 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_6 false,false,false,false,false,false
