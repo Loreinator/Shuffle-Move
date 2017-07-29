@@ -1,0 +1,13 @@
+STAGE SP_004
+ROW_1 Charmander,Air,Charmander,Charmander,Air,Charmander
+FROW_1 false,false,false,false,false,false
+ROW_2 Charmander,Air,Wood,Wood,Air,Charmander
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Air,Charmander,Charmander,Air,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Air,Charmander,Charmander,Air,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Charmander,Charmander,Wood,Wood,Charmander,Charmander
+FROW_5 false,false,false,false,false,false
+ROW_6 Charmander,Wood,Wood,Wood,Wood,Charmander
+FROW_6 false,false,false,false,false,false
