@@ -307,6 +307,7 @@ RESOURCE Suicune img/icons/245.png
 RESOURCE Larvitar img/icons/246.png
 RESOURCE Pupitar img/icons/247.png
 RESOURCE Tyranitar img/icons/248.png
+RESOURCE Tyranitar_s img/icons/248-s.png
 RESOURCE Lugia img/icons/249.png
 RESOURCE Ho-oh img/icons/250.png
 RESOURCE Celebi img/icons/251.png
@@ -932,6 +933,7 @@ RESOURCE Mega_Scizor img/icons/212-m.png
 RESOURCE Mega_Heracross img/icons/214-m.png
 RESOURCE Mega_Houndoom img/icons/229-m.png
 RESOURCE Mega_Tyranitar img/icons/248-m.png
+RESOURCE Mega_Tyranitar_s img/icons/248-sm.png
 RESOURCE Mega_Sceptile img/icons/254-m.png
 RESOURCE Mega_Blaziken img/icons/257-m.png
 RESOURCE Mega_Swampert img/icons/260-m.png

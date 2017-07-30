@@ -5500,6 +5500,41 @@ public enum Effect {
       }
    },
    /**
+    * Same as {@link #DIANCIE}.
+    */
+   TYRANITAR_S {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return DIANCIE.isAttackPowerEffective();
+      }
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return DIANCIE.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return DIANCIE.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return DIANCIE.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+   },
+   /**
     * Same as {@link #STEELIX}.
     */
    GLALIE_W {
