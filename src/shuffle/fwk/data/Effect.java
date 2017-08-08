@@ -1232,6 +1232,26 @@ public enum Effect {
       }
    },
    /**
+    * Can inflict the opponent with a burn for ten turns. All Fire-type damage is increased by 50%.
+    */
+   BURN_P {
+      // TODO when disruption timers are implemented
+      
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.FIRE, PkmType.GHOST,
+            PkmType.GROUND, PkmType.POISON, PkmType.ROCK, PkmType.WATER);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.BURN, 10);
+      }
+   },
+   /**
     * Leaves the foe spooked.
     */
    SPOOKIFY {
@@ -2191,6 +2211,16 @@ public enum Effect {
       }
    },
    /**
+    * Attacks rarely deal a ton more damage than usual.
+    */
+   TRY_HARD {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Makes it more likely to receive items when set as a Support.
     */
    GOOD_LUCK {
@@ -2622,6 +2652,12 @@ public enum Effect {
     * Increases the chance that the next match's skill is triggered.
     */
    CHEER {
+      // TODO when released and more data is available
+   },
+   /**
+    * Guarantees that the next match's skill is triggered (unless the original chance is 0%)
+    */
+   SUPER_CHEER {
       // TODO when released and more data is available
    },
    /**
