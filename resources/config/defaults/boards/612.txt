@@ -1,0 +1,13 @@
+STAGE 612
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Bulbasaur,Turtwig,Bulbasaur,Bulbasaur,Metal,Metal
+FROW_2 false,false,false,false,false,true
+ROW_3 Turtwig,Wood,Turtwig,Bulbasaur,Turtwig,Turtwig
+FROW_3 false,true,false,false,false,false
+ROW_4 Bulbasaur,Wood,Turtwig,Turtwig,Wood,Wood
+FROW_4 false,true,false,false,true,true
+ROW_5 Metal,Metal,Bulbasaur,Turtwig,Wood,Turtwig
+FROW_5 true,true,false,false,true,false
+ROW_6 Metal,Metal,Metal,Metal,Turtwig,Turtwig
+FROW_6 true,true,true,true,false,false

@@ -1,0 +1,13 @@
+STAGE 610
+ROW_1 Metal,Wood,Air,Air,Wood,Metal
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Metal,Air,Air,Metal,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Metal,Air,Air,Metal,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Wood,Air,Air,Wood,Metal
+FROW_6 false,false,false,false,false,false
