@@ -141,7 +141,7 @@ public class SpeciesTest {
       }
       assertEquals(88, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(16));
       for (int i = 0; i < MAX_LEVELS.length; i++) {
-         assertEquals(100, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
+         assertEquals(120, new Species("name", 30, PkmType.STEEL, Effect.AIR).getAttack(MAX_LEVELS[i]));
       }
       
       // Rapidly test all base attacks other than 30 for levels 1 through 10.
