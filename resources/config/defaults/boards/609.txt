@@ -1,0 +1,13 @@
+STAGE 609
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_2 true,true,true,true,true,true
+ROW_3 Kadabra,Golbat,Bronzor,Bronzor,Golbat,Kadabra
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_4 true,true,true,true,true,true
+ROW_5 Golbat,Kadabra,Bronzor,Bronzor,Kadabra,Golbat
+FROW_5 false,false,false,false,false,false
+ROW_6 Kadabra,Golbat,Bronzor,Bronzor,Golbat,Kadabra
+FROW_6 false,false,false,false,false,false

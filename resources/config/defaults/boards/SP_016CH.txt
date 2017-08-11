@@ -1,0 +1,13 @@
+STAGE SP_016CH
+ROW_1 Air,Air,Wood,Wood,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Pikachu_ch,Charizard,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Charizard,Pikachu_ch,Charizard,Pikachu_ch,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Charizard,Pikachu_ch,Charizard,Pikachu_ch,Charizard,Pikachu_ch
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Charizard,Wood,Wood,Pikachu_ch,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Wood,Pikachu_ch,Charizard,Wood,Air
+FROW_6 false,false,false,false,false,false

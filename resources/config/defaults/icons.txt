@@ -52,6 +52,7 @@ RESOURCE Pikachu_uc img/icons/025-unova.png
 RESOURCE Pikachu_ac img/icons/025-alola.png
 RESOURCE Pikachu_r img/icons/025-rayquaza.png
 RESOURCE Pikachu_sr img/icons/025-rayquazas.png
+RESOURCE Pikachu_ch img/icons/025-charizard.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Raichu_a img/icons/026-a.png
@@ -631,6 +632,7 @@ RESOURCE Whimsicott_w img/icons/547-w.png
 RESOURCE Petilil img/icons/548.png
 RESOURCE Lilligant img/icons/549.png
 RESOURCE Basculin img/icons/550.png
+RESOURCE Basculin_b img/icons/550-b.png
 RESOURCE Sandile img/icons/551.png
 RESOURCE Krokorok img/icons/552.png
 RESOURCE Krookodile img/icons/553.png
@@ -667,7 +669,9 @@ RESOURCE Vanillite_h img/icons/582-h.png
 RESOURCE Vanillish img/icons/583.png
 RESOURCE Vanilluxe img/icons/584.png
 RESOURCE Deerling img/icons/585.png
+RESOURCE Deerling_s img/icons/585_01.png
 RESOURCE Sawsbuck img/icons/586.png
+RESOURCE Sawsbuck_s img/icons/586_01.png
 RESOURCE Emolga img/icons/587.png
 RESOURCE Karrablast img/icons/588.png
 RESOURCE Escavalier img/icons/589.png
