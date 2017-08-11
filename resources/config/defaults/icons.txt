@@ -632,7 +632,7 @@ RESOURCE Whimsicott_w img/icons/547-w.png
 RESOURCE Petilil img/icons/548.png
 RESOURCE Lilligant img/icons/549.png
 RESOURCE Basculin img/icons/550.png
-RESOURCE Basculin_b img/icons/550-b.png
+RESOURCE Basculin_b img/icons/550_b.png
 RESOURCE Sandile img/icons/551.png
 RESOURCE Krokorok img/icons/552.png
 RESOURCE Krookodile img/icons/553.png
