@@ -4423,6 +4423,37 @@ public enum Effect {
       
    },
    /**
+    * Gengar clone.
+    */
+   MEWTWO_XS {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return GENGAR.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return GENGAR.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return GENGAR.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+      
+   },
+   /**
     * Erases all pookemon in a V shapped pattern, same rules as other megas for scoring. Pattern is
     * simulataneous.
     */
@@ -5120,6 +5151,54 @@ public enum Effect {
       
    },
    /**
+    * Shiny Mewtwo Y: <br>
+    * Erases tiles in a Y shape.
+    */
+   MEWTWO_S {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            effect.addPlannedOptions(Arrays.asList(1, 1, 1, 6));
+            effect.addPlannedOptions(Arrays.asList(2, 2, 2, 5));
+            effect.addPlannedOptions(Arrays.asList(3, 3, 3, 4));
+            effect.addPlannedOptions(Arrays.asList(4, 3, 4, 4));
+            effect.addPlannedOptions(Arrays.asList(5, 3, 5, 4));
+            effect.addPlannedOptions(Arrays.asList(6, 3, 6, 4));
+            return effect;
+         }
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return SABLEYE.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return SABLEYE.getEffectRepeatDelay();
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return SABLEYE.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
     * A random lightning strike erases a jagged line of blocks horizontally. This line is produced
     * by independently tracking two ignorant strikes which begin at the left column, and each tick
     * progress right one and activate them for clearing, in sequence. The one to the right must be
@@ -5271,6 +5350,42 @@ public enum Effect {
     * Aerodactyl clone
     */
    ALAKAZAM {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return AERODACTYL.isAttackPowerEffective();
+      }
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      /**
+       * @param comboEffect
+       * @param task
+       * @return
+       */
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return AERODACTYL.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return 10;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return AERODACTYL.getBonusScoreFor(basicScore, value, typeModifier);
+      }
+
+   },
+   /**
+    * Aerodactyl clone
+    */
+   DIANCIE_S {
       
       @Override
       protected boolean isAttackPowerEffective() {

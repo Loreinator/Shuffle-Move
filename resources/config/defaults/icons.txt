@@ -202,6 +202,8 @@ RESOURCE Dragonair img/icons/148.png
 RESOURCE Dragonite img/icons/149.png
 RESOURCE Mewtwo img/icons/150.png
 RESOURCE Mewtwo_x img/icons/150.png
+RESOURCE Mewtwo_s img/icons/150-s.png
+RESOURCE Mewtwo_xs img/icons/150-s.png
 RESOURCE Mew img/icons/151.png
 RESOURCE Chikorita img/icons/152.png
 RESOURCE Chikorita_w img/icons/152-w.png
@@ -827,6 +829,7 @@ RESOURCE Zygarde-10 img/icons/718-10.png
 RESOURCE Zygarde-50 img/icons/718.png
 RESOURCE Zygarde-c img/icons/718-c.png
 RESOURCE Diancie img/icons/719.png
+RESOURCE Diancie_s img/icons/719-s.png
 RESOURCE Hoopa img/icons/720.png
 RESOURCE Hoopa_u img/icons/720-u.png
 RESOURCE Volcanion img/icons/721.png
@@ -930,7 +933,9 @@ RESOURCE Mega_Gyarados img/icons/130-m.png
 RESOURCE Mega_Gyarados_s img/icons/130-sm.png
 RESOURCE Mega_Aerodactyl img/icons/142-m.png
 RESOURCE Mega_Mewtwo_y img/icons/150-my.png
+RESOURCE Mega_Mewtwo_ys img/icons/150-smy.png
 RESOURCE Mega_Mewtwo_x img/icons/150-mx.png
+RESOURCE Mega_Mewtwo_xs img/icons/150-smx.png
 RESOURCE Mega_Ampharos img/icons/181-m.png
 RESOURCE Mega_Steelix img/icons/208-m.png
 RESOURCE Mega_Scizor img/icons/212-m.png
@@ -966,14 +971,15 @@ RESOURCE Mega_Garchomp img/icons/445-m.png
 RESOURCE Mega_Lucario img/icons/448-m.png
 RESOURCE Mega_Abomasnow img/icons/460-m.png
 RESOURCE Mega_Gallade img/icons/475-m.png
+RESOURCE Mega_Audino img/icons/531-m.png
+RESOURCE Mega_Audino_w img/icons/531-m.png
+RESOURCE Mega_Diancie img/icons/719-m.png
+RESOURCE Mega_Diancie_s img/icons/719-sm.png
 RESOURCE Rotom_f img/icons/479-f.png
 RESOURCE Rotom_h img/icons/479-h.png
 RESOURCE Rotom_m img/icons/479-m.png
 RESOURCE Rotom_s img/icons/479-s.png
 RESOURCE Rotom_w img/icons/479-w.png
-RESOURCE Mega_Audino img/icons/531-m.png
-RESOURCE Mega_Audino_w img/icons/531-m.png
-RESOURCE Mega_Diancie img/icons/719-m.png
 RESOURCE Air img/icons/air.png
 RESOURCE Coin img/icons/coin.png
 RESOURCE FROZEN_MASK img/icons/frozen.png
