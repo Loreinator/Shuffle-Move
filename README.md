@@ -46,6 +46,8 @@ This program is licensed under GNU General Public License Version 3. Please read
 ##Changelog
 * **v0.3.114 - 2017-08-2**
 	- Fixed French species translations
+	- Mega slot list ordering is now sorted by team position
+	- Fixed a bug with selecting between megas with the same name
 * **v0.3.113 - 2017-08-24**
 	- Updates for August 22nd
 * **v0.3.112 - 2017-08-10**
