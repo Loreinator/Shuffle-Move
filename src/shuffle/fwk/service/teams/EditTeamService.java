@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -181,7 +180,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private Map<String, JComboBox<Character>> nameToKeybindComboboxMap = new HashMap<String, JComboBox<Character>>();
    private Stage curStage = StageManager.DEFAULT_STAGE;
    private Team prevTeam = null;
-   private JComboBox<String> megaChooser;
+   private JComboBox<Object> megaChooser;
    private JCheckBox megaActive;
    private boolean wasMegaActive = false;
    private JComboBox<Integer> megaProgressChooser;
@@ -195,6 +194,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    private JScrollPane rosterScrollPane;
    private Supplier<Dimension> getMinUpperPanel = null;
    private JCheckBox survivalMode;
+   private List<Species> megaSlotList = new ArrayList<Species>();
    
    private JPanel selectedComponent = null;
    private Species selectedSpecies = null;
@@ -445,7 +445,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       secondOptionRow.add(megaLabel, rowc);
       
       rowc.gridx = 2;
-      megaChooser = new JComboBox<String>();
+      megaChooser = new JComboBox<Object>();
       megaChooser.setToolTipText(getString(KEY_MEGA_TOOLTIP));
       secondOptionRow.add(megaChooser, rowc);
       
@@ -819,7 +819,7 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       nameToKeybindComboboxMap.clear();
       nameToItemListenerMap.clear();
       List<String> teamNames = curTeam.getNames();
-      Set<String> names = new HashSet<String>(teamNames);
+      Set<String> names = new LinkedHashSet<String>(teamNames);
       SpeciesManager speciesManager = getUser().getSpeciesManager();
       for (String name : teamNames) {
          Species species = speciesManager.getSpeciesByName(name);
@@ -842,20 +842,22 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       freezeCheckBox.setSelected(hasFreeze);
       
       megaChooser.removeAllItems();
+      megaSlotList.clear();
       megaChooser.addItem(getString(KEY_NONE));
       for (String name : names) {
          Species species = speciesManager.getSpeciesByName(name);
          if (species.getMegaName() != null && !curTeam.isNonSupport(species)) {
-            megaChooser.addItem(species.getLocalizedName(true));
+            megaChooser.addItem(new MegaSlotSpeciesWrapper(species));
+            megaSlotList.add(species);
          }
       }
       String megaSlotName = curTeam.getMegaSlotName();
       Species megaSpecies = megaSlotName == null ? null : speciesManager.getSpeciesValue(megaSlotName);
       // Mega chooser (which species is the mega slot) settings...
       if (megaSpecies == null || megaSpecies.getMegaName() == null) {
-         megaChooser.setSelectedItem(getString(KEY_NONE));
+         megaChooser.setSelectedIndex(0);
       } else {
-         megaChooser.setSelectedItem(megaSpecies.getLocalizedName(true));
+         megaChooser.setSelectedIndex(megaSlotList.indexOf(megaSpecies) + 1);
       }
       int newThreshold = curTeam.getMegaThreshold(speciesManager, getUser().getRosterManager(),
             getUser().getEffectManager());
@@ -1059,19 +1061,8 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    
    private void updateFromOptions() {
       TeamImpl curTeam = getCurrentTeamImpl();
-      String megaSlotDisplayed = getMegaSlot();
-      String megaSlot = null;
-      if (megaSlotDisplayed != null) {
-         SpeciesManager sm = getUser().getSpeciesManager();
-         for (Species s : curTeam.getSpecies(sm)) {
-            if (s.getMegaName() != null && megaSlotDisplayed.equals(s.getLocalizedName(true))
-                  && !curTeam.isNonSupport(s)) {
-               megaSlot = s.getName();
-               break;
-            }
-         }
-      }
-      curTeam.setMegaSlot(megaSlot);
+      Species megaSlotSpecies = getMegaSlot();
+      curTeam.setMegaSlot(megaSlotSpecies == null ? null : megaSlotSpecies.getName());
       String woodName = Species.WOOD.getName();
       boolean hasWood = curTeam.getNames().contains(woodName);
       String metalName = Species.METAL.getName();
@@ -1173,9 +1164,13 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
       updateTeamPanel();
    }
    
-   private String getMegaSlot() {
-      String chosen = megaChooser.getItemAt(megaChooser.getSelectedIndex());
-      return chosen == null || chosen.equals(getString(KEY_NONE)) ? null : chosen;
+   private Species getMegaSlot() {
+      Species chosen = null;
+      int megaSlotIndex = megaChooser.getSelectedIndex();
+      if (megaSlotIndex > 0) {
+         chosen = megaSlotList.get(megaSlotIndex - 1);
+      }
+      return chosen;
    }
    
    private Effect getEffect() {
@@ -1314,6 +1309,35 @@ public class EditTeamService extends BaseService<EditTeamServiceUser>
    @Override
    public Integer scaleBorderThickness(int given) {
       return getUser() == null ? given : getUser().scaleBorderThickness(given);
+   }
+   
+   /**
+    * Wrapper class to allow two species with the same localized name to be interpreted as different
+    * items in the mega slot list.
+    * 
+    * @author Andrew Meyers
+    *        
+    */
+   private class MegaSlotSpeciesWrapper {
+      protected Species species;
+      
+      public MegaSlotSpeciesWrapper(Species s) {
+         species = s;
+      }
+      
+      @Override
+      public String toString() {
+         return species.getLocalizedName(true);
+      }
+      
+      @Override
+      public boolean equals(Object o) {
+         if (o instanceof MegaSlotSpeciesWrapper) {
+            return species.equals(((MegaSlotSpeciesWrapper) o).species);
+         } else {
+            return species.equals(o);
+         }
+      }
    }
    
 }
