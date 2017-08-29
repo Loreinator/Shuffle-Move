@@ -1211,6 +1211,13 @@ public enum Effect {
       
    },
    /**
+    * Can reset your opponent's disruption counter to maximum
+    */
+   POSSESSION {
+      // TODO when disruption timers are implemented
+      
+   },
+   /**
     * Can inflict the opponent with a burn for three turns. All Fire-type damage is increased by
     * 50%.
     */
@@ -1817,6 +1824,44 @@ public enum Effect {
     * number cleared is 5.
     */
    BLOCK_SMASH_P_P {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !task.findMatches(1, false, (r, c, s) -> task.getEffectFor(s).equals(METAL)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> task.getEffectFor(s).equals(METAL));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               int numSwapped = (int) getMultiplier(task, comboEffect);
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  if (!toErase.isEmpty()) {
+                     eraseBonus(task, toErase, true);
+                  }
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Same as {@link Effect#BLOCK_SMASH} except that the rate of occurrence is "Sometimes" and the
+    * number cleared is 10.
+    */
+   BLOCK_OFF {
       
       @Override
       protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
