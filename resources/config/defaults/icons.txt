@@ -53,6 +53,7 @@ RESOURCE Pikachu_ac img/icons/025-alola.png
 RESOURCE Pikachu_r img/icons/025-rayquaza.png
 RESOURCE Pikachu_sr img/icons/025-rayquazas.png
 RESOURCE Pikachu_ch img/icons/025-charizard.png
+RESOURCE Pikachu_ce img/icons/025-celebration.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Raichu_a img/icons/026-a.png
