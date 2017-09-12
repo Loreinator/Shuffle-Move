@@ -313,6 +313,20 @@ public enum Effect {
       }
    },
    /**
+    * Increases damage done by any pokemon in a combo.
+    */
+   TYPELESS_COMBO {
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task);
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, Arrays.asList(PkmType.values()), getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Increases damage done by any Fire types in a combo.
     */
    PYRE {
