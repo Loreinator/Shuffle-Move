@@ -1,0 +1,13 @@
+STAGE SP_537C
+ROW_1 Unown-26,Unown-26,Wood,Wood,Unown-27,Unown-27
+FROW_1 false,false,false,false,false,false
+ROW_2 Unown-26,Metal,Unown-26,Unown-27,Metal,Unown-27
+FROW_2 false,false,false,false,false,false
+ROW_3 Unown-27,Wood,Unown-26,Unown-26,Unown-27,Unown-26
+FROW_3 false,false,false,false,false,false
+ROW_4 Unown-26,Wood,Unown-27,Unown-27,Unown-26,Unown-27
+FROW_4 false,false,false,false,false,false
+ROW_5 Unown-27,Metal,Unown-26,Unown-27,Metal,Unown-26
+FROW_5 false,false,false,false,false,false
+ROW_6 Unown-27,Unown-27,Wood,Wood,Unown-26,Unown-26
+FROW_6 false,false,false,false,false,false

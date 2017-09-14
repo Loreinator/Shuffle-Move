@@ -1,0 +1,13 @@
+STAGE SP_776
+ROW_1 Silvally,Air,Silvally,Silvally,Air,Silvally
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Silvally,Air,Silvally,Silvally,Air,Silvally
+FROW_3 false,false,false,false,false,false
+ROW_4 Silvally,Air,Silvally,Silvally,Air,Silvally
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Silvally,Air,Silvally,Silvally,Air,Silvally
+FROW_6 false,false,false,false,false,false
