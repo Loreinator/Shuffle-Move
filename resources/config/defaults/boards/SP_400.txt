@@ -1,0 +1,13 @@
+STAGE SP_400
+ROW_1 Air,Porygon-Z,Air,Air,Air,Air
+FROW_1 false,true,false,false,false,false
+ROW_2 Air,Air,Air,Air,Porygon-Z,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Porygon-Z,Air,Air,Air,Air
+FROW_3 false,true,false,false,false,false
+ROW_4 Air,Air,Air,Air,Porygon-Z,Air
+FROW_4 false,false,false,false,true,false
+ROW_5 Air,Porygon-Z,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Air,Air,Porygon-Z,Air
+FROW_6 false,false,false,false,true,false

@@ -260,6 +260,10 @@ RESOURCE Murkrow img/icons/198.png
 RESOURCE Slowking img/icons/199.png
 RESOURCE Misdreavus img/icons/200.png
 RESOURCE Unown img/icons/201.png
+RESOURCE Unown-02 img/icons/201_02.png
+RESOURCE Unown-04 img/icons/201_04.png
+RESOURCE Unown-08 img/icons/201_08.png
+RESOURCE Unown-13 img/icons/201_13.png
 RESOURCE Unown-26 img/icons/201-26.png
 RESOURCE Unown-27 img/icons/201-27.png
 RESOURCE Wobbuffet img/icons/202.png
@@ -314,6 +318,7 @@ RESOURCE Tyranitar img/icons/248.png
 RESOURCE Tyranitar_s img/icons/248-s.png
 RESOURCE Lugia img/icons/249.png
 RESOURCE Ho-oh img/icons/250.png
+RESOURCE Ho-oh_s img/icons/250-s.png
 RESOURCE Celebi img/icons/251.png
 RESOURCE Treecko img/icons/252.png
 RESOURCE Treecko_w img/icons/252-w.png
