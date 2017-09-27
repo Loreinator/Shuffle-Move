@@ -53,7 +53,9 @@ RESOURCE Pikachu_ac img/icons/025-alola.png
 RESOURCE Pikachu_r img/icons/025-rayquaza.png
 RESOURCE Pikachu_sr img/icons/025-rayquazas.png
 RESOURCE Pikachu_ch img/icons/025-charizard.png
-RESOURCE Pikachu_ce img/icons/025-celebration.png
+RESOURCE Pikachu_bw img/icons/025-beachwalk.png
+RESOURCE Pikachu_pc img/icons/025-pastrychef.png
+RESOURCE Pikachu_ar img/icons/025-artist.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Raichu_a img/icons/026-a.png
@@ -531,7 +533,9 @@ RESOURCE Munchlax img/icons/446.png
 RESOURCE Riolu img/icons/447.png
 RESOURCE Lucario img/icons/448.png
 RESOURCE Hippopotas img/icons/449.png
+RESOURCE Hippopotas_f img/icons/449-f.png
 RESOURCE Hippowdon img/icons/450.png
+RESOURCE Hippowdon_f img/icons/450-f.png
 RESOURCE Skorupi img/icons/451.png
 RESOURCE Drapion img/icons/452.png
 RESOURCE Croagunk img/icons/453.png
