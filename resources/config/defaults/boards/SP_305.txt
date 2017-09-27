@@ -1,0 +1,13 @@
+STAGE SP_305
+ROW_1 Air,Slowking,Slowking,Air,Air
+FROW_1 false,true,true,false,false,false
+ROW_2 Slowking,Slowking,Air,Air,Air,Air
+FROW_2 true,false,false,false,false,false
+ROW_3 Slowking,Air,Air,Slowking,Slowking,Air
+FROW_3 true,false,false,true,true,false
+ROW_4 Air,Air,Slowking,Slowking,Air,Air
+FROW_4 false,false,true,false,false,false
+ROW_5 Air,Air,Slowking,Air,Air,Slowking
+FROW_5 false,false,true,false,false,true
+ROW_6 Air,Air,Air,Air,Slowking,Slowking
+FROW_6 false,false,false,false,true,false

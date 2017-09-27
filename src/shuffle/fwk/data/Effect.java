@@ -156,6 +156,24 @@ public enum Effect {
       }
    },
    /**
+    * Attacks do more damage when you make a match of 4. Skill Level increases odds of activation.
+    */
+   DEMOLISH {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+         if (e.getNumBlocks() == 4) {
+            return super.getOdds(task, e);
+         } else {
+            return 0;
+         }
+      }
+   },
+   /**
     * Attacks do more damage when you make a match of 5.
     */
    POWER_OF_5 {
