@@ -760,7 +760,7 @@ RESOURCE Keldeo_r img/icons/647-r.png
 RESOURCE Meloetta img/icons/648.png
 RESOURCE Meloetta_p img/icons/648-p.png
 RESOURCE Genesect img/icons/649.png
-RESOURCE Genesect-s img/icons/649-s.png
+RESOURCE Genesect_s img/icons/649-s.png
 RESOURCE Chespin img/icons/650.png
 RESOURCE Quilladin img/icons/651.png
 RESOURCE Chesnaught img/icons/652.png
