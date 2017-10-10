@@ -1,0 +1,13 @@
+STAGE SP_116
+ROW_1 Marowak,Marowak,Marowak_a,Marowak_a,Marowak,Marowak
+FROW_1 false,false,false,false,false,false
+ROW_2 Marowak,Marowak_a,Salazzle,Salazzle,Marowak_a,Marowak
+FROW_2 false,false,false,false,false,false
+ROW_3 Marowak_a,Salazzle,Wood,Wood,Salazzle,Marowak_a
+FROW_3 false,false,false,false,false,false
+ROW_4 Marowak_a,Salazzle,Wood,Wood,Salazzle,Marowak_a
+FROW_4 false,false,false,false,false,false
+ROW_5 Marowak,Marowak_a,Salazzle,Salazzle,Marowak_a,Marowak
+FROW_5 false,false,false,false,false,false
+ROW_6 Marowak,Marowak,Marowak_a,Marowak_a,Marowak,Marowak
+FROW_6 false,false,false,false,false,false
