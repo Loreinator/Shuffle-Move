@@ -466,6 +466,7 @@ RESOURCE Rayquaza_s img/icons/384-s.png
 RESOURCE Jirachi img/icons/385.png
 RESOURCE Deoxys img/icons/386.png
 RESOURCE Deoxys_a img/icons/386-a.png
+RESOURCE Deoxys_d img/icons/386-d.png
 RESOURCE Turtwig img/icons/387.png
 RESOURCE Grotle img/icons/388.png
 RESOURCE Torterra img/icons/389.png
@@ -682,8 +683,10 @@ RESOURCE Vanillish img/icons/583.png
 RESOURCE Vanilluxe img/icons/584.png
 RESOURCE Deerling img/icons/585.png
 RESOURCE Deerling_s img/icons/585_01.png
+RESOURCE Deerling_a img/icons/585_02.png
 RESOURCE Sawsbuck img/icons/586.png
 RESOURCE Sawsbuck_s img/icons/586_01.png
+RESOURCE Sawsbuck_a img/icons/586_02.png
 RESOURCE Emolga img/icons/587.png
 RESOURCE Karrablast img/icons/588.png
 RESOURCE Escavalier img/icons/589.png
@@ -757,6 +760,7 @@ RESOURCE Keldeo_r img/icons/647-r.png
 RESOURCE Meloetta img/icons/648.png
 RESOURCE Meloetta_p img/icons/648-p.png
 RESOURCE Genesect img/icons/649.png
+RESOURCE Genesect-s img/icons/649-s.png
 RESOURCE Chespin img/icons/650.png
 RESOURCE Quilladin img/icons/651.png
 RESOURCE Chesnaught img/icons/652.png

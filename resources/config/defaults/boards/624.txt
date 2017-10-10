@@ -1,0 +1,13 @@
+STAGE 624
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Lampent,Banette,Banette,Metal,Metal,Lampent
+FROW_2 false,false,false,false,false,false
+ROW_3 Metal,Pumpkaboo,Wood,Metal,Pumpkaboo,Metal
+FROW_3 false,false,false,false,false,false
+ROW_4 Metal,Pumpkaboo,Wood,Metal,Metal,Pumpkaboo
+FROW_4 false,true,false,false,false,false
+ROW_5 Metal,Lampent,Wood,Lampent,Wood,Banette
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Lampent,Wood,Lampent,Wood,Pumpkaboo
+FROW_6 false,false,false,false,false,false

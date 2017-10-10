@@ -414,6 +414,26 @@ public enum Effect {
       }
    },
    /**
+    * Increases damage of Ghost-type moves in a Combo. Works only on a match of 5.
+    */
+   SHADOW_DANCE {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.GHOST, getBonus(task, comboEffect));
+      }
+
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+         if (e.getNumBlocks() == 5) {
+            return super.getOdds(task, e);
+         } else {
+            return 0;
+         }
+      }
+
+   },
+   /**
     * Increases damage of Rock-type moves in a Combo.
     */
    ROCK_COMBO {
@@ -486,6 +506,39 @@ public enum Effect {
     * The more of this Species in the puzzle area, the more damage.
     */
    CROWD_CONTROL {
+      
+      @Override
+      protected boolean isAttackPowerEffective() {
+         return false;
+      }
+      
+      @Override
+      public NumberSpan getBonusValue(ActivateComboEffect comboEffect, SimulationTask task) {
+         NumberSpan ret = new NumberSpan();
+         if (canActivate(comboEffect, task)) {
+            Board board = task.getState().getBoard();
+            Species effectSpecies = task.getEffectSpecies(comboEffect.getCoords());
+            int num = task
+                  .findMatches(36, true,
+                        (r, c, s) -> (s.equals(
+                              effectSpecies)
+                        && (!task.isActive(r, c) || board.isFrozenAt(r, c) || task.getClaimsFor(r, c).size() > 0)))
+                  .size() / 2;
+            ret = new NumberSpan(0, num, getOdds(task, comboEffect)).multiplyBy(getMultiplier(task, comboEffect));
+         }
+         return ret;
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value;
+      }
+      
+   },
+   /**
+    * The more of this Species in the puzzle area, the more damage.
+    */
+   CROWD_CONTROL_P {
       
       @Override
       protected boolean isAttackPowerEffective() {
@@ -1446,6 +1499,27 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
+      }
+   },
+   /**
+    * Leaves the foe paralyzed (for more turns).
+    */
+   PARALYZE_P {
+      // TODO when disruption timers are implemented
+      
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
+            PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 7);
+#TO DO: CONFIRM DURATION
       }
    },
    /**

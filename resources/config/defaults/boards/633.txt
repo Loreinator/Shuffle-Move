@@ -1,0 +1,13 @@
+STAGE 633
+ROW_1 Wood,Drifloon,Wood,Drifloon,Wood,Drifloon
+FROW_1 true,false,true,false,true,false
+ROW_2 Metal,Meowth,Metal,Meowth,Metal,Meowth
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Drifloon,Meowt,Drifloon,Meowth,Drifloon,Meowth
+FROW_6 false,false,false,false,false,false

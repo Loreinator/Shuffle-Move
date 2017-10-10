@@ -1,0 +1,13 @@
+STAGE 630
+ROW_1 Wood,Wood,Air,Air,Air,Air
+FROW_1 true,true,false,false,false,false
+ROW_2 Weepinbell,Bellsprout,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Weepinbell,Bellsprout,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Wood,Air,Air,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Weepinbell,Bellsprout,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false
