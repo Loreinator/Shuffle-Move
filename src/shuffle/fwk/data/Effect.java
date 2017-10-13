@@ -1519,7 +1519,7 @@ public enum Effect {
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
          ifThenSetStatus(comboEffect, task, Status.PARALYZE, 11);
-      }
+       }
    },
    /**
     * Fills the Mega Guage of a Pokemon of the same type.
