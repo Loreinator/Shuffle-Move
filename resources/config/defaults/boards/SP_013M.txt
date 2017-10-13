@@ -1,0 +1,13 @@
+STAGE SP_013M
+ROW_1 Espurr,Wood,Espurr,Wood,Espurr,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Espurr,Meowstic,Wood,Meowstic,Espurr,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Meowstic,Espurr,Meowstic,Wood,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Espurr,Espurr,Air,Espurr,Espurr,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Meowstic,Espurr,Meowstic,Wood,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Espurr,Wood,Espurr,Wood,Espurr,Air
+FROW_6 false,false,false,false,false,false
