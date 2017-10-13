@@ -1,4 +1,4 @@
-#Shuffle Move v0.3.118
+#Shuffle Move v0.3.119
 
 A program to identify and display the best next move for the game Pokémon Shuffle. I do not own any part of Pokémon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
 
@@ -44,6 +44,11 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
+* **v0.3.119 - 2017-10-13**
+	- Fix Tyranitar repeat starting board
+	- Update Pikachu name from Costumed to Spooky
+	- Fix Paralyze+ duration
+	- Fix other stun-inducing effect to the correct duration
 * **v0.3.118 - 2017-10-12**
 	- Updates for October 10th
 * **v0.3.117 - 2017-10-01**
