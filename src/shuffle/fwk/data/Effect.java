@@ -1190,7 +1190,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
       }
    },
    /**
@@ -1211,7 +1211,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
       }
       
    },
@@ -1233,7 +1233,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
       }
       
    },
@@ -1255,7 +1255,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
       }
       
    },
@@ -1277,7 +1277,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
       }
       
    },
@@ -1518,8 +1518,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 7);
-#TO DO: CONFIRM DURATION
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 11);
       }
    },
    /**
@@ -2973,7 +2972,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 1);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
       }
    },
    /**
@@ -2989,7 +2988,7 @@ public enum Effect {
       
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
       }
    },
    /**

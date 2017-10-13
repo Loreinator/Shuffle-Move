@@ -9,5 +9,5 @@ ROW_4 Metal,Metal,Metal,Metal,Metal,Metal
 FROW_4 false,false,false,false,false,false
 ROW_5 Air,Air,Air,Air,Air,Air
 FROW_5 false,false,false,false,false,false
-ROW_6 Coin,Air,Air,Air,Air,Coin
+ROW_6 Air,Air,Air,Air,Air,Air
 FROW_6 false,false,false,false,false,false
