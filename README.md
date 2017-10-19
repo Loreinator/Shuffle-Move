@@ -45,7 +45,7 @@ This program is licensed under GNU General Public License Version 3. Please read
 
 ##Changelog
 * **v0.3.120 - 2017-10-**
-	- 
+	- Spanish translations added
 * **v0.3.119 - 2017-10-13**
 	- Fix Tyranitar repeat starting board
 	- Update Pikachu name from Costumed to Spooky
