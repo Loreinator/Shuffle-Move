@@ -484,6 +484,16 @@ public enum Effect {
       }
    },
    /**
+    * Increases damage of Electric-type moves in a Combo.
+    */
+   CONDUCTION {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetSpecial(comboEffect, task, PkmType.ELECTRIC, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Increases damage of Dark-type moves in a combo.
     */
    SINISTER_POWER {
