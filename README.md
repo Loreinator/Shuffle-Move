@@ -44,7 +44,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.120 - 2017-10-**
+* **v0.3.120 - 2017-10-30**
 	- Spanish translations added
 	- Updates for October 28th
 * **v0.3.119 - 2017-10-13**
