@@ -1,0 +1,13 @@
+STAGE SP_726C
+ROW_1 Mimikyu,Wood,Wood,Wood,Wood,Pikachu
+FROW_1 false,false,false,false,false,false
+ROW_2 Mimikyu,Wood,Wood,Wood,Wood,Pikachu
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Pikachu,Pikachu,Mimikyu,Pikachu,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Wood,Wood,Wood,Wood,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Mimikyu,Mimikyu,Pikachu,Mimikyu,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Pikachu,Wood,Wood,Wood,Wood,Mimikyu
+FROW_6 false,false,false,false,false,false
