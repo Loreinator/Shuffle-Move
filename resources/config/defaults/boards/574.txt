@@ -1,0 +1,13 @@
+STAGE 574
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Metal,Ditto,Ditto,Metal,Metal,Metal
+FROW_2 true,false,false,true,true,true
+ROW_3 Wood,Wood,Wood,Ditto,Ditto,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Pichu,Pichu,Togepi,Cleffa,Azurill,Togepi
+FROW_4 false,false,false,false,false,false
+ROW_5 Pichu,Pichu,Togepi,Cleffa,Azurill,Togepi
+FROW_5 false,false,false,false,false,false
+ROW_6 Togepi,Azurill,Cleffa,Togepi,Pichu,Pichu
+FROW_6 false,false,false,false,false,false
