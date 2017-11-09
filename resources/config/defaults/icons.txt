@@ -144,6 +144,7 @@ RESOURCE Gastly img/icons/092.png
 RESOURCE Haunter img/icons/093.png
 RESOURCE Gengar img/icons/094.png
 RESOURCE Gengar_sp img/icons/094-sp.png
+RESOURCE Gengar_s img/icons/094-s.png
 RESOURCE Onix img/icons/095.png
 RESOURCE Drowzee img/icons/096.png
 RESOURCE Hypno img/icons/097.png
@@ -941,6 +942,7 @@ RESOURCE Mega_Alakazam img/icons/065-m.png
 RESOURCE Mega_Slowbro img/icons/080-m.png
 RESOURCE Mega_Gengar img/icons/094-m.png
 RESOURCE Mega_Gengar_sp img/icons/094-m.png
+RESOURCE Mega_Gengar_s img/icons/094-sm.png
 RESOURCE Mega_Kangaskhan img/icons/115-m.png
 RESOURCE Mega_Pinsir img/icons/127-m.png
 RESOURCE Mega_Gyarados img/icons/130-m.png

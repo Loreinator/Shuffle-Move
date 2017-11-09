@@ -1,0 +1,13 @@
+STAGE SP_016CE
+ROW_1 Butterfree,Pidgeot,Pikachu,Lapras,Charizard,Muk
+FROW_1 false,false,true,true,false,false
+ROW_2 Butterfree,Pidgeot,Pikachu,Lapras,Charizard,Muk
+FROW_2 false,false,false,false,false,false
+ROW_3 Pikachu,Pikachu,Lapras,Pikachu,Lapras,Lapras
+FROW_3 false,false,false,false,false,false
+ROW_4 Butterfree,Pidgeot,Pikachu,Lapras,Charizard,Muk
+FROW_4 false,false,false,false,false,false
+ROW_5 Butterfree,Pidgeot,Pikachu,Lapras,Charizard,Muk
+FROW_5 false,false,false,false,false,false
+ROW_6 Pikachu,Pikachu,Wood,Wood,Lapras,Lapras
+FROW_6 false,false,false,false,false,false
