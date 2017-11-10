@@ -5981,6 +5981,50 @@ public enum Effect {
       
    },
    /**
+    * Same as {@link #MEDICHAM}.
+    */
+   GENGAR_S {
+      
+      @Override
+      public boolean isPersistent() {
+         return true;
+      }
+      
+      @Override
+      protected ActivateComboEffect handlePlans(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (comboEffect instanceof ActivateMegaComboEffect) {
+            return comboEffect;
+         } else {
+            ActivateMegaComboEffect effect = new ActivateMegaComboEffect(comboEffect);
+            effect.addPlannedOptions(Arrays.asList(3, 3, 3, 4, 4, 3, 4, 4));
+            effect.addPlannedOptions(Arrays.asList(2, 3, 3, 5, 5, 4, 4, 2));
+            effect.addPlannedOptions(Arrays.asList(2, 4, 4, 5, 5, 3, 3, 2));
+            return effect;
+         }
+      }
+      
+      @Override
+      public List<Integer> getExtraBlocks(ActivateComboEffect comboEffect, SimulationTask task) {
+         return SABLEYE.getExtraBlocks(comboEffect, task);
+      }
+      
+      @Override
+      public int getEffectRepeatDelay() {
+         return SABLEYE.getEffectRepeatDelay();
+      }
+      
+      @Override
+      public int getValueLimit() {
+         return SABLEYE.getValueLimit();
+      }
+      
+      @Override
+      public NumberSpan getBonusScoreFor(double basicScore, NumberSpan value, double typeModifier) {
+         return value.multiplyBy(basicScore * 0.2 * typeModifier);
+      }
+      
+   },
+   /**
     * No effect whatsoever, clears itself as a normal block without any additional effects.
     */
    NONE {
