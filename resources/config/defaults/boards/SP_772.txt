@@ -1,0 +1,13 @@
+STAGE SP_772
+ROW_1 Air,Air,Metal,Metal,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Metal,Metal,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Metal,Air,Air,Metal,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Metal,Air,Air,Metal,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Metal,Air,Air,Air,Air,Metal
+FROW_5 false,false,false,false,false,false
+ROW_6 Metal,Air,Air,Air,Air,Metal
+FROW_6 false,false,false,false,false,false

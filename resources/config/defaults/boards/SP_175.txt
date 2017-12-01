@@ -1,0 +1,13 @@
+STAGE SP_175
+ROW_1 Air,Froakie,Air,Air,Froakie_w,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Froakie_w,Air,Air,Froakie,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Froakie_w,Froakie,Froakie_w,Froakie,Froakie_w,Froakie
+FROW_3 false,false,false,false,false,false
+ROW_4 Froakie,Froakie_w,Froakie,Froakie_w,Froakie,Froakie_w
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Froakie,Air,Air,Froakie_w,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Froakie,Air,Air,Froakie_w,Air
+FROW_6 false,false,false,false,false,false
