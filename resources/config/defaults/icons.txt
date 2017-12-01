@@ -790,7 +790,9 @@ RESOURCE Litleo img/icons/667.png
 RESOURCE Pyroar img/icons/668.png
 RESOURCE Pyroar_f img/icons/668-f.png
 RESOURCE Flabébé img/icons/669.png
+RESOURCE Flabébé_w img/icons/669-w.png
 RESOURCE Floette img/icons/670.png
+RESOURCE Floette_w img/icons/670-w.png
 RESOURCE Florges img/icons/671.png
 RESOURCE Skiddo img/icons/672.png
 RESOURCE Gogoat img/icons/673.png
