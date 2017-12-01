@@ -2105,7 +2105,7 @@ public enum Effect {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
-               if (matches.size() / 2 > 0 || odds < 1.0) {
+               if (odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
