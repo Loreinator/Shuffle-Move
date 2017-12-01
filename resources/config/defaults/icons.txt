@@ -278,6 +278,7 @@ RESOURCE Dunsparce img/icons/206.png
 RESOURCE Gligar img/icons/207.png
 RESOURCE Steelix img/icons/208.png
 RESOURCE Snubbull img/icons/209.png
+RESOURCE Snubbull_w img/icons/209-w.png
 RESOURCE Granbull img/icons/210.png
 RESOURCE Qwilfish img/icons/211.png
 RESOURCE Scizor img/icons/212.png
@@ -357,6 +358,7 @@ RESOURCE Pelipper img/icons/279.png
 RESOURCE Ralts img/icons/280.png
 RESOURCE Kirlia img/icons/281.png
 RESOURCE Gardevoir img/icons/282.png
+RESOURCE Gardevoir_s img/icons/282-s.png
 RESOURCE Surskit img/icons/283.png
 RESOURCE Masquerain img/icons/284.png
 RESOURCE Shroomish img/icons/285.png
@@ -763,12 +765,15 @@ RESOURCE Meloetta_p img/icons/648-p.png
 RESOURCE Genesect img/icons/649.png
 RESOURCE Genesect_s img/icons/649-s.png
 RESOURCE Chespin img/icons/650.png
+RESOURCE Chespin_w img/icons/650-w.png
 RESOURCE Quilladin img/icons/651.png
 RESOURCE Chesnaught img/icons/652.png
 RESOURCE Fennekin img/icons/653.png
+RESOURCE Fennekin_w img/icons/653-w.png
 RESOURCE Braixen img/icons/654.png
 RESOURCE Delphox img/icons/655.png
 RESOURCE Froakie img/icons/656.png
+RESOURCE Froakie_w img/icons/656-w.png
 RESOURCE Frogadier img/icons/657.png
 RESOURCE Greninja img/icons/658.png
 RESOURCE Greninja_a img/icons/658-a.png
@@ -785,7 +790,9 @@ RESOURCE Litleo img/icons/667.png
 RESOURCE Pyroar img/icons/668.png
 RESOURCE Pyroar_f img/icons/668-f.png
 RESOURCE Flabébé img/icons/669.png
+RESOURCE Flabébé_w img/icons/669-w.png
 RESOURCE Floette img/icons/670.png
+RESOURCE Floette_w img/icons/670-w.png
 RESOURCE Florges img/icons/671.png
 RESOURCE Skiddo img/icons/672.png
 RESOURCE Gogoat img/icons/673.png
@@ -963,6 +970,7 @@ RESOURCE Mega_Sceptile img/icons/254-m.png
 RESOURCE Mega_Blaziken img/icons/257-m.png
 RESOURCE Mega_Swampert img/icons/260-m.png
 RESOURCE Mega_Gardevoir img/icons/282-m.png
+RESOURCE Mega_Gardevoir_s img/icons/282-sm.png
 RESOURCE Mega_Sableye img/icons/302-m.png
 RESOURCE Mega_Sableye_c img/icons/302-m.png
 RESOURCE Mega_Mawile img/icons/303-m.png

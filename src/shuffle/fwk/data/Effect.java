@@ -2087,6 +2087,41 @@ public enum Effect {
       }
    },
    /**
+    * Removes ALL non-Support Pokemon icons.
+    */
+   ELIMINATE {
+      
+      @Override
+      protected boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+         return super.canActivate(comboEffect, task)
+               && !task.findMatches(1, false, (r, c, s) -> nonSupports.contains(s)).isEmpty();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  List<Integer> toErase = new ArrayList<Integer>();
+                  for (int i = 0; i < matches.size() / 2; i++ ) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toErase.addAll(Arrays.asList(row, col));
+                  }
+                  eraseBonus(task, toErase, true);
+               }
+            }
+         }
+      }
+   },
+   /**
     * Removes 3 barrier-type disruption without fail.
     */
    BARRIER_BASH_P {
