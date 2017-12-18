@@ -256,6 +256,21 @@ public enum Effect {
       }
    },
    /**
+    * Does more damage the more times in a row it is triggered. <br>
+    * Up, Up, Up: first activation: 2 <br>
+    * Up, Up, Up: second activation: 4 <br>
+    * Up, Up, Up: third activation: 8 <br>
+    * Up, Up, Up: fourth activation: 16 <br>
+    * Up, Up, Up: fifth or higher activation: 20 <br>
+    */
+   UP_UP_UP {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Damage may randomly be increased or decreased.
     */
    RISK_TAKER {
@@ -661,6 +676,41 @@ public enum Effect {
       }
    },
    /**
+    * Does more damage when the opponent has more HP left.
+    */
+   HYPER_DRAIN {
+      
+      @Override
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
+      }
+      
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+         if (e.getNumBlocks() == 3) {
+	    return 0;
+         } else {
+            return super.getOdds(task, e);
+         }
+      }
+   },
+   /**
     * Sometimes increases damage and leaves opponent paralyzed.
     */
    QUAKE {
@@ -683,7 +733,33 @@ public enum Effect {
       // Will RANDOMLY set it to paralyzed
       @Override
       protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
-         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 3);
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
+      }
+   },
+   /**
+    * Sometimes increases damage and leaves opponent paralyzed.
+    */
+   SAND_SPORT {
+      
+      private final Collection<PkmType> IMMUNITIES = Arrays.asList(PkmType.DRAGON, PkmType.ELECTRIC, PkmType.FAIRY,
+            PkmType.FLYING, PkmType.GHOST, PkmType.POISON, PkmType.PSYCHIC, PkmType.STEEL);
+            
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task)
+               && !IMMUNITIES.contains(task.getState().getCore().getStage().getType()) && task.canStatusActivate();
+      }
+      
+      // Will deterministically set the multiplier
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      // Will RANDOMLY set it to paralyzed
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 4);
       }
    },
    /**
@@ -1253,6 +1329,27 @@ public enum Effect {
    CRUSHING_STEP {
       // TODO when disruption timers are implemented
       
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+      
+      @Override
+      public boolean canActivate(ActivateComboEffect comboEffect, SimulationTask task) {
+         return super.canActivate(comboEffect, task) && task.canStatusActivate();
+      }
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         ifThenSetStatus(comboEffect, task, Status.PARALYZE, 2);
+      }
+      
+   },
+   /**
+    * Can delay your opponent's disruptions for a turn, deals additional damage
+    */
+   POWER_HUG {
+      // TODO when disruption timers are implemented
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
@@ -2307,6 +2404,16 @@ public enum Effect {
       }
    },
    /**
+    * Attacks can occasionally deal greater damage than usual.
+    */
+   BEAST_POWER {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
     * Increases damage done by any flying types in a combo. 2.0x multiplier
     */
    SKY_BLAST {
@@ -3127,7 +3234,7 @@ public enum Effect {
       // TODO when disruption timers are implemented
    },
    /**
-    * Occasionally turns one non-support species into a rock (wood)
+    * Occasionally turns two non-support species into a rock (wood)
     */
    ROCKIFY {
       
@@ -3138,7 +3245,33 @@ public enum Effect {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
-               if (matches.size() / 2 > 1 || odds < 1.0) {
+               if (matches.size() / 2 > 2 || odds < 1.0) {
+                  task.setIsRandom();
+               }
+               if (odds >= Math.random()) {
+                  int blockIndex = getRandomInt(matches.size() / 2);
+                  int row = matches.get(blockIndex * 2);
+                  int col = matches.get(blockIndex * 2 + 1);
+                  List<Integer> toReplace = new ArrayList<Integer>(Arrays.asList(row, col));
+                  handleReplaceOf(comboEffect, task, toReplace, Species.WOOD);
+               }
+            }
+         }
+      }
+   },
+   /**
+    * Occasionally turns 10 non-support species into a rock (wood)
+    */
+   ROCKIFY_P {
+      
+      @Override
+      protected void doSpecial(ActivateComboEffect comboEffect, SimulationTask task) {
+         if (canActivate(comboEffect, task)) {
+            Collection<Species> nonSupports = task.getState().getCore().getNonSupportSpecies();
+            List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
+            if (!matches.isEmpty()) {
+               double odds = getOdds(task, comboEffect);
+               if (matches.size() / 2 > 10 || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
@@ -3164,7 +3297,7 @@ public enum Effect {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
-               if (matches.size() / 2 > 1 || odds < 1.0) {
+               if (matches.size() / 2 > 2 || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {

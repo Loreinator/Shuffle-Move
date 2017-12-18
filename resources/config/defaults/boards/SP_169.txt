@@ -1,0 +1,13 @@
+STAGE SP_169
+ROW_1 Air,Chespin_w,Air,Air,Chespin,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Chespin_w,Wood,Wood,Chespin,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Chespin,Wood,Wood,Chespin_w,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Chespin_w,Wood,Wood,Chespin,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Chespin_w,Wood,Wood,Chespin,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Chespin,Wood,Chespin,Chespin_w,Wood,Chespin_w
+FROW_6 false,false,false,false,false,false

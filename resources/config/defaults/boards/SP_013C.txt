@@ -1,0 +1,13 @@
+STAGE SP_013C
+ROW_1 Pikachu_h,Wood,Pikachu_h,Wood,Pikachu_h,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Pikachu_h,Vanillite_h,Wood,Vanillite_h,Pikachu_h,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Vanillite_h,Pikachu_h,Vanillite_h,Wood,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Pikachu_h,Pikachu_h,Air,Pikachu_h,Pikachu_h,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Vanillite_h,Pikachu_h,Vanillite_h,Wood,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Pikachu_h,Wood,Pikachu_h,Wood,Pikachu_h,Air
+FROW_6 false,false,false,false,false,false

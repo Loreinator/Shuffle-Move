@@ -1,0 +1,13 @@
+STAGE 658
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Vanillite,Wood,Vanillite,Castform,Castform,Wood
+FROW_2 false,false,false,false,false,true
+ROW_3 Vanillite,Castform,Castform,Vanillite,Wood,Snorunt
+FROW_3 false,false,false,false,false,false
+ROW_4 Castform,Castform,Snorunt,Castform,Wood,Snorunt
+FROW_4 false,false,false,false,false,false
+ROW_5 Castform,Wood,Castform,Castform,Vanillite,Metal
+FROW_5 false,false,false,false,false,true
+ROW_6 Vanillite,Metal,Metal,Metal,Metal,Metal
+FROW_6 false,true,true,true,true,true

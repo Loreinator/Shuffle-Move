@@ -1,0 +1,13 @@
+STAGE 647
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Jellicent,Jellicent,Air,Jellicent,Jellicent,Air
+FROW_3 true,false,false,false,true,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Jellicent,Air,Air,Jellicent,Air,Air
+FROW_5 false,false,false,true,false,false
+ROW_6 Air,Air,Air,Air,Air,Air
+FROW_6 false,false,false,false,false,false
