@@ -1,0 +1,13 @@
+STAGE 662
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Air,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Air,Air,Air,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Tepig,Tepig,Air,Air,Tepig
+FROW_4 false,false,false,false,false,false
+ROW_5 Tepig,Air,Air,Air,Air,Tepig
+FROW_5 false,false,false,false,false,false
+ROW_6 Tepig,Air,Air,Tepig,Tepig,Air
+FROW_6 false,false,false,false,false,false

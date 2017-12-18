@@ -1,0 +1,13 @@
+STAGE 656
+ROW_1 Air,Grovyle,Air,Air,Air,Grovyle
+FROW_1 false,true,false,false,false,true
+ROW_2 Air,Grovyle,Air,Air,Air,Grovyle
+FROW_2 false,true,false,false,false,true
+ROW_3 Air,Air,Air,Grovyle,Air,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Grovyle,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Grovyle,Air,Air,Air,Grovyle
+FROW_5 false,true,false,false,false,true
+ROW_6 Air,Grovyle,Air,Air,Air,Grovyle
+FROW_6 false,true,false,false,false,true
