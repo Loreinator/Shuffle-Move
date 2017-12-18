@@ -1,13 +1,13 @@
 STAGE 648
 ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
 FROW_1 true,true,true,true,true,true
-ROW_2 Metal,Castform_f,Cherrim,Castform_f,Wood,Castform_f
+ROW_2 Metal,Castform_s,Cherrim,Castform_s,Wood,Castform_s
 FROW_2 true,false,false,false,false,false
 ROW_3 Cherrim,Castform,Wood,Cherrim,Wood,Castform
 FROW_3 false,false,false,false,false,false
-ROW_4 Cherrim,Castform,Castform,Castform_f,Castform,Castform
+ROW_4 Cherrim,Castform,Castform,Castform_s,Castform,Castform
 FROW_4 false,false,false,false,false,false
 ROW_5 Metal,Metal,Metal,Metal,Metal,Metal
 FROW_5 true,true,true,true,true,true
-ROW_6 Metal,Metal,Metal,Castform_f,Cherrim,Castform_f
+ROW_6 Metal,Metal,Metal,Castform_s,Cherrim,Castform_s
 FROW_6 true,true,true,false,false,false
