@@ -3245,14 +3245,18 @@ public enum Effect {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
-               if (matches.size() / 2 > 2 || odds < 1.0) {
+               int numSwapped = 2;
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  int blockIndex = getRandomInt(matches.size() / 2);
-                  int row = matches.get(blockIndex * 2);
-                  int col = matches.get(blockIndex * 2 + 1);
-                  List<Integer> toReplace = new ArrayList<Integer>(Arrays.asList(row, col));
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toReplace = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toReplace.addAll(Arrays.asList(row, col));
+                  }
                   handleReplaceOf(comboEffect, task, toReplace, Species.WOOD);
                }
             }
@@ -3271,14 +3275,18 @@ public enum Effect {
             List<Integer> matches = task.findMatches(36, false, (r, c, s) -> nonSupports.contains(s));
             if (!matches.isEmpty()) {
                double odds = getOdds(task, comboEffect);
-               if (matches.size() / 2 > 10 || odds < 1.0) {
+               int numSwapped = 10;
+               if (matches.size() / 2 > numSwapped || odds < 1.0) {
                   task.setIsRandom();
                }
                if (odds >= Math.random()) {
-                  int blockIndex = getRandomInt(matches.size() / 2);
-                  int row = matches.get(blockIndex * 2);
-                  int col = matches.get(blockIndex * 2 + 1);
-                  List<Integer> toReplace = new ArrayList<Integer>(Arrays.asList(row, col));
+                  List<Integer> randoms = getUniqueRandoms(0, matches.size() / 2, numSwapped);
+                  List<Integer> toReplace = new ArrayList<Integer>();
+                  for (Integer i : randoms) {
+                     int row = matches.get(i * 2);
+                     int col = matches.get(i * 2 + 1);
+                     toReplace.addAll(Arrays.asList(row, col));
+                  }
                   handleReplaceOf(comboEffect, task, toReplace, Species.WOOD);
                }
             }
