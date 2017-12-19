@@ -7,6 +7,8 @@ RESOURCE Charmander_w img/icons/004-w.png
 RESOURCE Charmeleon img/icons/005.png
 RESOURCE Charizard img/icons/006.png
 RESOURCE Charizard_x img/icons/006.png
+RESOURCE Charizard_s img/icons/006-s.png
+RESOURCE Charizard_sx img/icons/006-s.png
 RESOURCE Squirtle img/icons/007.png
 RESOURCE Squirtle_w img/icons/007-w.png
 RESOURCE Wartortle img/icons/008.png
@@ -56,6 +58,7 @@ RESOURCE Pikachu_ch img/icons/025-charizard.png
 RESOURCE Pikachu_bw img/icons/025-beachwalk.png
 RESOURCE Pikachu_pc img/icons/025-pastrychef.png
 RESOURCE Pikachu_ar img/icons/025-artist.png
+RESOURCE Pikachu_mh img/icons/025-mushroom.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Raichu_a img/icons/026-a.png
@@ -430,6 +433,9 @@ RESOURCE Feebas img/icons/349.png
 RESOURCE Milotic img/icons/350.png
 RESOURCE Castform img/icons/351.png
 RESOURCE Castform_w img/icons/351-w.png
+RESOURCE Castform_s img/icons/351-s.png
+RESOURCE Castform_r img/icons/351-r.png
+RESOURCE Castform_h img/icons/351-h.png
 RESOURCE Kecleon img/icons/352.png
 RESOURCE Shuppet img/icons/353.png
 RESOURCE Banette img/icons/354.png
@@ -470,6 +476,7 @@ RESOURCE Jirachi img/icons/385.png
 RESOURCE Deoxys img/icons/386.png
 RESOURCE Deoxys_a img/icons/386-a.png
 RESOURCE Deoxys_d img/icons/386-d.png
+RESOURCE Deoxys_s img/icons/386-s.png
 RESOURCE Turtwig img/icons/387.png
 RESOURCE Grotle img/icons/388.png
 RESOURCE Torterra img/icons/389.png
@@ -845,7 +852,9 @@ RESOURCE Avalugg img/icons/713.png
 RESOURCE Noibat img/icons/714.png
 RESOURCE Noivern img/icons/715.png
 RESOURCE Xerneas img/icons/716.png
+RESOURCE Xerneas_s img/icons/716-s.png
 RESOURCE Yveltal img/icons/717.png
+RESOURCE Yveltal_s img/icons/717-s.png
 RESOURCE Zygarde img/icons/718.png
 RESOURCE Zygarde-10 img/icons/718-10.png
 RESOURCE Zygarde-50 img/icons/718.png
@@ -942,6 +951,8 @@ RESOURCE Marshadow img/icons/802.png
 RESOURCE Mega_Venusaur img/icons/003-m.png
 RESOURCE Mega_Charizard_x img/icons/006-mx.png
 RESOURCE Mega_Charizard_y img/icons/006-my.png
+RESOURCE Mega_Charizard_xs img/icons/006-sm.png
+RESOURCE Mega_Charizard_ys img/icons/006-smy.png
 RESOURCE Mega_Blastoise img/icons/009-m.png
 RESOURCE Mega_Beedrill img/icons/015-m.png
 RESOURCE Mega_Pidgeot img/icons/018-m.png

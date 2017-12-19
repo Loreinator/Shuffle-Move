@@ -1,0 +1,13 @@
+STAGE EX52
+ROW_1 Deoxys_s,Deoxys,Air,Air,Deoxys_s,Deoxys
+FROW_1 false,false,false,false,false,false
+ROW_2 Deoxys_s,Deoxys,Air,Air,Deoxys_s,Deoxys
+FROW_2 false,false,false,false,false,false
+ROW_3 Deoxys,Deoxys_s,Air,Air,Deoxys,Deoxys_s
+FROW_3 false,false,false,false,false,false
+ROW_4 Deoxys,Deoxys_s,Air,Air,Deoxys,Deoxys_s
+FROW_4 false,false,false,false,false,false
+ROW_5 Deoxys_s,Deoxys,Air,Air,Deoxys_s,Deoxys
+FROW_5 false,false,false,false,false,false
+ROW_6 Deoxys_s,Deoxys,Air,Air,Deoxys_s,Deoxys
+FROW_6 false,false,false,false,false,false

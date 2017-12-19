@@ -1,0 +1,13 @@
+STAGE 664
+ROW_1 Metal,Metal,Metal,Metal,Metal,Metal
+FROW_1 true,true,true,true,true,true
+ROW_2 Metal,Wood,Castform_r,Wood,Castform_r,Castform_r
+FROW_2 true,false,false,false,false,false
+ROW_3 Castform,Wood,Castform_r,Wood,Castform_r,Castform_r
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Pelipper,Wood,Castform_r,Wood,Pelipper
+FROW_4 false,false,false,false,false,false
+ROW_5 Wood,Pelipper,Wood,Castform_r,Wood,Wood
+FROW_5 false,false,false,false,false,false
+ROW_6 Castform_r,Castform_r,Pelipper,Pelipper,Castform_r,Pelipper
+FROW_6 false,false,false,false,false,false

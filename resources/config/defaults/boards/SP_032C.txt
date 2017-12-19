@@ -1,0 +1,13 @@
+STAGE SP_032C
+ROW_1 Cubchooh,Snover_h,Delibird_h,Vanillilte_h,Cubchoo_h,Snover_h
+FROW_1 false,false,false,false,false,false
+ROW_2 Snover_h,Cubchoo_h,Vanillite_h,Delibird_h,Snover_h,Cubchoo_h
+FROW_2 false,false,true,true,false,false
+ROW_3 Pikachu_h,Pikachu_h,Delibird_h,Delibird_h,Pikachu_h,Pikachu_h
+FROW_3 false,false,false,true,false,false
+ROW_4 Pikachu_h,Pikachu_h,Vanillite_h,Vanillite_h,Pikachu_h,Pikachu_h
+FROW_4 false,false,true,false,false,false
+ROW_5 Cubchooh,Snover_h,Vanillilte_h,Delibird_h,Cubchoo_h,Snover_h
+FROW_5 false,false,true,true,false,false
+ROW_6 Snover_h,Cubchoo_h,Delibird_h,Vanillite_h,Snover_h,Cubchoo_h
+FROW_6 false,false,false,false,false,false

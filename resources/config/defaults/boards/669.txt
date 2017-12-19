@@ -1,0 +1,13 @@
+STAGE 669
+ROW_1 Wood,Wood,Hypno,Hypno,Wood,Wood
+FROW_1 false,false,false,false,false,false
+ROW_2 Wood,Hypno,Wood,Hypno,Wood,Wood
+FROW_2 false,false,false,false,false,false
+ROW_3 Wood,Air,Wood,Wood,Hypno,Wood
+FROW_3 false,false,false,false,false,false
+ROW_4 Wood,Hypno,Hypno,Wood,Hypno,Wood
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Wood,Hypno,Hypno,Wood,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Hypno,Air,Air,Hypno,Air
+FROW_6 false,false,false,false,false,false
