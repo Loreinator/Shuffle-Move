@@ -1,0 +1,13 @@
+STAGE SP_218
+ROW_1 Air,Air,Air,Granbull_w,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Granbull_w,Air,Granbull_w,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Granbull_w,Air,Air,Air,Granbull_w
+FROW_3 false,false,false,false,false,false
+ROW_4 Granbull_w,Air,Air,Air,Granbull_w,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Granbull_w,Air,Granbull_w,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Granbull_w,Air,Air,Air
+FROW_6 false,false,false,false,false,false

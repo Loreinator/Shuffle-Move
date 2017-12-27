@@ -711,6 +711,41 @@ public enum Effect {
       }
    },
    /**
+    * Does more damage when the opponent has more HP left.
+    */
+   BIG_EATER {
+      
+      @Override
+      public NumberSpan modifyScoreRange(ActivateComboEffect comboEffect, SimulationTask task, NumberSpan score) {
+         NumberSpan ret = score;
+         if (canActivate(comboEffect, task)) {
+            double scoreIfActivated = getRemainingHealthScoreBoost(task, 0.1);
+            double odds = getOdds(task, comboEffect);
+            if (odds >= 1.0) {
+               // completely override the normal score
+               ret = new NumberSpan(scoreIfActivated);
+            } else if (odds > 0) {
+               // partially override them together
+               double finalMin = Math.min(score.getMinimum(), scoreIfActivated);
+               double finalMax = Math.max(score.getMaximum(), scoreIfActivated);
+               double finalAvg = score.getAverage() * (1 - odds) + scoreIfActivated * odds;
+               
+               ret = new NumberSpan(finalMin, finalMax, finalAvg, 1);
+            }
+         }
+         return super.modifyScoreRange(comboEffect, task, ret);
+      }
+      
+      @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+         if (e.getNumBlocks() == 3) {
+	    return 0;
+         } else {
+            return super.getOdds(task, e);
+         }
+      }
+   },
+   /**
     * Sometimes increases damage and leaves opponent paralyzed.
     */
    QUAKE {
