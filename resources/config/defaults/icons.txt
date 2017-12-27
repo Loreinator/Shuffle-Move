@@ -59,6 +59,7 @@ RESOURCE Pikachu_bw img/icons/025-beachwalk.png
 RESOURCE Pikachu_pc img/icons/025-pastrychef.png
 RESOURCE Pikachu_ar img/icons/025-artist.png
 RESOURCE Pikachu_mh img/icons/025-mushroom.png
+RESOURCE Pikachu_ye img/icons/025-yearsend.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Raichu_a img/icons/026-a.png
@@ -252,8 +253,11 @@ RESOURCE Azumarill img/icons/184.png
 RESOURCE Sudowoodo img/icons/185.png
 RESOURCE Politoed img/icons/186.png
 RESOURCE Hoppip img/icons/187.png
+RESOURCE Hoppip_w img/icons/187-w.png
 RESOURCE Skiploom img/icons/188.png
+RESOURCE Skiploom_w img/icons/188-w.png
 RESOURCE Jumpluff img/icons/189.png
+RESOURCE Jumpluff img/icons/189-w.png
 RESOURCE Aipom img/icons/190.png
 RESOURCE Sunkern img/icons/191.png
 RESOURCE Sunflora img/icons/192.png
@@ -283,6 +287,7 @@ RESOURCE Steelix img/icons/208.png
 RESOURCE Snubbull img/icons/209.png
 RESOURCE Snubbull_w img/icons/209-w.png
 RESOURCE Granbull img/icons/210.png
+RESOURCE Granbull_w img/icons/210-w.png
 RESOURCE Qwilfish img/icons/211.png
 RESOURCE Scizor img/icons/212.png
 RESOURCE Shuckle img/icons/213.png
@@ -513,7 +518,9 @@ RESOURCE Pachirisu img/icons/417.png
 RESOURCE Buizel img/icons/418.png
 RESOURCE Floatzel img/icons/419.png
 RESOURCE Cherubi img/icons/420.png
+RESOURCE Cherubi_w img/icons/420-w.png
 RESOURCE Cherrim img/icons/421.png
+RESOURCE Cherrim_w img/icons/421-w.png
 RESOURCE Shellos img/icons/422.png
 RESOURCE Shellos_e img/icons/422-e.png
 RESOURCE Gastrodon img/icons/423.png
@@ -927,9 +934,9 @@ RESOURCE Mimikyu img/icons/778.png
 RESOURCE Bruxish img/icons/779.png
 RESOURCE Drampa img/icons/780.png
 RESOURCE Dhelmise img/icons/781.png
-RESOURCE Janhmo_o img/icons/782.png
-RESOURCE Hakamo_o img/icons/783.png
-RESOURCE Kommo_o img/icons/784.png
+RESOURCE Janhmo-o img/icons/782.png
+RESOURCE Hakamo-o img/icons/783.png
+RESOURCE Kommo-o img/icons/784.png
 RESOURCE Tapu_Koko img/icons/785.png
 RESOURCE Tapu_Lele img/icons/786.png
 RESOURCE Tapu_Bulu img/icons/787.png

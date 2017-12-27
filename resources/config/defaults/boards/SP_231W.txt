@@ -1,0 +1,13 @@
+STAGE SP_231W
+ROW_1 Air,Air,Air,Air,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Cherrim_w,Air,Cherrim_w,Cherrim_w,Air,Cherrim_w
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Cherrim_w,Air,Air,Cherrim_w,Air
+FROW_3 false,false,false,false,false,false
+ROW_4 Air,Air,Air,Air,Air,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Cherrim_w,Air,Air,Cherrim_w,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Cherrim_w,Air,Air,Air,Air,Cherrim_w
+FROW_6 false,false,false,false,false,false

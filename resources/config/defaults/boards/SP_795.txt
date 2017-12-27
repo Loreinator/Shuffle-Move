@@ -1,0 +1,13 @@
+STAGE SP_795
+ROW_1 Air,Air,Air,Hakamo-o,Air,Air
+FROW_1 false,false,false,false,false,false
+ROW_2 Air,Air,Hakamo-o,Air,Air,Air
+FROW_2 false,false,false,false,false,false
+ROW_3 Air,Jangmo-o,Air,Hakamo-o,Air,Hakamo-o
+FROW_3 false,false,false,false,false,false
+ROW_4 Jangmo-o,Air,Jangmo-o,Air,Hakamo-o,Air
+FROW_4 false,false,false,false,false,false
+ROW_5 Air,Air,Air,Jangmo-o,Air,Air
+FROW_5 false,false,false,false,false,false
+ROW_6 Air,Air,Jangmo-o,Air,Air,Air
+FROW_6 false,false,false,false,false,false
