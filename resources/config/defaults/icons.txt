@@ -257,7 +257,7 @@ RESOURCE Hoppip_w img/icons/187-w.png
 RESOURCE Skiploom img/icons/188.png
 RESOURCE Skiploom_w img/icons/188-w.png
 RESOURCE Jumpluff img/icons/189.png
-RESOURCE Jumpluff img/icons/189-w.png
+RESOURCE Jumpluff_w img/icons/189-w.png
 RESOURCE Aipom img/icons/190.png
 RESOURCE Sunkern img/icons/191.png
 RESOURCE Sunflora img/icons/192.png
@@ -934,7 +934,7 @@ RESOURCE Mimikyu img/icons/778.png
 RESOURCE Bruxish img/icons/779.png
 RESOURCE Drampa img/icons/780.png
 RESOURCE Dhelmise img/icons/781.png
-RESOURCE Janhmo-o img/icons/782.png
+RESOURCE Jangmo-o img/icons/782.png
 RESOURCE Hakamo-o img/icons/783.png
 RESOURCE Kommo-o img/icons/784.png
 RESOURCE Tapu_Koko img/icons/785.png
