@@ -44,7 +44,7 @@ Species Icons: http://serebii.net
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
 ##Changelog
-* **v0.3.126 - 201**
+* **v0.3.126 - 2018-01-21**
 	- Fix Mega Gardevoir (Shiny)
 * **v0.3.125 - 2017-12-27**
 	- Updates for December 26th
