@@ -182,6 +182,24 @@ public enum Effect {
          return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
       }
    },
+    /**
+    * Sometimes, attacks do more damage when you make a match of 5.
+    */
+   EXTINCTION {
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+	  
+	  @Override
+      protected double getOdds(SimulationTask task, ActivateComboEffect e) {
+         if (e.getNumBlocks() == 5) {
+            return super.getOdds(task, e);
+         } else {
+            return 0;
+         }
+      }
+   },
    /**
     * Attacks do more damage when things are looking desperate.
     */
@@ -2432,6 +2450,16 @@ public enum Effect {
     * Attacks can occasionally deal greater damage than usual.
     */
    UNITY_POWER {
+      
+      @Override
+      public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {
+         return getMultiplier(comboEffect, task, getBonus(task, comboEffect));
+      }
+   },
+   /**
+    * Attacks can occasionally deal greater damage than usual.
+    */
+   PSYBURST {
       
       @Override
       public NumberSpan getScoreMultiplier(ActivateComboEffect comboEffect, SimulationTask task) {

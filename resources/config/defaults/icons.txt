@@ -60,6 +60,10 @@ RESOURCE Pikachu_pc img/icons/025-pastrychef.png
 RESOURCE Pikachu_ar img/icons/025-artist.png
 RESOURCE Pikachu_mh img/icons/025-mushroom.png
 RESOURCE Pikachu_ye img/icons/025-yearsend.png
+RESOURCE Pikachu_ld img/icons/025-entei.png
+RESOURCE Pikachu_d img/icons/025-dazed.png
+RESOURCE Pikachu_f img/icons/025-d.png
+RESOURCE Pikachu_su img/icons/025-o.png
 RESOURCE Raichu img/icons/026.png
 RESOURCE Raichu_w img/icons/026-w.png
 RESOURCE Raichu_a img/icons/026-a.png
@@ -250,6 +254,7 @@ RESOURCE Ampharos img/icons/181.png
 RESOURCE Bellossom img/icons/182.png
 RESOURCE Marill img/icons/183.png
 RESOURCE Azumarill img/icons/184.png
+RESOURCE Azumarill_w img/icons/184-w.png
 RESOURCE Sudowoodo img/icons/185.png
 RESOURCE Politoed img/icons/186.png
 RESOURCE Hoppip img/icons/187.png
