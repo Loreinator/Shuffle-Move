@@ -3,9 +3,9 @@ ROW_1 Air,Wood,Air,Air,Wood,Air
 FROW_1 false,false,false,false,false,false
 ROW_2 Air,Wood,Air,Air,Wood,Air
 FROW_2 false,false,false,false,false,false
-ROW_3 Wood,Wood,Air,Wood,Wood,Air
+ROW_3 Air,Wood,Air,Air,Wood,Air
 FROW_3 false,false,false,false,false,false
-ROW_4 Air,Wood,Wood,Air,Wood,Wood
+ROW_4 Air,Wood,Air,Air,Wood,Air
 FROW_4 false,false,false,false,false,false
 ROW_5 Air,Wood,Air,Air,Wood,Air
 FROW_5 false,false,false,false,false,false
