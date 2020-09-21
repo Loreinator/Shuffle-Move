@@ -1,8 +1,8 @@
-#Shuffle Move v0.3.128
+# Shuffle Move v0.3.128
 
 A program to identify and display the best next move for the game Pokémon Shuffle. I do not own any part of Pokémon Shuffle, which is the property of Nintendo. All credit is given in the documentation within the source code. 
 
-##Installation
+## Installation
 
 1. **Update to at least Java 8 (Java 8u51 for best performance).**
 
@@ -13,24 +13,24 @@ A program to identify and display the best next move for the game Pokémon Shuff
    Other: Use Shuffle Move vX.X.X.jar or from the command line navigate to this directory and enter:
 		`java -jar "<Jar name>"` 
 
-##Instructions
+## Instructions
 
 1. Install
 2. Launch program
 3. Click Help → Help to see the help documentation.
    For all other problems, see the release thread listed at [Reddit](https://www.reddit.com/r/ShuffleMove/wiki/versionlinks).
 
-##Planned Features
+## Planned Features
 
 See the [Issues](https://github.com/Loreinator/Shuffle-Move/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) page.
 
-##Contact
+## Contact
 
 Email: [all4atlantis@gmail.com](mailto:all4atlantis@gmail.com)  
 GitHub: https://github.com/Loreinator/Shuffle-Move  
 Reddit: https://www.reddit.com/r/ShuffleMove/wiki/index
 
-##License
+## License
 
 Copyright 2015-2017 Andrew Meyers  
 Splash screen and window icons: http://reddit.com/u/ArmpitWrestling  
@@ -43,7 +43,7 @@ Species Icons: http://serebii.net
 
 This program is licensed under GNU General Public License Version 3. Please read and agree to the terms of the included license before use.
 
-##Changelog
+## Changelog
 * **v0.3.128 - 2018-02-24**
 	- Updates for February 13th
 * **v0.3.127 - 2018-02-03**
